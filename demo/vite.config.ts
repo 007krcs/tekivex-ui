@@ -4,6 +4,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: resolve(__dirname),
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -13,6 +14,10 @@ export default defineConfig({
       '@hooks': resolve(__dirname, '../src/hooks'),
       '@a11y': resolve(__dirname, '../src/a11y'),
     },
+  },
+  build: {
+    outDir: resolve(__dirname, 'dist'),
+    emptyOutDir: true,
   },
   server: { port: 5174, open: true },
 });

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tekivex-ui
+    runtime: static
+    buildCommand: npm install && cd demo && npx vite build
+    staticPublishPath: demo/dist
+    pullRequestPreviewsEnabled: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
