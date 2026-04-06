@@ -257,31 +257,6 @@ export function Header({ currentRoute, isDark, onToggleTheme, theme }: HeaderPro
 
         <div style={dividerStyle} aria-hidden="true" />
 
-        {/* GitHub link */}
-        <a
-          href="https://github.com/tekivex/ui"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            ...iconButtonStyle,
-            textDecoration: 'none',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          aria-label="View on GitHub"
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = theme.primary;
-            (e.currentTarget as HTMLElement).style.color = theme.primary;
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = theme.border;
-            (e.currentTarget as HTMLElement).style.color = theme.textMuted;
-          }}
-        >
-          <IconGitHub color="currentColor" />
-        </a>
-
         {/* Theme toggle */}
         <button
           type="button"

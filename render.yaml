@@ -2,7 +2,7 @@ services:
   - type: web
     name: tekivex-ui
     runtime: static
-    buildCommand: npm install && cd demo && npx vite build
+    buildCommand: npm install && npm run build:demo
     staticPublishPath: demo/dist
     pullRequestPreviewsEnabled: false
     routes:
