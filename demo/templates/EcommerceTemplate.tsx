@@ -141,9 +141,9 @@ function CartIcon({ count }: { count: number }) {
 }
 
 function StockBadge({ stock }: { stock: Product['stock'] }) {
-  if (stock === 'in') return <TkxBadge color="success" variant="subtle" size="sm">In Stock</TkxBadge>;
-  if (stock === 'low') return <TkxBadge color="warning" variant="subtle" size="sm">Low Stock</TkxBadge>;
-  return <TkxBadge color="danger" variant="subtle" size="sm">Out of Stock</TkxBadge>;
+  if (stock === 'in') return <TkxBadge variant="success" size="sm">In Stock</TkxBadge>;
+  if (stock === 'low') return <TkxBadge variant="warning" size="sm">Low Stock</TkxBadge>;
+  return <TkxBadge variant="danger" size="sm">Out of Stock</TkxBadge>;
 }
 
 export function EcommerceTemplate({ theme }: Props) {
@@ -218,7 +218,7 @@ export function EcommerceTemplate({ theme }: Props) {
   const pad = (n: number) => String(n).padStart(2, '0');
 
   return (
-    <div style={{ background: theme.background, color: theme.text, fontFamily: 'inherit', minHeight: '100vh' }}>
+    <div style={{ background: theme.bg, color: theme.text, fontFamily: 'inherit', minHeight: '100vh' }}>
 
       {/* ─── HEADER ─── */}
       <header style={{
@@ -386,7 +386,7 @@ export function EcommerceTemplate({ theme }: Props) {
 
                     <TkxCardBody style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <TkxBadge variant="outline" size="sm">{product.brand}</TkxBadge>
+                        <TkxBadge outlined size="sm">{product.brand}</TkxBadge>
                         <StockBadge stock={product.stock} />
                       </div>
 
@@ -409,7 +409,7 @@ export function EcommerceTemplate({ theme }: Props) {
                           </span>
                         )}
                         {product.originalPrice && (
-                          <TkxBadge color="success" variant="subtle" size="sm">
+                          <TkxBadge variant="success" size="sm">
                             Save ${(product.originalPrice - product.price).toFixed(2)}
                           </TkxBadge>
                         )}
@@ -521,7 +521,7 @@ export function EcommerceTemplate({ theme }: Props) {
                 <h2 style={{ fontSize: 24, fontWeight: 900, color: theme.text, letterSpacing: '-0.03em', margin: 0 }}>
                   ⚡ Flash Deals
                 </h2>
-                <TkxBadge color="danger" variant="subtle">Limited Time</TkxBadge>
+                <TkxBadge variant="danger">Limited Time</TkxBadge>
               </div>
               <p style={{ fontSize: 13, color: theme.textMuted, marginTop: 4 }}>Ending soon — don't miss out</p>
             </div>
@@ -650,7 +650,7 @@ export function EcommerceTemplate({ theme }: Props) {
             padding: '48px 24px',
           }}>
             <TkxCardBody>
-              <TkxBadge color="primary" variant="subtle" style={{ marginBottom: 16 }}>Newsletter</TkxBadge>
+              <TkxBadge variant="primary" style={{ marginBottom: 16 }}>Newsletter</TkxBadge>
               <h2 style={{ fontSize: 26, fontWeight: 900, color: theme.text, letterSpacing: '-0.03em', marginBottom: 10 }}>
                 Get 10% Off Your First Order
               </h2>
@@ -716,7 +716,7 @@ export function EcommerceTemplate({ theme }: Props) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-                  <TkxBadge variant="outline" size="sm">{modalProduct.brand}</TkxBadge>
+                  <TkxBadge outlined size="sm">{modalProduct.brand}</TkxBadge>
                   <StockBadge stock={modalProduct.stock} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>

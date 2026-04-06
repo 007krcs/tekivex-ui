@@ -191,7 +191,7 @@ function ProjectCard({ project, theme }: { project: typeof PROJECTS.all[0]; them
     <TkxCard isHoverable style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <TkxCardHeader>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <TkxBadge color={project.color as any} variant="subtle">{project.category}</TkxBadge>
+          <TkxBadge variant={project.color as any}>{project.category}</TkxBadge>
           <span style={{ fontSize: 12, color: theme.textMuted, display: 'flex', gap: 12 }}>
             <span>★ {project.stars}</span>
             <span>⑂ {project.forks}</span>
@@ -203,7 +203,7 @@ function ProjectCard({ project, theme }: { project: typeof PROJECTS.all[0]; them
         <p style={{ fontSize: 13.5, color: theme.textMuted, lineHeight: 1.65, marginBottom: 14 }}>{project.description}</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
           {project.tech.map(t => (
-            <TkxBadge key={t} variant="outline" size="sm">{t}</TkxBadge>
+            <TkxBadge key={t} outlined size="sm">{t}</TkxBadge>
           ))}
         </div>
         <div style={{ marginBottom: 4 }}>
@@ -254,7 +254,7 @@ export function PortfolioTemplate({ theme }: Props) {
   });
 
   return (
-    <div style={{ background: theme.background, color: theme.text, fontFamily: 'inherit', minHeight: '100vh' }}>
+    <div style={{ background: theme.bg, color: theme.text, fontFamily: 'inherit', minHeight: '100vh' }}>
 
       {/* ─── NAV ─── */}
       <nav style={{
@@ -277,7 +277,7 @@ export function PortfolioTemplate({ theme }: Props) {
             <TkxButton key={link} variant="ghost" size="sm">{link}</TkxButton>
           ))}
           <TkxButton variant="ghost" size="sm">Contact</TkxButton>
-          <TkxBadge color="success" variant="subtle" style={{ marginLeft: 8 }}>● Available for work</TkxBadge>
+          <TkxBadge variant="success" style={{ marginLeft: 8 }}>● Available for work</TkxBadge>
           <TkxButton color="primary" size="sm" style={{ marginLeft: 8 }}>Hire Me</TkxButton>
         </div>
       </nav>
@@ -285,7 +285,7 @@ export function PortfolioTemplate({ theme }: Props) {
       {/* ─── HERO ─── */}
       <section style={{ padding: '88px 0 72px', background: `linear-gradient(160deg, ${theme.primary}0a 0%, transparent 60%)` }}>
         <div style={section()}>
-          <TkxBadge color="success" variant="subtle" style={{ marginBottom: 20 }}>
+          <TkxBadge variant="success" style={{ marginBottom: 20 }}>
             ● Open to full-time &amp; freelance opportunities
           </TkxBadge>
           <h1 style={{
@@ -310,7 +310,7 @@ export function PortfolioTemplate({ theme }: Props) {
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 48 }}>
             {['React', 'TypeScript', 'Node.js', 'AWS', 'PostgreSQL', 'Docker'].map(tag => (
-              <TkxBadge key={tag} variant="outline">{tag}</TkxBadge>
+              <TkxBadge key={tag} outlined>{tag}</TkxBadge>
             ))}
           </div>
           <div style={{
@@ -414,7 +414,7 @@ export function PortfolioTemplate({ theme }: Props) {
                     <div>
                       <div style={{ fontSize: 17, fontWeight: 700, color: theme.text }}>{exp.role}</div>
                       <div style={{ fontSize: 14, color: theme.textMuted, marginTop: 2 }}>
-                        <TkxBadge color={exp.color} variant="subtle" size="sm" style={{ marginRight: 8 }}>{exp.company}</TkxBadge>
+                        <TkxBadge variant={exp.color} size="sm" style={{ marginRight: 8 }}>{exp.company}</TkxBadge>
                         {exp.period}
                       </div>
                     </div>
@@ -427,7 +427,7 @@ export function PortfolioTemplate({ theme }: Props) {
                     ))}
                   </ul>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                    {exp.skills.map(s => <TkxBadge key={s} variant="outline" size="sm">{s}</TkxBadge>)}
+                    {exp.skills.map(s => <TkxBadge key={s} outlined size="sm">{s}</TkxBadge>)}
                   </div>
                 </TkxCardBody>
               </TkxCard>
@@ -483,7 +483,7 @@ export function PortfolioTemplate({ theme }: Props) {
                 <TkxCardBody style={{ flex: 1 }}>
                   <div style={{ display: 'flex', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>
                     {post.tags.map(tag => (
-                      <TkxBadge key={tag} variant="subtle" color="primary" size="sm">{tag}</TkxBadge>
+                      <TkxBadge key={tag} variant="primary" size="sm">{tag}</TkxBadge>
                     ))}
                   </div>
                   <h3 style={{ fontSize: 16, fontWeight: 700, color: theme.text, lineHeight: 1.4, marginBottom: 10 }}>

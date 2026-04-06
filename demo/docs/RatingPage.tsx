@@ -148,7 +148,7 @@ export function RatingPage({ theme }: { theme: ThemeTokens }) {
           ].map(({ label, value }) => (
             <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{ fontSize: '13px', color: theme.textMuted, minWidth: '140px' }}>{label}</span>
-              <TkxRating value={value} readOnly showValue label={label} />
+              <TkxRating value={value} isReadOnly showValue label={label} />
             </div>
           ))}
         </div>
@@ -174,7 +174,7 @@ export function RatingPage({ theme }: { theme: ThemeTokens }) {
             label="Quality rating"
             value={half}
             onChange={setHalf}
-            precision="half"
+            precision={0.5}
             showValue
           />
           <span style={{ fontSize: '13px', color: theme.textMuted }}>{half}/5</span>
@@ -195,7 +195,7 @@ export function RatingPage({ theme }: { theme: ThemeTokens }) {
           {(['sm', 'md', 'lg', 'xl'] as const).map((s) => (
             <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{ fontSize: '12px', color: theme.textMuted, minWidth: '24px' }}>{s}</span>
-              <TkxRating value={4} readOnly size={s} label={`Size ${s} example`} />
+              <TkxRating value={4} isReadOnly size={s} label={`Size ${s} example`} />
             </div>
           ))}
         </div>
@@ -216,7 +216,7 @@ export function RatingPage({ theme }: { theme: ThemeTokens }) {
           {(['warning', 'primary', 'danger', 'success', 'secondary'] as const).map((cs) => (
             <div key={cs} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{ fontSize: '12px', color: theme.textMuted, minWidth: '80px' }}>{cs}</span>
-              <TkxRating value={4} readOnly colorScheme={cs} label={`${cs} color scheme example`} />
+              <TkxRating value={4} isReadOnly colorScheme={cs} label={`${cs} color scheme example`} />
             </div>
           ))}
         </div>
@@ -230,9 +230,9 @@ export function RatingPage({ theme }: { theme: ThemeTokens }) {
         code={`<TkxRating value={3.5} readOnly showValue precision="half" />`}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <TkxRating value={4.8} readOnly showValue count={5} label="Overall (showValue)" />
-          <TkxRating value={8.2} readOnly showValue count={10} label="Score out of 10" />
-          <TkxRating value={3.5} readOnly showValue precision="half" label="Half-star with value" />
+          <TkxRating value={4.8} isReadOnly showValue max={5} label="Overall (showValue)" />
+          <TkxRating value={8.2} isReadOnly showValue max={10} label="Score out of 10" />
+          <TkxRating value={3.5} isReadOnly showValue precision={0.5} label="Half-star with value" />
         </div>
       </DemoSection>
 
@@ -249,7 +249,8 @@ export function RatingPage({ theme }: { theme: ThemeTokens }) {
             <span style={{ fontSize: '13px', color: theme.textMuted, minWidth: '80px' }}>Hearts</span>
             <TkxRating
               label="Favorites"
-              icon="heart"
+              emptyIcon="heart"
+              filledIcon="heart"
               colorScheme="danger"
               value={heart}
               onChange={setHeart}
@@ -260,7 +261,8 @@ export function RatingPage({ theme }: { theme: ThemeTokens }) {
             <span style={{ fontSize: '13px', color: theme.textMuted, minWidth: '80px' }}>Circles</span>
             <TkxRating
               label="Difficulty"
-              icon="circle"
+              emptyIcon="circle"
+              filledIcon="circle"
               colorScheme="primary"
               value={circle}
               onChange={setCircle}

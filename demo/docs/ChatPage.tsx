@@ -264,25 +264,19 @@ const [thinking, setThinking] = useState(false);
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', backgroundColor: theme.bg, borderRadius: '12px', border: `1px solid ${theme.border}` }}>
           <TkxChatBubble
-            role="system"
-            content="Conversation started"
+            message={{ id: 'demo-1', role: 'system', content: 'Conversation started' }}
           />
           <TkxChatBubble
-            role="user"
-            content="What components are available in TekiVex UI?"
-            timestamp={new Date(Date.now() - 2 * 60 * 1000)}
-            status="sent"
+            message={{ id: 'demo-2', role: 'user', content: 'What components are available in TekiVex UI?', timestamp: new Date(Date.now() - 2 * 60 * 1000) }}
+            showTimestamp
           />
           <TkxChatBubble
-            role="assistant"
-            content="Over 40 fully accessible components including buttons, inputs, selects, modals, drawers, chat, data tables, and more — all WCAG 2.1 AAA compliant."
-            timestamp={new Date(Date.now() - 1 * 60 * 1000)}
+            message={{ id: 'demo-3', role: 'assistant', content: 'Over 40 fully accessible components including buttons, inputs, selects, modals, drawers, chat, data tables, and more — all WCAG 2.1 AAA compliant.', timestamp: new Date(Date.now() - 1 * 60 * 1000) }}
+            showTimestamp
           />
           <TkxChatBubble
-            role="user"
-            content="Do they support dark mode?"
-            timestamp={new Date()}
-            status="sending"
+            message={{ id: 'demo-4', role: 'user', content: 'Do they support dark mode?', timestamp: new Date(), isStreaming: true }}
+            showTimestamp
           />
         </div>
       </DemoSection>
@@ -297,9 +291,9 @@ const [thinking, setThinking] = useState(false);
 <TkxChatBubble role="user" content="Failed to send"     status="error"   />`}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', backgroundColor: theme.bg, borderRadius: '12px', border: `1px solid ${theme.border}` }}>
-          <TkxChatBubble role="user" content="This message is currently sending…" status="sending" />
-          <TkxChatBubble role="user" content="This message was delivered successfully." status="sent" />
-          <TkxChatBubble role="user" content="This message failed to send. Tap to retry." status="error" />
+          <TkxChatBubble message={{ id: 'status-1', role: 'user', content: 'This message is currently sending…', isStreaming: true }} />
+          <TkxChatBubble message={{ id: 'status-2', role: 'user', content: 'This message was delivered successfully.' }} />
+          <TkxChatBubble message={{ id: 'status-3', role: 'user', content: 'This message failed to send. Tap to retry.', error: true }} />
         </div>
       </DemoSection>
 
