@@ -99,6 +99,7 @@ export function DemoSection({
     gap: '12px',
     minHeight: '80px',
     backgroundColor: theme.surface,
+    overflow: 'auto',
   };
 
   const toolbarStyle: CSSProperties = {
