@@ -26,6 +26,21 @@ import { SkeletonPage } from './docs/SkeletonPage';
 import { AvatarPage } from './docs/AvatarPage';
 import { TablePage } from './docs/TablePage';
 import { DividerPage } from './docs/DividerPage';
+import { SelectPage } from './docs/SelectPage';
+import { CheckboxPage } from './docs/CheckboxPage';
+import { RadioPage } from './docs/RadioPage';
+import { ToastPage } from './docs/ToastPage';
+import { AccordionPage } from './docs/AccordionPage';
+import { DrawerPage } from './docs/DrawerPage';
+import { DatePickerPage } from './docs/DatePickerPage';
+import { SliderPage } from './docs/SliderPage';
+import { PaginationPage } from './docs/PaginationPage';
+import { ImagePage } from './docs/ImagePage';
+import { FileUploadPage } from './docs/FileUploadPage';
+import { RatingPage } from './docs/RatingPage';
+import { ChatPage } from './docs/ChatPage';
+import { TagPage } from './docs/TagPage';
+import { TimelinePage } from './docs/TimelinePage';
 
 // ── Template pages ─────────────────────────────────────────────────────────────
 import { DashboardTemplate } from './templates/DashboardTemplate';
@@ -54,6 +69,21 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/avatar': AvatarPage,
   '/components/table': TablePage,
   '/components/divider': DividerPage,
+  '/components/select': SelectPage,
+  '/components/checkbox': CheckboxPage,
+  '/components/radio': RadioPage,
+  '/components/toast': ToastPage,
+  '/components/accordion': AccordionPage,
+  '/components/drawer': DrawerPage,
+  '/components/date-picker': DatePickerPage,
+  '/components/slider': SliderPage,
+  '/components/pagination': PaginationPage,
+  '/components/image': ImagePage,
+  '/components/file-upload': FileUploadPage,
+  '/components/rating': RatingPage,
+  '/components/chat': ChatPage,
+  '/components/tag': TagPage,
+  '/components/timeline': TimelinePage,
   '/templates/dashboard': DashboardTemplate,
   '/templates/portfolio': PortfolioTemplate,
   '/templates/ecommerce': EcommerceTemplate,

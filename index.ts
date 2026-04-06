@@ -56,6 +56,52 @@ export type { TkxTableProps, ColumnDef, SortDirection } from './src/components/T
 export { TkxDivider } from './src/components/TkxDivider';
 export type { TkxDividerProps } from './src/components/TkxDivider';
 
+// New Components
+export { TkxSelect } from './src/components/TkxSelect';
+export type { TkxSelectProps, SelectOption, SelectSize } from './src/components/TkxSelect';
+
+export { TkxCheckbox } from './src/components/TkxCheckbox';
+export type { TkxCheckboxProps, CheckboxSize } from './src/components/TkxCheckbox';
+
+export { TkxRadio, TkxRadioGroup } from './src/components/TkxRadio';
+export type { TkxRadioProps, TkxRadioGroupProps } from './src/components/TkxRadio';
+
+export { TkxToastProvider, useToast } from './src/components/TkxToast';
+export type { TkxToastProps, ToastItem, ToastVariant, ToastPosition } from './src/components/TkxToast';
+
+export { TkxAccordion } from './src/components/TkxAccordion';
+export type { TkxAccordionProps, AccordionItem } from './src/components/TkxAccordion';
+
+export { TkxDrawer } from './src/components/TkxDrawer';
+export type { TkxDrawerProps, DrawerPlacement, DrawerSize } from './src/components/TkxDrawer';
+
+export { TkxDatePicker } from './src/components/TkxDatePicker';
+export type { TkxDatePickerProps, DatePickerMode } from './src/components/TkxDatePicker';
+
+export { TkxSlider } from './src/components/TkxSlider';
+export type { TkxSliderProps } from './src/components/TkxSlider';
+
+export { TkxPagination } from './src/components/TkxPagination';
+export type { TkxPaginationProps } from './src/components/TkxPagination';
+
+export { TkxImage } from './src/components/TkxImage';
+export type { TkxImageProps, ImageFit, ImageRatio } from './src/components/TkxImage';
+
+export { TkxFileUpload } from './src/components/TkxFileUpload';
+export type { TkxFileUploadProps } from './src/components/TkxFileUpload';
+
+export { TkxRating } from './src/components/TkxRating';
+export type { TkxRatingProps, RatingSize } from './src/components/TkxRating';
+
+export { TkxChat, TkxChatBubble, TkxThinkingIndicator } from './src/components/TkxChat';
+export type { TkxChatProps, TkxChatBubbleProps, ChatMessage, MessageRole } from './src/components/TkxChat';
+
+export { TkxTag, TkxTagInput } from './src/components/TkxTag';
+export type { TkxTagProps, TkxTagInputProps, TagVariant, TagSize, TagColorScheme } from './src/components/TkxTag';
+
+export { TkxTimeline } from './src/components/TkxTimeline';
+export type { TkxTimelineProps, TimelineItem, TimelineVariant, TimelineItemStatus } from './src/components/TkxTimeline';
+
 // Accessibility Primitives
 export { SkipNav, LiveRegion, FocusTrap, VisuallyHidden } from './src/a11y';
 export type { SkipNavProps, LiveRegionProps, FocusTrapProps } from './src/a11y';
