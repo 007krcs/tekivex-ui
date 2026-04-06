@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://007krcs.github.io/tekivex-ui/sitemap.xml
