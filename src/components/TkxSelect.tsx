@@ -1,31 +1,35 @@
 import {
-  forwardRef,
-  useId,
-  useRef,
   useState,
+  useRef,
   useEffect,
   useCallback,
-  type HTMLAttributes,
+  useId,
+  type ReactNode,
+  type CSSProperties,
   type KeyboardEvent,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
-import { getAccessibleForeground } from '../engine/wcag';
 import { tkx, cx } from '../engine/tkx';
+
+// ── Types ──────────────────────────────────────────────────────────────────────
 
 export type SelectSize = 'sm' | 'md' | 'lg';
 
 export interface SelectOption {
   value: string;
   label: string;
-  disabled?: boolean;
   group?: string;
+  disabled?: boolean;
+  icon?: ReactNode;
+  description?: string;
 }
 
-export interface TkxSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface TkxSelectProps {
   options: SelectOption[];
-  value?: string;
-  defaultValue?: string;
+  value?: string | string[];
+  defaultValue?: string | string[];
   placeholder?: string;
   size?: SelectSize;
   isDisabled?: boolean;
@@ -36,336 +40,884 @@ export interface TkxSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, 'on
   multiple?: boolean;
   searchable?: boolean;
   clearable?: boolean;
-  onChange?: (value: string) => void;
+  isLoading?: boolean;
+  onChange?: (value: string | string[]) => void;
+  renderOption?: (option: SelectOption, isSelected: boolean) => ReactNode;
+  maxMenuHeight?: number;
   id?: string;
+  className?: string;
+  style?: CSSProperties;
 }
 
-const SIZE_MAP: Record<SelectSize, { py: string; px: string; fontSize: string; iconSize: number }> = {
-  sm: { py: '6px', px: '10px', fontSize: '13px', iconSize: 14 },
-  md: { py: '9px', px: '12px', fontSize: '14px', iconSize: 16 },
-  lg: { py: '12px', px: '14px', fontSize: '15px', iconSize: 18 },
+// ── Helpers ────────────────────────────────────────────────────────────────────
+
+const SIZE_MAP: Record<SelectSize, { py: string; px: string; fontSize: string; iconSize: number; tagPy: string; tagPx: string }> = {
+  sm: { py: '6px',  px: '10px', fontSize: '13px', iconSize: 14, tagPy: '1px',  tagPx: '6px'  },
+  md: { py: '9px',  px: '12px', fontSize: '14px', iconSize: 16, tagPy: '2px',  tagPx: '8px'  },
+  lg: { py: '12px', px: '14px', fontSize: '15px', iconSize: 18, tagPy: '3px',  tagPx: '10px' },
 };
 
-export const TkxSelect = forwardRef<HTMLDivElement, TkxSelectProps>(
-  (
-    {
-      options,
-      value: valueProp,
-      defaultValue,
-      placeholder = 'Select an option…',
-      size = 'md',
-      isDisabled = false,
-      isInvalid = false,
-      label,
-      hint,
-      errorMessage,
-      searchable = false,
-      clearable = false,
-      onChange,
-      id: idProp,
-      className,
-      style,
-      ...rest
-    },
-    ref,
-  ) => {
-    const theme = useTheme();
-    const autoId = useId();
-    const id = idProp ?? autoId;
-    const listboxId = `${id}-listbox`;
-    const hintId = `${id}-hint`;
-    const errorId = `${id}-error`;
+function toArray(v: string | string[] | undefined): string[] {
+  if (v === undefined) return [];
+  return Array.isArray(v) ? v : [v];
+}
 
-    const [isOpen, setIsOpen] = useState(false);
-    const [internalValue, setInternalValue] = useState(defaultValue ?? '');
-    const [search, setSearch] = useState('');
-    const [activeIndex, setActiveIndex] = useState(-1);
+// ── Portal Dropdown positioning ────────────────────────────────────────────────
 
-    const isControlled = valueProp !== undefined;
-    const selectedValue = isControlled ? valueProp : internalValue;
+interface DropdownRect {
+  top: number;
+  left: number;
+  width: number;
+  placement: 'below' | 'above';
+}
 
-    const containerRef = useRef<HTMLDivElement>(null);
-    const triggerRef = useRef<HTMLButtonElement>(null);
-    const searchRef = useRef<HTMLInputElement>(null);
+function calcDropdownRect(
+  triggerEl: HTMLElement,
+  dropdownHeight: number,
+): DropdownRect {
+  const rect = triggerEl.getBoundingClientRect();
+  const viewportH = window.innerHeight;
+  const gap = 6;
+  const spaceBelow = viewportH - rect.bottom - gap;
+  const spaceAbove = rect.top - gap;
+  const placement: 'below' | 'above' =
+    spaceBelow >= Math.min(dropdownHeight, 200) || spaceBelow >= spaceAbove
+      ? 'below'
+      : 'above';
 
-    const sz = SIZE_MAP[size];
-    const hasError = isInvalid || !!errorMessage;
-    const selectedOption = options.find((o) => o.value === selectedValue);
+  return {
+    top:
+      placement === 'below'
+        ? rect.bottom + window.scrollY + gap
+        : rect.top + window.scrollY - gap - Math.min(dropdownHeight, 280),
+    left: rect.left + window.scrollX,
+    width: rect.width,
+    placement,
+  };
+}
 
-    const filteredOptions = searchable && search
-      ? options.filter((o) => o.label.toLowerCase().includes(search.toLowerCase()))
-      : options;
+// ── Spinner ────────────────────────────────────────────────────────────────────
 
-    // group options
-    const groups = filteredOptions.reduce<Record<string, SelectOption[]>>((acc, opt) => {
+function Spinner({ size, color }: { size: number; color: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      aria-hidden="true"
+      style={{
+        animation: 'tkx-spin 0.7s linear infinite',
+      }}
+    >
+      <style>{`@keyframes tkx-spin{to{transform:rotate(360deg)}}`}</style>
+      <path d="M12 2a10 10 0 0 1 10 10" />
+    </svg>
+  );
+}
+
+// ── Main Component ─────────────────────────────────────────────────────────────
+
+export function TkxSelect({
+  options,
+  value: valueProp,
+  defaultValue,
+  placeholder = 'Select an option…',
+  size = 'md',
+  isDisabled = false,
+  isInvalid = false,
+  label,
+  hint,
+  errorMessage,
+  multiple = false,
+  searchable = false,
+  clearable = false,
+  isLoading = false,
+  onChange,
+  renderOption,
+  maxMenuHeight = 280,
+  id: idProp,
+  className,
+  style,
+}: TkxSelectProps) {
+  const theme = useTheme();
+  const autoId = useId();
+  const id = idProp ?? autoId;
+  const listboxId = `${id}-listbox`;
+  const hintId = `${id}-hint`;
+  const errorId = `${id}-error`;
+
+  const isControlled = valueProp !== undefined;
+  const [internalValue, setInternalValue] = useState<string[]>(
+    toArray(defaultValue),
+  );
+
+  const selectedValues = isControlled ? toArray(valueProp) : internalValue;
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [dropdownRect, setDropdownRect] = useState<DropdownRect | null>(null);
+  const [typeahead, setTypeahead] = useState('');
+  const typeaheadTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const sz = SIZE_MAP[size];
+  const hasError = isInvalid || !!errorMessage;
+
+  // ── Filtered + grouped options ────────────────────────────────────────────
+
+  const filteredOptions = searchable && search
+    ? options.filter((o) =>
+        o.label.toLowerCase().includes(search.toLowerCase()),
+      )
+    : options;
+
+  const flatEnabled = filteredOptions.filter((o) => !o.disabled);
+
+  const groups = filteredOptions.reduce<Record<string, SelectOption[]>>(
+    (acc, opt) => {
       const g = opt.group ?? '';
       if (!acc[g]) acc[g] = [];
       acc[g].push(opt);
       return acc;
-    }, {});
+    },
+    {},
+  );
 
-    const flatFiltered = filteredOptions.filter((o) => !o.disabled);
+  // ── Commit value ──────────────────────────────────────────────────────────
 
-    const selectValue = useCallback(
-      (val: string) => {
-        if (!isControlled) setInternalValue(val);
-        onChange?.(val);
+  const commitValue = useCallback(
+    (val: string) => {
+      let next: string[];
+      if (multiple) {
+        next = selectedValues.includes(val)
+          ? selectedValues.filter((v) => v !== val)
+          : [...selectedValues, val];
+      } else {
+        next = [val];
+      }
+
+      if (!isControlled) setInternalValue(next);
+      onChange?.(multiple ? next : next[0] ?? '');
+
+      if (!multiple) {
         setIsOpen(false);
         setSearch('');
         setActiveIndex(-1);
         triggerRef.current?.focus();
-      },
-      [isControlled, onChange],
-    );
+      }
+    },
+    [isControlled, multiple, onChange, selectedValues],
+  );
 
-    const clearSelection = useCallback(() => {
-      if (!isControlled) setInternalValue('');
-      onChange?.('');
+  const removeTag = useCallback(
+    (val: string, e: React.MouseEvent) => {
+      e.stopPropagation();
+      const next = selectedValues.filter((v) => v !== val);
+      if (!isControlled) setInternalValue(next);
+      onChange?.(multiple ? next : next[0] ?? '');
+    },
+    [isControlled, multiple, onChange, selectedValues],
+  );
+
+  const clearAll = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!isControlled) setInternalValue([]);
+      onChange?.(multiple ? [] : '');
+    },
+    [isControlled, multiple, onChange],
+  );
+
+  // ── Positioning ───────────────────────────────────────────────────────────
+
+  const updatePosition = useCallback(() => {
+    if (!triggerRef.current || !isOpen) return;
+    setDropdownRect(calcDropdownRect(triggerRef.current, maxMenuHeight));
+  }, [isOpen, maxMenuHeight]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [isOpen, updatePosition]);
+
+  // ── Outside click ─────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: PointerEvent) => {
+      const target = e.target as Node;
+      if (
+        triggerRef.current?.contains(target) ||
+        dropdownRef.current?.contains(target)
+      )
+        return;
+      setIsOpen(false);
       setSearch('');
-    }, [isControlled, onChange]);
-
-    const openDropdown = () => {
-      if (isDisabled) return;
-      setIsOpen(true);
-      const idx = flatFiltered.findIndex((o) => o.value === selectedValue);
-      setActiveIndex(idx >= 0 ? idx : 0);
     };
+    document.addEventListener('pointerdown', handler);
+    return () => document.removeEventListener('pointerdown', handler);
+  }, [isOpen]);
 
-    // close on outside click
-    useEffect(() => {
-      if (!isOpen) return;
-      const handler = (e: PointerEvent) => {
-        if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-          setIsOpen(false);
-          setSearch('');
+  // ── Focus search when open ────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (isOpen && searchable) {
+      setTimeout(() => searchInputRef.current?.focus(), 0);
+    }
+  }, [isOpen, searchable]);
+
+  // ── Scroll active item into view ──────────────────────────────────────────
+
+  useEffect(() => {
+    if (!isOpen || activeIndex < 0) return;
+    const el = listRef.current?.querySelector(
+      `[data-idx="${activeIndex}"]`,
+    ) as HTMLElement | null;
+    el?.scrollIntoView({ block: 'nearest' });
+  }, [activeIndex, isOpen]);
+
+  // ── Keyboard: trigger button ───────────────────────────────────────────────
+
+  const handleTriggerKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    switch (e.key) {
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        if (!isOpen) {
+          openDropdown();
+        } else if (activeIndex >= 0 && flatEnabled[activeIndex]) {
+          commitValue(flatEnabled[activeIndex].value);
         }
-      };
-      document.addEventListener('pointerdown', handler);
-      return () => document.removeEventListener('pointerdown', handler);
-    }, [isOpen]);
-
-    // focus search on open
-    useEffect(() => {
-      if (isOpen && searchable) {
-        setTimeout(() => searchRef.current?.focus(), 0);
-      }
-    }, [isOpen, searchable]);
-
-    const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-      switch (e.key) {
-        case 'Enter':
-        case ' ':
-          e.preventDefault();
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setIsOpen(false);
+        setSearch('');
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        if (!isOpen) openDropdown();
+        else setActiveIndex((i) => Math.min(i + 1, flatEnabled.length - 1));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (!isOpen) openDropdown();
+        else setActiveIndex((i) => Math.max(i - 1, 0));
+        break;
+      case 'Home':
+        e.preventDefault();
+        if (isOpen) setActiveIndex(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        if (isOpen) setActiveIndex(flatEnabled.length - 1);
+        break;
+      default:
+        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
           if (!isOpen) openDropdown();
-          else if (activeIndex >= 0 && flatFiltered[activeIndex]) selectValue(flatFiltered[activeIndex].value);
-          break;
-        case 'Escape':
-          e.preventDefault();
-          setIsOpen(false);
-          setSearch('');
-          break;
-        case 'ArrowDown':
-          e.preventDefault();
-          if (!isOpen) openDropdown();
-          else setActiveIndex((i) => Math.min(i + 1, flatFiltered.length - 1));
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          setActiveIndex((i) => Math.max(i - 1, 0));
-          break;
-        case 'Home':
-          e.preventDefault();
-          setActiveIndex(0);
-          break;
-        case 'End':
-          e.preventDefault();
-          setActiveIndex(flatFiltered.length - 1);
-          break;
-      }
-    };
+          handleTypeahead(e.key);
+        }
+    }
+  };
 
-    const borderColor = hasError ? theme.danger : isOpen ? theme.primary : theme.border;
-    const activeOptionId = activeIndex >= 0 && flatFiltered[activeIndex] ? `${id}-opt-${flatFiltered[activeIndex].value}` : undefined;
+  // ── Keyboard: search input ─────────────────────────────────────────────────
 
-    const describedBy = [hint && hintId, hasError && errorId].filter(Boolean).join(' ') || undefined;
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key) {
+      case 'Escape':
+        e.preventDefault();
+        setIsOpen(false);
+        setSearch('');
+        triggerRef.current?.focus();
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        setActiveIndex((i) => Math.min(i + 1, flatEnabled.length - 1));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setActiveIndex((i) => Math.max(i - 1, 0));
+        break;
+      case 'Home':
+        e.preventDefault();
+        setActiveIndex(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        setActiveIndex(flatEnabled.length - 1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (activeIndex >= 0 && flatEnabled[activeIndex]) {
+          commitValue(flatEnabled[activeIndex].value);
+        }
+        break;
+    }
+  };
 
-    return (
-      <div ref={ref} className={cx(tkx('flex flex-col gap-1 w-full'), className)} style={style} {...rest}>
-        {label && (
-          <label htmlFor={id} className={tkx('text-sm font-medium font-sans')} style={{ color: theme.text }}>
-            {sanitizeString(label)}
-          </label>
-        )}
+  // ── Typeahead ─────────────────────────────────────────────────────────────
 
-        <div ref={containerRef} className={tkx('relative w-full')} style={{ opacity: isDisabled ? 0.6 : 1 }}>
-          <button
-            ref={triggerRef}
-            id={id}
-            type="button"
-            role="combobox"
-            aria-haspopup="listbox"
-            aria-expanded={isOpen}
-            aria-controls={listboxId}
-            aria-activedescendant={activeOptionId}
-            aria-invalid={hasError}
-            aria-describedby={describedBy}
-            disabled={isDisabled}
-            onClick={() => (isOpen ? setIsOpen(false) : openDropdown())}
-            onKeyDown={handleKeyDown}
-            className={tkx('w-full flex items-center justify-between rounded-lg outline-none focus-visible:focus-ring cursor-pointer border-none')}
-            style={{
-              padding: `${sz.py} ${sz.px}`,
-              fontSize: sz.fontSize,
-              fontFamily: 'inherit',
-              backgroundColor: theme.surface,
-              color: selectedOption ? theme.text : theme.textMuted,
-              border: `1.5px solid ${borderColor}`,
-              boxSizing: 'border-box',
-              transition: 'border-color 150ms',
-              textAlign: 'left',
-            }}
-          >
-            <span className={tkx('truncate flex-1')}>
-              {selectedOption ? sanitizeString(selectedOption.label) : sanitizeString(placeholder)}
-            </span>
-            <span className={tkx('flex items-center gap-1 shrink-0 ml-2')} style={{ color: theme.textMuted }}>
-              {clearable && selectedValue && (
-                <span
-                  role="button"
-                  aria-label="Clear selection"
-                  tabIndex={-1}
-                  onClick={(e) => { e.stopPropagation(); clearSelection(); }}
-                  style={{ cursor: 'pointer', lineHeight: 1 }}
-                >
-                  <svg width={sz.iconSize} height={sz.iconSize} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                </span>
-              )}
-              <svg
-                width={sz.iconSize}
-                height={sz.iconSize}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 150ms' }}
-              >
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </span>
-          </button>
+  function handleTypeahead(char: string) {
+    if (typeaheadTimer.current) clearTimeout(typeaheadTimer.current);
+    const next = typeahead + char.toLowerCase();
+    setTypeahead(next);
 
-          {isOpen && (
+    const idx = flatEnabled.findIndex((o) =>
+      o.label.toLowerCase().startsWith(next),
+    );
+    if (idx >= 0) setActiveIndex(idx);
+
+    typeaheadTimer.current = setTimeout(() => setTypeahead(''), 800);
+  }
+
+  function openDropdown() {
+    if (isDisabled || isLoading) return;
+    setIsOpen(true);
+    const startIdx = flatEnabled.findIndex((o) =>
+      selectedValues.includes(o.value),
+    );
+    setActiveIndex(startIdx >= 0 ? startIdx : 0);
+  }
+
+  // ── Render helpers ────────────────────────────────────────────────────────
+
+  const borderColor = hasError
+    ? theme.danger
+    : isOpen
+    ? theme.primary
+    : theme.border;
+
+  const activeOptionId =
+    activeIndex >= 0 && flatEnabled[activeIndex]
+      ? `${id}-opt-${flatEnabled[activeIndex].value}`
+      : undefined;
+
+  const describedBy =
+    [hint && hintId, hasError && errorId].filter(Boolean).join(' ') ||
+    undefined;
+
+  // Tags displayed in trigger when multiple
+  const selectedOptionObjects = selectedValues
+    .map((v) => options.find((o) => o.value === v))
+    .filter(Boolean) as SelectOption[];
+
+  // ── Dropdown element (portalled) ──────────────────────────────────────────
+
+  const dropdownEl = isOpen && dropdownRect
+    ? createPortal(
+        <div
+          ref={dropdownRef}
+          role="listbox"
+          id={listboxId}
+          aria-label={label ? sanitizeString(label) : 'Options'}
+          aria-multiselectable={multiple}
+          style={{
+            position: 'absolute',
+            top: dropdownRect.top,
+            left: dropdownRect.left,
+            width: dropdownRect.width,
+            zIndex: 9999,
+            backgroundColor: theme.surface,
+            border: `1.5px solid ${theme.border}`,
+            borderRadius: 10,
+            boxShadow: `0 8px 32px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.14)`,
+            overflow: 'hidden',
+            minWidth: dropdownRect.width,
+            maxHeight: maxMenuHeight,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {/* Search */}
+          {searchable && (
             <div
-              role="listbox"
-              id={listboxId}
-              aria-label={label ? sanitizeString(label) : 'Options'}
-              className={tkx('absolute z-50 w-full rounded-lg overflow-auto shadow-lg mt-1')}
               style={{
-                backgroundColor: theme.surface,
-                border: `1.5px solid ${theme.border}`,
-                maxHeight: '240px',
-                top: '100%',
-                left: 0,
+                padding: '8px 10px',
+                borderBottom: `1px solid ${theme.border}`,
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
               }}
             >
-              {searchable && (
-                <div style={{ padding: '6px 8px', borderBottom: `1px solid ${theme.border}` }}>
-                  <input
-                    ref={searchRef}
-                    type="text"
-                    value={search}
-                    onChange={(e) => { setSearch(e.target.value); setActiveIndex(0); }}
-                    placeholder="Search…"
-                    className={tkx('w-full border-none outline-none bg-transparent text-sm font-sans')}
-                    style={{ color: theme.text, fontSize: sz.fontSize }}
-                    aria-label="Search options"
-                  />
-                </div>
-              )}
-
-              {Object.entries(groups).map(([group, groupOpts]) => (
-                <div key={group}>
-                  {group && (
-                    <div
-                      className={tkx('px-3 text-xs font-semibold uppercase tracking-wide')}
-                      style={{ color: theme.textMuted, padding: '6px 12px 2px' }}
-                      aria-hidden="true"
-                    >
-                      {sanitizeString(group)}
-                    </div>
-                  )}
-                  {groupOpts.map((opt) => {
-                    const flatIdx = flatFiltered.indexOf(opt);
-                    const isActive = flatIdx === activeIndex;
-                    const isSelected = opt.value === selectedValue;
-                    return (
-                      <div
-                        key={opt.value}
-                        id={`${id}-opt-${opt.value}`}
-                        role="option"
-                        aria-selected={isSelected}
-                        aria-disabled={opt.disabled}
-                        onClick={() => !opt.disabled && selectValue(opt.value)}
-                        onMouseEnter={() => !opt.disabled && setActiveIndex(flatIdx)}
-                        className={tkx('cursor-pointer select-none')}
-                        style={{
-                          padding: `${sz.py} ${sz.px}`,
-                          fontSize: sz.fontSize,
-                          fontFamily: 'inherit',
-                          color: opt.disabled ? theme.textMuted : theme.text,
-                          backgroundColor: isActive
-                            ? `${theme.primary}20`
-                            : isSelected
-                            ? `${theme.primary}10`
-                            : 'transparent',
-                          cursor: opt.disabled ? 'not-allowed' : 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <span>{sanitizeString(opt.label)}</span>
-                        {isSelected && (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2.5">
-                            <path d="M20 6L9 17l-5-5" />
-                          </svg>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-
-              {filteredOptions.length === 0 && (
-                <div
-                  className={tkx('text-sm text-center')}
-                  style={{ color: theme.textMuted, padding: `${sz.py} ${sz.px}` }}
-                >
-                  No options found
-                </div>
-              )}
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke={theme.textMuted}
+                strokeWidth="2"
+                aria-hidden="true"
+                style={{ flexShrink: 0 }}
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setActiveIndex(0);
+                }}
+                onKeyDown={handleSearchKeyDown}
+                placeholder="Search…"
+                aria-label="Search options"
+                style={{
+                  border: 'none',
+                  outline: 'none',
+                  background: 'transparent',
+                  color: theme.text,
+                  fontSize: sz.fontSize,
+                  fontFamily: 'inherit',
+                  width: '100%',
+                }}
+              />
             </div>
           )}
-        </div>
 
-        {hint && !hasError && (
-          <span id={hintId} className={tkx('text-xs')} style={{ color: theme.textMuted }}>
-            {sanitizeString(hint)}
+          {/* Options list */}
+          <div
+            ref={listRef}
+            style={{
+              overflowY: 'auto',
+              flexGrow: 1,
+              maxHeight: maxMenuHeight - (searchable ? 48 : 0),
+            }}
+          >
+            {Object.entries(groups).map(([group, groupOpts]) => (
+              <div key={group}>
+                {group && (
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      padding: '8px 12px 4px',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      color: theme.textMuted,
+                      fontFamily: 'inherit',
+                      position: 'sticky',
+                      top: 0,
+                      backgroundColor: theme.surface,
+                      zIndex: 1,
+                      borderBottom: `1px solid ${theme.border}`,
+                    }}
+                  >
+                    {sanitizeString(group)}
+                  </div>
+                )}
+                {groupOpts.map((opt) => {
+                  const flatIdx = flatEnabled.indexOf(opt);
+                  const isActive = flatIdx === activeIndex;
+                  const isSelected = selectedValues.includes(opt.value);
+
+                  const optionContent = renderOption ? (
+                    renderOption(opt, isSelected)
+                  ) : (
+                    <span
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1,
+                        minWidth: 0,
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 8,
+                        }}
+                      >
+                        {opt.icon && (
+                          <span style={{ flexShrink: 0, display: 'flex' }}>
+                            {opt.icon}
+                          </span>
+                        )}
+                        <span
+                          style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {sanitizeString(opt.label)}
+                        </span>
+                      </span>
+                      {opt.description && (
+                        <span
+                          style={{
+                            fontSize: '12px',
+                            color: theme.textMuted,
+                            marginTop: 1,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {sanitizeString(opt.description)}
+                        </span>
+                      )}
+                    </span>
+                  );
+
+                  return (
+                    <div
+                      key={opt.value}
+                      id={`${id}-opt-${opt.value}`}
+                      data-idx={flatIdx >= 0 ? flatIdx : undefined}
+                      role="option"
+                      aria-selected={isSelected}
+                      aria-disabled={opt.disabled || undefined}
+                      onClick={() => !opt.disabled && commitValue(opt.value)}
+                      onMouseEnter={() =>
+                        !opt.disabled && flatIdx >= 0 && setActiveIndex(flatIdx)
+                      }
+                      style={{
+                        padding: `${sz.py} ${sz.px}`,
+                        fontSize: sz.fontSize,
+                        fontFamily: 'inherit',
+                        color: opt.disabled ? theme.textMuted : theme.text,
+                        backgroundColor: isActive
+                          ? `${theme.primary}22`
+                          : isSelected
+                          ? `${theme.primary}12`
+                          : 'transparent',
+                        cursor: opt.disabled ? 'not-allowed' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: 8,
+                        transition: 'background-color 80ms',
+                        opacity: opt.disabled ? 0.5 : 1,
+                        userSelect: 'none',
+                      }}
+                    >
+                      {optionContent}
+                      {isSelected && !renderOption && (
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke={theme.primary}
+                          strokeWidth="2.5"
+                          aria-hidden="true"
+                          style={{ flexShrink: 0 }}
+                        >
+                          <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+
+            {filteredOptions.length === 0 && (
+              <div
+                style={{
+                  padding: `${sz.py} ${sz.px}`,
+                  fontSize: sz.fontSize,
+                  fontFamily: 'inherit',
+                  color: theme.textMuted,
+                  textAlign: 'center',
+                }}
+              >
+                {isLoading ? 'Loading…' : 'No options found'}
+              </div>
+            )}
+          </div>
+        </div>,
+        document.body,
+      )
+    : null;
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+
+  const hasClearable =
+    clearable && selectedValues.length > 0 && !isDisabled && !isLoading;
+
+  return (
+    <div
+      className={cx(tkx('flex flex-col gap-1 w-full'), className)}
+      style={style}
+    >
+      {label && (
+        <label
+          htmlFor={id}
+          style={{
+            fontSize: '14px',
+            fontWeight: 500,
+            fontFamily: 'inherit',
+            color: theme.text,
+            userSelect: 'none',
+          }}
+        >
+          {sanitizeString(label)}
+        </label>
+      )}
+
+      <div style={{ position: 'relative', width: '100%', opacity: isDisabled ? 0.55 : 1 }}>
+        <button
+          ref={triggerRef}
+          id={id}
+          type="button"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-controls={listboxId}
+          aria-activedescendant={activeOptionId}
+          aria-invalid={hasError || undefined}
+          aria-describedby={describedBy}
+          aria-multiselectable={multiple}
+          disabled={isDisabled}
+          onClick={() => (isOpen ? setIsOpen(false) : openDropdown())}
+          onKeyDown={handleTriggerKeyDown}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 8,
+            padding: multiple && selectedValues.length > 0
+              ? `4px ${sz.px}`
+              : `${sz.py} ${sz.px}`,
+            fontSize: sz.fontSize,
+            fontFamily: 'inherit',
+            backgroundColor: theme.surface,
+            color: selectedValues.length > 0 ? theme.text : theme.textMuted,
+            border: `1.5px solid ${borderColor}`,
+            borderRadius: 8,
+            boxSizing: 'border-box',
+            transition: 'border-color 150ms',
+            textAlign: 'left',
+            cursor: isDisabled ? 'not-allowed' : 'pointer',
+            outline: 'none',
+            minHeight: size === 'sm' ? 34 : size === 'lg' ? 50 : 42,
+            flexWrap: 'wrap',
+          }}
+        >
+          {/* Multi-select tags or single label */}
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 4,
+              flex: 1,
+              minWidth: 0,
+            }}
+          >
+            {multiple && selectedOptionObjects.length > 0
+              ? selectedOptionObjects.map((opt) => (
+                  <span
+                    key={opt.value}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 4,
+                      padding: `${sz.tagPy} ${sz.tagPx}`,
+                      fontSize: `calc(${sz.fontSize} - 1px)`,
+                      fontFamily: 'inherit',
+                      backgroundColor: `${theme.primary}22`,
+                      color: theme.primary,
+                      borderRadius: 6,
+                      border: `1px solid ${theme.primary}44`,
+                      lineHeight: 1.4,
+                      maxWidth: 150,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    <span
+                      style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        maxWidth: 110,
+                      }}
+                    >
+                      {sanitizeString(opt.label)}
+                    </span>
+                    <span
+                      role="button"
+                      aria-label={`Remove ${sanitizeString(opt.label)}`}
+                      tabIndex={-1}
+                      onClick={(e) => removeTag(opt.value, e)}
+                      style={{
+                        cursor: 'pointer',
+                        flexShrink: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        opacity: 0.8,
+                      }}
+                    >
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        aria-hidden="true"
+                      >
+                        <path d="M18 6L6 18M6 6l12 12" />
+                      </svg>
+                    </span>
+                  </span>
+                ))
+              : !multiple && selectedValues.length > 0
+              ? (() => {
+                  const sel = options.find((o) => o.value === selectedValues[0]);
+                  return (
+                    <span
+                      style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 6,
+                      }}
+                    >
+                      {sel?.icon && (
+                        <span style={{ flexShrink: 0, display: 'flex' }}>
+                          {sel.icon}
+                        </span>
+                      )}
+                      {sel ? sanitizeString(sel.label) : ''}
+                    </span>
+                  );
+                })()
+              : (
+                <span style={{ opacity: 0.6 }}>
+                  {sanitizeString(placeholder)}
+                </span>
+              )}
           </span>
-        )}
-        {hasError && errorMessage && (
-          <span id={errorId} role="alert" className={tkx('text-xs flex items-center gap-1')} style={{ color: theme.danger }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+
+          {/* Right icons: clear + loading + chevron */}
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              flexShrink: 0,
+              color: theme.textMuted,
+            }}
+          >
+            {isLoading && <Spinner size={sz.iconSize} color={theme.primary} />}
+            {hasClearable && !isLoading && (
+              <span
+                role="button"
+                aria-label="Clear selection"
+                tabIndex={-1}
+                onClick={clearAll}
+                style={{
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  lineHeight: 1,
+                  opacity: 0.7,
+                  transition: 'opacity 120ms',
+                }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLElement).style.opacity = '1')
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLElement).style.opacity = '0.7')
+                }
+              >
+                <svg
+                  width={sz.iconSize}
+                  height={sz.iconSize}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </span>
+            )}
+            <svg
+              width={sz.iconSize}
+              height={sz.iconSize}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+              style={{
+                transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 150ms',
+                flexShrink: 0,
+              }}
+            >
+              <path d="M6 9l6 6 6-6" />
             </svg>
-            {sanitizeString(errorMessage)}
           </span>
-        )}
+        </button>
       </div>
-    );
-  },
-);
+
+      {hint && !hasError && (
+        <span
+          id={hintId}
+          style={{ fontSize: '12px', color: theme.textMuted, fontFamily: 'inherit' }}
+        >
+          {sanitizeString(hint)}
+        </span>
+      )}
+      {hasError && errorMessage && (
+        <span
+          id={errorId}
+          role="alert"
+          style={{
+            fontSize: '12px',
+            color: theme.danger,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            fontFamily: 'inherit',
+          }}
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+          </svg>
+          {sanitizeString(errorMessage)}
+        </span>
+      )}
+
+      {dropdownEl}
+    </div>
+  );
+}
 
 TkxSelect.displayName = 'TkxSelect';

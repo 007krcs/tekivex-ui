@@ -102,6 +102,33 @@ export type { TkxTagProps, TkxTagInputProps, TagVariant, TagSize, TagColorScheme
 export { TkxTimeline } from './src/components/TkxTimeline';
 export type { TkxTimelineProps, TimelineItem, TimelineVariant, TimelineItemStatus } from './src/components/TkxTimeline';
 
+export { TkxMenu } from './src/components/TkxMenu';
+export type { TkxMenuProps } from './src/components/TkxMenu';
+
+export { TkxClock } from './src/components/TkxClock';
+export type { TkxClockProps } from './src/components/TkxClock';
+
+export { TkxVideoPlayer } from './src/components/TkxVideoPlayer';
+export type { TkxVideoPlayerProps } from './src/components/TkxVideoPlayer';
+
+export { TkxStepper } from './src/components/TkxStepper';
+export type { TkxStepperProps } from './src/components/TkxStepper';
+
+export { TkxColorPicker } from './src/components/TkxColorPicker';
+export type { TkxColorPickerProps, ColorFormat } from './src/components/TkxColorPicker';
+
+export { TkxNumberInput } from './src/components/TkxNumberInput';
+export type { TkxNumberInputProps } from './src/components/TkxNumberInput';
+
+export { TkxOTP } from './src/components/TkxOTP';
+export type { TkxOTPProps } from './src/components/TkxOTP';
+
+export { TkxCommand, useTkxCommand } from './src/components/TkxCommand';
+export type { TkxCommandProps, CommandItem } from './src/components/TkxCommand';
+
+export { TkxCarousel } from './src/components/TkxCarousel';
+export type { TkxCarouselProps } from './src/components/TkxCarousel';
+
 // Accessibility Primitives
 export { SkipNav, LiveRegion, FocusTrap, VisuallyHidden } from './src/a11y';
 export type { SkipNavProps, LiveRegionProps, FocusTrapProps } from './src/a11y';

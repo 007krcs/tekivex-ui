@@ -41,6 +41,15 @@ import { RatingPage } from './docs/RatingPage';
 import { ChatPage } from './docs/ChatPage';
 import { TagPage } from './docs/TagPage';
 import { TimelinePage } from './docs/TimelinePage';
+import { MenuPage } from './docs/MenuPage';
+import { ClockPage } from './docs/ClockPage';
+import { VideoPlayerPage } from './docs/VideoPlayerPage';
+import { StepperPage } from './docs/StepperPage';
+import { ColorPickerPage } from './docs/ColorPickerPage';
+import { NumberInputPage } from './docs/NumberInputPage';
+import { OTPPage } from './docs/OTPPage';
+import { CommandPage } from './docs/CommandPage';
+import { CarouselPage } from './docs/CarouselPage';
 
 // ── Template pages ─────────────────────────────────────────────────────────────
 import { DashboardTemplate } from './templates/DashboardTemplate';
@@ -84,6 +93,15 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/chat': ChatPage,
   '/components/tag': TagPage,
   '/components/timeline': TimelinePage,
+  '/components/menu': MenuPage,
+  '/components/clock': ClockPage,
+  '/components/video-player': VideoPlayerPage,
+  '/components/stepper': StepperPage,
+  '/components/color-picker': ColorPickerPage,
+  '/components/number-input': NumberInputPage,
+  '/components/otp': OTPPage,
+  '/components/command': CommandPage,
+  '/components/carousel': CarouselPage,
   '/templates/dashboard': DashboardTemplate,
   '/templates/portfolio': PortfolioTemplate,
   '/templates/ecommerce': EcommerceTemplate,
