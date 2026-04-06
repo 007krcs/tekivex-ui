@@ -348,7 +348,7 @@ export function SupplyChainTemplate({ theme }: Props) {
               <p style={s.sectionSub}>All SKUs across active warehouses</p>
             </div>
             <div style={{ display: 'flex', gap: '8px', width: bp.isMobile ? '100%' : 'auto' }}>
-              <TkxInput placeholder="Search SKU or product..." size="sm" style={{ width: bp.isMobile ? '100%' : '220px' }} />
+              <TkxInput label="Search" placeholder="Search SKU or product..." size="sm" style={{ width: bp.isMobile ? '100%' : '220px' }} />
               <TkxButton variant="outline" size="sm">Filter</TkxButton>
             </div>
           </div>

@@ -253,7 +253,7 @@ export function AdminSettingsTemplate({ theme }: Props) {
       {/* ── Tabs ── */}
       <TkxCard style={{ marginBottom: 24 }}>
         <TkxCardBody>
-          <TkxTabs value={activeTab} onChange={setActiveTab}>
+          <TkxTabs activeIndex={activeTab} onChange={setActiveTab}>
             <TkxTabList>
               <TkxTab>Profile</TkxTab>
               <TkxTab>Notifications</TkxTab>
@@ -269,19 +269,13 @@ export function AdminSettingsTemplate({ theme }: Props) {
                   {/* Avatar area */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 28 }}>
                     <TkxAvatar
-                      size="lg"
+                      size="xl"
+                      alt="Alex Morrison"
+                      initials="AM"
                       style={{
-                        background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary ?? theme.primary}90)`,
-                        color: '#fff',
-                        fontSize: 22,
-                        fontWeight: 700,
-                        width: 72,
-                        height: 72,
                         flexShrink: 0,
                       }}
-                    >
-                      AM
-                    </TkxAvatar>
+                    />
                     <div>
                       <div style={{ fontSize: 18, fontWeight: 700, color: theme.text }}>Alex Morrison</div>
                       <div style={{ fontSize: 13, color: theme.textMuted, marginTop: 2 }}>Senior Platform Engineer</div>
