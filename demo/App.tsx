@@ -95,10 +95,76 @@ function getRoute(): string {
   return hash || '/';
 }
 
+// ── Responsive breakpoint ─────────────────────────────────────────────────────
+
+function useIsMobile(breakpoint = 768): boolean {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < breakpoint : false,
+  );
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, [breakpoint]);
+  return isMobile;
+}
+
+// ── Global responsive styles (injected once) ──────────────────────────────────
+
+function injectResponsiveStyles() {
+  if (typeof document === 'undefined') return;
+  if (document.getElementById('tkx-demo-responsive')) return;
+  const style = document.createElement('style');
+  style.id = 'tkx-demo-responsive';
+  style.textContent = `
+    * { box-sizing: border-box; }
+    body { overflow-x: hidden; }
+    @media (max-width: 767px) {
+      /* Doc page outer wrapper — reduce horizontal padding */
+      #main-content > div {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+        padding-top: 28px !important;
+      }
+      /* Prop tables — allow horizontal scroll instead of clip */
+      [role="region"][aria-label="Component props documentation"] {
+        overflow-x: auto !important;
+      }
+      /* Demo preview area — tighter padding */
+      [role="region"][aria-label^="Live demo:"] {
+        padding: 20px 12px !important;
+        flex-direction: column !important;
+      }
+      /* Any inline grid with two columns — stack on mobile */
+      [style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+      [style*="grid-template-columns: repeat(2"] {
+        grid-template-columns: 1fr !important;
+      }
+      /* Reduce font sizes slightly for hero headings */
+      h1[style*="2.25rem"] {
+        font-size: 1.75rem !important;
+      }
+    }
+    @media (max-width: 480px) {
+      #main-content > div {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 // ── Inner app (has access to theme context) ───────────────────────────────────
 function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: () => void }) {
   const theme = useTheme();
+  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentRoute, setCurrentRoute] = useState<string>(getRoute);
+
+  useEffect(() => { injectResponsiveStyles(); }, []);
 
   useEffect(() => {
     const handler = () => setCurrentRoute(getRoute());
@@ -106,8 +172,19 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
     return () => window.removeEventListener('hashchange', handler);
   }, []);
 
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    if (isMobile) setSidebarOpen(false);
+  }, [currentRoute, isMobile]);
+
+  // Close sidebar when switching to desktop
+  useEffect(() => {
+    if (!isMobile) setSidebarOpen(false);
+  }, [isMobile]);
+
   const handleNavigate = (route: string) => {
     window.location.hash = route;
+    if (isMobile) setSidebarOpen(false);
   };
 
   const PageComponent = ROUTE_MAP[currentRoute] ?? HomePage;
@@ -130,26 +207,37 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
     left: 0,
     bottom: 0,
     width: '260px',
-    zIndex: 100,
+    zIndex: 200,
     overflowY: 'auto',
     backgroundColor: theme.surface,
     borderRight: `1px solid ${theme.border}`,
     flexShrink: 0,
+    transform: isMobile && !sidebarOpen ? 'translateX(-260px)' : 'translateX(0)',
+    transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+  };
+
+  const overlayStyle: CSSProperties = {
+    position: 'fixed',
+    inset: 0,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    zIndex: 199,
+    backdropFilter: 'blur(2px)',
   };
 
   const mainWrapStyle: CSSProperties = {
-    marginLeft: '260px',
+    marginLeft: isMobile ? 0 : '260px',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
     minWidth: 0,
+    transition: 'margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
   };
 
   const headerStyle: CSSProperties = {
     position: 'sticky',
     top: 0,
-    zIndex: 50,
+    zIndex: 100,
     backgroundColor: theme.surface,
     borderBottom: `1px solid ${theme.border}`,
   };
@@ -157,6 +245,7 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
   const contentStyle: CSSProperties = {
     flex: 1,
     overflowY: 'auto',
+    overflowX: 'hidden',
     padding: '0',
     backgroundColor: theme.bg,
   };
@@ -197,7 +286,16 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
         Skip to main content
       </a>
 
-      {/* Fixed sidebar */}
+      {/* Mobile overlay */}
+      {isMobile && sidebarOpen && (
+        <div
+          style={overlayStyle}
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar (fixed, slides in on mobile) */}
       <nav style={sidebarStyle} aria-label="Main navigation">
         <Sidebar
           currentRoute={currentRoute}
@@ -214,6 +312,8 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
             isDark={isDark}
             onToggleTheme={onToggleTheme}
             theme={theme}
+            isMobile={isMobile}
+            onMenuToggle={() => setSidebarOpen((o) => !o)}
           />
         </div>
 
