@@ -14,8 +14,8 @@ const DATE_PICKER_PROPS = [
   { name: 'value', type: 'Date | null', default: 'null', description: 'Controlled selected date. Use null for an empty state.' },
   { name: 'onChange', type: '(date: Date | null) => void', default: 'undefined', description: 'Callback fired when a date is selected or cleared.' },
   { name: 'mode', type: "'single' | 'range'", default: "'single'", description: "Single date selection or a date range (returns { from: Date; to: Date | null })." },
-  { name: 'rangeValue', type: '{ from: Date | null; to: Date | null }', default: 'undefined', description: 'Controlled range value when mode="range".' },
-  { name: 'onRangeChange', type: '(range: { from: Date | null; to: Date | null }) => void', default: 'undefined', description: 'Callback for range changes when mode="range".' },
+  { name: 'rangeValue', type: '[Date | null, Date | null]', default: 'undefined', description: 'Controlled range value tuple [from, to] when mode="range".' },
+  { name: 'onRangeChange', type: '(range: [Date | null, Date | null]) => void', default: 'undefined', description: 'Callback for range changes when mode="range".' },
   { name: 'minDate', type: 'Date', default: 'undefined', description: 'Minimum selectable date. Dates before this are disabled in the calendar.' },
   { name: 'maxDate', type: 'Date', default: 'undefined', description: 'Maximum selectable date. Dates after this are disabled in the calendar.' },
   { name: 'disabledDates', type: 'Date[] | ((date: Date) => boolean)', default: 'undefined', description: 'Specific dates or a predicate function marking dates as unselectable.' },
@@ -31,7 +31,7 @@ const DATE_PICKER_PROPS = [
 
 export function DatePickerPage({ theme }: { theme: ThemeTokens }) {
   const [basicDate, setBasicDate] = useState<Date | null>(null);
-  const [rangeDate, setRangeDate] = useState<{ from: Date | null; to: Date | null }>({ from: null, to: null });
+  const [rangeDate, setRangeDate] = useState<[Date | null, Date | null]>([null, null]);
   const [minMaxDate, setMinMaxDate] = useState<Date | null>(null);
   const [disabledDate, setDisabledDate] = useState<Date | null>(null);
 
@@ -162,10 +162,10 @@ export function DatePickerPage({ theme }: { theme: ThemeTokens }) {
             onRangeChange={setRangeDate}
             placeholder="Select date range…"
           />
-          {(rangeDate.from || rangeDate.to) && (
+          {(rangeDate[0] || rangeDate[1]) && (
             <p style={{ margin: '8px 0 0', fontSize: '12px', color: theme.textMuted }}>
-              From: <strong style={{ color: theme.text }}>{formatDate(rangeDate.from)}</strong>
-              {' '}— To: <strong style={{ color: theme.text }}>{formatDate(rangeDate.to)}</strong>
+              From: <strong style={{ color: theme.text }}>{formatDate(rangeDate[0])}</strong>
+              {' '}— To: <strong style={{ color: theme.text }}>{formatDate(rangeDate[1])}</strong>
             </p>
           )}
         </div>

@@ -33,15 +33,15 @@ export function ClockPage({ theme }: { theme: ThemeTokens }) {
       <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Analog Clocks</h2>
       <div style={demoBox}>
         <div style={{ textAlign: 'center' }}>
-          <TkxClock variant="analog" analogStyle="classic" size={160} />
+          <TkxClock variant="analog" analogStyle="classic" size="md" />
           <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Classic</p>
         </div>
         <div style={{ textAlign: 'center' }}>
-          <TkxClock variant="analog" analogStyle="minimal" size={160} />
+          <TkxClock variant="analog" analogStyle="minimal" size="md" />
           <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Minimal</p>
         </div>
         <div style={{ textAlign: 'center' }}>
-          <TkxClock variant="analog" analogStyle="modern" size={160} />
+          <TkxClock variant="analog" analogStyle="modern" size="md" />
           <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Modern</p>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function ClockPage({ theme }: { theme: ThemeTokens }) {
 
       <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Combined</h2>
       <div style={demoBox}>
-        <TkxClock variant="both" analogStyle="modern" size={200} showSeconds />
+        <TkxClock variant="both" analogStyle="modern" size="lg" showSeconds />
       </div>
 
       <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Props</h2>
@@ -71,7 +71,7 @@ export function ClockPage({ theme }: { theme: ThemeTokens }) {
             ['variant', '"analog" | "digital" | "both"', '"analog"', 'Clock display mode'],
             ['analogStyle', '"classic" | "minimal" | "modern"', '"classic"', 'Visual style for analog clock'],
             ['format', '"12h" | "24h"', '"12h"', 'Time format for digital display'],
-            ['size', 'number', '200', 'Size in px for analog clock'],
+            ['size', '"sm" | "md" | "lg" | "xl"', '"md"', 'Clock size preset (120/180/240/320 px)'],
             ['showSeconds', 'boolean', 'false', 'Show seconds hand / digital seconds'],
           ].map(([prop, type, def, desc]) => (
             <tr key={prop} style={{ borderBottom: `1px solid ${theme.border}` }}>
