@@ -1,0 +1,75 @@
+{
+  "name": "@tekivex/ui",
+  "version": "2.0.0",
+  "description": "Quantum-Class Component Framework — WCAG 2.1 AAA, WAI-ARIA 1.2, Zero-Trust Security",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": "./dist/index.css",
+    "./themes": {
+      "import": "./dist/themes.js",
+      "require": "./dist/themes.cjs"
+    }
+  },
+  "sideEffects": ["*.css"],
+  "files": ["dist", "src"],
+  "scripts": {
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "dev": "vite",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts,.tsx --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "a11y:audit": "node scripts/a11y-audit.mjs",
+    "security:audit": "node scripts/security-audit.mjs",
+    "css:build": "node scripts/css-build.mjs"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "@vitejs/plugin-react": "^4.3.3",
+    "@vitest/coverage-v8": "^2.1.6",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "jsdom": "^25.0.1",
+    "prettier": "^3.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.6"
+  },
+  "keywords": [
+    "react",
+    "component-library",
+    "wcag",
+    "accessibility",
+    "aria",
+    "security",
+    "typescript",
+    "tekivex"
+  ],
+  "author": "007krcs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/007krcs/tekivex-ui.git"
+  }
+}

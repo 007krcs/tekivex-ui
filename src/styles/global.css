@@ -1,0 +1,167 @@
+/* TekiVex UI — Global Styles */
+
+/* ── Reset ────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ── CSS Custom Property Defaults (Quantum Dark) ──────────────────────────── */
+:root {
+  --tkx-bg: #0a0a0f;
+  --tkx-surface: #12121a;
+  --tkx-surfaceAlt: #1a1a2e;
+  --tkx-border: #2a2a3e;
+  --tkx-text: #e8e8f4;
+  --tkx-textMuted: #8888aa;
+  --tkx-primary: #00f5d4;
+  --tkx-secondary: #7b2ff7;
+  --tkx-danger: #f72585;
+  --tkx-warning: #ffbe0b;
+  --tkx-success: #06d6a0;
+  --tkx-info: #3a86ff;
+
+  /* Spacing scale */
+  --tkx-space-xs: 4px;
+  --tkx-space-sm: 8px;
+  --tkx-space-md: 16px;
+  --tkx-space-lg: 24px;
+  --tkx-space-xl: 32px;
+
+  /* Border radius */
+  --tkx-radius-sm: 4px;
+  --tkx-radius-md: 8px;
+  --tkx-radius-lg: 12px;
+  --tkx-radius-full: 9999px;
+
+  /* Typography */
+  --tkx-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --tkx-font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+
+  /* Transitions */
+  --tkx-transition: 200ms ease;
+  --tkx-transition-fast: 100ms ease;
+}
+
+/* ── Focus-Visible Styles ─────────────────────────────────────────────────── */
+.tkx-focus-ring:focus-visible {
+  outline: 2px solid var(--tkx-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Skip Navigation ──────────────────────────────────────────────────────── */
+.tkx-skip-nav {
+  position: absolute;
+  top: -9999px;
+  left: 0;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--tkx-primary);
+  color: var(--tkx-bg);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  transition: top var(--tkx-transition-fast);
+}
+
+.tkx-skip-nav:focus {
+  top: 0;
+  outline: 2px solid var(--tkx-bg);
+  outline-offset: 2px;
+}
+
+/* ── Visually Hidden (Screen-reader only) ─────────────────────────────────── */
+.tkx-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Animation Keyframes ──────────────────────────────────────────────────── */
+@keyframes tkx-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes tkx-slide-up {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tkx-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes tkx-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes tkx-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes tkx-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ── Reduced Motion ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── High Contrast (prefers-contrast: more) ───────────────────────────────── */
+@media (prefers-contrast: more) {
+  :root {
+    --tkx-border: currentColor;
+  }
+
+  .tkx-focus-ring:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* ── Forced Colors (Windows High Contrast Mode) ───────────────────────────── */
+@media (forced-colors: active) {
+  .tkx-button,
+  .tkx-badge,
+  .tkx-toggle,
+  .tkx-input,
+  .tkx-card {
+    forced-color-adjust: none;
+  }
+}
