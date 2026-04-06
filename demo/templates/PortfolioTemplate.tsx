@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 import {
   TkxButton, TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter,
   TkxBadge, TkxInput, TkxProgress, TkxToggle, TkxAlert, TkxTabs,
@@ -225,6 +226,8 @@ function ProjectCard({ project, theme }: { project: typeof PROJECTS.all[0]; them
 }
 
 export function PortfolioTemplate({ theme }: Props) {
+  const bp = useBreakpoint();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
@@ -234,7 +237,7 @@ export function PortfolioTemplate({ theme }: Props) {
   const section = (style?: React.CSSProperties): React.CSSProperties => ({
     maxWidth: 1080,
     margin: '0 auto',
-    padding: '0 24px',
+    padding: bp.isMobile ? '0 16px' : '0 24px',
     ...style,
   });
 
@@ -262,7 +265,7 @@ export function PortfolioTemplate({ theme }: Props) {
         background: theme.surface + 'f2',
         backdropFilter: 'blur(12px)',
         borderBottom: `1px solid ${theme.border}`,
-        padding: '0 24px',
+        padding: bp.isMobile ? '0 16px' : '0 24px',
       }}>
         <div style={{
           maxWidth: 1080, margin: '0 auto',
@@ -271,19 +274,53 @@ export function PortfolioTemplate({ theme }: Props) {
         }}>
           <div style={{ fontWeight: 800, fontSize: 15, color: theme.text, letterSpacing: '-0.02em', marginRight: 'auto' }}>
             Alex Chen
-            <span style={{ fontWeight: 400, color: theme.textMuted }}> — Full Stack Developer</span>
+            {!bp.isMobile && <span style={{ fontWeight: 400, color: theme.textMuted }}> — Full Stack Developer</span>}
           </div>
-          {(['About', 'Work', 'Skills', 'Blog'] as const).map(link => (
-            <TkxButton key={link} variant="ghost" size="sm">{link}</TkxButton>
-          ))}
-          <TkxButton variant="ghost" size="sm">Contact</TkxButton>
-          <TkxBadge variant="success" style={{ marginLeft: 8 }}>● Available for work</TkxBadge>
+          {!bp.isMobile && (
+            <>
+              {(['About', 'Work', 'Skills', 'Blog'] as const).map(link => (
+                <TkxButton key={link} variant="ghost" size="sm">{link}</TkxButton>
+              ))}
+              <TkxButton variant="ghost" size="sm">Contact</TkxButton>
+              <TkxBadge variant="success" style={{ marginLeft: 8 }}>● Available for work</TkxBadge>
+            </>
+          )}
           <TkxButton color="primary" size="sm" style={{ marginLeft: 8 }}>Hire Me</TkxButton>
+          {bp.isMobile && (
+            <button
+              onClick={() => setMobileNavOpen(v => !v)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 24, color: theme.text, padding: '4px 8px', marginLeft: 4,
+                lineHeight: 1,
+              }}
+              aria-label="Toggle navigation"
+            >
+              {mobileNavOpen ? '✕' : '☰'}
+            </button>
+          )}
         </div>
+        {bp.isMobile && mobileNavOpen && (
+          <div style={{
+            position: 'absolute', top: 60, left: 0, right: 0,
+            background: theme.surface,
+            borderBottom: `1px solid ${theme.border}`,
+            display: 'flex', flexDirection: 'column',
+            padding: '8px 16px 12px',
+            gap: 4,
+            zIndex: 99,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          }}>
+            {(['About', 'Work', 'Skills', 'Blog', 'Contact'] as const).map(link => (
+              <TkxButton key={link} variant="ghost" size="sm" onClick={() => setMobileNavOpen(false)}>{link}</TkxButton>
+            ))}
+            <TkxBadge variant="success" style={{ alignSelf: 'flex-start', marginTop: 4 }}>● Available for work</TkxBadge>
+          </div>
+        )}
       </nav>
 
       {/* ─── HERO ─── */}
-      <section style={{ padding: '88px 0 72px', background: `linear-gradient(160deg, ${theme.primary}0a 0%, transparent 60%)` }}>
+      <section style={{ padding: bp.isMobile ? '48px 0 40px' : '88px 0 72px', background: `linear-gradient(160deg, ${theme.primary}0a 0%, transparent 60%)` }}>
         <div style={section()}>
           <TkxBadge variant="success" style={{ marginBottom: 20 }}>
             ● Open to full-time &amp; freelance opportunities
@@ -314,7 +351,9 @@ export function PortfolioTemplate({ theme }: Props) {
             ))}
           </div>
           <div style={{
-            display: 'flex', gap: 0, flexWrap: 'wrap',
+            display: bp.isMobile ? 'grid' : 'flex',
+            ...(bp.isMobile ? { gridTemplateColumns: '1fr 1fr', gap: 24 } : { gap: 0 }),
+            flexWrap: 'wrap',
             borderTop: `1px solid ${theme.border}`, paddingTop: 32,
           }}>
             {[
@@ -324,12 +363,15 @@ export function PortfolioTemplate({ theme }: Props) {
               { value: '12', label: 'Awards' },
             ].map((stat, i) => (
               <div key={i} style={{
-                flex: '1 1 120px',
-                paddingRight: 32,
-                marginRight: 32,
-                borderRight: i < 3 ? `1px solid ${theme.border}` : 'none',
+                flex: bp.isMobile ? undefined : '1 1 120px',
+                paddingRight: bp.isMobile ? 0 : 32,
+                marginRight: bp.isMobile ? 0 : 32,
+                borderRight: bp.isMobile
+                  ? (i % 2 === 0 ? `1px solid ${theme.border}` : 'none')
+                  : (i < 3 ? `1px solid ${theme.border}` : 'none'),
+                ...(bp.isMobile && i % 2 === 0 ? { paddingRight: 24 } : {}),
               }}>
-                <div style={{ fontSize: 30, fontWeight: 900, color: theme.primary, letterSpacing: '-0.04em' }}>{stat.value}</div>
+                <div style={{ fontSize: bp.isMobile ? 24 : 30, fontWeight: 900, color: theme.primary, letterSpacing: '-0.04em' }}>{stat.value}</div>
                 <div style={{ fontSize: 13, color: theme.textMuted, marginTop: 2 }}>{stat.label}</div>
               </div>
             ))}
@@ -338,7 +380,7 @@ export function PortfolioTemplate({ theme }: Props) {
       </section>
 
       {/* ─── PROJECTS ─── */}
-      <section style={{ padding: '72px 0' }}>
+      <section style={{ padding: bp.isMobile ? '40px 0' : '72px 0' }}>
         <div style={section()}>
           <div style={{ marginBottom: 40 }}>
             <h2 style={sectionHeading()}>Featured Projects</h2>
@@ -367,7 +409,7 @@ export function PortfolioTemplate({ theme }: Props) {
       <TkxDivider />
 
       {/* ─── SKILLS ─── */}
-      <section style={{ padding: '72px 0', background: theme.surface }}>
+      <section style={{ padding: bp.isMobile ? '40px 0' : '72px 0', background: theme.surface }}>
         <div style={section()}>
           <h2 style={sectionHeading()}>Skills &amp; Expertise</h2>
           <p style={sectionSub()}>Years of hands-on work across the full stack.</p>
@@ -402,7 +444,7 @@ export function PortfolioTemplate({ theme }: Props) {
       <TkxDivider />
 
       {/* ─── EXPERIENCE ─── */}
-      <section style={{ padding: '72px 0' }}>
+      <section style={{ padding: bp.isMobile ? '40px 0' : '72px 0' }}>
         <div style={section()}>
           <h2 style={sectionHeading()}>Experience</h2>
           <p style={sectionSub()}>Where I've worked and what I've built.</p>
@@ -439,7 +481,7 @@ export function PortfolioTemplate({ theme }: Props) {
       <TkxDivider />
 
       {/* ─── TESTIMONIALS ─── */}
-      <section style={{ padding: '72px 0', background: theme.surface }}>
+      <section style={{ padding: bp.isMobile ? '40px 0' : '72px 0', background: theme.surface }}>
         <div style={section()}>
           <h2 style={sectionHeading()}>What People Say</h2>
           <p style={sectionSub()}>Kind words from colleagues and clients.</p>
@@ -468,7 +510,7 @@ export function PortfolioTemplate({ theme }: Props) {
       <TkxDivider />
 
       {/* ─── BLOG ─── */}
-      <section style={{ padding: '72px 0' }}>
+      <section style={{ padding: bp.isMobile ? '40px 0' : '72px 0' }}>
         <div style={section()}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
             <div>
@@ -509,9 +551,9 @@ export function PortfolioTemplate({ theme }: Props) {
       <TkxDivider />
 
       {/* ─── CONTACT ─── */}
-      <section style={{ padding: '72px 0 96px', background: `linear-gradient(160deg, ${theme.primary}08 0%, transparent 60%)` }}>
+      <section style={{ padding: bp.isMobile ? '40px 0 56px' : '72px 0 96px', background: `linear-gradient(160deg, ${theme.primary}08 0%, transparent 60%)` }}>
         <div style={section()}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: bp.isMobile ? '1fr' : '1fr 1fr', gap: bp.isMobile ? 32 : 60, alignItems: 'start' }}>
             <div>
               <h2 style={sectionHeading()}>Let's Work Together</h2>
               <p style={{ fontSize: 15, color: theme.textMuted, lineHeight: 1.75, marginBottom: 32 }}>
@@ -542,7 +584,7 @@ export function PortfolioTemplate({ theme }: Props) {
                   </TkxAlert>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: bp.isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
                       <TkxInput
                         label="Name"
                         placeholder="Jane Doe"

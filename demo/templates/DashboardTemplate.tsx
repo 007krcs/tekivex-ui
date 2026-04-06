@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 import type { ThemeTokens } from '@tekivex/ui';
 import {
   TkxButton, TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter,
@@ -87,6 +88,7 @@ function SparklineSVG({ values, color }: { values: number[]; color: string }) {
 }
 
 export function DashboardTemplate({ theme }: Props) {
+  const bp = useBreakpoint();
   const [dateRange, setDateRange] = useState<'today' | 'week' | 'month'>('week');
   const [activeTab, setActiveTab] = useState(0);
   const [reportStates, setReportStates] = useState([true, true, false, true, false]);
@@ -95,7 +97,7 @@ export function DashboardTemplate({ theme }: Props) {
     page: {
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '32px 24px 64px',
+      padding: bp.isMobile ? '20px 12px 48px' : '32px 24px 64px',
       fontFamily: 'inherit',
     } as React.CSSProperties,
 
@@ -115,7 +117,7 @@ export function DashboardTemplate({ theme }: Props) {
     } as React.CSSProperties,
 
     title: {
-      fontSize: '1.625rem',
+      fontSize: bp.isMobile ? '1.35rem' : '1.625rem',
       fontWeight: 800,
       color: theme.text,
       margin: 0,
@@ -131,7 +133,7 @@ export function DashboardTemplate({ theme }: Props) {
     headerRight: {
       display: 'flex',
       alignItems: 'center',
-      gap: '10px',
+      gap: '8px',
       flexWrap: 'wrap' as const,
     } as React.CSSProperties,
 
@@ -148,7 +150,7 @@ export function DashboardTemplate({ theme }: Props) {
 
     statsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
+      gridTemplateColumns: bp.isMobile ? '1fr' : bp.isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
       gap: '16px',
       marginBottom: '24px',
     } as React.CSSProperties,
@@ -169,7 +171,7 @@ export function DashboardTemplate({ theme }: Props) {
     } as React.CSSProperties,
 
     statValue: {
-      fontSize: '2rem',
+      fontSize: bp.isMobile ? '1.5rem' : '2rem',
       fontWeight: 800,
       color: theme.text,
       letterSpacing: '-0.03em',
@@ -185,7 +187,7 @@ export function DashboardTemplate({ theme }: Props) {
 
     mainGrid: {
       display: 'grid',
-      gridTemplateColumns: '3fr 2fr',
+      gridTemplateColumns: bp.isMobile || bp.isTablet ? '1fr' : '3fr 2fr',
       gap: '20px',
       marginBottom: '24px',
     } as React.CSSProperties,
@@ -274,7 +276,7 @@ export function DashboardTemplate({ theme }: Props) {
 
     bottomGrid: {
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
+      gridTemplateColumns: bp.isMobile ? '1fr' : '1fr 1fr',
       gap: '20px',
       marginBottom: '24px',
     } as React.CSSProperties,
@@ -300,7 +302,7 @@ export function DashboardTemplate({ theme }: Props) {
 
     quickActionsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
+      gridTemplateColumns: bp.isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
       gap: '10px',
     } as React.CSSProperties,
 
@@ -472,6 +474,7 @@ export function DashboardTemplate({ theme }: Props) {
             <p style={s.sectionSub}>By revenue this period</p>
           </TkxCardHeader>
           <TkxCardBody style={{ padding: 0 }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
@@ -494,6 +497,7 @@ export function DashboardTemplate({ theme }: Props) {
                 ))}
               </tbody>
             </table>
+            </div>
           </TkxCardBody>
         </TkxCard>
 
@@ -536,7 +540,7 @@ export function DashboardTemplate({ theme }: Props) {
 
               {/* Users Table */}
               <TkxTabPanel>
-                <div style={{ paddingTop: '8px' }}>
+                <div style={{ paddingTop: '8px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr>
@@ -571,7 +575,7 @@ export function DashboardTemplate({ theme }: Props) {
 
               {/* Transactions Table */}
               <TkxTabPanel>
-                <div style={{ paddingTop: '8px' }}>
+                <div style={{ paddingTop: '8px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr>

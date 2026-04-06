@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 import {
   TkxButton, TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter,
   TkxBadge, TkxInput, TkxProgress, TkxToggle, TkxAlert, TkxTabs,
@@ -105,12 +106,13 @@ export function SupplyChainTemplate({ theme }: Props) {
   const [alertNotifs, setAlertNotifs] = useState(true);
   const [lowStockAlerts, setLowStockAlerts] = useState(true);
   const [shipTracking, setShipTracking] = useState(false);
+  const bp = useBreakpoint();
 
   const s = {
     page: {
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '32px 24px 64px',
+      padding: bp.isMobile ? '20px 12px 48px' : '32px 24px 64px',
     } as React.CSSProperties,
 
     header: {
@@ -129,7 +131,7 @@ export function SupplyChainTemplate({ theme }: Props) {
     } as React.CSSProperties,
 
     title: {
-      fontSize: '1.625rem',
+      fontSize: bp.isMobile ? '1.35rem' : '1.625rem',
       fontWeight: 800,
       color: theme.text,
       margin: 0,
@@ -152,8 +154,8 @@ export function SupplyChainTemplate({ theme }: Props) {
 
     kpiGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(5, 1fr)',
-      gap: '14px',
+      gridTemplateColumns: bp.isMobile ? 'repeat(2, 1fr)' : bp.isTablet ? 'repeat(3, 1fr)' : 'repeat(5, 1fr)',
+      gap: bp.isMobile ? '10px' : '14px',
       marginBottom: '24px',
     } as React.CSSProperties,
 
@@ -167,7 +169,7 @@ export function SupplyChainTemplate({ theme }: Props) {
     } as React.CSSProperties,
 
     kpiValue: {
-      fontSize: '1.6rem',
+      fontSize: bp.isMobile ? '1.3rem' : '1.6rem',
       fontWeight: 800,
       color: theme.text,
       letterSpacing: '-0.03em',
@@ -214,15 +216,15 @@ export function SupplyChainTemplate({ theme }: Props) {
 
     supplierGrid: {
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: '20px',
+      gridTemplateColumns: bp.isMobile ? '1fr' : '1fr 1fr',
+      gap: bp.isMobile ? '16px' : '20px',
       marginBottom: '24px',
     } as React.CSSProperties,
 
     warehouseGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(4, 1fr)',
-      gap: '16px',
+      gridTemplateColumns: bp.isMobile ? '1fr' : bp.isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+      gap: bp.isMobile ? '12px' : '16px',
       marginBottom: '24px',
     } as React.CSSProperties,
 
@@ -236,8 +238,8 @@ export function SupplyChainTemplate({ theme }: Props) {
 
     footerToggles: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
-      gap: '16px',
+      gridTemplateColumns: bp.isMobile ? '1fr' : 'repeat(2, 1fr)',
+      gap: bp.isMobile ? '12px' : '16px',
     } as React.CSSProperties,
 
     toggleRow: {
@@ -340,19 +342,20 @@ export function SupplyChainTemplate({ theme }: Props) {
       {/* ── Inventory Table ── */}
       <TkxCard style={{ marginBottom: '24px' }}>
         <TkxCardHeader>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: bp.isMobile ? 'flex-start' : 'center', flexWrap: 'wrap', gap: '12px', flexDirection: bp.isMobile ? 'column' : 'row' }}>
             <div>
               <p style={s.sectionLabel}>Inventory Status</p>
               <p style={s.sectionSub}>All SKUs across active warehouses</p>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <TkxInput placeholder="Search SKU or product..." size="sm" style={{ width: '220px' }} />
+            <div style={{ display: 'flex', gap: '8px', width: bp.isMobile ? '100%' : 'auto' }}>
+              <TkxInput placeholder="Search SKU or product..." size="sm" style={{ width: bp.isMobile ? '100%' : '220px' }} />
               <TkxButton variant="outline" size="sm">Filter</TkxButton>
             </div>
           </div>
         </TkxCardHeader>
         <TkxCardBody style={{ padding: 0 }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: bp.isMobile ? '700px' : undefined }}>
             <thead>
               <tr>
                 <th style={s.tableHeader}>SKU</th>
@@ -392,6 +395,7 @@ export function SupplyChainTemplate({ theme }: Props) {
               ))}
             </tbody>
           </table>
+          </div>
         </TkxCardBody>
       </TkxCard>
 
@@ -413,7 +417,8 @@ export function SupplyChainTemplate({ theme }: Props) {
 
               {/* In Transit */}
               <TkxTabPanel>
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '12px' }}>
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '12px', minWidth: bp.isMobile ? '650px' : undefined }}>
                   <thead>
                     <tr>
                       <th style={s.tableHeader}>Tracking #</th>
@@ -448,11 +453,13 @@ export function SupplyChainTemplate({ theme }: Props) {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </TkxTabPanel>
 
               {/* Delivered */}
               <TkxTabPanel>
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '12px' }}>
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '12px', minWidth: bp.isMobile ? '550px' : undefined }}>
                   <thead>
                     <tr>
                       <th style={s.tableHeader}>Tracking #</th>
@@ -478,11 +485,13 @@ export function SupplyChainTemplate({ theme }: Props) {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </TkxTabPanel>
 
               {/* Pending */}
               <TkxTabPanel>
-                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '12px' }}>
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '12px', minWidth: bp.isMobile ? '500px' : undefined }}>
                   <thead>
                     <tr>
                       <th style={s.tableHeader}>PO #</th>
@@ -504,6 +513,7 @@ export function SupplyChainTemplate({ theme }: Props) {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </TkxTabPanel>
 
               {/* Exceptions */}

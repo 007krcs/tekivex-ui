@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 import {
   TkxButton, TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter,
   TkxBadge, TkxInput, TkxProgress, TkxToggle, TkxAlert, TkxTabs,
@@ -147,6 +148,7 @@ function StockBadge({ stock }: { stock: Product['stock'] }) {
 }
 
 export function EcommerceTemplate({ theme }: Props) {
+  const bp = useBreakpoint();
   const [activeCategory, setActiveCategory] = useState('all');
   const [cartItems, setCartItems] = useState<{ product: Product; qty: number }[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -226,11 +228,12 @@ export function EcommerceTemplate({ theme }: Props) {
         background: theme.surface + 'f4',
         backdropFilter: 'blur(12px)',
         borderBottom: `1px solid ${theme.border}`,
-        padding: '0 24px',
+        padding: bp.isMobile ? '0 12px' : '0 24px',
       }}>
         <div style={{
           maxWidth: 1100, margin: '0 auto',
-          display: 'flex', alignItems: 'center', height: 64, gap: 16,
+          display: 'flex', alignItems: 'center', minHeight: 64, gap: bp.isMobile ? 8 : 16,
+          flexWrap: 'wrap', padding: bp.isMobile ? '8px 0' : undefined,
         }}>
           <div style={{ marginRight: 'auto' }}>
             <div style={{ fontSize: 20, fontWeight: 900, color: theme.text, letterSpacing: '-0.03em' }}>
@@ -241,7 +244,7 @@ export function EcommerceTemplate({ theme }: Props) {
             </div>
           </div>
 
-          <div style={{ flex: '0 1 340px' }}>
+          <div style={{ flex: bp.isMobile ? '1 1 100%' : '0 1 340px', order: bp.isMobile ? 1 : 0 }}>
             <TkxInput
               placeholder="Search products, brands, categories…"
               size="sm"
@@ -351,7 +354,7 @@ export function EcommerceTemplate({ theme }: Props) {
         </div>
 
         {/* ─── MAIN LAYOUT (products + cart sidebar) ─── */}
-        <div style={{ display: 'grid', gridTemplateColumns: showCart && cartCount > 0 ? '1fr 320px' : '1fr', gap: 28, marginTop: 28 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: bp.isMobile ? '1fr' : (showCart && cartCount > 0 ? '1fr 320px' : '1fr'), gap: 28, marginTop: 28 }}>
 
           {/* Product Grid */}
           <div>
@@ -360,7 +363,7 @@ export function EcommerceTemplate({ theme }: Props) {
                 Try adjusting your filters or switching category.
               </TkxAlert>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, ${bp.isMobile ? 'minmax(240px, 1fr)' : 'minmax(280px, 1fr)'})`, gap: 20 }}>
                 {filtered.map(product => (
                   <TkxCard key={product.id} isHoverable style={{ display: 'flex', flexDirection: 'column' }}>
                     {/* Image area */}
@@ -547,7 +550,7 @@ export function EcommerceTemplate({ theme }: Props) {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, ${bp.isMobile ? 'minmax(240px, 1fr)' : 'minmax(280px, 1fr)'})`, gap: 20 }}>
             {flashDeals.map(product => (
               <TkxCard key={product.id} isHoverable style={{ display: 'flex', flexDirection: 'column', border: `1.5px solid #ef444440` }}>
                 <div style={{
@@ -594,7 +597,7 @@ export function EcommerceTemplate({ theme }: Props) {
           <h2 style={{ fontSize: 24, fontWeight: 900, color: theme.text, letterSpacing: '-0.03em', marginBottom: 32 }}>
             Customer Reviews
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: 40, alignItems: 'start', flexWrap: 'wrap' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: bp.isMobile ? '1fr' : '260px 1fr', gap: bp.isMobile ? 24 : 40, alignItems: 'start' }}>
             <TkxCard>
               <TkxCardBody style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 56, fontWeight: 900, color: theme.text, letterSpacing: '-0.04em', lineHeight: 1 }}>4.6</div>
@@ -704,7 +707,7 @@ export function EcommerceTemplate({ theme }: Props) {
           title={modalProduct.name}
           size="lg"
         >
-          <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 24, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: bp.isMobile ? '1fr' : '200px 1fr', gap: 24, alignItems: 'start' }}>
             <div style={{
               height: 200, background: modalProduct.bg + '22',
               borderRadius: 12,

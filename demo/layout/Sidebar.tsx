@@ -80,6 +80,9 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Portfolio', route: '/templates/portfolio' },
       { label: 'E-commerce', route: '/templates/ecommerce' },
       { label: 'Supply Chain', route: '/templates/supply-chain' },
+      { label: 'Blog / CMS', route: '/templates/blog' },
+      { label: 'Admin Settings', route: '/templates/admin-settings' },
+      { label: 'Landing Page', route: '/templates/landing-page' },
     ],
   },
 ];
