@@ -8,6 +8,8 @@ import { Header } from './layout/Header';
 import { HomePage } from './pages/HomePage';
 import { GettingStartedPage } from './pages/GettingStartedPage';
 import { CSSSystemPage } from './pages/CSSSystemPage';
+import { AboutPage } from './pages/AboutPage';
+import { LicensePage } from './pages/LicensePage';
 
 // ── Component doc pages ───────────────────────────────────────────────────────
 // These are loaded lazily via dynamic import paths but imported statically here
@@ -114,6 +116,8 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/templates/blog': BlogTemplate,
   '/templates/admin-settings': AdminSettingsTemplate,
   '/templates/landing-page': LandingPageTemplate,
+  '/about': AboutPage,
+  '/license': LicensePage,
 };
 
 function getRoute(): string {

@@ -64,6 +64,8 @@ const ROUTE_TITLES: Record<string, string> = {
   '/templates/blog': 'Blog / CMS Template',
   '/templates/admin-settings': 'Admin Settings Template',
   '/templates/landing-page': 'Landing Page Template',
+  '/about': 'About Us',
+  '/license': 'License',
 };
 
 // ── Icons ─────────────────────────────────────────────────────────────────────

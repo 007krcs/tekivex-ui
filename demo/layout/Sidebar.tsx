@@ -86,6 +86,13 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Landing Page', route: '/templates/landing-page' },
     ],
   },
+  {
+    title: 'Resources',
+    items: [
+      { label: 'About Us', route: '/about' },
+      { label: 'License', route: '/license' },
+    ],
+  },
 ];
 
 // ── SVG icons ─────────────────────────────────────────────────────────────────
@@ -300,6 +307,41 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
           WCAG 2.1 AAA · WAI-ARIA 1.2
           <br />
           Zero-trust · TypeScript
+        </p>
+        <div style={{ marginTop: '8px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <a
+            href="#/about"
+            onClick={(e) => { e.preventDefault(); onNavigate('/about'); }}
+            style={{ fontSize: '11px', color: theme.textMuted, textDecoration: 'none' }}
+          >
+            About
+          </a>
+          <a
+            href="#/license"
+            onClick={(e) => { e.preventDefault(); onNavigate('/license'); }}
+            style={{ fontSize: '11px', color: theme.textMuted, textDecoration: 'none' }}
+          >
+            License
+          </a>
+          <a
+            href="https://github.com/007krcs/tekivex-ui"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: '11px', color: theme.textMuted, textDecoration: 'none' }}
+          >
+            GitHub
+          </a>
+          <a
+            href="https://www.npmjs.com/package/tekivex-ui"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: '11px', color: theme.textMuted, textDecoration: 'none' }}
+          >
+            npm
+          </a>
+        </div>
+        <p style={{ ...footerTextStyle, marginTop: '8px', fontSize: '10px' }}>
+          MIT © 2026 007krcs
         </p>
       </div>
     </div>
