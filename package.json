@@ -1,6 +1,6 @@
 {
   "name": "@tekivex/ui",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Quantum-Class Component Framework — WCAG 2.1 AAA, WAI-ARIA 1.2, Zero-Trust Security",
   "type": "module",
   "main": "./dist/index.cjs",

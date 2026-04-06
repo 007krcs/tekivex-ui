@@ -198,4 +198,4 @@ Four full-page templates are included in the demo:
 
 ## License
 
-[MIT](./LICENSE) © 2024 [007krcs](https://github.com/007krcs)
+[MIT](./LICENSE) © 2026 [007krcs](https://github.com/007krcs)
