@@ -1,6 +1,6 @@
 {
   "name": "@tekivex/ui",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Quantum-Class Component Framework — WCAG 2.1 AAA, WAI-ARIA 1.2, Zero-Trust Security",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -71,8 +71,12 @@
   ],
   "author": "007krcs",
   "license": "MIT",
+  "homepage": "https://ui.tekivex.com/",
   "repository": {
     "type": "git",
     "url": "https://github.com/007krcs/tekivex-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/007krcs/tekivex-ui/issues"
   }
 }
