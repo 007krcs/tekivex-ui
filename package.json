@@ -31,7 +31,9 @@
     "a11y:audit": "node scripts/a11y-audit.mjs",
     "security:audit": "node scripts/security-audit.mjs",
     "css:build": "node scripts/css-build.mjs",
-    "build:demo": "vite build --config ./demo/vite.config.ts"
+    "build:demo": "vite build --config ./demo/vite.config.ts",
+    "prepublishOnly": "npm run build",
+    "pack:check": "npm pack --dry-run"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

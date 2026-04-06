@@ -51,6 +51,7 @@ export interface MenuRadioGroup {
   value: string;
   options: { value: string; label: string; icon?: ReactNode }[];
   onChange?: (value: string) => void;
+  disabled?: boolean;
 }
 
 export interface MenuSeparator {

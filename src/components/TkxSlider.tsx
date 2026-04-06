@@ -28,6 +28,12 @@ export interface TkxSliderProps {
   colorScheme?: 'primary' | 'success' | 'danger' | 'warning';
   size?: 'sm' | 'md' | 'lg';
   marks?: { value: number; label: string }[];
+  orientation?: 'horizontal' | 'vertical';
+  showTooltip?: boolean | 'hover' | 'always';
+  formatValue?: (value: number) => string;
+  onChangeEnd?: (value: number) => void;
+  onRangeChangeEnd?: (range: [number, number]) => void;
+  gradient?: boolean;
 }
 
 const SIZE_MAP = {
@@ -58,13 +64,17 @@ interface ThumbProps {
   trackHeight: number;
   thumbSize: number;
   ariaLabel: string;
-  tooltip: string | null;
+  tooltipMode: false | 'hover' | 'always';
+  formatValue: (v: number) => string;
+  orientation: 'horizontal' | 'vertical';
   onChange: (v: number) => void;
+  onChangeEnd?: () => void;
 }
 
-function Thumb({ value, min, max, step, isDisabled, trackColor, thumbSize, ariaLabel, tooltip, onChange }: ThumbProps) {
+function Thumb({ value, min, max, step, isDisabled, trackColor, thumbSize, ariaLabel, tooltipMode, formatValue, orientation, onChange, onChangeEnd }: ThumbProps) {
   const [focused, setFocused] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (isDisabled) return;
@@ -81,37 +91,65 @@ function Thumb({ value, min, max, step, isDisabled, trackColor, thumbSize, ariaL
     }
   };
 
-  const showTooltip = (focused || dragging) && tooltip !== null;
+  const isVertical = orientation === 'vertical';
+  const percent = toPercent(value, min, max);
+  const showTip =
+    tooltipMode === 'always' ||
+    (tooltipMode === 'hover' && (hovered || dragging || focused));
 
-  return (
-    <div
-      style={{
+  const positionStyle: React.CSSProperties = isVertical
+    ? {
         position: 'absolute',
-        left: `${toPercent(value, min, max)}%`,
+        bottom: `${percent}%`,
+        transform: 'translateY(50%)',
+        left: '50%',
+        marginLeft: `-${thumbSize / 2}px`,
+        zIndex: 2,
+        cursor: isDisabled ? 'not-allowed' : 'grab',
+      }
+    : {
+        position: 'absolute',
+        left: `${percent}%`,
         transform: 'translateX(-50%)',
         top: '50%',
         marginTop: `-${thumbSize / 2}px`,
         zIndex: 2,
         cursor: isDisabled ? 'not-allowed' : 'grab',
-      }}
-    >
-      {showTooltip && (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: thumbSize + 6,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            backgroundColor: trackColor,
-            color: '#fff',
-            borderRadius: '4px',
-            padding: '2px 6px',
-            fontSize: '0.75rem',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-          }}
-        >
-          {tooltip}
+      };
+
+  const tooltipStyle: React.CSSProperties = isVertical
+    ? {
+        position: 'absolute',
+        left: thumbSize + 6,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        backgroundColor: trackColor,
+        color: '#fff',
+        borderRadius: '4px',
+        padding: '2px 6px',
+        fontSize: '0.75rem',
+        whiteSpace: 'nowrap',
+        pointerEvents: 'none',
+      }
+    : {
+        position: 'absolute',
+        bottom: thumbSize + 6,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        backgroundColor: trackColor,
+        color: '#fff',
+        borderRadius: '4px',
+        padding: '2px 6px',
+        fontSize: '0.75rem',
+        whiteSpace: 'nowrap',
+        pointerEvents: 'none',
+      };
+
+  return (
+    <div style={positionStyle}>
+      {showTip && (
+        <div style={tooltipStyle}>
+          {formatValue(value)}
         </div>
       )}
       <div
@@ -122,11 +160,14 @@ function Thumb({ value, min, max, step, isDisabled, trackColor, thumbSize, ariaL
         aria-valuemax={max}
         aria-valuenow={value}
         aria-disabled={isDisabled}
+        aria-orientation={orientation}
         onKeyDown={handleKeyDown}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
         onPointerDown={(e) => { if (!isDisabled) { setDragging(true); (e.target as HTMLElement).setPointerCapture(e.pointerId); }}}
-        onPointerUp={() => setDragging(false)}
+        onPointerUp={() => { setDragging(false); onChangeEnd?.(); }}
         style={{
           width: thumbSize,
           height: thumbSize,
@@ -161,6 +202,12 @@ export function TkxSlider({
   colorScheme = 'primary',
   size = 'md',
   marks,
+  orientation = 'horizontal',
+  showTooltip = false,
+  formatValue: formatValueProp,
+  onChangeEnd,
+  onRangeChangeEnd,
+  gradient = false,
 }: TkxSliderProps) {
   const theme = useTheme();
   const id = useId();
@@ -175,6 +222,10 @@ export function TkxSlider({
   const rangeVal = isRangeControlled ? rangeValue! : internalRange;
 
   const trackRef = useRef<HTMLDivElement>(null);
+  const singleValueRef = useRef(singleValue);
+  singleValueRef.current = singleValue;
+  const rangeValRef = useRef(rangeVal);
+  rangeValRef.current = rangeVal;
 
   const trackColor = {
     primary: theme.primary,
@@ -184,19 +235,35 @@ export function TkxSlider({
   }[colorScheme];
 
   const sizes = SIZE_MAP[size];
+  const isVertical = orientation === 'vertical';
 
-  const getValueFromPointer = useCallback((clientX: number): number => {
+  const tooltipMode: false | 'hover' | 'always' =
+    showTooltip === true ? 'hover' :
+    showTooltip === false ? false :
+    showTooltip; // 'hover' | 'always'
+
+  const formatVal = formatValueProp ?? ((v: number) => String(v));
+
+  const trackColorLight = trackColor + '66'; // 40% opacity variant for gradient end
+
+  const getValueFromPointer = useCallback((clientX: number, clientY?: number): number => {
     const track = trackRef.current;
     if (!track) return min;
     const rect = track.getBoundingClientRect();
-    const ratio = clamp((clientX - rect.left) / rect.width, 0, 1);
+    let ratio: number;
+    if (isVertical) {
+      // vertical: bottom = min, top = max
+      ratio = clamp((rect.bottom - (clientY ?? 0)) / rect.height, 0, 1);
+    } else {
+      ratio = clamp((clientX - rect.left) / rect.width, 0, 1);
+    }
     const raw = ratio * (max - min) + min;
     return clamp(snapToStep(raw, min, step), min, max);
-  }, [min, max, step]);
+  }, [min, max, step, isVertical]);
 
   const handleTrackPointerDown = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
     if (isDisabled) return;
-    const v = getValueFromPointer(e.clientX);
+    const v = getValueFromPointer(e.clientX, e.clientY);
 
     if (!isRange) {
       if (!isControlled) setInternalValue(v);
@@ -239,7 +306,7 @@ export function TkxSlider({
   const transition = reducedMotion ? 'none' : 'background 150ms ease';
 
   return (
-    <div className={tkx('flex flex-col gap-2 w-full')} style={{ opacity: isDisabled ? 0.55 : 1 }}>
+    <div className={tkx('flex flex-col gap-2')} style={{ opacity: isDisabled ? 0.55 : 1, ...(isVertical ? { height: 200, width: 'auto', display: 'inline-flex' } : { width: '100%' }) }}>
       {(safeLabel || showValue) && (
         <div className={tkx('flex items-center justify-between')}>
           {safeLabel && (
@@ -253,25 +320,32 @@ export function TkxSlider({
           )}
           {showValue && !isRange && (
             <span className={tkx('text-sm tabular-nums')} style={{ color: theme.textMuted, fontSize: sizes.fontSize }}>
-              {singleValue}
+              {formatVal(singleValue)}
             </span>
           )}
           {showValue && isRange && (
             <span className={tkx('text-sm tabular-nums')} style={{ color: theme.textMuted, fontSize: sizes.fontSize }}>
-              {rangeVal[0]} – {rangeVal[1]}
+              {formatVal(rangeVal[0])} – {formatVal(rangeVal[1])}
             </span>
           )}
         </div>
       )}
 
       {/* Track container */}
-      <div style={{ position: 'relative', paddingTop: sizes.thumb / 2, paddingBottom: sizes.thumb / 2 }}>
+      <div style={{
+        position: 'relative',
+        ...(isVertical
+          ? { paddingLeft: sizes.thumb / 2, paddingRight: sizes.thumb / 2, flex: 1 }
+          : { paddingTop: sizes.thumb / 2, paddingBottom: sizes.thumb / 2 }),
+      }}>
         <div
           ref={trackRef}
           onPointerDown={handleTrackPointerDown}
           style={{
             position: 'relative',
-            height: sizes.track,
+            ...(isVertical
+              ? { width: sizes.track, height: '100%' }
+              : { height: sizes.track }),
             borderRadius: 9999,
             backgroundColor: theme.border,
             cursor: isDisabled ? 'not-allowed' : 'pointer',
@@ -282,12 +356,17 @@ export function TkxSlider({
           <div
             style={{
               position: 'absolute',
-              top: 0,
-              left: `${fillLeft}%`,
-              width: `${fillRight - fillLeft}%`,
-              height: '100%',
+              ...(isVertical
+                ? { left: 0, bottom: `${fillLeft}%`, height: `${fillRight - fillLeft}%`, width: '100%' }
+                : { top: 0, left: `${fillLeft}%`, width: `${fillRight - fillLeft}%`, height: '100%' }),
               borderRadius: 9999,
-              backgroundColor: isDisabled ? theme.textMuted : trackColor,
+              ...(isDisabled
+                ? { backgroundColor: theme.textMuted }
+                : gradient
+                  ? { background: isVertical
+                      ? `linear-gradient(to top, ${trackColorLight}, ${trackColor})`
+                      : `linear-gradient(to right, ${trackColorLight}, ${trackColor})` }
+                  : { backgroundColor: trackColor }),
               transition,
             }}
           />
@@ -298,11 +377,9 @@ export function TkxSlider({
               key={i}
               style={{
                 position: 'absolute',
-                left: `${toPercent(t, min, max)}%`,
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 3,
-                height: sizes.track + 4,
+                ...(isVertical
+                  ? { bottom: `${toPercent(t, min, max)}%`, left: '50%', transform: 'translate(-50%, 50%)', height: 3, width: sizes.track + 4 }
+                  : { left: `${toPercent(t, min, max)}%`, top: '50%', transform: 'translate(-50%, -50%)', width: 3, height: sizes.track + 4 }),
                 backgroundColor: theme.surface,
                 borderRadius: 9999,
                 pointerEvents: 'none',
@@ -322,8 +399,11 @@ export function TkxSlider({
               trackHeight={sizes.track}
               thumbSize={sizes.thumb}
               ariaLabel={safeLabel ?? 'Slider'}
-              tooltip={showValue ? null : String(singleValue)}
+              tooltipMode={tooltipMode}
+              formatValue={formatVal}
+              orientation={orientation}
               onChange={setSingleValue}
+              onChangeEnd={onChangeEnd ? () => onChangeEnd(singleValueRef.current) : undefined}
             />
           ) : (
             <>
@@ -337,8 +417,11 @@ export function TkxSlider({
                 trackHeight={sizes.track}
                 thumbSize={sizes.thumb}
                 ariaLabel={`${safeLabel ?? 'Range'} start`}
-                tooltip={showValue ? null : String(rangeVal[0])}
+                tooltipMode={tooltipMode}
+                formatValue={formatVal}
+                orientation={orientation}
                 onChange={setRangeStart}
+                onChangeEnd={onRangeChangeEnd ? () => onRangeChangeEnd(rangeValRef.current) : undefined}
               />
               <Thumb
                 value={rangeVal[1]}
@@ -350,8 +433,11 @@ export function TkxSlider({
                 trackHeight={sizes.track}
                 thumbSize={sizes.thumb}
                 ariaLabel={`${safeLabel ?? 'Range'} end`}
-                tooltip={showValue ? null : String(rangeVal[1])}
+                tooltipMode={tooltipMode}
+                formatValue={formatVal}
+                orientation={orientation}
                 onChange={setRangeEnd}
+                onChangeEnd={onRangeChangeEnd ? () => onRangeChangeEnd(rangeValRef.current) : undefined}
               />
             </>
           )}
@@ -359,14 +445,15 @@ export function TkxSlider({
 
         {/* Mark labels */}
         {marks && marks.length > 0 && (
-          <div style={{ position: 'relative', marginTop: 8 }}>
+          <div style={{ position: isVertical ? 'absolute' : 'relative', ...(isVertical ? { left: '100%', top: 0, bottom: 0, marginLeft: 8 } : { marginTop: 8 }) }}>
             {marks.map((mark, i) => (
               <div
                 key={i}
                 style={{
                   position: 'absolute',
-                  left: `${toPercent(mark.value, min, max)}%`,
-                  transform: 'translateX(-50%)',
+                  ...(isVertical
+                    ? { bottom: `${toPercent(mark.value, min, max)}%`, transform: 'translateY(50%)', left: 0 }
+                    : { left: `${toPercent(mark.value, min, max)}%`, transform: 'translateX(-50%)' }),
                   fontSize: '0.6875rem',
                   color: theme.textMuted,
                   whiteSpace: 'nowrap',
@@ -380,7 +467,7 @@ export function TkxSlider({
       </div>
 
       {/* Tick labels when no marks */}
-      {showTicks && !marks && (
+      {showTicks && !marks && !isVertical && (
         <div style={{ position: 'relative', height: '1rem' }}>
           {ticks.map((t, i) => (
             <span
@@ -393,7 +480,7 @@ export function TkxSlider({
                 color: theme.textMuted,
               }}
             >
-              {Math.round(t)}
+              {formatVal(Math.round(t))}
             </span>
           ))}
         </div>

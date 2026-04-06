@@ -50,6 +50,7 @@ import { NumberInputPage } from './docs/NumberInputPage';
 import { OTPPage } from './docs/OTPPage';
 import { CommandPage } from './docs/CommandPage';
 import { CarouselPage } from './docs/CarouselPage';
+import { IconPage } from './docs/IconPage';
 
 // ── Template pages ─────────────────────────────────────────────────────────────
 import { DashboardTemplate } from './templates/DashboardTemplate';
@@ -105,6 +106,7 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/otp': OTPPage,
   '/components/command': CommandPage,
   '/components/carousel': CarouselPage,
+  '/components/icon': IconPage,
   '/templates/dashboard': DashboardTemplate,
   '/templates/portfolio': PortfolioTemplate,
   '/templates/ecommerce': EcommerceTemplate,

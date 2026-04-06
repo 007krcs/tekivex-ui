@@ -94,6 +94,10 @@ const ICONS = {
   download: 'M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z',
   closedCaption: 'M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 7H9.5v-.5h-2v3h2V13H11v1c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1zm7 0h-1.5v-.5h-2v3h2V13H18v1c0 .55-.45 1-1 1h-3c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1z',
   settings: 'M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z',
+  replay10: 'M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z',
+  forward10: 'M18 13c0 3.31-2.69 6-6 6s-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8V1l-5 5 5 5V7c3.31 0 6 2.69 6 6z',
+  errorOutline: 'M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',
+  refresh: 'M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z',
 };
 
 // ── Control button ────────────────────────────────────────────────────────────
@@ -190,6 +194,9 @@ export function TkxVideoPlayer({
   const [hoverX, setHoverX] = useState(0);
   const [centerFlash, setCenterFlash] = useState<'play' | 'pause' | null>(null);
   const [isPiP, setIsPiP] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
+  const [volumeHover, setVolumeHover] = useState(false);
 
   // ── Video event wiring ────────────────────────────────────────────────────
 
@@ -211,6 +218,13 @@ export function TkxVideoPlayer({
     const onEndedEvt = () => { setPlaying(false); setControlsLocked(true); onEnded?.(); };
     const onPiPEnter = () => setIsPiP(true);
     const onPiPLeave = () => setIsPiP(false);
+    const onWaiting = () => setIsBuffering(true);
+    const onCanPlay = () => setIsBuffering(false);
+    const onError = () => {
+      const err = v.error;
+      setVideoError(err ? `Error ${err.code}: ${err.message || 'Failed to load video'}` : 'Failed to load video');
+      setIsBuffering(false);
+    };
 
     v.addEventListener('timeupdate', onTimeUpdate);
     v.addEventListener('durationchange', onDurationChange);
@@ -219,6 +233,9 @@ export function TkxVideoPlayer({
     v.addEventListener('ended', onEndedEvt);
     v.addEventListener('enterpictureinpicture', onPiPEnter);
     v.addEventListener('leavepictureinpicture', onPiPLeave);
+    v.addEventListener('waiting', onWaiting);
+    v.addEventListener('canplay', onCanPlay);
+    v.addEventListener('error', onError);
 
     return () => {
       v.removeEventListener('timeupdate', onTimeUpdate);
@@ -228,6 +245,9 @@ export function TkxVideoPlayer({
       v.removeEventListener('ended', onEndedEvt);
       v.removeEventListener('enterpictureinpicture', onPiPEnter);
       v.removeEventListener('leavepictureinpicture', onPiPLeave);
+      v.removeEventListener('waiting', onWaiting);
+      v.removeEventListener('canplay', onCanPlay);
+      v.removeEventListener('error', onError);
     };
   }, [onEnded, startTime]);
 
@@ -390,6 +410,29 @@ export function TkxVideoPlayer({
     });
   }, [subtitles.length]);
 
+  const skipForward = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = Math.min(v.currentTime + 10, v.duration || 0);
+  }, []);
+
+  const skipBack = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = Math.max(v.currentTime - 10, 0);
+  }, []);
+
+  const retryLoad = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    setVideoError(null);
+    v.load();
+  }, []);
+
+  const handleDoubleClick = useCallback(() => {
+    if (allowFullscreen) toggleFullscreen();
+  }, [allowFullscreen, toggleFullscreen]);
+
   const seek = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const v = videoRef.current;
     const bar = progressRef.current;
@@ -482,6 +525,7 @@ export function TkxVideoPlayer({
         muted={initialMuted}
         playsInline
         onClick={togglePlay}
+        onDoubleClick={handleDoubleClick}
       >
         {sources.map((s, i) => (
           <source key={i} src={s.src} type={s.type} />
@@ -555,6 +599,75 @@ export function TkxVideoPlayer({
         </div>
       )}
 
+      {/* Loading spinner overlay */}
+      {isBuffering && !videoError && (
+        <div
+          aria-label="Loading"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none',
+            zIndex: 10,
+          }}
+        >
+          <div
+            style={{
+              width: 48,
+              height: 48,
+              border: '4px solid rgba(255,255,255,0.25)',
+              borderTopColor: theme.primary,
+              borderRadius: '50%',
+              animation: reducedMotion ? 'none' : 'tkxvp-spin 0.8s linear infinite',
+            }}
+          />
+        </div>
+      )}
+
+      {/* Error state overlay */}
+      {videoError && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0,0,0,0.8)',
+            zIndex: 20,
+            gap: 12,
+          }}
+        >
+          <SvgIcon path={ICONS.errorOutline} size={48} color="#ef4444" />
+          <span style={{ color: '#fff', fontSize: '0.9rem', maxWidth: '80%', textAlign: 'center' }}>
+            {videoError}
+          </span>
+          <button
+            type="button"
+            onClick={retryLoad}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              background: theme.primary,
+              color: '#fff',
+              border: 'none',
+              borderRadius: 6,
+              padding: '8px 18px',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              marginTop: 4,
+            }}
+          >
+            <SvgIcon path={ICONS.refresh} size={18} color="#fff" />
+            Retry
+          </button>
+        </div>
+      )}
+
       {/* Controls bar */}
       {controls && (
         <div
@@ -582,7 +695,6 @@ export function TkxVideoPlayer({
             tabIndex={0}
             onClick={seek}
             onMouseMove={onProgressHover}
-            onMouseLeave={() => setHoverTime(null)}
             style={{
               position: 'relative',
               height: 4,
@@ -631,20 +743,30 @@ export function TkxVideoPlayer({
                 pointerEvents: 'none',
               }}
             />
-            {/* Chapter markers */}
-            {chapters.map((ch, i) => (
-              <div
-                key={i}
-                style={{
-                  position: 'absolute',
-                  top: 0, bottom: 0,
-                  left: `${(ch.time / duration) * 100}%`,
-                  width: 2,
-                  background: 'rgba(255,255,255,0.6)',
-                  pointerEvents: 'none',
-                }}
-              />
-            ))}
+            {/* Chapter markers (dots with hover labels) */}
+            {chapters.map((ch, i) => {
+              const pct = duration > 0 ? (ch.time / duration) * 100 : 0;
+              return (
+                <div
+                  key={i}
+                  title={sanitizeString(ch.label)}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: `${pct}%`,
+                    transform: 'translate(-50%, -50%)',
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: '#fff',
+                    border: `2px solid ${theme.primary}`,
+                    zIndex: 2,
+                    cursor: 'pointer',
+                    pointerEvents: 'auto',
+                  }}
+                />
+              );
+            })}
             {/* Hover tooltip */}
             {hoverTime !== null && (
               <div
@@ -679,25 +801,58 @@ export function TkxVideoPlayer({
               <SvgIcon path={playing ? ICONS.pause : ICONS.play} size={22} />
             </CtrlBtn>
 
-            {/* Volume */}
-            <CtrlBtn onClick={toggleMute} title={muted ? 'Unmute' : 'Mute'} primary={theme.primary}>
-              <SvgIcon path={volumeIcon} size={20} />
+            {/* Skip back 10s */}
+            <CtrlBtn onClick={skipBack} title="Skip back 10 seconds" primary={theme.primary}>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SvgIcon path={ICONS.replay10} size={22} />
+                <span style={{ position: 'absolute', fontSize: '7px', fontWeight: 700, color: 'currentColor', marginTop: 1 }}>10</span>
+              </div>
             </CtrlBtn>
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.05}
-              value={muted ? 0 : volume}
-              onChange={changeVolume}
-              aria-label="Volume"
-              style={{
-                width: 64,
-                accentColor: theme.primary,
-                cursor: 'pointer',
-                height: 4,
-              }}
-            />
+
+            {/* Skip forward 10s */}
+            <CtrlBtn onClick={skipForward} title="Skip forward 10 seconds" primary={theme.primary}>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SvgIcon path={ICONS.forward10} size={22} />
+                <span style={{ position: 'absolute', fontSize: '7px', fontWeight: 700, color: 'currentColor', marginTop: 1 }}>10</span>
+              </div>
+            </CtrlBtn>
+
+            {/* Volume with hover slider */}
+            <div
+              style={{ display: 'flex', alignItems: 'center', position: 'relative' }}
+              onMouseEnter={() => setVolumeHover(true)}
+              onMouseLeave={() => setVolumeHover(false)}
+            >
+              <CtrlBtn onClick={toggleMute} title={muted ? 'Unmute' : 'Mute'} primary={theme.primary}>
+                <SvgIcon path={volumeIcon} size={20} />
+              </CtrlBtn>
+              <div
+                style={{
+                  overflow: 'hidden',
+                  width: volumeHover ? 64 : 0,
+                  opacity: volumeHover ? 1 : 0,
+                  transition: reducedMotion ? 'none' : 'width 0.2s ease, opacity 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={muted ? 0 : volume}
+                  onChange={changeVolume}
+                  aria-label="Volume"
+                  style={{
+                    width: 64,
+                    accentColor: theme.primary,
+                    cursor: 'pointer',
+                    height: 4,
+                  }}
+                />
+              </div>
+            </div>
 
             {/* Time */}
             <span
@@ -730,7 +885,7 @@ export function TkxVideoPlayer({
             )}
 
             {/* Playback speed */}
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <button
                 type="button"
                 onClick={() => setShowSpeedMenu((v) => !v)}
@@ -744,10 +899,30 @@ export function TkxVideoPlayer({
                   fontWeight: 600,
                   padding: '6px 8px',
                   letterSpacing: '0.02em',
+                  position: 'relative',
                 }}
               >
                 {playbackRate}×
               </button>
+              {playbackRate !== 1 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    background: theme.primary,
+                    color: '#fff',
+                    fontSize: '0.55rem',
+                    fontWeight: 700,
+                    borderRadius: 6,
+                    padding: '1px 4px',
+                    lineHeight: 1.2,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  {playbackRate}x
+                </span>
+              )}
               {showSpeedMenu && (
                 <div
                   style={{
@@ -825,6 +1000,10 @@ export function TkxVideoPlayer({
         @keyframes tkxvp-flash {
           0% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
           100% { opacity: 0; transform: translate(-50%,-50%) scale(1.5); }
+        }
+        @keyframes tkxvp-spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
       `}</style>
     </div>

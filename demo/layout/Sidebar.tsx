@@ -71,6 +71,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'OTP Input', route: '/components/otp' },
       { label: 'Command', route: '/components/command' },
       { label: 'Carousel', route: '/components/carousel' },
+      { label: 'Icon', route: '/components/icon' },
     ],
   },
   {

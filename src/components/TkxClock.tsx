@@ -196,7 +196,7 @@ function AnalogFace({
           fontSize={size * 0.12}
           fill={textMuted}
           fontFamily="monospace"
-          fontVariantNumeric="tabular-nums"
+          style={{ fontVariantNumeric: 'tabular-nums' }}
         >
           {String(hours).padStart(2, '0')}:{String(minutes).padStart(2, '0')}
         </text>
