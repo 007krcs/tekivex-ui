@@ -125,7 +125,7 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
     ]}
     required
   >
-    <TkxInput label="Password" type="password" placeholder="Min 8 characters" />
+    <TkxInput type="password" placeholder="Min 8 characters" />
   </TkxFormField>
 
   <TkxButton type="submit">Register</TkxButton>
@@ -142,7 +142,7 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
               rules={[{ required: true, message: 'Name is required' }]}
               required
             >
-              <TkxInput label="Full Name" placeholder="Jane Doe" />
+              <TkxInput placeholder="Jane Doe" />
             </TkxFormField>
 
             <TkxFormField
@@ -154,7 +154,7 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
               ]}
               required
             >
-              <TkxInput label="Email" type="email" placeholder="jane@example.com" />
+              <TkxInput type="email" placeholder="jane@example.com" />
             </TkxFormField>
 
             <TkxFormField
@@ -166,7 +166,7 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
               ]}
               required
             >
-              <TkxInput label="Password" type="password" placeholder="Min 8 characters" />
+              <TkxInput type="password" placeholder="Min 8 characters" />
             </TkxFormField>
 
             <div style={{ marginTop: 16 }}>
@@ -193,11 +193,11 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
         code={`<TkxForm layout="horizontal" onSubmit={handleSubmit}>
   <TkxFormField name="username" label="Username" required
     rules={[{ required: true, message: 'Required' }]}>
-    <TkxInput label="Username" placeholder="Enter username" />
+    <TkxInput placeholder="Enter username" />
   </TkxFormField>
 
   <TkxFormField name="bio" label="Bio" help="A short description about yourself">
-    <TkxInput label="Bio" placeholder="Tell us about yourself" />
+    <TkxInput placeholder="Tell us about yourself" />
   </TkxFormField>
 
   <TkxButton type="submit">Save</TkxButton>
@@ -214,11 +214,11 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
             rules={[{ required: true, message: 'Username is required' }]}
             required
           >
-            <TkxInput label="Username" placeholder="Enter username" />
+            <TkxInput placeholder="Enter username" />
           </TkxFormField>
 
           <TkxFormField name="bio" label="Bio" help="A short description about yourself">
-            <TkxInput label="Bio" placeholder="Tell us about yourself" />
+            <TkxInput placeholder="Tell us about yourself" />
           </TkxFormField>
 
           <div style={{ marginTop: 16 }}>
@@ -237,11 +237,11 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
         theme={theme}
         code={`<TkxForm layout="inline" onSubmit={handleSearch}>
   <TkxFormField name="query">
-    <TkxInput label="Search" placeholder="Search..." />
+    <TkxInput placeholder="Search..." />
   </TkxFormField>
 
   <TkxFormField name="category">
-    <TkxInput label="Category" placeholder="Category" />
+    <TkxInput placeholder="Category" />
   </TkxFormField>
 
   <TkxButton type="submit">Search</TkxButton>
@@ -253,11 +253,11 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
           onSubmit={(values) => setBasicResult(JSON.stringify(values, null, 2))}
         >
           <TkxFormField name="query">
-            <TkxInput label="Search" placeholder="Search..." />
+            <TkxInput placeholder="Search..." />
           </TkxFormField>
 
           <TkxFormField name="category">
-            <TkxInput label="Category" placeholder="Category" />
+            <TkxInput placeholder="Category" />
           </TkxFormField>
 
           <TkxButton type="submit">Search</TkxButton>
@@ -290,7 +290,7 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
     ]}
     required
   >
-    <TkxInput label="Invite Code" placeholder="ABC123" />
+    <TkxInput placeholder="ABC123" />
   </TkxFormField>
 
   <TkxButton type="submit">Verify</TkxButton>
@@ -317,7 +317,7 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
             ]}
             required
           >
-            <TkxInput label="Invite Code" placeholder="ABC123" />
+            <TkxInput placeholder="ABC123" />
           </TkxFormField>
 
           <div style={{ marginTop: 16 }}>
@@ -344,11 +344,11 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
     >
       <TkxFormField name="firstName" label="First Name" required
         rules={[{ required: true, message: 'Required' }]}>
-        <TkxInput label="First Name" placeholder="First" />
+        <TkxInput placeholder="First" />
       </TkxFormField>
 
       <TkxFormField name="lastName" label="Last Name">
-        <TkxInput label="Last Name" placeholder="Last" />
+        <TkxInput placeholder="Last" />
       </TkxFormField>
 
       <TkxButton onClick={() => {
@@ -391,7 +391,7 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
         theme={theme}
         code={`<TkxForm disabled initialValues={{ email: 'locked@example.com' }}>
   <TkxFormField name="email" label="Email">
-    <TkxInput label="Email" />
+    <TkxInput />
   </TkxFormField>
 
   <TkxButton type="submit" disabled>Submit</TkxButton>
@@ -399,7 +399,7 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
       >
         <TkxForm disabled initialValues={{ email: 'locked@example.com' }}>
           <TkxFormField name="email" label="Email">
-            <TkxInput label="Email" />
+            <TkxInput />
           </TkxFormField>
 
           <div style={{ marginTop: 16 }}>
@@ -536,11 +536,11 @@ function ProgrammaticFormDemo({
           rules={[{ required: true, message: 'First name is required' }]}
           required
         >
-          <TkxInput label="First Name" placeholder="First" />
+          <TkxInput placeholder="First" />
         </TkxFormField>
 
         <TkxFormField name="lastName" label="Last Name">
-          <TkxInput label="Last Name" placeholder="Last" />
+          <TkxInput placeholder="Last" />
         </TkxFormField>
 
         <ProgrammaticFormInner onLog={onLog} />

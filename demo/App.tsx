@@ -74,6 +74,16 @@ import { EmptyPage } from './docs/EmptyPage';
 import { StatisticPage } from './docs/StatisticPage';
 import { ConfigProviderPage } from './docs/ConfigProviderPage';
 
+// ── Previously missing component pages ────────────────────────────────────────
+import { AnchorPage } from './docs/AnchorPage';
+import { CascaderPage } from './docs/CascaderPage';
+import { MentionsPage } from './docs/MentionsPage';
+import { QRCodePage } from './docs/QRCodePage';
+import { ResultPage } from './docs/ResultPage';
+import { SegmentedPage } from './docs/SegmentedPage';
+import { TourPage } from './docs/TourPage';
+import { WatermarkPage } from './docs/WatermarkPage';
+
 // ── New section pages ──────────────────────────────────────────────────────────
 import { ChartsPage } from './docs/ChartsPage';
 import { HeadlessPage } from './docs/HeadlessPage';
@@ -154,6 +164,15 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/empty': EmptyPage,
   '/components/statistic': StatisticPage,
   '/components/config-provider': ConfigProviderPage,
+  // ── Previously missing component routes ──────────────────────────────────
+  '/components/anchor': AnchorPage,
+  '/components/cascader': CascaderPage,
+  '/components/mentions': MentionsPage,
+  '/components/qr-code': QRCodePage,
+  '/components/result': ResultPage,
+  '/components/segmented': SegmentedPage,
+  '/components/tour': TourPage,
+  '/components/watermark': WatermarkPage,
   // ── New routes ────────────────────────────────────────────────────────────
   '/charts': ChartsPage,
   '/headless': HeadlessPage,
