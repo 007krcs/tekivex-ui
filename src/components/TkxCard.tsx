@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { useTheme } from '../themes';
+import { useReducedMotion } from '../hooks';
 import { tkx, cx } from '../engine/tkx';
 
 export type CardVariant = 'default' | 'glass' | 'quantum' | 'elevated' | 'outlined';
@@ -20,6 +21,7 @@ const PADDING_CLASS: Record<CardPadding, string> = {
 export const TkxCard = forwardRef<HTMLElement, TkxCardProps>(
   ({ variant = 'default', isHoverable, isClickable, padding = 'md', as, children, className, style, ...rest }, ref) => {
     const theme = useTheme();
+    const reducedMotion = useReducedMotion();
     const Tag = (as ?? (isClickable ? 'button' : 'div')) as 'div';
 
     const variantStyle: React.CSSProperties = {
@@ -33,7 +35,7 @@ export const TkxCard = forwardRef<HTMLElement, TkxCardProps>(
     const base = tkx(
       'rounded-xl w-full text-left block font-sans focus-visible:focus-ring',
       PADDING_CLASS[padding],
-      (isHoverable || isClickable) && 'transition-transform duration-150 hover:scale-[1.01]',
+      (isHoverable || isClickable) && !reducedMotion && 'transition-transform duration-150 hover:scale-[1.01]',
       isClickable ? 'cursor-pointer' : 'cursor-default',
     );
 

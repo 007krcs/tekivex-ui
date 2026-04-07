@@ -2,7 +2,7 @@ import { useEffect, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
-import { useFocusTrap, useEscapeKey, useAnnounce } from '../hooks';
+import { useFocusTrap, useEscapeKey, useAnnounce, useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'full';
@@ -28,6 +28,7 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
   const theme = useTheme();
   const titleId = useId();
   const trapRef = useFocusTrap(isOpen);
+  const reducedMotion = useReducedMotion();
   const announce = useAnnounce();
   const safeTitle = sanitizeString(title);
   const isFull = size === 'full';
@@ -51,7 +52,7 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
       <div
         aria-hidden="true"
         onClick={closeOnOverlayClick ? onClose : undefined}
-        className={tkx('absolute inset-0 animate-fade-in')}
+        className={tkx('absolute inset-0', !reducedMotion && 'animate-fade-in')}
         style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
       />
 
@@ -61,7 +62,7 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={tkx('relative z-10 flex flex-col overflow-hidden animate-slide-up', isFull ? '' : 'rounded-xl')}
+        className={tkx('relative z-10 flex flex-col overflow-hidden', !reducedMotion && 'animate-slide-up', isFull ? '' : 'rounded-xl')}
         style={{
           backgroundColor: theme.surface,
           border: `1px solid ${theme.border}`,

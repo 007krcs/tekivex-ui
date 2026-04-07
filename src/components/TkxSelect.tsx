@@ -609,6 +609,7 @@ export function TkxSelect({
                         transition: 'background-color 80ms',
                         opacity: opt.disabled ? 0.5 : 1,
                         userSelect: 'none',
+                        touchAction: 'manipulation',
                       }}
                     >
                       {optionContent}
@@ -714,6 +715,7 @@ export function TkxSelect({
             outline: 'none',
             minHeight: size === 'sm' ? 34 : size === 'lg' ? 50 : 42,
             flexWrap: 'wrap',
+            touchAction: 'manipulation',
           }}
         >
           {/* Multi-select tags or single label */}

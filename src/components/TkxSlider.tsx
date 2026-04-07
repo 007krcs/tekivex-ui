@@ -350,6 +350,7 @@ export function TkxSlider({
             backgroundColor: theme.border,
             cursor: isDisabled ? 'not-allowed' : 'pointer',
             userSelect: 'none',
+            touchAction: 'none',
           }}
         >
           {/* Fill */}

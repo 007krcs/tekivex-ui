@@ -1,47 +1,50 @@
-import type { CSSProperties } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
 import { TkxVideoPlayer } from '@tekivex/ui';
+import { DemoSection } from '../layout/DemoSection';
 
 export function VideoPlayerPage({ theme }: { theme: ThemeTokens }) {
-  const wrap: CSSProperties = {
-    maxWidth: 900,
-    margin: '0 auto',
-    padding: '40px 32px',
-    color: theme.text,
-  };
-
-  const demoBox: CSSProperties = {
-    padding: 32,
-    borderRadius: 12,
-    border: `1px solid ${theme.border}`,
-    background: theme.surface,
-    marginBottom: 32,
-  };
-
   return (
-    <div style={wrap}>
+    <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 32px', color: theme.text }}>
       <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 8 }}>Video Player</h1>
       <p style={{ color: theme.textMuted, marginBottom: 32 }}>
         Custom HTML5 video player with play/pause, seek, volume, fullscreen, and Picture-in-Picture support.
       </p>
 
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Basic Player</h2>
-      <div style={demoBox}>
+      <DemoSection
+        title="Basic Player"
+        description="A video player with poster image and default controls."
+        theme={theme}
+        code={`import { TkxVideoPlayer } from '@tekivex/ui';
+
+<TkxVideoPlayer
+  src="https://www.w3schools.com/html/mov_bbb.mp4"
+  poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg"
+/>`}
+      >
         <TkxVideoPlayer
           src="https://www.w3schools.com/html/mov_bbb.mp4"
           poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg"
         />
-      </div>
+      </DemoSection>
 
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>With Title</h2>
-      <div style={demoBox}>
+      <DemoSection
+        title="With Title"
+        description="Displays a title overlay on the video player. Starts muted."
+        theme={theme}
+        code={`<TkxVideoPlayer
+  src="https://www.w3schools.com/html/mov_bbb.mp4"
+  title="Big Buck Bunny — Sample Video"
+  autoPlay={false}
+  muted
+/>`}
+      >
         <TkxVideoPlayer
           src="https://www.w3schools.com/html/mov_bbb.mp4"
           title="Big Buck Bunny — Sample Video"
           autoPlay={false}
           muted
         />
-      </div>
+      </DemoSection>
 
       <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Props</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
@@ -54,9 +57,9 @@ export function VideoPlayerPage({ theme }: { theme: ThemeTokens }) {
         </thead>
         <tbody>
           {[
-            ['src', 'string', '—', 'Video source URL'],
-            ['poster', 'string', '—', 'Thumbnail image URL'],
-            ['title', 'string', '—', 'Video title shown in overlay'],
+            ['src', 'string', '\u2014', 'Video source URL'],
+            ['poster', 'string', '\u2014', 'Thumbnail image URL'],
+            ['title', 'string', '\u2014', 'Video title shown in overlay'],
             ['autoPlay', 'boolean', 'false', 'Auto-play on mount'],
             ['muted', 'boolean', 'false', 'Start muted'],
             ['loop', 'boolean', 'false', 'Loop video playback'],

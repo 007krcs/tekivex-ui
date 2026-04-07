@@ -1,7 +1,7 @@
 import { useState, useRef, useId, type ReactElement, cloneElement } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
-import { useEscapeKey, useClickOutside } from '../hooks';
+import { useEscapeKey, useClickOutside, useReducedMotion } from '../hooks';
 import { getAccessibleForeground } from '../engine/wcag';
 import { tkx } from '../engine/tkx';
 
@@ -27,6 +27,7 @@ export function TkxTooltip({ content, children, placement = 'top', delay = 300 }
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const tooltipId = useId();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reducedMotion = useReducedMotion();
   const safeContent = sanitizeString(content);
   const textColor = getAccessibleForeground(theme.surfaceAlt, [theme.text, '#ffffff', '#000000']);
 
@@ -51,7 +52,7 @@ export function TkxTooltip({ content, children, placement = 'top', delay = 300 }
         <span
           id={tooltipId}
           role="tooltip"
-          className={tkx('absolute z-[9000] text-xs font-sans py-1.5 px-2.5 rounded-md whitespace-nowrap pointer-events-none animate-fade-in')}
+          className={tkx('absolute z-[9000] text-xs font-sans py-1.5 px-2.5 rounded-md whitespace-nowrap pointer-events-none', !reducedMotion && 'animate-fade-in')}
           style={{
             backgroundColor: theme.surfaceAlt,
             color: textColor,

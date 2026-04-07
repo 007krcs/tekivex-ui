@@ -21,6 +21,6 @@
       "@a11y/*": ["./src/a11y/*"]
     }
   },
-  "include": ["src", "index.ts", "tests"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "index.ts"],
+  "exclude": ["node_modules", "dist", "tests", "demo"]
 }

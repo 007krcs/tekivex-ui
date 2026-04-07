@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TkxCommand, useTkxCommand, type ThemeTokens, type CommandItem } from '@tekivex/ui';
+import { DemoSection } from '../layout/DemoSection';
 
 const COMMANDS: CommandItem[] = [
   // File group
@@ -7,7 +8,7 @@ const COMMANDS: CommandItem[] = [
     id: 'new-document',
     label: 'New Document',
     description: 'Create a new empty document',
-    shortcut: '⌘N',
+    shortcut: '\u2318N',
     group: 'File',
     keywords: ['create', 'blank', 'new'],
     icon: (
@@ -19,9 +20,9 @@ const COMMANDS: CommandItem[] = [
   },
   {
     id: 'open-file',
-    label: 'Open File…',
+    label: 'Open File\u2026',
     description: 'Browse and open a file from disk',
-    shortcut: '⌘O',
+    shortcut: '\u2318O',
     group: 'File',
     keywords: ['browse', 'load', 'open'],
     icon: (
@@ -34,7 +35,7 @@ const COMMANDS: CommandItem[] = [
     id: 'save',
     label: 'Save',
     description: 'Save the current file',
-    shortcut: '⌘S',
+    shortcut: '\u2318S',
     group: 'File',
     keywords: ['write', 'persist'],
     icon: (
@@ -47,9 +48,9 @@ const COMMANDS: CommandItem[] = [
   },
   {
     id: 'save-as',
-    label: 'Save As…',
+    label: 'Save As\u2026',
     description: 'Save a copy to a new location',
-    shortcut: '⇧⌘S',
+    shortcut: '\u21E7\u2318S',
     group: 'File',
     keywords: ['export', 'copy', 'rename'],
   },
@@ -58,7 +59,7 @@ const COMMANDS: CommandItem[] = [
     id: 'find-replace',
     label: 'Find & Replace',
     description: 'Search and replace text in the document',
-    shortcut: '⌘H',
+    shortcut: '\u2318H',
     group: 'Edit',
     keywords: ['search', 'change', 'substitute'],
     icon: (
@@ -72,7 +73,7 @@ const COMMANDS: CommandItem[] = [
     id: 'select-all',
     label: 'Select All',
     description: 'Select all content in the current view',
-    shortcut: '⌘A',
+    shortcut: '\u2318A',
     group: 'Edit',
     keywords: ['highlight', 'all'],
   },
@@ -80,7 +81,7 @@ const COMMANDS: CommandItem[] = [
     id: 'undo',
     label: 'Undo',
     description: 'Undo the last action',
-    shortcut: '⌘Z',
+    shortcut: '\u2318Z',
     group: 'Edit',
     keywords: ['revert', 'back'],
   },
@@ -89,7 +90,7 @@ const COMMANDS: CommandItem[] = [
     id: 'toggle-theme',
     label: 'Toggle Theme',
     description: 'Switch between light and dark mode',
-    shortcut: '⌘⇧L',
+    shortcut: '\u2318\u21E7L',
     group: 'View',
     keywords: ['dark', 'light', 'mode', 'color scheme'],
     icon: (
@@ -103,7 +104,7 @@ const COMMANDS: CommandItem[] = [
     id: 'command-palette',
     label: 'Command Palette',
     description: 'Open the command palette',
-    shortcut: '⌘K',
+    shortcut: '\u2318K',
     group: 'View',
     keywords: ['commands', 'actions', 'quick open'],
   },
@@ -111,7 +112,7 @@ const COMMANDS: CommandItem[] = [
     id: 'settings',
     label: 'Settings',
     description: 'Open application preferences',
-    shortcut: '⌘,',
+    shortcut: '\u2318,',
     group: 'View',
     keywords: ['preferences', 'config', 'options'],
     icon: (
@@ -127,7 +128,7 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
   const cmd = useTkxCommand();
   const [lastAction, setLastAction] = useState<string | null>(null);
 
-  // Global ⌘K / Ctrl+K shortcut
+  // Global Cmd+K / Ctrl+K shortcut
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -139,28 +140,32 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
     return () => window.removeEventListener('keydown', handler);
   }, [cmd]);
 
-  const sectionStyle = {
-    marginBottom: '40px',
+  const kbdStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '3px',
+    background: theme.surfaceAlt,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '5px',
+    padding: '3px 8px',
+    fontSize: '12px',
+    fontFamily: 'monospace',
+    color: theme.text,
+    boxShadow: `0 1px 0 ${theme.border}`,
   };
 
-  const labelStyle = {
+  const btnStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '10px',
+    background: theme.primary,
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '10px 20px',
     fontSize: '14px',
     fontWeight: 600,
-    color: theme.textMuted,
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.08em',
-    marginBottom: '12px',
-  };
-
-  const demoBoxStyle = {
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
-    borderRadius: '12px',
-    padding: '32px 24px',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    alignItems: 'center',
-    gap: '16px',
+    cursor: 'pointer',
   };
 
   const tableWrapStyle = {
@@ -204,43 +209,15 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
     color: theme.primary,
   };
 
-  const kbdStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '3px',
-    background: theme.surfaceAlt,
-    border: `1px solid ${theme.border}`,
-    borderRadius: '5px',
-    padding: '3px 8px',
-    fontSize: '12px',
-    fontFamily: 'monospace',
-    color: theme.text,
-    boxShadow: `0 1px 0 ${theme.border}`,
-  };
-
-  const btnStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '10px',
-    background: theme.primary,
-    color: '#fff',
-    border: 'none',
-    borderRadius: '8px',
-    padding: '10px 20px',
-    fontSize: '14px',
-    fontWeight: 600,
-    cursor: 'pointer',
-  };
-
   const props = [
-    { name: 'items', type: 'CommandItem[]', default: '—', description: 'Array of command items to display and search through.' },
+    { name: 'items', type: 'CommandItem[]', default: '\u2014', description: 'Array of command items to display and search through.' },
     { name: 'isOpen', type: 'boolean', default: 'false', description: 'Controls whether the palette overlay is visible.' },
-    { name: 'onClose', type: '() => void', default: '—', description: 'Called when the palette should be dismissed (Escape, backdrop click).' },
-    { name: 'placeholder', type: 'string', default: "'Type a command…'", description: 'Placeholder text shown in the search input.' },
-    { name: 'emptyMessage', type: 'string', default: '—', description: 'Message shown when no commands match the current query.' },
+    { name: 'onClose', type: '() => void', default: '\u2014', description: 'Called when the palette should be dismissed (Escape, backdrop click).' },
+    { name: 'placeholder', type: 'string', default: "'Type a command\u2026'", description: 'Placeholder text shown in the search input.' },
+    { name: 'emptyMessage', type: 'string', default: '\u2014', description: 'Message shown when no commands match the current query.' },
     { name: 'maxItems', type: 'number', default: '8', description: 'Maximum number of results to render at once.' },
-    { name: 'onItemSelect', type: '(item: CommandItem) => void', default: '—', description: 'Called when a command item is selected (in addition to item.onSelect).' },
-    { name: 'style', type: 'CSSProperties', default: '—', description: 'Inline style override for the palette panel.' },
+    { name: 'onItemSelect', type: '(item: CommandItem) => void', default: '\u2014', description: 'Called when a command item is selected (in addition to item.onSelect).' },
+    { name: 'style', type: 'CSSProperties', default: '\u2014', description: 'Inline style override for the palette panel.' },
   ];
 
   const hookProps = [
@@ -259,14 +236,44 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
         </h1>
         <p style={{ fontSize: '16px', color: theme.textMuted, margin: 0, maxWidth: '600px' }}>
           A fuzzy-search command palette with keyboard navigation, group headers, shortcut display,
-          and a focus trap. Press <span style={kbdStyle}>⌘K</span> or <span style={kbdStyle}>Ctrl K</span> to open.
+          and a focus trap. Press <span style={kbdStyle}>{'\u2318'}K</span> or <span style={kbdStyle}>Ctrl K</span> to open.
         </p>
       </div>
 
       {/* Live demo */}
-      <div style={sectionStyle}>
-        <div style={labelStyle}>Live demo</div>
-        <div style={demoBoxStyle}>
+      <DemoSection
+        title="Live Demo"
+        description="Click the button or press Cmd+K / Ctrl+K to open the command palette. Try searching for commands."
+        theme={theme}
+        code={`import { TkxCommand, useTkxCommand } from '@tekivex/ui';
+import type { CommandItem } from '@tekivex/ui';
+
+const commands: CommandItem[] = [
+  { id: 'save', label: 'Save', shortcut: '\u2318S', group: 'File' },
+  { id: 'find', label: 'Find & Replace', shortcut: '\u2318H', group: 'Edit' },
+];
+
+function App() {
+  const cmd = useTkxCommand();
+
+  return (
+    <>
+      <button onClick={cmd.open}>Open Command Palette</button>
+      <TkxCommand
+        isOpen={cmd.isOpen}
+        onClose={cmd.close}
+        items={commands}
+        placeholder="Search commands\u2026"
+        onItemSelect={(item) => {
+          console.log(item.label);
+          cmd.close();
+        }}
+      />
+    </>
+  );
+}`}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
             <button style={btnStyle} onClick={cmd.open}>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -277,7 +284,7 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={kbdStyle}>⌘</span>
+              <span style={kbdStyle}>{'\u2318'}</span>
               <span style={{ color: theme.textMuted, fontSize: '13px' }}>+</span>
               <span style={kbdStyle}>K</span>
               <span style={{ color: theme.textMuted, fontSize: '13px', marginLeft: '4px' }}>
@@ -301,27 +308,31 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
             )}
           </div>
         </div>
-      </div>
+      </DemoSection>
 
       {/* Keyboard shortcuts reference */}
-      <div style={sectionStyle}>
-        <div style={labelStyle}>Keyboard shortcuts (inside palette)</div>
+      <DemoSection
+        title="Keyboard Shortcuts (inside palette)"
+        description="Navigation keys available when the command palette is open."
+        theme={theme}
+        code={`// Keyboard navigation is built-in:
+// Arrow Up/Down — Navigate items
+// Enter — Select focused item
+// Escape — Close palette
+// Tab / Shift+Tab — Move focus forward / back`}
+      >
         <div
           style={{
-            background: theme.surface,
-            border: `1px solid ${theme.border}`,
-            borderRadius: '12px',
-            padding: '20px 24px',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
             gap: '12px 24px',
           }}
         >
           {[
-            { keys: ['↑', '↓'], action: 'Navigate items' },
-            { keys: ['↵'], action: 'Select focused item' },
+            { keys: ['\u2191', '\u2193'], action: 'Navigate items' },
+            { keys: ['\u21B5'], action: 'Select focused item' },
             { keys: ['Esc'], action: 'Close palette' },
-            { keys: ['Tab', '⇧Tab'], action: 'Move focus forward / back' },
+            { keys: ['Tab', '\u21E7Tab'], action: 'Move focus forward / back' },
           ].map(({ keys, action }) => (
             <div key={action} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
@@ -333,14 +344,14 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
             </div>
           ))}
         </div>
-      </div>
+      </DemoSection>
 
       {/* The actual command palette (rendered via portal) */}
       <TkxCommand
         isOpen={cmd.isOpen}
         onClose={cmd.close}
         items={COMMANDS}
-        placeholder="Search commands…"
+        placeholder="Search commands\u2026"
         emptyMessage="No matching commands found."
         onItemSelect={(item) => {
           setLastAction(item.label);
@@ -348,7 +359,7 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
         }}
       />
 
-      {/* Props table — TkxCommand */}
+      {/* Props table -- TkxCommand */}
       <div style={{ marginTop: '56px' }}>
         <h2 style={{ fontSize: '20px', fontWeight: 700, color: theme.text, marginBottom: '16px' }}>
           TkxCommand props

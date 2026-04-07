@@ -129,6 +129,13 @@ export type { TkxCommandProps, CommandItem } from './src/components/TkxCommand';
 export { TkxCarousel } from './src/components/TkxCarousel';
 export type { TkxCarouselProps } from './src/components/TkxCarousel';
 
+// i18n / RTL
+export { I18nProvider } from './src/i18n/I18nProvider';
+export { useI18n, useLocale, useDirection, isRTL, I18nContext } from './src/i18n';
+export { enUS, esES, arSA, frFR, deDE, jaJP, LOCALES } from './src/i18n';
+export type { LocaleStrings, LocaleCode, Direction, I18nContextValue } from './src/i18n';
+export type { I18nProviderProps } from './src/i18n/I18nProvider';
+
 // Accessibility Primitives
 export { SkipNav, LiveRegion, FocusTrap, VisuallyHidden } from './src/a11y';
 export type { SkipNavProps, LiveRegionProps, FocusTrapProps } from './src/a11y';
