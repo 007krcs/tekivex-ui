@@ -28,7 +28,7 @@ export function I18nProvider({
 
   return (
     <I18nContext.Provider value={value}>
-      <div dir={value.direction} style={{ direction: value.direction }}>
+      <div dir={value.direction} style={{ direction: value.direction, display: 'contents' }}>
         {children}
       </div>
     </I18nContext.Provider>

@@ -14,17 +14,34 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'index.ts'),
+      // Multiple entry points — each generates its own dist file.
+      // index.ts     → dist/index.{js,cjs}
+      // src/charts   → dist/charts.{js,cjs}
+      // src/headless → dist/headless.{js,cjs}
+      entry: {
+        index: resolve(__dirname, 'index.ts'),
+        charts: resolve(__dirname, 'src/charts/index.ts'),
+        headless: resolve(__dirname, 'src/headless/index.ts'),
+      },
       name: 'TekiVexUI',
       formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'cjs' ? 'cjs' : 'js'}`,
+      fileName: (format, entryName) =>
+        `${entryName}.${format === 'cjs' ? 'cjs' : 'js'}`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      // recharts is a dependency but mark it external to keep bundle lean.
+      // Consumers install it alongside @tekivex/ui.
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'recharts',
+      ],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          recharts: 'Recharts',
         },
       },
     },

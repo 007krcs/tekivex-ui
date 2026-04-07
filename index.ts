@@ -168,7 +168,11 @@ export * from './src/components/TkxList';
 // i18n / RTL
 export { I18nProvider } from './src/i18n/I18nProvider';
 export { useI18n, useLocale, useDirection, isRTL, I18nContext } from './src/i18n';
-export { enUS, esES, arSA, frFR, deDE, jaJP, LOCALES } from './src/i18n';
+export {
+  enUS, esES, ptBR, ptPT, frFR, deDE, itIT, nlNL, plPL, ruRU, ukUA, trTR,
+  svSE, daDK, csCZ, huHU, arSA, heIL, faIR, jaJP, koKR, zhCN, zhTW,
+  thTH, viVN, idID, roRO, LOCALES,
+} from './src/i18n';
 export type { LocaleStrings, LocaleCode, Direction, I18nContextValue } from './src/i18n';
 export type { I18nProviderProps } from './src/i18n/I18nProvider';
 

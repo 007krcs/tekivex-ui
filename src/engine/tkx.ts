@@ -709,6 +709,8 @@ function declarationsToCSS(decls: Declarations): string {
 
 const registry = new Map<string, string>(); // hash → full CSS block
 let styleEl: HTMLStyleElement | null = null;
+// Constructable CSSStyleSheet for O(1) rule insertion (Chrome 73+, Firefox 101+, Safari 16.4+)
+let adoptedSheet: CSSStyleSheet | null = null;
 
 function getOrCreateStyleEl(): HTMLStyleElement {
   if (!styleEl || !styleEl.isConnected) {
@@ -722,13 +724,64 @@ function getOrCreateStyleEl(): HTMLStyleElement {
   return styleEl;
 }
 
+function getAdoptedSheet(): CSSStyleSheet | null {
+  if (adoptedSheet) return adoptedSheet;
+  try {
+    // Constructable Stylesheets API — supported in all evergreen browsers
+    const sheet = new CSSStyleSheet();
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    adoptedSheet = sheet;
+    return sheet;
+  } catch {
+    return null;
+  }
+}
+
 function registerBlock(hash: string, cssBlock: string): void {
   if (registry.has(hash)) return;
   registry.set(hash, cssBlock);
-  if (typeof document !== 'undefined') {
-    const el = getOrCreateStyleEl();
-    el.textContent += cssBlock + '\n';
+  if (typeof document === 'undefined') return;
+
+  const sheet = getAdoptedSheet();
+  if (sheet) {
+    // O(1) per rule — insertRule appends without touching existing text
+    // Split multi-rule blocks (e.g. base + media query) and insert each one.
+    // We use a simple regex split on top-level `}` boundaries.
+    const rules = splitCSSRules(cssBlock);
+    for (const rule of rules) {
+      try {
+        sheet.insertRule(rule, sheet.cssRules.length);
+      } catch {
+        // Fallback for any rule the browser rejects (e.g. invalid pseudo)
+        getOrCreateStyleEl().textContent += rule + '\n';
+      }
+    }
+  } else {
+    // Fallback for environments that don't support adoptedStyleSheets
+    getOrCreateStyleEl().textContent += cssBlock + '\n';
   }
+}
+
+/**
+ * Split a CSS string into individual top-level rules.
+ * Handles nested braces (media queries, @supports, etc.).
+ */
+function splitCSSRules(css: string): string[] {
+  const rules: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < css.length; i++) {
+    if (css[i] === '{') depth++;
+    else if (css[i] === '}') {
+      depth--;
+      if (depth === 0) {
+        const rule = css.slice(start, i + 1).trim();
+        if (rule) rules.push(rule);
+        start = i + 1;
+      }
+    }
+  }
+  return rules;
 }
 
 // ── Main TKX function ─────────────────────────────────────────────────────────
@@ -866,6 +919,10 @@ export function extractAtomicCSS(): string {
 export function resetAtomicCSS(): void {
   registry.clear();
   styleEl = null;
+  if (adoptedSheet && typeof document !== 'undefined') {
+    document.adoptedStyleSheets = document.adoptedStyleSheets.filter(s => s !== adoptedSheet);
+    adoptedSheet = null;
+  }
 }
 
 // ── cx — className merge helper (like clsx but integrated) ────────────────────

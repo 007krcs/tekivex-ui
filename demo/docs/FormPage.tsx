@@ -445,6 +445,60 @@ export function FormPage({ theme }: { theme: ThemeTokens }) {
 
 // ── Programmatic form sub-component ──────────────────────────────────────────
 
+function ProgrammaticFormInner({
+  onLog,
+}: {
+  onLog: (msg: string) => void;
+}) {
+  const form = useTkxForm();
+
+  return (
+    <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
+      <TkxButton
+        variant="outline"
+        onClick={() => {
+          const vals = form.getFieldsValue();
+          onLog(`getFieldsValue: ${JSON.stringify(vals)}`);
+        }}
+      >
+        Read Values
+      </TkxButton>
+      <TkxButton
+        variant="outline"
+        onClick={() => {
+          form.setFieldsValue({ firstName: 'John', lastName: 'Doe' });
+          onLog('setFieldsValue({ firstName: "John", lastName: "Doe" })');
+        }}
+      >
+        Set Values
+      </TkxButton>
+      <TkxButton
+        variant="outline"
+        onClick={() => {
+          form.resetFields();
+          onLog('resetFields()');
+        }}
+      >
+        Reset
+      </TkxButton>
+      <TkxButton
+        variant="outline"
+        onClick={async () => {
+          try {
+            const vals = await form.validateFields();
+            onLog(`validateFields passed: ${JSON.stringify(vals)}`);
+          } catch {
+            onLog('validateFields failed — check field errors');
+          }
+        }}
+      >
+        Validate
+      </TkxButton>
+      <TkxButton type="submit">Submit</TkxButton>
+    </div>
+  );
+}
+
 function ProgrammaticFormDemo({
   theme,
   log,
@@ -456,8 +510,6 @@ function ProgrammaticFormDemo({
   onLog: (msg: string) => void;
   onClear: () => void;
 }) {
-  const form = useTkxForm();
-
   const logBoxStyle = {
     marginTop: 12,
     padding: '12px 16px',
@@ -491,50 +543,7 @@ function ProgrammaticFormDemo({
           <TkxInput label="Last Name" placeholder="Last" />
         </TkxFormField>
 
-        <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
-          <TkxButton
-            variant="outline"
-            onClick={() => {
-              const vals = form.getFieldsValue();
-              onLog(`getFieldsValue: ${JSON.stringify(vals)}`);
-            }}
-          >
-            Read Values
-          </TkxButton>
-
-          <TkxButton
-            variant="outline"
-            onClick={() => {
-              form.setFieldsValue({ firstName: 'John', lastName: 'Doe' });
-              onLog('setFieldsValue({ firstName: "John", lastName: "Doe" })');
-            }}
-          >
-            Set Values
-          </TkxButton>
-
-          <TkxButton
-            variant="outline"
-            onClick={() => {
-              form.resetFields();
-              onLog('resetFields()');
-            }}
-          >
-            Reset
-          </TkxButton>
-
-          <TkxButton
-            variant="outline"
-            onClick={() => {
-              form.validateFields()
-                .then((vals) => onLog(`validateFields passed: ${JSON.stringify(vals)}`))
-                .catch(() => onLog('validateFields failed'));
-            }}
-          >
-            Validate
-          </TkxButton>
-
-          <TkxButton type="submit">Submit</TkxButton>
-        </div>
+        <ProgrammaticFormInner onLog={onLog} />
       </TkxForm>
 
       {log.length > 0 && (

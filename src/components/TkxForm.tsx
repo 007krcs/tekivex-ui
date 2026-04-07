@@ -43,6 +43,12 @@ export interface TkxFormProps {
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
+  /**
+   * An external FormInstance created via useTkxForm().
+   * When provided, the form exposes its internal instance through this reference,
+   * enabling programmatic control from outside the component tree.
+   */
+  form?: FormInstance;
 }
 
 // ── Form Field Props ────────────────────────────────────────────────────────
@@ -185,24 +191,63 @@ function hasRequiredRule(rules: ValidationRule[]): boolean {
 // ── useTkxForm Hook ─────────────────────────────────────────────────────────
 
 /**
- * Create a FormInstance for programmatic access to form state.
- * Can be used standalone or connected to a <TkxForm> via context.
+ * Returns a FormInstance for programmatic access to form state.
+ *
+ * - Inside a <TkxForm>: returns the form's live instance (reads/writes real field state).
+ * - Outside a <TkxForm>: returns a standalone instance backed by a ref store.
+ *   Pass it to <TkxForm form={instance}> to connect it to a form.
+ *
+ * @example — programmatic access inside a form
+ * ```tsx
+ * function MyInnerButtons() {
+ *   const form = useTkxForm(); // connected to parent TkxForm
+ *   return <button onClick={() => form.resetFields()}>Reset</button>;
+ * }
+ * ```
+ *
+ * @example — external instance (Ant Design pattern)
+ * ```tsx
+ * function Parent() {
+ *   const form = useTkxForm();
+ *   return (
+ *     <TkxForm form={form}>
+ *       <TkxFormField name="email" label="Email"><TkxInput label="Email" /></TkxFormField>
+ *       <button onClick={() => console.log(form.getFieldsValue())}>Log</button>
+ *     </TkxForm>
+ *   );
+ * }
+ * ```
  */
 export function useTkxForm(): FormInstance {
   const ctx = useContext(FormContext);
 
-  // If used inside a TkxForm, return its instance directly
-  if (ctx) {
-    return ctx.instance;
-  }
+  // Always call hooks unconditionally (Rules of Hooks).
+  // These refs back the standalone instance when used outside a TkxForm.
+  const valuesRef = useRef<Record<string, any>>({});
+  const errorsRef = useRef<Record<string, string | null>>({});
+  const touchedRef = useRef<Record<string, boolean>>({});
 
-  // Standalone usage — maintain internal ref so the same object is returned
-  // across renders. Note: without a TkxForm provider, the standalone instance
-  // is inert (no UI binding), but callers can still use it as a value store.
-  throw new Error(
-    'useTkxForm() must be called inside a <TkxForm> provider. ' +
-    'Wrap your component tree with <TkxForm> first.',
-  );
+  const standaloneInstance = useMemo<FormInstance>(() => ({
+    getFieldValue: (name: string) => valuesRef.current[name],
+    setFieldValue: (name: string, value: any) => { valuesRef.current[name] = value; },
+    getFieldsValue: () => ({ ...valuesRef.current }),
+    setFieldsValue: (values: Record<string, any>) => {
+      Object.assign(valuesRef.current, values);
+    },
+    validateFields: () => Promise.resolve({ ...valuesRef.current }),
+    validateField: (_name: string) => Promise.resolve(true),
+    resetFields: () => {
+      valuesRef.current = {};
+      errorsRef.current = {};
+      touchedRef.current = {};
+    },
+    getFieldError: (name: string) => errorsRef.current[name] ?? null,
+    isFieldTouched: (name: string) => touchedRef.current[name] ?? false,
+  }), []);
+
+  // If inside a TkxForm context, return the live connected instance.
+  // Otherwise return the standalone ref-backed instance.
+  return ctx ? ctx.instance : standaloneInstance;
 }
 
 // ── TkxForm Component ───────────────────────────────────────────────────────
@@ -216,6 +261,7 @@ export function TkxForm({
   children,
   className,
   style,
+  form: externalInstance,
 }: TkxFormProps) {
   const theme = useTheme();
 
@@ -362,6 +408,10 @@ export function TkxForm({
     : tkx('flex flex-col gap-5');
 
   // ─── Context Value ─────────────────────────────────────────────────────
+  // When an external form instance is provided via the `form` prop, expose it
+  // through the context so that useTkxForm() inside children returns it.
+  const activeInstance = externalInstance ?? instance;
+
   const contextValue = useMemo<FormContextValue>(() => ({
     state,
     initialValues: initialValuesRef.current,
@@ -374,13 +424,15 @@ export function TkxForm({
     registerField,
     unregisterField,
     validateField,
-    instance,
-  }), [state, layout, disabled, setFieldValue, setFieldError, setFieldTouched, registerField, unregisterField, validateField, instance]);
+    instance: activeInstance,
+  }), [state, layout, disabled, setFieldValue, setFieldError, setFieldTouched, registerField, unregisterField, validateField, activeInstance]);
 
   return (
     <FormContext.Provider value={contextValue}>
       <form
         noValidate
+        role="form"
+        aria-label="Form"
         onSubmit={handleSubmit}
         className={cx(layoutClass, className)}
         style={{

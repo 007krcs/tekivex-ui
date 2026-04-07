@@ -1,7 +1,7 @@
 {
   "name": "@tekivex/ui",
-  "version": "2.3.0",
-  "description": "Quantum-Class Component Framework — WCAG 2.1 AAA, WAI-ARIA 1.2, Zero-Trust Security",
+  "version": "2.5.0",
+  "description": "Production-grade React component library — 70+ components, WCAG 2.1 AAA, WAI-ARIA 1.2, built-in charts, headless primitives, zero-runtime CSS engine, TypeScript-first.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -15,11 +15,28 @@
     "./styles": "./dist/index.css",
     "./themes": {
       "import": "./dist/themes.js",
-      "require": "./dist/themes.cjs"
+      "require": "./dist/themes.cjs",
+      "types": "./dist/themes.d.ts"
+    },
+    "./charts": {
+      "import": "./dist/charts.js",
+      "require": "./dist/charts.cjs",
+      "types": "./dist/charts.d.ts"
+    },
+    "./headless": {
+      "import": "./dist/headless.js",
+      "require": "./dist/headless.cjs",
+      "types": "./dist/headless.d.ts"
     }
   },
-  "sideEffects": ["*.css", "./src/styles/global.css"],
-  "files": ["dist", "src"],
+  "sideEffects": [
+    "*.css",
+    "./src/styles/global.css"
+  ],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "vite build && tsc --emitDeclarationOnly",
     "dev": "vite",
@@ -38,6 +55,14 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "recharts": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "recharts": "^2.15.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
@@ -62,14 +87,36 @@
   "keywords": [
     "react",
     "component-library",
+    "ui-library",
+    "design-system",
     "wcag",
     "accessibility",
+    "a11y",
     "aria",
+    "wai-aria",
     "security",
+    "xss-protection",
     "typescript",
-    "tekivex"
+    "tailwind-alternative",
+    "css-in-js",
+    "headless",
+    "charts",
+    "recharts",
+    "data-grid",
+    "form",
+    "validation",
+    "dark-mode",
+    "rtl",
+    "i18n",
+    "animation",
+    "tekivex",
+    "enterprise",
+    "zero-runtime"
   ],
-  "author": "007krcs",
+  "author": {
+    "name": "007krcs",
+    "url": "https://github.com/007krcs"
+  },
   "license": "MIT",
   "homepage": "https://ui.tekivex.com/",
   "repository": {
@@ -78,5 +125,12 @@
   },
   "bugs": {
     "url": "https://github.com/007krcs/tekivex-ui/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/007krcs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -31,7 +31,7 @@ describe('TkxForm', () => {
     expect(screen.getByText('Username')).toBeInTheDocument();
   });
 
-  it('calls onSubmit with form values', () => {
+  it('calls onSubmit with form values', async () => {
     const onSubmit = vi.fn();
     render(
       <TkxForm onSubmit={onSubmit} initialValues={{ name: 'Alice' }}>
@@ -43,7 +43,7 @@ describe('TkxForm', () => {
       { wrapper: Wrapper },
     );
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-    expect(onSubmit).toHaveBeenCalled();
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
   });
 
   it('shows validation error for required field on submit', async () => {

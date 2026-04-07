@@ -1,6 +1,10 @@
-import { createContext, useContext, useEffect, type ReactNode, createElement } from 'react';
+import { createContext, useContext, useLayoutEffect, useEffect, type ReactNode, createElement } from 'react';
 import { cssVar } from '../engine/css';
 import { meetsAA } from '../engine/wcag';
+
+// useLayoutEffect on client, useEffect on server (avoids SSR warning)
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 // ── Theme Token Type ─────────────────────────────────────────────────────────
 
@@ -90,7 +94,10 @@ export interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ theme = quantumDark, children }: ThemeProviderProps) {
-  useEffect(() => {
+  // useLayoutEffect fires synchronously after DOM mutations and before paint,
+  // eliminating the flash-of-unstyled-content that useEffect causes.
+  // The isomorphic alias silently falls back to useEffect during SSR.
+  useIsomorphicLayoutEffect(() => {
     const vars = (Object.entries(theme) as [keyof ThemeTokens, string][])
       .map(([key, value]) => cssVar(key, value))
       .join(' ');
@@ -98,12 +105,32 @@ export function ThemeProvider({ theme = quantumDark, children }: ThemeProviderPr
     if (!styleEl) {
       styleEl = document.createElement('style');
       styleEl.id = 'tkx-theme';
-      document.head.appendChild(styleEl);
+      // Insert as the very first style element so it has the lowest specificity
+      // and component-level overrides always win.
+      const firstStyle = document.head.querySelector('style');
+      if (firstStyle) {
+        document.head.insertBefore(styleEl, firstStyle);
+      } else {
+        document.head.appendChild(styleEl);
+      }
     }
     styleEl.textContent = `:root { ${vars} }`;
   }, [theme]);
 
-  return createElement(ThemeContext.Provider, { value: theme }, children);
+  // Also set CSS variables as inline style on the provider wrapper so that
+  // SSR-rendered HTML already contains the correct values without a round-trip.
+  const inlineVars = Object.fromEntries(
+    (Object.entries(theme) as [keyof ThemeTokens, string][]).map(([key, value]) => [
+      `--tkx-${key}`,
+      value,
+    ]),
+  ) as Record<string, string>;
+
+  return createElement(
+    ThemeContext.Provider,
+    { value: theme },
+    createElement('div', { style: { display: 'contents', ...inlineVars } }, children),
+  );
 }
 
 export function useTheme(): ThemeTokens {
