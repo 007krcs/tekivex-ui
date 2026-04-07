@@ -31,6 +31,24 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    title: 'Charts',
+    items: [
+      { label: 'Charts Overview', route: '/charts' },
+    ],
+  },
+  {
+    title: 'Headless Primitives',
+    items: [
+      { label: 'Headless Hooks', route: '/headless' },
+    ],
+  },
+  {
+    title: 'Security & A11y',
+    items: [
+      { label: 'Security Engine', route: '/security' },
+    ],
+  },
+  {
     title: 'Components',
     items: [
       { label: 'Button', route: '/components/button' },
@@ -92,6 +110,15 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Empty', route: '/components/empty' },
       { label: 'Statistic', route: '/components/statistic' },
       { label: 'Config Provider', route: '/components/config-provider' },
+      { label: 'Affix', route: '/components/affix' },
+      { label: 'Anchor', route: '/components/anchor' },
+      { label: 'Cascader', route: '/components/cascader' },
+      { label: 'Mentions', route: '/components/mentions' },
+      { label: 'QR Code', route: '/components/qr-code' },
+      { label: 'Result', route: '/components/result' },
+      { label: 'Segmented', route: '/components/segmented' },
+      { label: 'Tour', route: '/components/tour' },
+      { label: 'Watermark', route: '/components/watermark' },
     ],
   },
   {
@@ -269,7 +296,7 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
         <IconLogo />
         <div style={brandTextStyle}>
           <span style={brandNameStyle}>TekiVex UI</span>
-          <span style={versionBadgeStyle}>v2.0.0</span>
+          <span style={versionBadgeStyle}>v2.5.0</span>
         </div>
       </div>
 

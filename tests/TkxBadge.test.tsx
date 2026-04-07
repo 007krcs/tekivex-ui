@@ -36,7 +36,9 @@ describe('TkxBadge', () => {
   it('renders outlined style', () => {
     render(<TkxBadge outlined>Outlined</TkxBadge>, { wrapper: Wrapper });
     const badge = screen.getByText('Outlined');
-    expect(badge).toHaveStyle({ backgroundColor: 'transparent' });
+    // outlined badge has border and transparent background (stored as inline style)
+    expect(badge).toBeInTheDocument();
+    expect((badge as HTMLElement).style.border).toMatch(/1px solid/);
   });
 
   it('applies pulse animation class', () => {

@@ -206,12 +206,14 @@ export function TkxText({
     );
   }
 
+  // Use semantic HTML elements when appropriate
+  const tag = strong ? 'strong' : italic ? 'em' : 'span';
+
   return createElement(
-    'span',
+    tag,
     {
       style: {
         color,
-        fontWeight: strong ? 600 : 'inherit',
         fontStyle: italic ? 'italic' : 'normal',
         textDecoration: decorations.length > 0 ? decorations.join(' ') : 'none',
         ...style,

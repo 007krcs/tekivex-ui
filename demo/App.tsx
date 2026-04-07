@@ -74,6 +74,11 @@ import { EmptyPage } from './docs/EmptyPage';
 import { StatisticPage } from './docs/StatisticPage';
 import { ConfigProviderPage } from './docs/ConfigProviderPage';
 
+// ── New section pages ──────────────────────────────────────────────────────────
+import { ChartsPage } from './docs/ChartsPage';
+import { HeadlessPage } from './docs/HeadlessPage';
+import { SecurityPage } from './docs/SecurityPage';
+
 // ── Template pages ─────────────────────────────────────────────────────────────
 import { DashboardTemplate } from './templates/DashboardTemplate';
 import { PortfolioTemplate } from './templates/PortfolioTemplate';
@@ -149,6 +154,10 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/empty': EmptyPage,
   '/components/statistic': StatisticPage,
   '/components/config-provider': ConfigProviderPage,
+  // ── New routes ────────────────────────────────────────────────────────────
+  '/charts': ChartsPage,
+  '/headless': HeadlessPage,
+  '/security': SecurityPage,
   '/templates/dashboard': DashboardTemplate,
   '/templates/portfolio': PortfolioTemplate,
   '/templates/ecommerce': EcommerceTemplate,

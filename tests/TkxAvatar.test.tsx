@@ -24,15 +24,16 @@ describe('TkxAvatar', () => {
   });
 
   it('renders with different sizes', () => {
-    const { container } = render(<TkxAvatar alt="Small" size="sm" />, { wrapper: Wrapper });
-    const wrapper = container.firstElementChild as HTMLElement;
-    expect(wrapper).toHaveStyle({ width: '32px', height: '32px' });
+    render(<TkxAvatar alt="Small" size="sm" />, { wrapper: Wrapper });
+    // The inner fallback div carries role="img" and inline size styles
+    const inner = screen.getByRole('img', { name: 'Small' });
+    expect(inner).toHaveStyle({ width: '32px', height: '32px' });
   });
 
   it('renders xl size', () => {
-    const { container } = render(<TkxAvatar alt="XL" size="xl" />, { wrapper: Wrapper });
-    const wrapper = container.firstElementChild as HTMLElement;
-    expect(wrapper).toHaveStyle({ width: '72px', height: '72px' });
+    render(<TkxAvatar alt="XL" size="xl" />, { wrapper: Wrapper });
+    const inner = screen.getByRole('img', { name: 'XL' });
+    expect(inner).toHaveStyle({ width: '72px', height: '72px' });
   });
 
   it('shows status indicator when provided', () => {

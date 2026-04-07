@@ -70,7 +70,7 @@ export function TkxImage({
   ratio = 'auto',
   radius = 'none',
   caption,
-  lazy = false,
+  lazy = true,
   preview = false,
   className,
   style,
