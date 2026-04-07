@@ -200,3 +200,33 @@ export { TKX, css, fromObject, responsive, keyframes, cssVar, extractCSS, inject
 export { tkx, tx, cx, extractAtomicCSS, resetAtomicCSS, tkxPlugin, tkxRemovePlugin, tkxListPlugins, resolvePluginUtility } from './src/engine/tkx';
 export type { TkxPluginDef } from './src/engine/tkx';
 export type { TkxInput as TkxUtilityInput } from './src/engine/tkx';
+
+export { TkxDropdown } from './src/components/TkxDropdown';
+export type { TkxDropdownProps, DropdownItem, DropdownGroup } from './src/components/TkxDropdown';
+
+// Quantum AI Components (v2.5+)
+export { TkxQuantumForm } from './src/components/TkxQuantumForm';
+export type { TkxQuantumFormProps, QuantumFieldConfig } from './src/components/TkxQuantumForm';
+
+export { TkxThemeBuilder } from './src/components/TkxThemeBuilder';
+export type { TkxThemeBuilderProps } from './src/components/TkxThemeBuilder';
+
+export { TkxPlayground } from './src/components/TkxPlayground';
+export type { TkxPlaygroundProps, PlaygroundExample } from './src/components/TkxPlayground';
+
+// Real-Time Components (v2.5+)
+export { TkxLiveFeed } from './src/components/TkxLiveFeed';
+export type { TkxLiveFeedProps, FeedItem } from './src/components/TkxLiveFeed';
+
+export { TkxLiveMetrics } from './src/components/TkxLiveMetrics';
+export type { TkxLiveMetricsProps, MetricItem } from './src/components/TkxLiveMetrics';
+
+export { TkxRealTimeChart } from './src/components/TkxRealTimeChart';
+export type { TkxRealTimeChartProps, ChartDataPoint } from './src/components/TkxRealTimeChart';
+
+export { TkxLiveLog } from './src/components/TkxLiveLog';
+export type { TkxLiveLogProps, LogEntry, LogLevel } from './src/components/TkxLiveLog';
+
+// Quantum AI Engine (v2.5+)
+export { QuantumAI, inferFieldIntelligence, optimizeThemeColors, hslToHex, Qubit, QuantumRegister, QuantumAnnealer, QuantumBoltzmannMachine, AmplitudeAmplifier } from './src/engine/quantum-ai';
+export type { FieldIntelligence, ValidationSuggestion, ThemeColorState, AnnealerResult, QBMInference, AmplifiedResult } from './src/engine/quantum-ai';

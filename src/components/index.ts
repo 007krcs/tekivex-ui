@@ -71,3 +71,8 @@ export * from './TkxList';
 export * from './TkxQuantumForm';
 export * from './TkxThemeBuilder';
 export * from './TkxPlayground';
+export * from './TkxLiveFeed';
+export * from './TkxLiveMetrics';
+export * from './TkxRealTimeChart';
+export * from './TkxLiveLog';
+export * from './TkxDropdown';

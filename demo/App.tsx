@@ -74,6 +74,13 @@ import { EmptyPage } from './docs/EmptyPage';
 import { StatisticPage } from './docs/StatisticPage';
 import { ConfigProviderPage } from './docs/ConfigProviderPage';
 
+// ── Real-Time pages ────────────────────────────────────────────────────────────
+import { LiveFeedPage } from './docs/LiveFeedPage';
+import { LiveMetricsPage } from './docs/LiveMetricsPage';
+import { RealTimeChartPage } from './docs/RealTimeChartPage';
+import { LiveLogPage } from './docs/LiveLogPage';
+import { DataGridInfinitePage } from './docs/DataGridInfinitePage';
+
 // ── Quantum AI pages ───────────────────────────────────────────────────────────
 import { QuantumFormPage } from './docs/QuantumFormPage';
 import { ThemeBuilderPage } from './docs/ThemeBuilderPage';
@@ -169,6 +176,12 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/empty': EmptyPage,
   '/components/statistic': StatisticPage,
   '/components/config-provider': ConfigProviderPage,
+  // ── Real-Time routes ──────────────────────────────────────────────────────
+  '/live-feed': LiveFeedPage,
+  '/live-metrics': LiveMetricsPage,
+  '/realtime-chart': RealTimeChartPage,
+  '/live-log': LiveLogPage,
+  '/datagrid-infinite': DataGridInfinitePage,
   // ── Quantum AI routes ─────────────────────────────────────────────────────
   '/quantum-form': QuantumFormPage,
   '/theme-builder': ThemeBuilderPage,

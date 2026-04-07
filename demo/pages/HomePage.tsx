@@ -657,7 +657,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
                   const colored = line
                     .replace(/(import|from|export|function|return|const)/g, `<span style="color:${theme.primary};font-weight:600">$1</span>`)
                     .replace(/('[^']*'|"[^"]*")/g, `<span style="color:#10b981">$1</span>`)
-                    .replace(/(&lt;[A-Z][^&]*?&gt;|&lt;\/[A-Z][^&]*?&gt;|&lt;[A-Z][^&]*/g, `<span style="color:#06b6d4">$&</span>`)
+                    .replace(/(&lt;[A-Z][^&]*?&gt;|&lt;\/[A-Z][^&]*?&gt;|&lt;[A-Z][^&]*)/g, `<span style="color:#06b6d4">$&</span>`)
                     .replace(/(TkxQuantumForm|ThemeProvider|TkxButton|quantumDark)/g, `<span style="color:#f59e0b">$1</span>`);
                   return (
                     <div key={i} dangerouslySetInnerHTML={{ __html: `<span style="color:${theme.border};user-select:none;margin-right:16px;font-size:11px">${String(i + 1).padStart(2, ' ')}</span>${colored}` }} />

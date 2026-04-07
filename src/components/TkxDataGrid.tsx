@@ -66,6 +66,14 @@ export interface TkxDataGridProps<T = any> {
   showExport?: boolean;
   /** File name for CSV export (without .csv extension). Default: "export". */
   exportFileName?: string;
+  /** Called when the user scrolls near the bottom. Use to fetch more data. */
+  onLoadMore?: () => void | Promise<void>;
+  /** Whether more data is available to load. When false, sentinel is hidden. */
+  hasMore?: boolean;
+  /** Show a loading skeleton at the bottom while fetching more data. */
+  loadingMore?: boolean;
+  /** How many pixels from the bottom to trigger onLoadMore. Default: 200 */
+  loadMoreThreshold?: number;
 }
 
 // ── Sort icon ─────────────────────────────────────────────────────────────────
@@ -354,6 +362,10 @@ export function TkxDataGrid<T = any>({
   pageSize = 0,
   showExport = false,
   exportFileName = 'export',
+  onLoadMore,
+  hasMore,
+  loadingMore = false,
+  loadMoreThreshold = 200,
 }: TkxDataGridProps<T>) {
   const theme = useTheme();
   const reduced = useReducedMotion();
@@ -459,6 +471,40 @@ export function TkxDataGrid<T = any>({
     : pagedData.length;
   const visibleData = isVirtual ? pagedData.slice(startIndex, endIndex) : pagedData;
   const offsetY = startIndex * rowHeight;
+
+  // ── Infinite scroll ─────────────────────────────────────────────────────
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const loadingRef = useRef<boolean>(false);
+
+  // Reset the debounce flag whenever data.length changes (new data arrived)
+  useEffect(() => {
+    loadingRef.current = false;
+  }, [data.length]);
+
+  useEffect(() => {
+    if (!onLoadMore) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && !loadingRef.current && hasMore !== false) {
+          loadingRef.current = true;
+          onLoadMore();
+        }
+      },
+      {
+        root: scrollContainerRef.current,
+        rootMargin: `0px 0px ${loadMoreThreshold}px 0px`,
+        threshold: 0,
+      },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onLoadMore, hasMore, loadMoreThreshold]);
 
   // ── Selection logic ─────────────────────────────────────────────────────
   const selectedSet = useMemo(() => new Set(selectedRows), [selectedRows]);
@@ -849,6 +895,32 @@ export function TkxDataGrid<T = any>({
             </tbody>
           )}
         </table>
+
+        {/* ── Infinite scroll sentinel ─────────────────────────────── */}
+        {(hasMore || loadingMore) && (
+          <div ref={sentinelRef} style={{ height: 1, width: '100%' }}>
+            {loadingMore && (
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <tbody>
+                  {Array.from({ length: 3 }, (_, i) => (
+                    <tr key={i}>
+                      {columns.map((col) => (
+                        <td key={col.key} style={{ padding: '10px 16px' }}>
+                          <TkxSkeleton variant="text" height="16px" />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+        {!hasMore && onLoadMore && (
+          <div style={{ padding: '16px', textAlign: 'center', fontSize: 13, color: theme.textMuted }}>
+            ✓ All rows loaded
+          </div>
+        )}
       </div>
 
       {/* ── Pagination ────────────────────────────────────────────────── */}

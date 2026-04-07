@@ -39,6 +39,16 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    title: '⚡ Real-Time',
+    items: [
+      { label: 'Live Feed', route: '/live-feed' },
+      { label: 'Live Metrics', route: '/live-metrics' },
+      { label: 'Real-Time Chart', route: '/realtime-chart' },
+      { label: 'Live Log', route: '/live-log' },
+      { label: 'DataGrid Infinite', route: '/datagrid-infinite' },
+    ],
+  },
+  {
     title: 'Charts',
     items: [
       { label: 'Charts Overview', route: '/charts' },

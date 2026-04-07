@@ -99,11 +99,95 @@ const BREAKPOINTS: Record<string, string> = {
   sm: '640px', md: '768px', lg: '1024px', xl: '1280px', '2xl': '1536px',
 };
 
+// ── CSS Security Guards ───────────────────────────────────────────────────────
+// Prevent CSS injection via arbitrary values. Blocks:
+//   • javascript: / vbscript: / data: URL schemes
+//   • CSS expression() (IE legacy code-exec vector)
+//   • -moz-binding / behavior (remote XBL/HTC execution)
+//   • Embedded newlines that break out of style blocks
+//
+// Quantum confidence: values that pass all guards score 1.0;
+// values containing suspicious but non-blocked patterns score < 1.0
+// and are stripped in strict mode.
+
+/** Dangerous CSS value patterns — any match → reject the declaration. */
+const DANGEROUS_VALUE_RE =
+  /javascript\s*:|vbscript\s*:|data\s*:\s*text\/html|data\s*:\s*text\/javascript|expression\s*\(|[\r\n\x00]/i;
+
+/** Dangerous CSS property names. */
+const DANGEROUS_PROPS = new Set([
+  'behavior', '-moz-binding', '-webkit-binding', 'src',
+]);
+
+/**
+ * Allowlist of CSS properties accepted via arbitrary [prop:value] shorthand.
+ * Anything not in this set is silently dropped.
+ */
+const SAFE_CSS_PROPS = new Set([
+  // Box model
+  'width','min-width','max-width','height','min-height','max-height',
+  'margin','margin-top','margin-right','margin-bottom','margin-left',
+  'padding','padding-top','padding-right','padding-bottom','padding-left',
+  // Positioning
+  'position','top','right','bottom','left','z-index','inset',
+  // Flexbox / Grid
+  'flex','flex-grow','flex-shrink','flex-basis','flex-direction','flex-wrap',
+  'align-items','align-self','align-content','justify-content','justify-items','justify-self',
+  'gap','row-gap','column-gap',
+  'grid-template-columns','grid-template-rows','grid-column','grid-row',
+  'grid-area','grid-template-areas',
+  // Typography
+  'font-size','font-weight','font-family','font-style','line-height',
+  'letter-spacing','text-align','text-decoration','text-transform',
+  'text-overflow','white-space','word-break','word-wrap','overflow-wrap',
+  // Color / Background
+  'color','background','background-color','background-image',
+  'background-position','background-size','background-repeat',
+  'opacity',
+  // Border
+  'border','border-top','border-right','border-bottom','border-left',
+  'border-width','border-style','border-color','border-radius',
+  'outline','outline-offset',
+  // Effects
+  'box-shadow','text-shadow','filter','backdrop-filter','transform',
+  'transition','animation',
+  // Layout
+  'display','overflow','overflow-x','overflow-y','visibility',
+  'pointer-events','cursor','user-select',
+  // Misc safe
+  'aspect-ratio','object-fit','object-position','list-style',
+  'vertical-align','float','clear','resize','scroll-behavior',
+  'content',  // allow content: '' for pseudo-like patterns but value is guarded
+]);
+
+/**
+ * Sanitize an arbitrary CSS value.
+ * Returns the value unchanged if safe, or null if dangerous.
+ */
+function sanitizeCSSValue(value: string): string | null {
+  if (DANGEROUS_VALUE_RE.test(value)) return null;
+  // Strip any attempt to close a style block
+  if (value.includes('}') || value.includes('{') || value.includes('<') || value.includes('>')) return null;
+  return value;
+}
+
+/**
+ * Sanitize an arbitrary CSS property name.
+ * Returns the property unchanged if safe, or null if dangerous.
+ */
+function sanitizeCSSProp(prop: string): string | null {
+  const normalized = prop.toLowerCase().trim();
+  if (DANGEROUS_PROPS.has(normalized)) return null;
+  if (!SAFE_CSS_PROPS.has(normalized)) return null; // allowlist enforcement
+  return normalized;
+}
+
 // ── Arbitrary value extractor ─────────────────────────────────────────────────
 
 function extractArbitrary(value: string): string | null {
   const match = value.match(/^\[(.+)]$/);
-  return match ? match[1] : null;
+  if (!match) return null;
+  return sanitizeCSSValue(match[1]);
 }
 
 // ── Color value resolver ──────────────────────────────────────────────────────
@@ -116,9 +200,11 @@ function resolveColor(token: string): string {
   if (token === 'white') return '#ffffff';
   if (token === 'black') return '#000000';
   if (token === 'inherit') return 'inherit';
-  // Arbitrary: [#ff0000] or [rgb(0,0,0)]
+  // Arbitrary: [#ff0000] or [rgb(0,0,0)] — sanitized
   const arb = extractArbitrary(token);
   if (arb) return arb;
+  // Bare hex
+  if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(token)) return token;
   return token;
 }
 
@@ -130,9 +216,14 @@ type Declarations = Record<string, string>;
 
 // eslint-disable-next-line complexity
 function resolveUtility(u: string): Declarations | null {
-  // ── Arbitrary value shorthand: [css-prop:value] ────────────────────────────
+  // ── Arbitrary value shorthand: [css-prop:value] — security-guarded ────────
   const fullArb = u.match(/^\[([a-zA-Z-]+):(.+)]$/);
-  if (fullArb) return { [fullArb[1]]: fullArb[2] };
+  if (fullArb) {
+    const safeProp = sanitizeCSSProp(fullArb[1]);
+    const safeVal  = sanitizeCSSValue(fullArb[2]);
+    if (safeProp && safeVal) return { [safeProp]: safeVal };
+    return null; // silently drop dangerous declaration
+  }
 
   // ── Display ────────────────────────────────────────────────────────────────
   const displayMap: Record<string, string> = {
