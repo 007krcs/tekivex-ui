@@ -423,6 +423,37 @@ export function App() {
   );
 }`;
 
+// Pure-JSX syntax tokenizer for the floating code card. No dangerouslySetInnerHTML,
+// so any source — including unescaped JSX <Components> — renders correctly.
+function tokenizeCodeLine(line: string, theme: ThemeTokens): React.ReactNode[] {
+  const KEYWORDS = new Set(['import', 'from', 'export', 'function', 'return', 'const', 'let', 'var']);
+  const COMPONENTS = new Set(['TkxQuantumForm', 'ThemeProvider', 'TkxButton', 'quantumDark']);
+  // Token regex: keyword/identifier | string | jsx tag | other
+  const tokenRe = /([A-Za-z_][A-Za-z0-9_]*)|('[^']*'|"[^"]*")|(<\/?[A-Z][A-Za-z0-9]*\b\s*\/?>?)|([\s\S])/g;
+  const out: React.ReactNode[] = [];
+  let key = 0;
+  let m: RegExpExecArray | null;
+  while ((m = tokenRe.exec(line)) !== null) {
+    if (m[1]) {
+      // identifier — keyword, component, or plain
+      if (KEYWORDS.has(m[1])) {
+        out.push(<span key={key++} style={{ color: theme.primary, fontWeight: 600 }}>{m[1]}</span>);
+      } else if (COMPONENTS.has(m[1])) {
+        out.push(<span key={key++} style={{ color: '#f59e0b' }}>{m[1]}</span>);
+      } else {
+        out.push(<span key={key++}>{m[1]}</span>);
+      }
+    } else if (m[2]) {
+      out.push(<span key={key++} style={{ color: '#10b981' }}>{m[2]}</span>);
+    } else if (m[3]) {
+      out.push(<span key={key++} style={{ color: '#06b6d4' }}>{m[3]}</span>);
+    } else if (m[4]) {
+      out.push(<span key={key++}>{m[4]}</span>);
+    }
+  }
+  return out;
+}
+
 // ── Main HomePage ─────────────────────────────────────────────────────────────
 
 export function HomePage({ theme }: { theme: ThemeTokens }) {
@@ -671,18 +702,16 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
                 <span style={{ marginLeft: 12, fontSize: 12, color: theme.textMuted, fontFamily: 'monospace' }}>app.tsx</span>
                 <span style={{ marginLeft: 'auto', fontSize: 11, color: theme.primary, background: `${theme.primary}18`, padding: '2px 8px', borderRadius: 999 }}>⚛ Quantum AI</span>
               </div>
-              {/* Code */}
-              <pre style={{ margin: 0, padding: '24px', fontFamily: 'monospace', fontSize: 13, lineHeight: 1.7, color: theme.text, overflowX: 'auto' }}>
-                {QUICK_START.split('\n').map((line, i) => {
-                  const colored = line
-                    .replace(/(import|from|export|function|return|const)/g, `<span style="color:${theme.primary};font-weight:600">$1</span>`)
-                    .replace(/('[^']*'|"[^"]*")/g, `<span style="color:#10b981">$1</span>`)
-                    .replace(/(&lt;[A-Z][^&]*?&gt;|&lt;\/[A-Z][^&]*?&gt;|&lt;[A-Z][^&]*)/g, `<span style="color:#06b6d4">$&</span>`)
-                    .replace(/(TkxQuantumForm|ThemeProvider|TkxButton|quantumDark)/g, `<span style="color:#f59e0b">$1</span>`);
-                  return (
-                    <div key={i} dangerouslySetInnerHTML={{ __html: `<span style="color:${theme.border};user-select:none;margin-right:16px;font-size:11px">${String(i + 1).padStart(2, ' ')}</span>${colored}` }} />
-                  );
-                })}
+              {/* Code — pure React tokens, no dangerouslySetInnerHTML */}
+              <pre style={{ margin: 0, padding: '20px clamp(14px, 4vw, 24px)', fontFamily: 'monospace', fontSize: 'clamp(11px, 2.6vw, 13px)', lineHeight: 1.7, color: theme.text, overflowX: 'auto', whiteSpace: 'pre' }}>
+                {QUICK_START.split('\n').map((line, i) => (
+                  <div key={i}>
+                    <span style={{ color: theme.border, userSelect: 'none', marginRight: 16, fontSize: 11 }}>
+                      {String(i + 1).padStart(2, ' ')}
+                    </span>
+                    {tokenizeCodeLine(line, theme)}
+                  </div>
+                ))}
               </pre>
             </div>
           </div>
@@ -717,16 +746,19 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
             </h2>
           </div>
 
-          {/* Tab selector */}
-          <div style={{ display: 'flex', gap: 4, padding: 4, borderRadius: 14, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, marginBottom: 32, backdropFilter: 'blur(20px)' }}>
+          {/* Tab selector — horizontally scrollable on narrow viewports */}
+          <div role="tablist" aria-label="Architecture sections" style={{ display: 'flex', gap: 4, padding: 4, borderRadius: 14, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, marginBottom: 32, backdropFilter: 'blur(20px)', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
             {tabs.map((tab, i) => (
               <button key={tab}
+                role="tab"
+                aria-selected={activeTab === i}
                 onClick={() => setActiveTab(i)}
                 style={{
-                  flex: 1, padding: '10px 16px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                  flex: '1 0 auto', padding: '10px 16px', borderRadius: 10, border: 'none', cursor: 'pointer',
                   background: activeTab === i ? `linear-gradient(135deg, ${theme.primary}cc, #7c3aed99)` : 'transparent',
                   color: activeTab === i ? '#fff' : theme.textMuted,
                   fontWeight: activeTab === i ? 700 : 500, fontSize: 14,
+                  whiteSpace: 'nowrap',
                   transition: 'all 0.2s', boxShadow: activeTab === i ? `0 4px 16px -4px ${theme.primary}88` : 'none',
                 }}>
                 {tab}

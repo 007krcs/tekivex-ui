@@ -126,9 +126,19 @@
       }
       /* ── Mobile (≤640 px) — collapse rigid grids and trim padding ────── */
       @media (max-width: 640px) {
-        /* Any inline-style grid with multiple columns collapses to 1 */
-        [style*="grid-template-columns"] {
+        /* Any inline-style grid with multiple columns collapses to 1.
+           We target every variant of the property string React might emit. */
+        [style*="grid-template-columns"],
+        [style*="gridTemplateColumns"],
+        [style*="repeat("],
+        [style*="1fr 1fr"],
+        [style*="2fr 1fr"] {
           grid-template-columns: 1fr !important;
+        }
+        /* Stats / hero / feature cards: never let a card exceed the screen */
+        [style*="grid-template-columns"] > * {
+          min-width: 0 !important;
+          max-width: 100% !important;
         }
         /* Trim large horizontal padding */
         [style*="padding: 48px 32px"],
@@ -139,23 +149,24 @@
         [style*="padding:40px 32px"] {
           padding: 20px 16px !important;
         }
-        [style*="padding: 32px"],
-        [style*="padding:32px"] {
-          padding: 16px !important;
-        }
-        [style*="padding: 80px 40px"],
-        [style*="padding:80px 40px"] {
-          padding: 40px 20px !important;
+        [style*="padding: 80px 32px"],
+        [style*="padding:80px 32px"] {
+          padding: 40px 16px !important;
         }
         [style*="padding: 0 32px"],
         [style*="padding:0 32px"] {
           padding-left: 16px !important;
           padding-right: 16px !important;
         }
+        [style*="padding: 80px 40px"],
+        [style*="padding:80px 40px"] {
+          padding: 40px 20px !important;
+        }
         /* Hero headlines wrap better on small screens */
-        h1 {
+        h1, h2, h3 {
           word-wrap: break-word;
           overflow-wrap: break-word;
+          hyphens: auto;
         }
         /* Tables become horizontally scrollable instead of overflowing the layout */
         table {
@@ -163,13 +174,21 @@
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
         }
+        /* Any flex bar (tabs, toolbar) scrolls horizontally if it overflows */
+        [style*="display: flex"][style*="overflow"],
+        [style*="display:flex"][style*="overflow"] {
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
       }
       /* ── Tablet (641–960 px) — reduce 4-col grids to 2-col, keep some padding */
       @media (min-width: 641px) and (max-width: 960px) {
-        [style*="repeat(4, 1fr)"] {
+        [style*="repeat(4, 1fr)"],
+        [style*="repeat(4,1fr)"] {
           grid-template-columns: repeat(2, 1fr) !important;
         }
-        [style*="repeat(3, 1fr)"] {
+        [style*="repeat(3, 1fr)"],
+        [style*="repeat(3,1fr)"] {
           grid-template-columns: repeat(2, 1fr) !important;
         }
       }
