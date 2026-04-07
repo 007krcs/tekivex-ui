@@ -363,6 +363,9 @@ function AnimCounter({ target, suffix = '', duration = 2000 }: { target: number;
 }
 
 // ── Holographic Text ──────────────────────────────────────────────────────────
+// Uses a CSS class (injected once) so background-clip:text is applied with
+// the !important specificity React inline styles can't provide. Without this,
+// some browsers / paint paths show the gradient as a solid box.
 
 function HoloText({ children, theme }: { children: string; theme: ThemeTokens }) {
   const [tick, setTick] = useState(0);
@@ -370,20 +373,34 @@ function HoloText({ children, theme }: { children: string; theme: ThemeTokens })
     const id = setInterval(() => setTick(t => t + 1), 50);
     return () => clearInterval(id);
   }, []);
+  // Inject the holo-text rule once, with !important so nothing can override it.
+  useEffect(() => {
+    if (document.getElementById('tkx-holo-text-css')) return;
+    const style = document.createElement('style');
+    style.id = 'tkx-holo-text-css';
+    style.textContent = `
+      .tkx-holo-text {
+        display: inline-block;
+        background-size: 300% 100% !important;
+        background-repeat: no-repeat !important;
+        -webkit-background-clip: text !important;
+                background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        color: transparent !important;
+        padding: 0 0.05em;
+      }
+    `;
+    document.head.appendChild(style);
+  }, []);
   const hue = (tick * 2) % 360;
   return (
-    <span style={{
-      display: 'inline-block',
-      backgroundImage: `linear-gradient(${90 + Math.sin(tick * 0.03) * 30}deg, ${theme.primary}, hsl(${hue},100%,65%), #00d4ff, ${theme.primary})`,
-      backgroundSize: '300% 100%',
-      backgroundPosition: `${(tick * 2) % 300}% 0`,
-      backgroundRepeat: 'no-repeat',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
-      color: 'transparent',
-      transition: 'background-position 0.05s',
-    }}>
+    <span
+      className="tkx-holo-text"
+      style={{
+        backgroundImage: `linear-gradient(${90 + Math.sin(tick * 0.03) * 30}deg, ${theme.primary}, hsl(${hue},100%,65%), #00d4ff, ${theme.primary})`,
+        backgroundPosition: `${(tick * 2) % 300}% 0`,
+      }}
+    >
       {children}
     </span>
   );
@@ -584,7 +601,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
 
       {/* ── Stats Section ─────────────────────────────────────────────── */}
       <section style={{ position: 'relative', zIndex: 1, padding: '0 32px 80px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20 }}>
           {stats.map(({ value, suffix, label }) => (
             <div key={label} style={{
               padding: '32px 24px', textAlign: 'center', borderRadius: 20,
@@ -602,7 +619,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
 
       {/* ── Quantum Code Showcase ─────────────────────────────────────── */}
       <section style={{ position: 'relative', zIndex: 1, padding: '0 32px 100px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 48, alignItems: 'center' }}>
           <div>
             <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 999, background: `${theme.primary}18`, border: `1px solid ${theme.primary}33`, color: theme.primary, fontSize: 12, fontWeight: 700, marginBottom: 16, letterSpacing: '0.05em' }}>
               ⚛ QUANTUM AI ENGINE
@@ -683,7 +700,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
               What no other library offers
             </h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
             {features.map(f => (
               <Card3D key={f.title} theme={theme} icon={f.icon} title={f.title} desc={f.desc} color={f.color} delay={f.delay} />
             ))}
@@ -720,7 +737,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           {/* Tab content */}
           <div style={{ padding: '40px', borderRadius: 20, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, backdropFilter: 'blur(20px)', minHeight: 280 }}>
             {activeTab === 0 && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 32 }}>
                 <div>
                   <h3 style={{ margin: '0 0 16px', color: theme.text, fontWeight: 700 }}>70+ Production Components</h3>
                   <p style={{ color: theme.textMuted, lineHeight: 1.8, margin: 0 }}>From primitives (Button, Input, Badge) to advanced (DataGrid with virtual scrolling, Quantum AI Form, Visual Theme Builder, Live Playground). Every component is TypeScript-first, accessible, and security-hardened.</p>
@@ -732,7 +749,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
               </div>
             )}
             {activeTab === 1 && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 24 }}>
                 {[
                   { label: 'Layer 1: Security Shield', desc: 'All props sanitized. XSS patterns blocked. CSP-compatible. Immutable audit trail.' },
                   { label: 'Layer 2: Quantum Engine', desc: 'LRU cache, priority render queue, microtask batching, FNV-1a hashing.' },
@@ -774,7 +791,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
             )}
             {activeTab === 3 && (
               <div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 32 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20, marginBottom: 32 }}>
                   {[
                     { metric: '< 2ms', desc: 'Avg render time (LRU cache)' },
                     { metric: '94%', desc: 'Cache hit rate (FNV-1a hash)' },
@@ -802,7 +819,8 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
               vs. the competition
             </h2>
           </div>
-          <div style={{ borderRadius: 20, border: `1px solid ${theme.border}`, overflow: 'hidden', backdropFilter: 'blur(20px)' }}>
+          <div style={{ borderRadius: 20, border: `1px solid ${theme.border}`, overflowX: 'auto', overflowY: 'hidden', backdropFilter: 'blur(20px)', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ minWidth: 720 }}>
             {[
               ['Feature', 'tekivex-ui', 'MUI', 'Shadcn', 'Ant Design'],
               ['Quantum AI Form Inference', '✅', '❌', '❌', '❌'],
@@ -832,6 +850,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
                 ))}
               </div>
             ))}
+            </div>
           </div>
         </div>
       </section>
