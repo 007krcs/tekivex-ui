@@ -1,6 +1,6 @@
 {
   "name": "tekivex-ui",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "Production-grade React component library — 70+ components, WCAG 2.1 AAA, WAI-ARIA 1.2, built-in charts, headless primitives, zero-runtime CSS engine, TypeScript-first.",
   "type": "module",
   "main": "./dist/index.cjs",
