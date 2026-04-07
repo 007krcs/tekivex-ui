@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   ResponsiveContainer,
   PieChart,
@@ -73,10 +74,21 @@ export function TkxDonutChart({
   const theme = useTheme();
   const colors = getDefaultColors(theme);
   const tt = tooltipStyle(theme);
+  // Force ResponsiveContainer to re-measure after the parent layout settles.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   return (
-    <div role="img" aria-label={ariaLabel} style={{ width: '100%', height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div
+      role="img"
+      aria-label={ariaLabel}
+      style={{ width: '100%', minWidth: 240, height, position: 'relative' }}
+    >
+      {mounted && (
+      <ResponsiveContainer width="100%" height="100%" debounce={50}>
         <PieChart>
           {showTooltip && (
             <Tooltip
@@ -114,6 +126,7 @@ export function TkxDonutChart({
           )}
         </PieChart>
       </ResponsiveContainer>
+      )}
       {/* Overlay center label using absolute positioning */}
       {(centerLabel || centerSublabel) && (
         <div

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   ResponsiveContainer,
   PieChart,
@@ -41,10 +42,23 @@ export function TkxPieChart({
   const theme = useTheme();
   const colors = getDefaultColors(theme);
   const tt = tooltipStyle(theme);
+  // Force ResponsiveContainer to re-measure after the parent layout settles.
+  // Without this, recharts can compute 0×0 on first paint inside CSS grids/flex
+  // and the chart silently disappears.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   return (
-    <div role="img" aria-label={ariaLabel} style={{ width: '100%', height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div
+      role="img"
+      aria-label={ariaLabel}
+      style={{ width: '100%', minWidth: 240, height, position: 'relative' }}
+    >
+      {mounted && (
+      <ResponsiveContainer width="100%" height="100%" debounce={50}>
         <PieChart>
           {showTooltip && (
             <Tooltip
@@ -77,6 +91,7 @@ export function TkxPieChart({
           </Pie>
         </PieChart>
       </ResponsiveContainer>
+      )}
     </div>
   );
 }
