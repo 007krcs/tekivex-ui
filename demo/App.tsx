@@ -363,8 +363,10 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
   };
 
   const contentStyle: CSSProperties = {
+    // Single scroll container is the document body. Removing overflowY:auto here
+    // prevents the "scroll up makes screen jump down" jitter caused by two
+    // competing scroll contexts (body + inner main).
     flex: 1,
-    overflowY: 'auto',
     overflowX: 'hidden',
     padding: '0',
     backgroundColor: theme.bg,
@@ -447,7 +449,11 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
 
 // ── Root App component ─────────────────────────────────────────────────────────
 export function App() {
-  const [isDark, setIsDark] = useState(true);
+  // Default to light theme — flips automatically with prefers-color-scheme on first load.
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+  });
   const theme = isDark ? quantumDark : auroraLight;
 
   const handleToggleTheme = () => setIsDark((d) => !d);

@@ -374,9 +374,10 @@ function HoloText({ children, theme }: { children: string; theme: ThemeTokens })
   return (
     <span style={{
       display: 'inline-block',
-      background: `linear-gradient(${90 + Math.sin(tick * 0.03) * 30}deg, ${theme.primary}, hsl(${hue},100%,65%), #00d4ff, ${theme.primary})`,
+      backgroundImage: `linear-gradient(${90 + Math.sin(tick * 0.03) * 30}deg, ${theme.primary}, hsl(${hue},100%,65%), #00d4ff, ${theme.primary})`,
       backgroundSize: '300% 100%',
       backgroundPosition: `${(tick * 2) % 300}% 0`,
+      backgroundRepeat: 'no-repeat',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',

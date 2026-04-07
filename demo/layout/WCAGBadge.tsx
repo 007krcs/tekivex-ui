@@ -103,11 +103,35 @@ export function WCAGBadge({ criterion, level, status = 'PASS' }: WCAGBadgeProps)
 // ── WCAGBadgeGroup — displays multiple badges in a row ─────────────────────────
 
 interface WCAGBadgeGroupProps {
-  badges: WCAGBadgeProps[];
+  badges?: WCAGBadgeProps[];
   label?: string;
+  /** When `badges` is omitted, render a default set for the given level. */
+  level?: 'AA' | 'AAA';
+  /** Accepted but unused — component calls useTheme() internally. */
+  theme?: unknown;
 }
 
-export function WCAGBadgeGroup({ badges, label = 'WCAG Compliance' }: WCAGBadgeGroupProps) {
+const DEFAULT_BADGES_AA: WCAGBadgeProps[] = [
+  { criterion: '1.4.3', level: 'AA', status: 'PASS' },
+  { criterion: '2.1.1', level: 'AA', status: 'PASS' },
+  { criterion: '2.4.7', level: 'AA', status: 'PASS' },
+  { criterion: '4.1.2', level: 'AA', status: 'PASS' },
+];
+
+const DEFAULT_BADGES_AAA: WCAGBadgeProps[] = [
+  { criterion: '1.4.6', level: 'AAA', status: 'PASS' },
+  { criterion: '2.1.3', level: 'AAA', status: 'PASS' },
+  { criterion: '2.4.8', level: 'AAA', status: 'PASS' },
+  { criterion: '3.1.5', level: 'AAA', status: 'PASS' },
+];
+
+export function WCAGBadgeGroup({ badges, level, label = 'WCAG Compliance' }: WCAGBadgeGroupProps) {
+  const resolvedBadges =
+    badges && badges.length > 0
+      ? badges
+      : level === 'AAA'
+        ? DEFAULT_BADGES_AAA
+        : DEFAULT_BADGES_AA;
   const theme = useTheme();
 
   const groupStyle: CSSProperties = {
@@ -135,7 +159,7 @@ export function WCAGBadgeGroup({ badges, label = 'WCAG Compliance' }: WCAGBadgeG
       <span style={labelStyle} aria-hidden="true">
         {label}:
       </span>
-      {badges.map((badge) => (
+      {resolvedBadges.map((badge) => (
         <WCAGBadge
           key={`${badge.criterion}-${badge.level}`}
           criterion={badge.criterion}

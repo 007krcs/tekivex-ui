@@ -175,24 +175,30 @@ function evalCode(
   const t0 = performance.now();
   try {
     const trimmed = code.trim();
-    let body: string;
+
+    // Always wrap user code in a function component so React hooks (useState,
+    // useEffect, ...) work — they require an active render context to dispatch.
+    // The user can write a single JSX expression OR a function body that returns JSX.
+    const looksLikeExpression = trimmed.startsWith('<') || trimmed.startsWith('(');
+    const componentBody = looksLikeExpression
+      ? `return (${trimmed});`
+      : trimmed; // assume the user wrote `const x = ...; return <jsx>;`
+
+    let source = `
+      function PlaygroundRoot() {
+        ${componentBody}
+      }
+      return PlaygroundRoot;
+    `;
+
     const babel = getBabel();
     if (babel) {
-      // Transform JSX → React.createElement via Babel standalone
-      // Wrap top-level JSX expressions in `return (...)` so the function returns a ReactNode
-      const looksLikeExpression = trimmed.startsWith('<') || trimmed.startsWith('(');
-      const sourceToTransform = looksLikeExpression ? `const __out = (${trimmed});` : trimmed;
-      const transformed = babel.transform(sourceToTransform, {
+      source = babel.transform(source, {
         presets: ['react'],
         filename: 'playground.jsx',
-      }).code;
-      body = looksLikeExpression
-        ? `${transformed}\nreturn __out;`
-        : `${transformed}`;
-    } else {
-      // Fallback: assume the code is already valid JavaScript (no JSX)
-      body = `return (${trimmed});`;
+      }).code ?? source;
     }
+
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const fn = new Function(
       'React',
@@ -200,10 +206,11 @@ function evalCode(
       `
       "use strict";
       const { ${Object.keys(importsObj).join(', ')} } = imports;
-      ${body}
+      ${source}
     `,
-    ) as (r: typeof React, i: Record<string, unknown>) => ReactNode;
-    const element = fn(React, importsObj);
+    ) as (r: typeof React, i: Record<string, unknown>) => React.ComponentType;
+    const Component = fn(React, importsObj);
+    const element = React.createElement(Component);
     const renderMs = parseFloat((performance.now() - t0).toFixed(2));
     return { element, error: null, renderMs };
   } catch (err) {
