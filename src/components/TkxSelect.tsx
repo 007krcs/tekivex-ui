@@ -44,6 +44,10 @@ export interface TkxSelectProps {
   onChange?: (value: string | string[]) => void;
   renderOption?: (option: SelectOption, isSelected: boolean) => ReactNode;
   maxMenuHeight?: number;
+  /** Enable virtual scrolling for the dropdown. Defaults to auto (enabled when 100+ options). */
+  virtualScroll?: boolean;
+  /** Fixed option height in pixels for virtual scroll calculations. Default: 36 */
+  optionHeight?: number;
   id?: string;
   className?: string;
   style?: CSSProperties;
@@ -139,6 +143,8 @@ export function TkxSelect({
   onChange,
   renderOption,
   maxMenuHeight = 280,
+  virtualScroll,
+  optionHeight = 36,
   id: idProp,
   className,
   style,
@@ -172,6 +178,32 @@ export function TkxSelect({
   const sz = SIZE_MAP[size];
   const hasError = isInvalid || !!errorMessage;
 
+  // ── Virtual scroll for options ─────────────────────────────────────────
+
+  const optionsListRef = useRef<HTMLDivElement>(null);
+  const [optScrollTop, setOptScrollTop] = useState(0);
+  const [optContainerHeight, setOptContainerHeight] = useState(0);
+
+  const handleOptScroll = useCallback(() => {
+    if (!optionsListRef.current) return;
+    setOptScrollTop(optionsListRef.current.scrollTop);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setOptScrollTop(0);
+      return;
+    }
+    const el = optionsListRef.current;
+    if (!el) return;
+    setOptContainerHeight(el.clientHeight);
+    const ro = new ResizeObserver(() => {
+      setOptContainerHeight(el.clientHeight);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isOpen]);
+
   // ── Filtered + grouped options ────────────────────────────────────────────
 
   const filteredOptions = searchable && search
@@ -181,6 +213,25 @@ export function TkxSelect({
     : options;
 
   const flatEnabled = filteredOptions.filter((o) => !o.disabled);
+
+  const hasGroups = filteredOptions.some((o) => !!o.group);
+  const isVirtualSelect =
+    virtualScroll !== undefined
+      ? virtualScroll
+      : filteredOptions.length >= 100;
+  // Only virtualize when we have a flat list (no groups) for simplicity
+  const useVirtual = isVirtualSelect && !hasGroups;
+
+  const OPTION_OVERSCAN = 8;
+  const virtualTotalHeight = filteredOptions.length * optionHeight;
+  const vStartIndex = useVirtual
+    ? Math.max(0, Math.floor(optScrollTop / optionHeight) - OPTION_OVERSCAN)
+    : 0;
+  const vEndIndex = useVirtual
+    ? Math.min(filteredOptions.length, Math.ceil((optScrollTop + optContainerHeight) / optionHeight) + OPTION_OVERSCAN)
+    : filteredOptions.length;
+  const visibleOptions = useVirtual ? filteredOptions.slice(vStartIndex, vEndIndex) : filteredOptions;
+  const vOffsetY = vStartIndex * optionHeight;
 
   const groups = filteredOptions.reduce<Record<string, SelectOption[]>>(
     (acc, opt) => {
@@ -285,11 +336,23 @@ export function TkxSelect({
 
   useEffect(() => {
     if (!isOpen || activeIndex < 0) return;
-    const el = listRef.current?.querySelector(
-      `[data-idx="${activeIndex}"]`,
-    ) as HTMLElement | null;
-    el?.scrollIntoView({ block: 'nearest' });
-  }, [activeIndex, isOpen]);
+    if (useVirtual && optionsListRef.current) {
+      // For virtual scroll, compute position directly
+      const itemTop = activeIndex * optionHeight;
+      const itemBottom = itemTop + optionHeight;
+      const el = optionsListRef.current;
+      if (itemTop < el.scrollTop) {
+        el.scrollTop = itemTop;
+      } else if (itemBottom > el.scrollTop + el.clientHeight) {
+        el.scrollTop = itemBottom - el.clientHeight;
+      }
+    } else {
+      const el = listRef.current?.querySelector(
+        `[data-idx="${activeIndex}"]`,
+      ) as HTMLElement | null;
+      el?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [activeIndex, isOpen, useVirtual, optionHeight]);
 
   // ── Keyboard: trigger button ───────────────────────────────────────────────
 
@@ -494,13 +557,151 @@ export function TkxSelect({
 
           {/* Options list */}
           <div
-            ref={listRef}
+            ref={(el) => {
+              (listRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+              (optionsListRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+            }}
+            onScroll={useVirtual ? handleOptScroll : undefined}
             style={{
               overflowY: 'auto',
               flexGrow: 1,
               maxHeight: maxMenuHeight - (searchable ? 48 : 0),
             }}
           >
+            {useVirtual ? (
+              /* Virtualized flat list (no groups) */
+              <div style={{ height: virtualTotalHeight, position: 'relative' }}>
+                <div style={{ position: 'absolute', top: vOffsetY, left: 0, right: 0 }}>
+                  {visibleOptions.map((opt) => {
+                    const flatIdx = flatEnabled.indexOf(opt);
+                    const isActive = flatIdx === activeIndex;
+                    const isSelected = selectedValues.includes(opt.value);
+
+                    const optionContent = renderOption ? (
+                      renderOption(opt, isSelected)
+                    ) : (
+                      <span
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          flex: 1,
+                          minWidth: 0,
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8,
+                          }}
+                        >
+                          {opt.icon && (
+                            <span style={{ flexShrink: 0, display: 'flex' }}>
+                              {opt.icon}
+                            </span>
+                          )}
+                          <span
+                            style={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {sanitizeString(opt.label)}
+                          </span>
+                        </span>
+                        {opt.description && (
+                          <span
+                            style={{
+                              fontSize: '12px',
+                              color: theme.textMuted,
+                              marginTop: 1,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {sanitizeString(opt.description)}
+                          </span>
+                        )}
+                      </span>
+                    );
+
+                    return (
+                      <div
+                        key={opt.value}
+                        id={`${id}-opt-${opt.value}`}
+                        data-idx={flatIdx >= 0 ? flatIdx : undefined}
+                        role="option"
+                        aria-selected={isSelected}
+                        aria-disabled={opt.disabled || undefined}
+                        onClick={() => !opt.disabled && commitValue(opt.value)}
+                        onMouseEnter={() =>
+                          !opt.disabled && flatIdx >= 0 && setActiveIndex(flatIdx)
+                        }
+                        style={{
+                          height: optionHeight,
+                          boxSizing: 'border-box',
+                          padding: `0 ${sz.px}`,
+                          fontSize: sz.fontSize,
+                          fontFamily: 'inherit',
+                          color: opt.disabled ? theme.textMuted : theme.text,
+                          backgroundColor: isActive
+                            ? `${theme.primary}22`
+                            : isSelected
+                            ? `${theme.primary}12`
+                            : 'transparent',
+                          cursor: opt.disabled ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 8,
+                          transition: 'background-color 80ms',
+                          opacity: opt.disabled ? 0.5 : 1,
+                          userSelect: 'none',
+                          touchAction: 'manipulation',
+                        }}
+                      >
+                        {optionContent}
+                        {isSelected && !renderOption && (
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke={theme.primary}
+                            strokeWidth="2.5"
+                            aria-hidden="true"
+                            style={{ flexShrink: 0 }}
+                          >
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                {filteredOptions.length === 0 && (
+                  <div
+                    style={{
+                      padding: `${sz.py} ${sz.px}`,
+                      fontSize: sz.fontSize,
+                      fontFamily: 'inherit',
+                      color: theme.textMuted,
+                      textAlign: 'center',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                    }}
+                  >
+                    {isLoading ? 'Loading\u2026' : 'No options found'}
+                  </div>
+                )}
+              </div>
+            ) : (
+            /* Non-virtual: grouped rendering */
+            <>
             {Object.entries(groups).map(([group, groupOpts]) => (
               <div key={group}>
                 {group && (
@@ -645,6 +846,8 @@ export function TkxSelect({
               >
                 {isLoading ? 'Loading…' : 'No options found'}
               </div>
+            )}
+            </>
             )}
           </div>
         </div>,

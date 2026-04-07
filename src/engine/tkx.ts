@@ -660,6 +660,10 @@ function resolveUtility(u: string): Declarations | null {
   // ── CSS variable passthrough: [--my-var:value] ────────────────────────────
   if ((m = u.match(/^\[(--[a-zA-Z0-9-]+):(.+)]$/))) { return { [m[1]]: m[2] }; }
 
+  // ── Plugin utilities ─────────────────────────────────────────────────────
+  const pluginResult = resolvePluginUtility(u);
+  if (pluginResult) return pluginResult;
+
   return null;
 }
 
@@ -871,4 +875,62 @@ export function resetAtomicCSS(): void {
  */
 export function cx(...classes: (string | false | null | undefined)[]): string {
   return classes.filter(Boolean).join(' ');
+}
+
+// ── Plugin System ────────────────────────────────────────────────────────────
+/**
+ * TKX Plugin API — extend the utility engine with custom utilities.
+ *
+ * @example
+ * ```tsx
+ * import { tkxPlugin, tkx } from '@tekivex/ui';
+ *
+ * // Register custom utilities
+ * tkxPlugin({
+ *   name: 'brand',
+ *   utilities: {
+ *     'brand-gradient': { background: 'linear-gradient(135deg, #667eea, #764ba2)' },
+ *     'brand-text': { color: '#667eea', fontWeight: '700' },
+ *     'card-shadow': { boxShadow: '0 8px 32px rgba(102, 126, 234, 0.15)' },
+ *     'glass': {
+ *       background: 'rgba(255, 255, 255, 0.05)',
+ *       backdropFilter: 'blur(12px)',
+ *       border: '1px solid rgba(255, 255, 255, 0.1)',
+ *     },
+ *   },
+ * });
+ *
+ * // Use them like any built-in utility
+ * const cls = tkx('brand-gradient p-6 rounded-xl card-shadow');
+ * ```
+ */
+
+export interface TkxPluginDef {
+  name: string;
+  utilities: Record<string, Record<string, string>>;
+}
+
+const pluginRegistry = new Map<string, Record<string, Record<string, string>>>();
+
+export function tkxPlugin(plugin: TkxPluginDef): void {
+  pluginRegistry.set(plugin.name, plugin.utilities);
+}
+
+export function tkxRemovePlugin(name: string): void {
+  pluginRegistry.delete(name);
+}
+
+export function tkxListPlugins(): string[] {
+  return Array.from(pluginRegistry.keys());
+}
+
+/**
+ * Resolve a plugin utility to CSS properties.
+ * Called internally by the TKX engine — but also exported for inspection.
+ */
+export function resolvePluginUtility(name: string): Record<string, string> | null {
+  for (const utilities of pluginRegistry.values()) {
+    if (utilities[name]) return utilities[name];
+  }
+  return null;
 }

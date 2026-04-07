@@ -4,6 +4,7 @@ import {
   useRef,
   useMemo,
   useId,
+  useEffect,
   type ReactNode,
   type CSSProperties,
   type MouseEvent as ReactMouseEvent,
@@ -46,6 +47,10 @@ export interface TkxDataGridProps<T = any> {
   compact?: boolean;
   maxHeight?: number | string;
   onRowClick?: (row: T) => void;
+  /** Enable virtual scrolling. Defaults to auto (enabled when data has 50+ rows and maxHeight is set). */
+  virtualScroll?: boolean;
+  /** Row height in pixels for virtual scrolling calculations. Default: 40 */
+  rowHeight?: number;
 }
 
 // ── Sort icon ─────────────────────────────────────────────────────────────────
@@ -156,10 +161,50 @@ export function TkxDataGrid<T = any>({
   compact = false,
   maxHeight,
   onRowClick,
+  virtualScroll,
+  rowHeight = 40,
 }: TkxDataGridProps<T>) {
   const theme = useTheme();
   const reduced = useReducedMotion();
   const gridId = useId();
+
+  // ── Virtual scroll ────────────────────────────────────────────────────
+
+  const OVERSCAN = 10;
+  const isVirtual =
+    virtualScroll !== undefined
+      ? virtualScroll
+      : maxHeight !== undefined && data.length >= 50;
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+
+  const handleScroll = useCallback(() => {
+    if (!scrollContainerRef.current) return;
+    setScrollTop(scrollContainerRef.current.scrollTop);
+  }, []);
+
+  useEffect(() => {
+    if (!isVirtual || !scrollContainerRef.current) return;
+    const el = scrollContainerRef.current;
+    setContainerHeight(el.clientHeight);
+    const ro = new ResizeObserver(() => {
+      setContainerHeight(el.clientHeight);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isVirtual]);
+
+  const totalHeight = data.length * rowHeight;
+  const startIndex = isVirtual
+    ? Math.max(0, Math.floor(scrollTop / rowHeight) - OVERSCAN)
+    : 0;
+  const endIndex = isVirtual
+    ? Math.min(data.length, Math.ceil((scrollTop + containerHeight) / rowHeight) + OVERSCAN)
+    : data.length;
+  const visibleData = isVirtual ? data.slice(startIndex, endIndex) : data;
+  const offsetY = startIndex * rowHeight;
 
   // ── Sort state ──────────────────────────────────────────────────────────
 
@@ -281,6 +326,8 @@ export function TkxDataGrid<T = any>({
       }}
     >
       <div
+        ref={scrollContainerRef}
+        onScroll={isVirtual ? handleScroll : undefined}
         style={{
           maxHeight: maxHeight ?? 'none',
           overflowX: 'auto',
@@ -427,7 +474,15 @@ export function TkxDataGrid<T = any>({
                   </td>
                 </tr>
               ) : (
-                data.map((row, rowIndex) => {
+                <>
+                {/* Top spacer for virtual scrolling */}
+                {isVirtual && offsetY > 0 && (
+                  <tr aria-hidden="true">
+                    <td colSpan={totalCols} style={{ height: offsetY, padding: 0, border: 'none' }} />
+                  </tr>
+                )}
+                {visibleData.map((row, i) => {
+                  const rowIndex = startIndex + i;
                   const id = getRowId(row, rowKey);
                   const isSelected = selectedSet.has(id);
                   const isStriped = striped && rowIndex % 2 === 1;
@@ -448,6 +503,7 @@ export function TkxDataGrid<T = any>({
                         transition: reduced
                           ? 'none'
                           : 'background-color 120ms ease',
+                        ...(isVirtual ? { height: rowHeight, boxSizing: 'border-box' } : {}),
                       }}
                       onMouseEnter={
                         onRowClick
@@ -529,7 +585,14 @@ export function TkxDataGrid<T = any>({
                       })}
                     </tr>
                   );
-                })
+                })}
+                {/* Bottom spacer for virtual scrolling */}
+                {isVirtual && endIndex < data.length && (
+                  <tr aria-hidden="true">
+                    <td colSpan={totalCols} style={{ height: (data.length - endIndex) * rowHeight, padding: 0, border: 'none' }} />
+                  </tr>
+                )}
+                </>
               )}
             </tbody>
           )}

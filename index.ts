@@ -129,6 +129,42 @@ export type { TkxCommandProps, CommandItem } from './src/components/TkxCommand';
 export { TkxCarousel } from './src/components/TkxCarousel';
 export type { TkxCarouselProps } from './src/components/TkxCarousel';
 
+// Enterprise Components (v2.1+)
+export * from './src/components/TkxBreadcrumb';
+export * from './src/components/TkxPopover';
+export * from './src/components/TkxAutocomplete';
+export * from './src/components/TkxTreeView';
+export * from './src/components/TkxToolbar';
+export * from './src/components/TkxTransferList';
+export * from './src/components/TkxSpeedDial';
+export * from './src/components/TkxAppBar';
+export * from './src/components/TkxBottomNav';
+export * from './src/components/TkxSnackbar';
+export * from './src/components/TkxDataGrid';
+export * from './src/components/TkxMasonry';
+export * from './src/components/TkxRichTextDisplay';
+
+// Core Components (v2.2+)
+export * from './src/components/TkxForm';
+export * from './src/components/TkxLayout';
+export * from './src/components/TkxConfigProvider';
+export * from './src/components/TkxTypography';
+export * from './src/components/TkxSpin';
+export * from './src/components/TkxEmpty';
+export * from './src/components/TkxStatistic';
+
+// Components (v2.3+)
+export * from './src/components/TkxSegmented';
+export * from './src/components/TkxMentions';
+export * from './src/components/TkxQRCode';
+export * from './src/components/TkxResult';
+export * from './src/components/TkxTour';
+export * from './src/components/TkxWatermark';
+export * from './src/components/TkxAffix';
+export * from './src/components/TkxAnchor';
+export * from './src/components/TkxCascader';
+export * from './src/components/TkxList';
+
 // i18n / RTL
 export { I18nProvider } from './src/i18n/I18nProvider';
 export { useI18n, useLocale, useDirection, isRTL, I18nContext } from './src/i18n';
@@ -157,5 +193,6 @@ export { WCAGEngine, contrastRatio, meetsAA, meetsAAA, getAccessibleForeground, 
 export { TKX, css, fromObject, responsive, keyframes, cssVar, extractCSS, injectStyles } from './src/engine/css';
 
 // TKX Atomic CSS Engine — the utility-first system (better than Tailwind)
-export { tkx, tx, cx, extractAtomicCSS, resetAtomicCSS } from './src/engine/tkx';
+export { tkx, tx, cx, extractAtomicCSS, resetAtomicCSS, tkxPlugin, tkxRemovePlugin, tkxListPlugins, resolvePluginUtility } from './src/engine/tkx';
+export type { TkxPluginDef } from './src/engine/tkx';
 export type { TkxInput as TkxUtilityInput } from './src/engine/tkx';

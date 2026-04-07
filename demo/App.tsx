@@ -53,6 +53,26 @@ import { OTPPage } from './docs/OTPPage';
 import { CommandPage } from './docs/CommandPage';
 import { CarouselPage } from './docs/CarouselPage';
 import { IconPage } from './docs/IconPage';
+import { BreadcrumbPage } from './docs/BreadcrumbPage';
+import { PopoverPage } from './docs/PopoverPage';
+import { AutocompletePage } from './docs/AutocompletePage';
+import { TreeViewPage } from './docs/TreeViewPage';
+import { ToolbarPage } from './docs/ToolbarPage';
+import { TransferListPage } from './docs/TransferListPage';
+import { SpeedDialPage } from './docs/SpeedDialPage';
+import { AppBarPage } from './docs/AppBarPage';
+import { BottomNavPage } from './docs/BottomNavPage';
+import { SnackbarPage } from './docs/SnackbarPage';
+import { DataGridPage } from './docs/DataGridPage';
+import { MasonryPage } from './docs/MasonryPage';
+import { RichTextDisplayPage } from './docs/RichTextDisplayPage';
+import { FormPage } from './docs/FormPage';
+import { LayoutPage } from './docs/LayoutPage';
+import { TypographyPage } from './docs/TypographyPage';
+import { SpinPage } from './docs/SpinPage';
+import { EmptyPage } from './docs/EmptyPage';
+import { StatisticPage } from './docs/StatisticPage';
+import { ConfigProviderPage } from './docs/ConfigProviderPage';
 
 // ── Template pages ─────────────────────────────────────────────────────────────
 import { DashboardTemplate } from './templates/DashboardTemplate';
@@ -109,6 +129,26 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/command': CommandPage,
   '/components/carousel': CarouselPage,
   '/components/icon': IconPage,
+  '/components/breadcrumb': BreadcrumbPage,
+  '/components/popover': PopoverPage,
+  '/components/autocomplete': AutocompletePage,
+  '/components/tree-view': TreeViewPage,
+  '/components/toolbar': ToolbarPage,
+  '/components/transfer-list': TransferListPage,
+  '/components/speed-dial': SpeedDialPage,
+  '/components/app-bar': AppBarPage,
+  '/components/bottom-nav': BottomNavPage,
+  '/components/snackbar': SnackbarPage,
+  '/components/data-grid': DataGridPage,
+  '/components/masonry': MasonryPage,
+  '/components/rich-text': RichTextDisplayPage,
+  '/components/form': FormPage,
+  '/components/layout': LayoutPage,
+  '/components/typography': TypographyPage,
+  '/components/spin': SpinPage,
+  '/components/empty': EmptyPage,
+  '/components/statistic': StatisticPage,
+  '/components/config-provider': ConfigProviderPage,
   '/templates/dashboard': DashboardTemplate,
   '/templates/portfolio': PortfolioTemplate,
   '/templates/ecommerce': EcommerceTemplate,
