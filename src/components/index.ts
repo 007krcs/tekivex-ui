@@ -68,3 +68,6 @@ export * from './TkxAffix';
 export * from './TkxAnchor';
 export * from './TkxCascader';
 export * from './TkxList';
+export * from './TkxQuantumForm';
+export * from './TkxThemeBuilder';
+export * from './TkxPlayground';

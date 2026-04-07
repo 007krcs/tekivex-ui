@@ -74,6 +74,11 @@ import { EmptyPage } from './docs/EmptyPage';
 import { StatisticPage } from './docs/StatisticPage';
 import { ConfigProviderPage } from './docs/ConfigProviderPage';
 
+// ── Quantum AI pages ───────────────────────────────────────────────────────────
+import { QuantumFormPage } from './docs/QuantumFormPage';
+import { ThemeBuilderPage } from './docs/ThemeBuilderPage';
+import { PlaygroundPage } from './docs/PlaygroundPage';
+
 // ── Previously missing component pages ────────────────────────────────────────
 import { AnchorPage } from './docs/AnchorPage';
 import { CascaderPage } from './docs/CascaderPage';
@@ -164,6 +169,10 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/empty': EmptyPage,
   '/components/statistic': StatisticPage,
   '/components/config-provider': ConfigProviderPage,
+  // ── Quantum AI routes ─────────────────────────────────────────────────────
+  '/quantum-form': QuantumFormPage,
+  '/theme-builder': ThemeBuilderPage,
+  '/playground': PlaygroundPage,
   // ── Previously missing component routes ──────────────────────────────────
   '/components/anchor': AnchorPage,
   '/components/cascader': CascaderPage,

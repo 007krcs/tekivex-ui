@@ -31,6 +31,14 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    title: '⚛ Quantum AI',
+    items: [
+      { label: 'Quantum Form', route: '/quantum-form' },
+      { label: 'Theme Builder', route: '/theme-builder' },
+      { label: 'Live Playground', route: '/playground' },
+    ],
+  },
+  {
     title: 'Charts',
     items: [
       { label: 'Charts Overview', route: '/charts' },
