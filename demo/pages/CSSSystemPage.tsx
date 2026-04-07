@@ -971,6 +971,249 @@ tkx('hover:bg-[#ff6b35]', '@md:w-[640px]', 'focus:ring-[3px]')`}
 
       <div style={divStyle} aria-hidden="true" />
 
+      {/* ── Recipes: Real-World Patterns ── */}
+      <section style={sectionStyle} aria-labelledby="recipes-title">
+        <h2 id="recipes-title" style={h2Style}>
+          Recipes — Real-World Patterns
+        </h2>
+        <p style={descStyle}>
+          Copy-paste these production patterns. Each recipe shows how to build common UI
+          components using only TKX utilities — no custom CSS needed.
+        </p>
+
+        {/* Recipe 1: Card Layout */}
+        <div style={{ marginBottom: '28px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: theme.text, marginBottom: '8px' }}>
+            1. Responsive Card Grid
+          </div>
+          <CodeBlock
+            code={`import { tkx } from '@tekivex/ui';
+
+// Container: centers content, responsive padding
+const container = tkx('max-w-[1200px] mx-auto px-4 @md:px-6 @lg:px-8');
+
+// Card grid: 1 col mobile → 2 col tablet → 3 col desktop
+const grid = tkx('grid gap-6 @sm:grid-cols-2 @lg:grid-cols-3');
+
+// Card: surface bg, border, rounded, hover lift
+const card = tkx(
+  'bg-surface border border-border rounded-xl p-6',
+  'hover:shadow-lg hover:-translate-y-1',
+  'transition-all duration-200',
+  'motion-reduce:transition-none motion-reduce:hover:translate-y-0',
+);
+
+// Card title + description
+const title = tkx('text-lg font-bold text-primary mb-2');
+const desc = tkx('text-sm text-textMuted leading-relaxed');
+
+function ProductGrid() {
+  return (
+    <div className={container}>
+      <div className={grid}>
+        {products.map(p => (
+          <div key={p.id} className={card}>
+            <h3 className={title}>{p.name}</h3>
+            <p className={desc}>{p.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}`}
+            language="tsx"
+            title="Recipe: Responsive Card Grid"
+          />
+        </div>
+
+        {/* Recipe 2: Form Layout */}
+        <div style={{ marginBottom: '28px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: theme.text, marginBottom: '8px' }}>
+            2. Form with Validation
+          </div>
+          <CodeBlock
+            code={`import { tkx, cx } from '@tekivex/ui';
+
+const form = tkx('flex flex-col gap-5 max-w-[480px]');
+
+const fieldGroup = tkx('flex flex-col gap-1');
+
+const label = tkx('text-sm font-semibold text-textMuted');
+
+// Input: changes border color on focus and error
+const input = (hasError: boolean) => tkx(
+  'w-full px-4 py-3 rounded-lg bg-surface border text-base',
+  'focus:outline-none focus:ring-2 focus:ring-primary/40',
+  'placeholder:text-textMuted/50',
+  hasError ? 'border-danger focus:ring-danger/40' : 'border-border',
+  'disabled:opacity-50 disabled:cursor-not-allowed',
+);
+
+const errorText = tkx('text-xs text-danger mt-1');
+
+const submitBtn = tkx(
+  'px-6 py-3 rounded-lg bg-primary text-white font-bold',
+  'hover:opacity-90 active:scale-[0.98]',
+  'disabled:opacity-50 disabled:cursor-not-allowed',
+  'transition-all duration-150',
+  'motion-reduce:transition-none',
+);
+
+function LoginForm() {
+  return (
+    <form className={form}>
+      <div className={fieldGroup}>
+        <label className={label}>Email</label>
+        <input className={input(false)} placeholder="you@company.com" />
+      </div>
+      <div className={fieldGroup}>
+        <label className={label}>Password</label>
+        <input className={input(true)} type="password" />
+        <span className={errorText}>Password must be 8+ characters</span>
+      </div>
+      <button className={submitBtn}>Sign In</button>
+    </form>
+  );
+}`}
+            language="tsx"
+            title="Recipe: Form with Validation States"
+          />
+        </div>
+
+        {/* Recipe 3: Navigation Bar */}
+        <div style={{ marginBottom: '28px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: theme.text, marginBottom: '8px' }}>
+            3. Responsive Navigation Bar
+          </div>
+          <CodeBlock
+            code={`import { tkx } from '@tekivex/ui';
+
+const nav = tkx(
+  'fixed top-0 left-0 right-0 z-50',
+  'flex items-center justify-between',
+  'px-4 @md:px-8 py-3',
+  'bg-surface/80 backdrop-blur-lg',
+  'border-b border-border',
+);
+
+const logo = tkx('text-xl font-extrabold text-primary tracking-tight');
+
+// Links: hidden on mobile, flex on desktop
+const links = tkx('hidden @md:flex items-center gap-6');
+
+const link = (active: boolean) => tkx(
+  'text-sm font-medium transition-colors duration-150',
+  active ? 'text-primary' : 'text-textMuted hover:text-primary',
+);
+
+// Hamburger: visible on mobile only
+const hamburger = tkx(
+  'flex @md:hidden items-center justify-center',
+  'w-10 h-10 rounded-lg',
+  'hover:bg-surfaceAlt',
+  'transition-colors',
+);
+
+const cta = tkx(
+  'px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold',
+  'hover:opacity-90 transition-opacity',
+);`}
+            language="tsx"
+            title="Recipe: Responsive Nav Bar"
+          />
+        </div>
+
+        {/* Recipe 4: Dashboard Stats */}
+        <div style={{ marginBottom: '28px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: theme.text, marginBottom: '8px' }}>
+            4. Dashboard Stat Cards
+          </div>
+          <CodeBlock
+            code={`import { tkx } from '@tekivex/ui';
+
+const statsGrid = tkx('grid grid-cols-2 @lg:grid-cols-4 gap-4');
+
+const statCard = tkx(
+  'bg-surface border border-border rounded-xl p-5',
+  'hover:border-primary/30 transition-colors',
+);
+
+const statLabel = tkx(
+  'text-xs font-bold uppercase tracking-widest text-textMuted mb-2',
+);
+
+const statValue = tkx(
+  'text-2xl @lg:text-3xl font-extrabold text-primary tracking-tight',
+);
+
+const statChange = (positive: boolean) => tkx(
+  'inline-flex items-center gap-1 mt-2 text-xs font-semibold',
+  positive ? 'text-success' : 'text-danger',
+);
+
+// Usage
+<div className={statsGrid}>
+  <div className={statCard}>
+    <div className={statLabel}>Revenue</div>
+    <div className={statValue}>$48.2K</div>
+    <span className={statChange(true)}>↑ 12.5%</span>
+  </div>
+</div>`}
+            language="tsx"
+            title="Recipe: Dashboard Stats"
+          />
+        </div>
+
+        {/* Recipe 5: TKX vs Tailwind comparison */}
+        <div style={{ marginBottom: '28px' }}>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: theme.text, marginBottom: '8px' }}>
+            5. TKX vs Tailwind — Side by Side
+          </div>
+          <CodeBlock
+            code={`// ❌ TAILWIND: Conflict — both p-4 and p-8 stay in DOM, cascade decides
+<div className="p-4 p-8 bg-white text-black dark:bg-gray-900">
+  {/* Which padding wins? Depends on CSS source order — UNPREDICTABLE */}
+</div>
+
+// ✅ TKX: True merge — p-8 wins, p-4 is discarded at property level
+<div className={tkx('p-4 p-8 bg-white text-black dark:bg-gray-900')}>
+  {/* Guaranteed: padding: 32px. Always deterministic. */}
+</div>
+
+// ❌ TAILWIND: Need cn() / clsx / tailwind-merge for conditional styles
+import { cn } from '../lib/utils'; // extra dependency
+<div className={cn('px-4 py-2', isLarge && 'px-6 py-3')}>
+
+// ✅ TKX: Conditional merging is built in — no extra library
+<div className={tkx('px-4 py-2', isLarge && 'px-6 py-3')}>
+
+// ❌ TAILWIND: Theme needs PostCSS config + custom colors
+// tailwind.config.js → theme.extend.colors.brand → ...
+
+// ✅ TKX: Theme tokens work automatically from React context
+<div className={tkx('text-primary bg-surface border-border')}>
+  {/* Colors auto-follow ThemeProvider — no config needed */}
+</div>
+
+// ❌ TAILWIND: No built-in a11y variants
+// Need custom plugins for motion-safe, contrast-more
+
+// ✅ TKX: Accessibility variants are first-class
+<div className={tkx(
+  'transition-all',
+  'motion-reduce:transition-none',  // built-in
+  'contrast-more:border-2',         // built-in
+  'print:hidden',                    // built-in
+)}>
+</div>`}
+            language="tsx"
+            title="TKX vs Tailwind — Why TKX Wins"
+          />
+        </div>
+      </section>
+
+      <div style={divStyle} aria-hidden="true" />
+
       {/* Live playground */}
       <section aria-labelledby="playground-title">
         <h2 id="playground-title" style={h2Style}>

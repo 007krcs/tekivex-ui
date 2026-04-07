@@ -1,61 +1,64 @@
-import type { CSSProperties } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
 import { TkxClock } from '@tekivex/ui';
+import { DemoSection } from '../layout/DemoSection';
 
 export function ClockPage({ theme }: { theme: ThemeTokens }) {
-  const wrap: CSSProperties = {
-    maxWidth: 900,
-    margin: '0 auto',
-    padding: '40px 32px',
-    color: theme.text,
-  };
-
-  const demoBox: CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 40,
-    padding: 40,
-    borderRadius: 12,
-    border: `1px solid ${theme.border}`,
-    background: theme.surface,
-    flexWrap: 'wrap',
-    marginBottom: 32,
-  };
-
   return (
-    <div style={wrap}>
+    <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 32px', color: theme.text }}>
       <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 8 }}>Clock</h1>
       <p style={{ color: theme.textMuted, marginBottom: 32 }}>
         Live ticking clock with analog, digital, and combined modes. Classic, minimal, and modern styles.
       </p>
 
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Analog Clocks</h2>
-      <div style={demoBox}>
-        <div style={{ textAlign: 'center' }}>
-          <TkxClock variant="analog" analogStyle="classic" size="md" />
-          <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Classic</p>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <TkxClock variant="analog" analogStyle="minimal" size="md" />
-          <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Minimal</p>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <TkxClock variant="analog" analogStyle="modern" size="md" />
-          <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Modern</p>
-        </div>
-      </div>
+      <DemoSection
+        title="Analog Clocks"
+        description="Three visual styles for the analog clock face: classic, minimal, and modern."
+        theme={theme}
+        code={`import { TkxClock } from '@tekivex/ui';
 
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Digital Clock</h2>
-      <div style={demoBox}>
-        <TkxClock variant="digital" format="12h" />
-        <TkxClock variant="digital" format="24h" showSeconds />
-      </div>
+<TkxClock variant="analog" analogStyle="classic" size="md" />
+<TkxClock variant="analog" analogStyle="minimal" size="md" />
+<TkxClock variant="analog" analogStyle="modern" size="md" />`}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, flexWrap: 'wrap' }}>
+          <div style={{ textAlign: 'center' }}>
+            <TkxClock variant="analog" analogStyle="classic" size="md" />
+            <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Classic</p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <TkxClock variant="analog" analogStyle="minimal" size="md" />
+            <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Minimal</p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <TkxClock variant="analog" analogStyle="modern" size="md" />
+            <p style={{ marginTop: 8, fontSize: 12, color: theme.textMuted }}>Modern</p>
+          </div>
+        </div>
+      </DemoSection>
 
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Combined</h2>
-      <div style={demoBox}>
-        <TkxClock variant="both" analogStyle="modern" size="lg" showSeconds />
-      </div>
+      <DemoSection
+        title="Digital Clock"
+        description="Digital display with 12-hour and 24-hour formats."
+        theme={theme}
+        code={`<TkxClock variant="digital" format="12h" />
+<TkxClock variant="digital" format="24h" showSeconds />`}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, flexWrap: 'wrap' }}>
+          <TkxClock variant="digital" format="12h" />
+          <TkxClock variant="digital" format="24h" showSeconds />
+        </div>
+      </DemoSection>
+
+      <DemoSection
+        title="Combined"
+        description="Shows both analog and digital displays together."
+        theme={theme}
+        code={`<TkxClock variant="both" analogStyle="modern" size="lg" showSeconds />`}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TkxClock variant="both" analogStyle="modern" size="lg" showSeconds />
+        </div>
+      </DemoSection>
 
       <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Props</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>

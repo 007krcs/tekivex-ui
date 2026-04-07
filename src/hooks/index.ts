@@ -91,7 +91,7 @@ export function useEscapeKey(handler: () => void, active = true): void {
   handlerRef.current = handler;
 
   useEffect(() => {
-    if (!active) return;
+    if (!active || typeof document === 'undefined') return;
     const listener = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handlerRef.current();
     };

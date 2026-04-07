@@ -1,7 +1,7 @@
-import type { CSSProperties } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
 import { TkxCarousel } from '@tekivex/ui';
 import type { CarouselSlide } from '@tekivex/ui';
+import { DemoSection } from '../layout/DemoSection';
 
 const SLIDES: CarouselSlide[] = [
   {
@@ -43,42 +43,54 @@ const SLIDES: CarouselSlide[] = [
 ];
 
 export function CarouselPage({ theme }: { theme: ThemeTokens }) {
-  const wrap: CSSProperties = {
-    maxWidth: 900,
-    margin: '0 auto',
-    padding: '40px 32px',
-    color: theme.text,
-  };
-
-  const demoBox: CSSProperties = {
-    padding: 32,
-    borderRadius: 12,
-    border: `1px solid ${theme.border}`,
-    background: theme.surface,
-    marginBottom: 32,
-  };
-
   return (
-    <div style={wrap}>
+    <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 32px', color: theme.text }}>
       <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 8 }}>Carousel</h1>
       <p style={{ color: theme.textMuted, marginBottom: 32 }}>
         Touch-friendly carousel with drag support, auto-play, dot navigation, and arrow controls.
       </p>
 
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Basic Carousel</h2>
-      <div style={demoBox}>
+      <DemoSection
+        title="Basic Carousel"
+        description="A carousel with arrow navigation and dot indicators."
+        theme={theme}
+        code={`import { TkxCarousel } from '@tekivex/ui';
+import type { CarouselSlide } from '@tekivex/ui';
+
+const slides: CarouselSlide[] = [
+  { id: 'slide-1', content: <div>Slide One</div> },
+  { id: 'slide-2', content: <div>Slide Two</div> },
+  { id: 'slide-3', content: <div>Slide Three</div> },
+];
+
+<TkxCarousel slides={slides} height={240} showArrows showDots />`}
+      >
         <TkxCarousel slides={SLIDES} height={240} showArrows showDots />
-      </div>
+      </DemoSection>
 
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Auto-play</h2>
-      <div style={demoBox}>
+      <DemoSection
+        title="Auto-play"
+        description="Automatically advances slides at a configurable interval."
+        theme={theme}
+        code={`<TkxCarousel
+  slides={slides}
+  height={200}
+  autoPlay
+  autoPlayInterval={2500}
+  showDots
+/>`}
+      >
         <TkxCarousel slides={SLIDES} height={200} autoPlay autoPlayInterval={2500} showDots />
-      </div>
+      </DemoSection>
 
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Arrows Only</h2>
-      <div style={demoBox}>
+      <DemoSection
+        title="Arrows Only"
+        description="Navigation using arrow buttons without dot indicators."
+        theme={theme}
+        code={`<TkxCarousel slides={slides} height={180} showArrows />`}
+      >
         <TkxCarousel slides={SLIDES} height={180} showArrows />
-      </div>
+      </DemoSection>
 
       <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 16 }}>Props</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
