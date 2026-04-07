@@ -246,6 +246,7 @@ export function EcommerceTemplate({ theme }: Props) {
 
           <div style={{ flex: bp.isMobile ? '1 1 100%' : '0 1 340px', order: bp.isMobile ? 1 : 0 }}>
             <TkxInput
+              label="Search"
               placeholder="Search products, brands, categories…"
               size="sm"
               startAddon={

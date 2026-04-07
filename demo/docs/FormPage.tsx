@@ -536,11 +536,11 @@ function ProgrammaticFormDemo({
           rules={[{ required: true, message: 'First name is required' }]}
           required
         >
-          <TkxInput placeholder="First" />
+          <TkxInput label="First Name" placeholder="First" />
         </TkxFormField>
 
         <TkxFormField name="lastName" label="Last Name">
-          <TkxInput placeholder="Last" />
+          <TkxInput label="Last Name" placeholder="Last" />
         </TkxFormField>
 
         <ProgrammaticFormInner onLog={onLog} />

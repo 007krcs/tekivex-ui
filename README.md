@@ -4,7 +4,7 @@
 
 **The React component library that refuses to compromise.**
 
-WCAG 2.1 AAA · WAI-ARIA 1.2 · Zero-Trust Security · 27 Locales · Built-in Charts · Headless Primitives
+WCAG 2.1 AAA · WAI-ARIA 1.2 · Zero-Trust Security · 6 Locales + RTL · 70 Components · Zero Dependencies
 
 [![npm version](https://img.shields.io/npm/v/tekivex-ui?color=00f5d4&label=tekivex-ui&logo=npm)](https://www.npmjs.com/package/tekivex-ui)
 [![npm downloads](https://img.shields.io/npm/dw/tekivex-ui?color=00f5d4)](https://www.npmjs.com/package/tekivex-ui)
@@ -12,7 +12,7 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · Zero-Trust Security · 27 Locales · Built-in Ch
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18+-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
 [![WCAG 2.1 AAA](https://img.shields.io/badge/WCAG-2.1%20AAA-00c853.svg)](https://www.w3.org/TR/WCAG21/)
-[![Tests](https://img.shields.io/badge/Tests-436%20passing-00c853.svg)](#testing)
+[![Tests](https://img.shields.io/badge/Tests-240%2B%20passing-00c853.svg)](#testing)
 
 <br/>
 
@@ -34,9 +34,9 @@ npm install tekivex-ui
 | Auto XSS sanitisation on every prop | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Immutable security audit trail | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Full-featured DataGrid — **free** | ✅ | 💰 Pro | Partial | Partial | ❌ |
-| Built-in charts (7 types) | ✅ | ❌ | ✅ | ❌ | ❌ |
-| Headless hook layer | ✅ | ❌ | ❌ | ✅ | ✅ |
-| i18n — 27 locales incl. RTL | ✅ | ✅ | ✅ | Partial | ❌ |
+| 70 production components — **free** | ✅ | ✅ | ✅ | ✅ | 30 |
+| Hooks layer (a11y, theme, i18n) | ✅ | ❌ | ❌ | ✅ | ✅ |
+| i18n — 6 locales incl. RTL | ✅ | ✅ | ✅ | Partial | ❌ |
 | Plugin-extensible CSS engine | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Zero extra dependencies | ✅ | ❌ | ❌ | ❌ | ✅ |
 
