@@ -28,6 +28,7 @@ export interface ToastItem {
 
 export interface TkxToastProps {
   position?: ToastPosition;
+  children?: React.ReactNode;
 }
 
 // ── Module-level store ────────────────────────────────────────────────────────
@@ -227,7 +228,7 @@ function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 
-export function TkxToastProvider({ position = 'top-right' }: TkxToastProps) {
+export function TkxToastProvider({ position = 'top-right', children }: TkxToastProps) {
   const [toasts, setToasts] = useState<ToastItem[]>([...visible]);
   const reduced = useReducedMotion();
 
@@ -263,11 +264,11 @@ export function TkxToastProvider({ position = 'top-right' }: TkxToastProps) {
     }
   }, []);
 
-  if (typeof document === 'undefined') return null;
+  if (typeof document === 'undefined') return <>{children}</>;
 
   const ordered = isBottom ? [...toasts].reverse() : toasts;
 
-  return createPortal(
+  return <>{children}{createPortal(
     <div
       aria-label="Notifications"
       className={tkx('fixed z-[9999] flex flex-col gap-2 pointer-events-none')}
@@ -280,5 +281,5 @@ export function TkxToastProvider({ position = 'top-right' }: TkxToastProps) {
       ))}
     </div>,
     document.body,
-  );
+  )}</>;
 }

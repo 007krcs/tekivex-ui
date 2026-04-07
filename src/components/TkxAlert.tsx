@@ -49,7 +49,8 @@ export function TkxAlert({ variant, title, children, dismissible, onDismiss, ico
     if (safeTitle) {
       announce(safeTitle, variant === 'danger' || variant === 'warning' ? 'assertive' : 'polite');
     }
-  }, [safeTitle, variant, announce]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [safeTitle, variant]);
 
   const colorMap: Record<AlertVariant, string> = {
     info: theme.info, success: theme.success, warning: theme.warning, danger: theme.danger,
