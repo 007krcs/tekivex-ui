@@ -4,6 +4,7 @@
 // ── Color Contrast ───────────────────────────────────────────────────────────
 
 function hexToRgb(hex: string): [number, number, number] {
+  if (!hex || typeof hex !== 'string') return [0, 0, 0];
   const clean = hex.replace('#', '');
   const full = clean.length === 3
     ? clean.split('').map((c) => c + c).join('')
@@ -11,7 +12,7 @@ function hexToRgb(hex: string): [number, number, number] {
   const r = parseInt(full.slice(0, 2), 16);
   const g = parseInt(full.slice(2, 4), 16);
   const b = parseInt(full.slice(4, 6), 16);
-  return [r, g, b];
+  return [isNaN(r) ? 0 : r, isNaN(g) ? 0 : g, isNaN(b) ? 0 : b];
 }
 
 export function relativeLuminance(hex: string): number {

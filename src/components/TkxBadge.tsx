@@ -31,8 +31,8 @@ export const TkxBadge = forwardRef<HTMLSpanElement, TkxBadgeProps>(
       default: theme.border, primary: theme.primary, secondary: theme.secondary,
       danger: theme.danger, warning: theme.warning, success: theme.success, info: theme.info,
     };
-    const bgColor = colorMap[variant];
-    const textColor = getAccessibleForeground(bgColor, ['#ffffff', '#000000', theme.bg]);
+    const bgColor = colorMap[variant] || '#666666';
+    const textColor = getAccessibleForeground(bgColor, ['#ffffff', '#000000', theme.bg || '#000000']);
 
     const safeChildren = typeof children === 'string' ? sanitizeString(children) : children;
 
