@@ -51,7 +51,7 @@
       "operatingSystem": "Web",
       "description": "Production-ready React component library with WCAG 2.1 AAA accessibility, WAI-ARIA 1.2, TKX atomic CSS engine, zero-trust security, and 14+ fully-typed components.",
       "url": "https://007krcs.github.io/tekivex-ui/",
-      "version": "2.0.0",
+      "version": "2.5.2",
       "license": "https://github.com/007krcs/tekivex-ui/blob/master/LICENSE",
       "codeRepository": "https://github.com/007krcs/tekivex-ui",
       "programmingLanguage": ["TypeScript", "React", "CSS"],
@@ -71,8 +71,51 @@
 
     <!-- ── Google AdSense ───────────────────────────────────────────────────── -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4630229006617891" crossorigin="anonymous"></script>
+
+    <!-- ── Babel Standalone — JSX runtime transform for TkxPlayground ─────── -->
+    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js" crossorigin="anonymous"></script>
+
+    <!-- ── WCAG 2.1 AAA — focus-visible indicator + a11y baseline ──────────── -->
+    <style>
+      :focus-visible {
+        outline: 2px solid #00f5d4;
+        outline-offset: 2px;
+        border-radius: 3px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      .tkx-skip-link {
+        position: absolute;
+        top: -100px;
+        left: 0;
+        background: #00f5d4;
+        color: #0a0a0f;
+        padding: 12px 20px;
+        font-weight: 700;
+        text-decoration: none;
+        z-index: 10000;
+        border-radius: 0 0 8px 0;
+      }
+      .tkx-skip-link:focus {
+        top: 0;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
   </head>
   <body>
+    <a href="#main-content" class="tkx-skip-link">Skip to main content</a>
     <div id="root"></div>
     <script type="module" src="./main.tsx"></script>
   </body>

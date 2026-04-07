@@ -1,5 +1,5 @@
 import type { ThemeTokens } from '@tekivex/ui';
-import { TkxPlayground } from '@tekivex/ui';
+import { TkxPlayground } from '../../src/quantum';
 import * as TekivexComponents from '@tekivex/ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';

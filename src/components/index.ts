@@ -68,11 +68,7 @@ export * from './TkxAffix';
 export * from './TkxAnchor';
 export * from './TkxCascader';
 export * from './TkxList';
-export * from './TkxQuantumForm';
-export * from './TkxThemeBuilder';
-export * from './TkxPlayground';
-export * from './TkxLiveFeed';
-export * from './TkxLiveMetrics';
-export * from './TkxRealTimeChart';
-export * from './TkxLiveLog';
+// Heavy components moved to subpath entries to keep main bundle lean:
+//   TkxQuantumForm, TkxThemeBuilder, TkxPlayground → '@tekivex/ui/quantum'
+//   TkxLiveFeed, TkxLiveMetrics, TkxRealTimeChart, TkxLiveLog → '@tekivex/ui/realtime'
 export * from './TkxDropdown';

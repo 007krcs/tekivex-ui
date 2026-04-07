@@ -373,12 +373,14 @@ function HoloText({ children, theme }: { children: string; theme: ThemeTokens })
   const hue = (tick * 2) % 360;
   return (
     <span style={{
+      display: 'inline-block',
       background: `linear-gradient(${90 + Math.sin(tick * 0.03) * 30}deg, ${theme.primary}, hsl(${hue},100%,65%), #00d4ff, ${theme.primary})`,
       backgroundSize: '300% 100%',
       backgroundPosition: `${(tick * 2) % 300}% 0`,
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text',
+      color: 'transparent',
       transition: 'background-position 0.05s',
     }}>
       {children}
@@ -776,7 +778,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
                     { metric: '< 2ms', desc: 'Avg render time (LRU cache)' },
                     { metric: '94%', desc: 'Cache hit rate (FNV-1a hash)' },
                     { metric: 'O(√N)', desc: 'Component search time' },
-                    { metric: '563 kB', desc: 'Full bundle (gzip: 119 kB)' },
+                    { metric: '551 kB', desc: 'Full bundle (gzip: 117 kB)' },
                   ].map(({ metric, desc }) => (
                     <div key={metric} style={{ textAlign: 'center', padding: 24, borderRadius: 12, border: `1px solid ${theme.border}`, background: theme.surfaceAlt }}>
                       <p style={{ margin: '0 0 6px', fontSize: 28, fontWeight: 900, color: theme.primary }}>{metric}</p>
@@ -810,7 +812,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
               ['Built-in XSS shield', '✅', '❌', '❌', '❌'],
               ['27-locale i18n (built-in)', '✅', '🟡 pkg', '❌', '✅'],
               ['Headless primitives', '✅', '🟡 partial', '✅', '❌'],
-              ['Bundle gzip', '119 kB', '180 kB+', '30 kB*', '460 kB'],
+              ['Bundle gzip', '117 kB', '180 kB+', '30 kB*', '460 kB'],
             ].map((row, i) => (
               <div key={i} style={{
                 display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr',

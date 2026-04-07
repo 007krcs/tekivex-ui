@@ -5,6 +5,8 @@ import { useTheme } from '@tekivex/ui';
 
 export interface PropDef {
   name: string;
+  /** alias for name — used by some pages */
+  prop?: string;
   type: string;
   default?: string;
   required?: boolean;
@@ -12,12 +14,26 @@ export interface PropDef {
 }
 
 interface PropTableProps {
-  props: PropDef[];
+  /** canonical prop name */
+  props?: PropDef[];
+  /** alias accepted by pages that were generated with rows= */
+  rows?: PropDef[];
+  /** optional section title rendered above the table */
+  title?: string;
+  /** accepted but unused — component calls useTheme() internally */
+  theme?: unknown;
 }
 
 // ── PropTable component ───────────────────────────────────────────────────────
 
-export function PropTable({ props }: PropTableProps) {
+export function PropTable({ props, rows, title }: PropTableProps) {
+  // normalise: support both `props` and `rows` aliases
+  const rawItems = props ?? rows ?? [];
+  // support `prop` field as alias for `name`
+  const normalizedProps: PropDef[] = rawItems.map((p) => ({
+    ...p,
+    name: p.name ?? (p as { prop?: string }).prop ?? '',
+  }));
   const theme = useTheme();
 
   const wrapperStyle: CSSProperties = {
@@ -111,7 +127,7 @@ export function PropTable({ props }: PropTableProps) {
     lineHeight: '1.5',
   };
 
-  if (props.length === 0) {
+  if (normalizedProps.length === 0) {
     return (
       <div
         style={{
@@ -128,7 +144,13 @@ export function PropTable({ props }: PropTableProps) {
   }
 
   return (
-    <div style={wrapperStyle} role="region" aria-label="Component props documentation">
+    <div style={{ marginBottom: '32px' }}>
+      {title && (
+        <h3 style={{ fontSize: '14px', fontWeight: 700, color: theme.text, marginBottom: '10px', marginTop: 0 }}>
+          {title}
+        </h3>
+      )}
+      <div style={wrapperStyle} role="region" aria-label={title ? `${title} props` : 'Component props documentation'}>
       <table style={tableStyle}>
         <thead>
           <tr>
@@ -142,8 +164,8 @@ export function PropTable({ props }: PropTableProps) {
           </tr>
         </thead>
         <tbody>
-          {props.map((prop, i) => {
-            const isLast = i === props.length - 1;
+          {normalizedProps.map((prop, i) => {
+            const isLast = i === normalizedProps.length - 1;
             return (
               <tr
                 key={prop.name}
@@ -234,6 +256,7 @@ export function PropTable({ props }: PropTableProps) {
           })}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

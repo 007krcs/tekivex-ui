@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
-import { TkxLiveFeed } from '@tekivex/ui';
-import type { FeedItem } from '@tekivex/ui';
+import { TkxLiveFeed } from '../../src/realtime';
+import type { FeedItem } from '../../src/realtime';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 

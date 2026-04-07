@@ -165,14 +165,11 @@ export * from './src/components/TkxAnchor';
 export * from './src/components/TkxCascader';
 export * from './src/components/TkxList';
 
-// i18n / RTL
+// i18n / RTL — locale strings live in '@tekivex/ui/i18n' to keep the main bundle small.
+// Provider, hooks and direction utils stay here so most apps can use i18n with one English locale or none.
 export { I18nProvider } from './src/i18n/I18nProvider';
 export { useI18n, useLocale, useDirection, isRTL, I18nContext } from './src/i18n';
-export {
-  enUS, esES, ptBR, ptPT, frFR, deDE, itIT, nlNL, plPL, ruRU, ukUA, trTR,
-  svSE, daDK, csCZ, huHU, arSA, heIL, faIR, jaJP, koKR, zhCN, zhTW,
-  thTH, viVN, idID, roRO, LOCALES,
-} from './src/i18n';
+// Note: locale strings (enUS, esES, frFR, ...) and LOCALES are now exported from '@tekivex/ui/i18n'
 export type { LocaleStrings, LocaleCode, Direction, I18nContextValue } from './src/i18n';
 export type { I18nProviderProps } from './src/i18n/I18nProvider';
 
@@ -204,29 +201,11 @@ export type { TkxInput as TkxUtilityInput } from './src/engine/tkx';
 export { TkxDropdown } from './src/components/TkxDropdown';
 export type { TkxDropdownProps, DropdownItem, DropdownGroup } from './src/components/TkxDropdown';
 
-// Quantum AI Components (v2.5+)
-export { TkxQuantumForm } from './src/components/TkxQuantumForm';
-export type { TkxQuantumFormProps, QuantumFieldConfig } from './src/components/TkxQuantumForm';
-
-export { TkxThemeBuilder } from './src/components/TkxThemeBuilder';
-export type { TkxThemeBuilderProps } from './src/components/TkxThemeBuilder';
-
-export { TkxPlayground } from './src/components/TkxPlayground';
-export type { TkxPlaygroundProps, PlaygroundExample } from './src/components/TkxPlayground';
-
-// Real-Time Components (v2.5+)
-export { TkxLiveFeed } from './src/components/TkxLiveFeed';
-export type { TkxLiveFeedProps, FeedItem } from './src/components/TkxLiveFeed';
-
-export { TkxLiveMetrics } from './src/components/TkxLiveMetrics';
-export type { TkxLiveMetricsProps, MetricItem } from './src/components/TkxLiveMetrics';
-
-export { TkxRealTimeChart } from './src/components/TkxRealTimeChart';
-export type { TkxRealTimeChartProps, ChartDataPoint } from './src/components/TkxRealTimeChart';
-
-export { TkxLiveLog } from './src/components/TkxLiveLog';
-export type { TkxLiveLogProps, LogEntry, LogLevel } from './src/components/TkxLiveLog';
-
-// Quantum AI Engine (v2.5+)
-export { QuantumAI, inferFieldIntelligence, optimizeThemeColors, hslToHex, Qubit, QuantumRegister, QuantumAnnealer, QuantumBoltzmannMachine, AmplitudeAmplifier } from './src/engine/quantum-ai';
-export type { FieldIntelligence, ValidationSuggestion, ThemeColorState, AnnealerResult, QBMInference, AmplifiedResult } from './src/engine/quantum-ai';
+// Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
+//   Quantum AI components & engine  → '@tekivex/ui/quantum'
+//     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
+//   Real-Time UI components         → '@tekivex/ui/realtime'
+//     (TkxLiveFeed, TkxLiveMetrics, TkxRealTimeChart, TkxLiveLog)
+//   27-locale i18n strings          → '@tekivex/ui/i18n'
+//   Charts (recharts wrapper)       → '@tekivex/ui/charts'
+//   Headless hooks                  → '@tekivex/ui/headless'

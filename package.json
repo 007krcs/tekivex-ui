@@ -27,6 +27,21 @@
       "import": "./dist/headless.js",
       "require": "./dist/headless.cjs",
       "types": "./dist/headless.d.ts"
+    },
+    "./i18n": {
+      "import": "./dist/i18n.js",
+      "require": "./dist/i18n.cjs",
+      "types": "./dist/i18n.d.ts"
+    },
+    "./quantum": {
+      "import": "./dist/quantum.js",
+      "require": "./dist/quantum.cjs",
+      "types": "./dist/quantum.d.ts"
+    },
+    "./realtime": {
+      "import": "./dist/realtime.js",
+      "require": "./dist/realtime.cjs",
+      "types": "./dist/realtime.d.ts"
     }
   },
   "sideEffects": [

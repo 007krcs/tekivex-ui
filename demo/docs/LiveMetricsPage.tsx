@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
-import { TkxLiveMetrics } from '@tekivex/ui';
-import type { MetricItem } from '@tekivex/ui';
+import { TkxLiveMetrics } from '../../src/realtime';
+import type { MetricItem } from '../../src/realtime';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 

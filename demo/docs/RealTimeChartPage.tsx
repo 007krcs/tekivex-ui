@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
-import { TkxRealTimeChart } from '@tekivex/ui';
-import type { ChartDataPoint } from '@tekivex/ui';
+import { TkxRealTimeChart } from '../../src/realtime';
+import type { ChartDataPoint } from '../../src/realtime';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 

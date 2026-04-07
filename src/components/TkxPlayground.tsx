@@ -158,14 +158,41 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
 // ── Code evaluator ────────────────────────────────────────────────────────────
 
+// Babel standalone is loaded via <script> tag in the host page (see demo/index.html)
+// for JSX transformation. We probe for it lazily so the library bundle stays clean.
+interface BabelStandalone {
+  transform(code: string, opts: Record<string, unknown>): { code: string };
+}
+function getBabel(): BabelStandalone | null {
+  if (typeof window === 'undefined') return null;
+  return (window as unknown as { Babel?: BabelStandalone }).Babel ?? null;
+}
+
 function evalCode(
   code: string,
   importsObj: Record<string, unknown>,
 ): { element: ReactNode | null; error: string | null; renderMs: number } {
   const t0 = performance.now();
   try {
-    // Wrap raw JSX expression: if it looks like JSX (starts with <) wrap in parens
-    const wrapped = code.trim();
+    const trimmed = code.trim();
+    let body: string;
+    const babel = getBabel();
+    if (babel) {
+      // Transform JSX → React.createElement via Babel standalone
+      // Wrap top-level JSX expressions in `return (...)` so the function returns a ReactNode
+      const looksLikeExpression = trimmed.startsWith('<') || trimmed.startsWith('(');
+      const sourceToTransform = looksLikeExpression ? `const __out = (${trimmed});` : trimmed;
+      const transformed = babel.transform(sourceToTransform, {
+        presets: ['react'],
+        filename: 'playground.jsx',
+      }).code;
+      body = looksLikeExpression
+        ? `${transformed}\nreturn __out;`
+        : `${transformed}`;
+    } else {
+      // Fallback: assume the code is already valid JavaScript (no JSX)
+      body = `return (${trimmed});`;
+    }
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const fn = new Function(
       'React',
@@ -173,7 +200,7 @@ function evalCode(
       `
       "use strict";
       const { ${Object.keys(importsObj).join(', ')} } = imports;
-      return (${wrapped});
+      ${body}
     `,
     ) as (r: typeof React, i: Record<string, unknown>) => ReactNode;
     const element = fn(React, importsObj);
