@@ -31,12 +31,12 @@ const DEMO_EXAMPLES = [
     label: 'Card with Badge',
     code: `<TkxCard style={{ maxWidth: 320, padding: '20px 24px' }}>
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-    <TkxTypography variant="h5" style={{ margin: 0 }}>Quantum Report</TkxTypography>
-    <TkxBadge variant="success" pulse>● Live</TkxBadge>
+    <strong style={{ fontSize: 15, margin: 0 }}>Quantum Report</strong>
+    <TkxBadge color="#06d6a0">● Live</TkxBadge>
   </div>
-  <TkxTypography variant="body2" style={{ opacity: 0.7 }}>
+  <p style={{ opacity: 0.7, margin: 0, fontSize: 13, lineHeight: '1.6' }}>
     Real-time quantum annealing results from the optimization engine.
-  </TkxTypography>
+  </p>
 </TkxCard>`,
   },
   {
@@ -56,17 +56,17 @@ const DEMO_EXAMPLES = [
     <TkxStatistic title="Fidelity" value={99.4} suffix="%" precision={1} />
     <TkxStatistic title="Gate Depth" value={42} />
   </div>
-  <TkxProgress value={72} showLabel colorScheme="primary" />
-  <TkxProgress value={91} showLabel colorScheme="success" />
+  <TkxProgress value={72} showLabel />
+  <TkxProgress value={91} showLabel />
 </div>`,
   },
   {
     label: 'Alert Stack',
     code: `<div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-  <TkxAlert type="info"    message="Quantum engine initialized." />
-  <TkxAlert type="success" message="Palette optimized — WCAG AAA passed on all pairs." />
-  <TkxAlert type="warning" message="Annealing temperature above threshold." />
-  <TkxAlert type="error"   message="Decoherence detected in qubit array." />
+  <TkxAlert variant="info">Quantum engine initialized.</TkxAlert>
+  <TkxAlert variant="success">Palette optimized — WCAG AAA passed on all pairs.</TkxAlert>
+  <TkxAlert variant="warning">Annealing temperature above threshold.</TkxAlert>
+  <TkxAlert variant="danger">Decoherence detected in qubit array.</TkxAlert>
 </div>`,
   },
 ];
@@ -167,12 +167,12 @@ export function PlaygroundPage({ theme }: { theme: ThemeTokens }) {
       label: 'Card with Badge',
       code: \`<TkxCard style={{ maxWidth: 320, padding: '20px 24px' }}>
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-    <TkxTypography variant="h5" style={{ margin: 0 }}>Quantum Report</TkxTypography>
-    <TkxBadge variant="success" pulse>● Live</TkxBadge>
+    <strong style={{ fontSize: 15, margin: 0 }}>Quantum Report</strong>
+    <TkxBadge color="#06d6a0">● Live</TkxBadge>
   </div>
-  <TkxTypography variant="body2" style={{ opacity: 0.7 }}>
+  <p style={{ opacity: 0.7, margin: 0, fontSize: 13, lineHeight: '1.6' }}>
     Real-time quantum annealing results from the optimization engine.
-  </TkxTypography>
+  </p>
 </TkxCard>\`,
     },
     {
@@ -192,17 +192,17 @@ export function PlaygroundPage({ theme }: { theme: ThemeTokens }) {
     <TkxStatistic title="Fidelity" value={99.4} suffix="%" precision={1} />
     <TkxStatistic title="Gate Depth" value={42} />
   </div>
-  <TkxProgress value={72} showLabel colorScheme="primary" />
-  <TkxProgress value={91} showLabel colorScheme="success" />
+  <TkxProgress value={72} showLabel />
+  <TkxProgress value={91} showLabel />
 </div>\`,
     },
     {
       label: 'Alert Stack',
       code: \`<div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-  <TkxAlert type="info"    message="Quantum engine initialized." />
-  <TkxAlert type="success" message="Palette optimized — WCAG AAA passed on all pairs." />
-  <TkxAlert type="warning" message="Annealing temperature above threshold." />
-  <TkxAlert type="error"   message="Decoherence detected in qubit array." />
+  <TkxAlert variant="info">Quantum engine initialized.</TkxAlert>
+  <TkxAlert variant="success">Palette optimized — WCAG AAA passed on all pairs.</TkxAlert>
+  <TkxAlert variant="warning">Annealing temperature above threshold.</TkxAlert>
+  <TkxAlert variant="danger">Decoherence detected in qubit array.</TkxAlert>
 </div>\`,
     },
   ]}
