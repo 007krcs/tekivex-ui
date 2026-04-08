@@ -20,7 +20,7 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · Zero-Trust Security · 6 Locales + RTL · 70 Com
 npm install tekivex-ui
 ```
 
-[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://github.com/007krcs/tekivex-ui) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/novaai0401-ui/tekivex-issue-report/issues)
+[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://github.com/007krcs/tekivex-ui) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/novaai0401-ui/tekivex-issue-report/issues) · [⭐ Star](https://github.com/novaai0401-ui/tekivex-issue-report/stargazers)
 
 </div>
 
