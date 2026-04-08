@@ -41,12 +41,17 @@ const DEMO_EXAMPLES = [
   },
   {
     label: 'Form',
-    code: `<TkxQuantumForm
-  fields={[{ name: 'email' }, { name: 'password' }]}
-  onSubmit={(v) => alert(JSON.stringify(v))}
-  submitLabel="Sign In"
-  showConfidence={true}
-/>`,
+    code: `<TkxForm layout="vertical" onSubmit={(v) => alert(JSON.stringify(v))}>
+  <TkxFormField name="email" rules={[{ required: true }]}>
+    <TkxInput label="Email" type="email" placeholder="you@example.com" />
+  </TkxFormField>
+  <TkxFormField name="password" rules={[{ required: true, min: 8 }]}>
+    <TkxInput label="Password" type="password" placeholder="••••••••" />
+  </TkxFormField>
+  <TkxButton type="submit" variant="solid" colorScheme="primary" style={{ marginTop: 8 }}>
+    Sign In
+  </TkxButton>
+</TkxForm>`,
   },
   {
     label: 'Data Display',
@@ -56,8 +61,8 @@ const DEMO_EXAMPLES = [
     <TkxStatistic title="Fidelity" value={99.4} suffix="%" precision={1} />
     <TkxStatistic title="Gate Depth" value={42} />
   </div>
-  <TkxProgress value={72} showLabel />
-  <TkxProgress value={91} showLabel />
+  <TkxProgress value={72} showValue />
+  <TkxProgress value={91} showValue color="#06d6a0" />
 </div>`,
   },
   {
@@ -177,12 +182,17 @@ export function PlaygroundPage({ theme }: { theme: ThemeTokens }) {
     },
     {
       label: 'Form',
-      code: \`<TkxQuantumForm
-  fields={[{ name: 'email' }, { name: 'password' }]}
-  onSubmit={(v) => alert(JSON.stringify(v))}
-  submitLabel="Sign In"
-  showConfidence={true}
-/>\`,
+      code: \`<TkxForm layout="vertical" onSubmit={(v) => alert(JSON.stringify(v))}>
+  <TkxFormField name="email" rules={[{ required: true }]}>
+    <TkxInput label="Email" type="email" placeholder="you@example.com" />
+  </TkxFormField>
+  <TkxFormField name="password" rules={[{ required: true, min: 8 }]}>
+    <TkxInput label="Password" type="password" placeholder="••••••••" />
+  </TkxFormField>
+  <TkxButton type="submit" variant="solid" colorScheme="primary" style={{ marginTop: 8 }}>
+    Sign In
+  </TkxButton>
+</TkxForm>\`,
     },
     {
       label: 'Data Display',
@@ -192,8 +202,8 @@ export function PlaygroundPage({ theme }: { theme: ThemeTokens }) {
     <TkxStatistic title="Fidelity" value={99.4} suffix="%" precision={1} />
     <TkxStatistic title="Gate Depth" value={42} />
   </div>
-  <TkxProgress value={72} showLabel />
-  <TkxProgress value={91} showLabel />
+  <TkxProgress value={72} showValue />
+  <TkxProgress value={91} showValue color="#06d6a0" />
 </div>\`,
     },
     {

@@ -52,7 +52,6 @@ export const TkxProgress = forwardRef<HTMLDivElement, TkxProgressProps>(
           aria-label={label ?? (isIndeterminate ? 'Loading' : `${clamped}%`)}
           className={cx(tkx('inline-flex flex-col items-center gap-1'), className)}
           style={style}
-          {...rest}
         >
           <svg width={px} height={px} viewBox={`0 0 ${px} ${px}`} aria-hidden="true">
             <circle cx={px / 2} cy={px / 2} r={r} fill="none" stroke={theme.border} strokeWidth={strokeW} />
@@ -85,7 +84,6 @@ export const TkxProgress = forwardRef<HTMLDivElement, TkxProgressProps>(
         aria-label={label ?? (isIndeterminate ? 'Loading' : `${clamped}%`)}
         className={cx(tkx('flex flex-col gap-1 w-full'), className)}
         style={style}
-        {...rest}
       >
         {label && (
           <div className={tkx('flex justify-between text-sm')} style={{ color: theme.text }}>

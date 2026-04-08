@@ -339,7 +339,7 @@ export function Header({ currentRoute, isDark, onToggleTheme, theme, isMobile, o
             <span style={wcagBadgeStyle} title="Meets WCAG 2.1 Level AAA">
               WCAG AAA
             </span>
-            <span style={versionTextStyle}>v2.5.3</span>
+            <span style={versionTextStyle}>v2.5.7</span>
             <div style={dividerStyle} aria-hidden="true" />
           </>
         )}

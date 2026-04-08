@@ -557,7 +557,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           animation: 'tkxSlideUp 0.6s ease both',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: theme.primary, display: 'inline-block', animation: 'tkxPulseRing 1.5s ease-out infinite' }} />
-          v2.5.3 · Quantum AI Edition
+          v2.5.7 · Quantum AI Edition
         </div>
 
         {/* Main headline */}
@@ -921,7 +921,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <footer style={{ position: 'relative', zIndex: 1, padding: '40px 32px', borderTop: `1px solid ${theme.border}`, textAlign: 'center', color: theme.textMuted, fontSize: 13 }}>
         <p style={{ margin: '0 0 8px' }}>
-          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.5.3 · Built with ⚛ Quantum AI · MIT License
+          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.5.7 · Built with ⚛ Quantum AI · MIT License
         </p>
         <p style={{ margin: 0 }}>
           © 2024 <a href="https://github.com/007krcs" target="_blank" rel="noreferrer" style={{ color: theme.primary, textDecoration: 'none' }}>007krcs</a> ·
