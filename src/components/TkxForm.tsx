@@ -374,14 +374,16 @@ export function TkxForm<T extends Record<string, unknown> = Record<string, unkno
   }, []);
 
   // ─── Form Instance ─────────────────────────────────────────────────────
+  // Cast to the base FormInstance type for context compatibility.
+  // The generic T is only relevant at the props/API boundary, not internally.
   const instance = useMemo<FormInstance>(() => ({
     getFieldValue: (name: string) => stateRef.current.values[name],
     setFieldValue,
-    getFieldsValue: () => ({ ...stateRef.current.values } as Partial<T>),
-    setFieldsValue: (values: Partial<T>) => {
+    getFieldsValue: () => ({ ...stateRef.current.values }),
+    setFieldsValue: (values: Record<string, unknown>) => {
       setState(prev => {
         const merged = { ...prev.values, ...values };
-        onValuesChange?.(values, merged as T);
+        onValuesChange?.(values as Partial<T>, merged as T);
         return { ...prev, values: merged };
       });
     },
@@ -411,7 +413,7 @@ export function TkxForm<T extends Record<string, unknown> = Record<string, unkno
   // ─── Context Value ─────────────────────────────────────────────────────
   // When an external form instance is provided via the `form` prop, expose it
   // through the context so that useTkxForm() inside children returns it.
-  const activeInstance = externalInstance ?? instance;
+  const activeInstance: FormInstance = (externalInstance as FormInstance | undefined) ?? instance;
 
   const contextValue = useMemo<FormContextValue>(() => ({
     state,
