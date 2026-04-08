@@ -35,10 +35,10 @@ export interface ValidationRule {
 
 // ── Form Props ──────────────────────────────────────────────────────────────
 
-export interface TkxFormProps {
-  onSubmit?: (values: Record<string, any>) => void | Promise<void>;
-  onValuesChange?: (changed: Record<string, any>, all: Record<string, any>) => void;
-  initialValues?: Record<string, any>;
+export interface TkxFormProps<T extends Record<string, unknown> = Record<string, unknown>> {
+  onSubmit?: (values: T) => void | Promise<void>;
+  onValuesChange?: (changed: Partial<T>, all: T) => void;
+  initialValues?: Partial<T>;
   layout?: 'vertical' | 'horizontal' | 'inline';
   disabled?: boolean;
   children: ReactNode;
@@ -49,7 +49,7 @@ export interface TkxFormProps {
    * When provided, the form exposes its internal instance through this reference,
    * enabling programmatic control from outside the component tree.
    */
-  form?: FormInstance;
+  form?: FormInstance<T>;
 }
 
 // ── Form Field Props ────────────────────────────────────────────────────────
@@ -67,16 +67,16 @@ export interface TkxFormFieldProps {
 
 // ── Form Instance (programmatic API) ────────────────────────────────────────
 
-export interface FormInstance {
-  getFieldValue: (name: string) => any;
-  setFieldValue: (name: string, value: any) => void;
-  getFieldsValue: () => Record<string, any>;
-  setFieldsValue: (values: Record<string, any>) => void;
-  validateFields: () => Promise<Record<string, any>>;
-  validateField: (name: string) => Promise<boolean>;
+export interface FormInstance<T extends Record<string, unknown> = Record<string, unknown>> {
+  getFieldValue: <K extends keyof T>(name: K) => T[K] | undefined;
+  setFieldValue: <K extends keyof T>(name: K, value: T[K]) => void;
+  getFieldsValue: () => Partial<T>;
+  setFieldsValue: (values: Partial<T>) => void;
+  validateFields: () => Promise<T>;
+  validateField: (name: keyof T & string) => Promise<boolean>;
   resetFields: () => void;
-  getFieldError: (name: string) => string | null;
-  isFieldTouched: (name: string) => boolean;
+  getFieldError: (name: keyof T & string) => string | null;
+  isFieldTouched: (name: keyof T & string) => boolean;
 }
 
 // ── Internal State ──────────────────────────────────────────────────────────
@@ -86,18 +86,18 @@ interface FieldMeta {
 }
 
 interface FormState {
-  values: Record<string, any>;
+  values: Record<string, unknown>;
   errors: Record<string, string | null>;
   touched: Record<string, boolean>;
 }
 
 interface FormContextValue {
   state: FormState;
-  initialValues: Record<string, any>;
+  initialValues: Record<string, unknown>;
   layout: 'vertical' | 'horizontal' | 'inline';
   disabled: boolean;
   fieldMeta: React.MutableRefObject<Record<string, FieldMeta>>;
-  setFieldValue: (name: string, value: any) => void;
+  setFieldValue: (name: string, value: unknown) => void;
   setFieldError: (name: string, error: string | null) => void;
   setFieldTouched: (name: string) => void;
   registerField: (name: string, meta: FieldMeta) => void;
@@ -224,18 +224,18 @@ export function useTkxForm(): FormInstance {
 
   // Always call hooks unconditionally (Rules of Hooks).
   // These refs back the standalone instance when used outside a TkxForm.
-  const valuesRef = useRef<Record<string, any>>({});
+  const valuesRef = useRef<Record<string, unknown>>({});
   const errorsRef = useRef<Record<string, string | null>>({});
   const touchedRef = useRef<Record<string, boolean>>({});
 
   const standaloneInstance = useMemo<FormInstance>(() => ({
     getFieldValue: (name: string) => valuesRef.current[name],
-    setFieldValue: (name: string, value: any) => { valuesRef.current[name] = value; },
+    setFieldValue: (name: string, value: unknown) => { valuesRef.current[name] = value; },
     getFieldsValue: () => ({ ...valuesRef.current }),
-    setFieldsValue: (values: Record<string, any>) => {
+    setFieldsValue: (values: Record<string, unknown>) => {
       Object.assign(valuesRef.current, values);
     },
-    validateFields: () => Promise.resolve({ ...valuesRef.current }),
+    validateFields: () => Promise.resolve({ ...valuesRef.current } as Record<string, unknown>),
     validateField: (_name: string) => Promise.resolve(true),
     resetFields: () => {
       valuesRef.current = {};
@@ -253,17 +253,17 @@ export function useTkxForm(): FormInstance {
 
 // ── TkxForm Component ───────────────────────────────────────────────────────
 
-export function TkxForm({
+export function TkxForm<T extends Record<string, unknown> = Record<string, unknown>>({
   onSubmit,
   onValuesChange,
-  initialValues = {},
+  initialValues = {} as Partial<T>,
   layout = 'vertical',
   disabled = false,
   children,
   className,
   style,
   form: externalInstance,
-}: TkxFormProps) {
+}: TkxFormProps<T>) {
   const theme = useTheme();
 
   // ─── State ──────────────────────────────────────────────────────────────
@@ -288,13 +288,13 @@ export function TkxForm({
   }, []);
 
   // ─── Value Management ───────────────────────────────────────────────────
-  const setFieldValue = useCallback((name: string, value: any) => {
+  const setFieldValue = useCallback((name: string, value: unknown) => {
     setState(prev => {
       const next = {
         ...prev,
         values: { ...prev.values, [name]: value },
       };
-      onValuesChange?.({ [name]: value }, next.values);
+      onValuesChange?.({ [name]: value } as Partial<T>, next.values as T);
       return next;
     });
   }, [onValuesChange]);
@@ -328,7 +328,7 @@ export function TkxForm({
     return error === null;
   }, []);
 
-  const validateFields = useCallback(async (): Promise<Record<string, any>> => {
+  const validateFields = useCallback(async (): Promise<T> => {
     const fieldNames = Object.keys(fieldMetaRef.current);
     const results = await Promise.all(
       fieldNames.map(async (name) => {
@@ -362,7 +362,7 @@ export function TkxForm({
       return Promise.reject(errorMap);
     }
 
-    return { ...stateRef.current.values };
+    return { ...stateRef.current.values } as T;
   }, []);
 
   const resetFields = useCallback(() => {
@@ -377,11 +377,11 @@ export function TkxForm({
   const instance = useMemo<FormInstance>(() => ({
     getFieldValue: (name: string) => stateRef.current.values[name],
     setFieldValue,
-    getFieldsValue: () => ({ ...stateRef.current.values }),
-    setFieldsValue: (values: Record<string, any>) => {
+    getFieldsValue: () => ({ ...stateRef.current.values } as Partial<T>),
+    setFieldsValue: (values: Partial<T>) => {
       setState(prev => {
         const merged = { ...prev.values, ...values };
-        onValuesChange?.(values, merged);
+        onValuesChange?.(values, merged as T);
         return { ...prev, values: merged };
       });
     },

@@ -2,6 +2,29 @@
 // In-browser live component playground. Type JSX, see it render instantly.
 // Uses new Function() evaluation, an error boundary, quantum component
 // suggestions via AmplitudeAmplifier, and real-time render-time metrics.
+//
+// ⚠ SECURITY NOTICE — new Function() / arbitrary code execution
+// ─────────────────────────────────────────────────────────────────────────────
+// TkxPlayground intentionally evaluates user-supplied JSX using new Function().
+// This is an INTENTIONAL design decision for a developer-facing live playground;
+// it is NOT suitable for executing untrusted user content.
+//
+// Risk: new Function() does NOT provide a true sandbox. Code running inside it
+// has access to the JavaScript global scope, including window, document, and
+// fetch. A malicious actor with access to the playground input could exfiltrate
+// data or execute arbitrary browser-side code.
+//
+// Mitigation in this component:
+//   • The playground is intended for developer tooling / docs sites only.
+//   • "use strict" is applied inside the evaluated function.
+//   • An ErrorBoundary catches runtime exceptions from bad code.
+//   • All output is rendered inside React's reconciler (no innerHTML).
+//
+// If you need a true sandbox (e.g. for user-facing code execution):
+//   • Use a sandboxed <iframe sandbox="allow-scripts"> with a restrictive CSP.
+//   • Or run evaluation in a Web Worker (no DOM access).
+//   • Reference: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
+// ─────────────────────────────────────────────────────────────────────────────
 
 import { useState, useCallback, useRef, useEffect, type ReactNode } from 'react';
 import React from 'react';

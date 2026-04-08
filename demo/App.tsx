@@ -1,114 +1,112 @@
-import { useState, useEffect, type CSSProperties } from 'react';
+import { useState, useEffect, lazy, Suspense, type CSSProperties } from 'react';
 import { ThemeProvider, useTheme, quantumDark, auroraLight } from '@tekivex/ui';
 import type { ThemeTokens } from '@tekivex/ui';
 import { Sidebar } from './layout/Sidebar';
 import { Header } from './layout/Header';
 
-// ── Page imports ──────────────────────────────────────────────────────────────
+// ── Critical pages — eager (small, always needed) ─────────────────────────────
 import { HomePage } from './pages/HomePage';
 import { GettingStartedPage } from './pages/GettingStartedPage';
 import { CSSSystemPage } from './pages/CSSSystemPage';
 import { AboutPage } from './pages/AboutPage';
 import { LicensePage } from './pages/LicensePage';
 
-// ── Component doc pages ───────────────────────────────────────────────────────
-// These are loaded lazily via dynamic import paths but imported statically here
-// to keep bundle simple for a local demo.
-import { ButtonPage } from './docs/ButtonPage';
-import { CardPage } from './docs/CardPage';
-import { InputPage } from './docs/InputPage';
-import { BadgePage } from './docs/BadgePage';
-import { ProgressPage } from './docs/ProgressPage';
-import { TogglePage } from './docs/TogglePage';
-import { AlertPage } from './docs/AlertPage';
-import { ModalPage } from './docs/ModalPage';
-import { TabsPage } from './docs/TabsPage';
-import { TooltipPage } from './docs/TooltipPage';
-import { SkeletonPage } from './docs/SkeletonPage';
-import { AvatarPage } from './docs/AvatarPage';
-import { TablePage } from './docs/TablePage';
-import { DividerPage } from './docs/DividerPage';
-import { SelectPage } from './docs/SelectPage';
-import { CheckboxPage } from './docs/CheckboxPage';
-import { RadioPage } from './docs/RadioPage';
-import { ToastPage } from './docs/ToastPage';
-import { AccordionPage } from './docs/AccordionPage';
-import { DrawerPage } from './docs/DrawerPage';
-import { DatePickerPage } from './docs/DatePickerPage';
-import { SliderPage } from './docs/SliderPage';
-import { PaginationPage } from './docs/PaginationPage';
-import { ImagePage } from './docs/ImagePage';
-import { FileUploadPage } from './docs/FileUploadPage';
-import { RatingPage } from './docs/RatingPage';
-import { ChatPage } from './docs/ChatPage';
-import { TagPage } from './docs/TagPage';
-import { TimelinePage } from './docs/TimelinePage';
-import { MenuPage } from './docs/MenuPage';
-import { ClockPage } from './docs/ClockPage';
-import { VideoPlayerPage } from './docs/VideoPlayerPage';
-import { StepperPage } from './docs/StepperPage';
-import { ColorPickerPage } from './docs/ColorPickerPage';
-import { NumberInputPage } from './docs/NumberInputPage';
-import { OTPPage } from './docs/OTPPage';
-import { CommandPage } from './docs/CommandPage';
-import { CarouselPage } from './docs/CarouselPage';
-import { IconPage } from './docs/IconPage';
-import { BreadcrumbPage } from './docs/BreadcrumbPage';
-import { PopoverPage } from './docs/PopoverPage';
-import { AutocompletePage } from './docs/AutocompletePage';
-import { TreeViewPage } from './docs/TreeViewPage';
-import { ToolbarPage } from './docs/ToolbarPage';
-import { TransferListPage } from './docs/TransferListPage';
-import { SpeedDialPage } from './docs/SpeedDialPage';
-import { AppBarPage } from './docs/AppBarPage';
-import { BottomNavPage } from './docs/BottomNavPage';
-import { SnackbarPage } from './docs/SnackbarPage';
-import { DataGridPage } from './docs/DataGridPage';
-import { MasonryPage } from './docs/MasonryPage';
-import { RichTextDisplayPage } from './docs/RichTextDisplayPage';
-import { FormPage } from './docs/FormPage';
-import { LayoutPage } from './docs/LayoutPage';
-import { TypographyPage } from './docs/TypographyPage';
-import { SpinPage } from './docs/SpinPage';
-import { EmptyPage } from './docs/EmptyPage';
-import { StatisticPage } from './docs/StatisticPage';
-import { ConfigProviderPage } from './docs/ConfigProviderPage';
+// ── Component doc pages — lazy loaded ────────────────────────────────────────
+const ButtonPage = lazy(() => import('./docs/ButtonPage').then(m => ({ default: m.ButtonPage })));
+const CardPage = lazy(() => import('./docs/CardPage').then(m => ({ default: m.CardPage })));
+const InputPage = lazy(() => import('./docs/InputPage').then(m => ({ default: m.InputPage })));
+const BadgePage = lazy(() => import('./docs/BadgePage').then(m => ({ default: m.BadgePage })));
+const ProgressPage = lazy(() => import('./docs/ProgressPage').then(m => ({ default: m.ProgressPage })));
+const TogglePage = lazy(() => import('./docs/TogglePage').then(m => ({ default: m.TogglePage })));
+const AlertPage = lazy(() => import('./docs/AlertPage').then(m => ({ default: m.AlertPage })));
+const ModalPage = lazy(() => import('./docs/ModalPage').then(m => ({ default: m.ModalPage })));
+const TabsPage = lazy(() => import('./docs/TabsPage').then(m => ({ default: m.TabsPage })));
+const TooltipPage = lazy(() => import('./docs/TooltipPage').then(m => ({ default: m.TooltipPage })));
+const SkeletonPage = lazy(() => import('./docs/SkeletonPage').then(m => ({ default: m.SkeletonPage })));
+const AvatarPage = lazy(() => import('./docs/AvatarPage').then(m => ({ default: m.AvatarPage })));
+const TablePage = lazy(() => import('./docs/TablePage').then(m => ({ default: m.TablePage })));
+const DividerPage = lazy(() => import('./docs/DividerPage').then(m => ({ default: m.DividerPage })));
+const SelectPage = lazy(() => import('./docs/SelectPage').then(m => ({ default: m.SelectPage })));
+const CheckboxPage = lazy(() => import('./docs/CheckboxPage').then(m => ({ default: m.CheckboxPage })));
+const RadioPage = lazy(() => import('./docs/RadioPage').then(m => ({ default: m.RadioPage })));
+const ToastPage = lazy(() => import('./docs/ToastPage').then(m => ({ default: m.ToastPage })));
+const AccordionPage = lazy(() => import('./docs/AccordionPage').then(m => ({ default: m.AccordionPage })));
+const DrawerPage = lazy(() => import('./docs/DrawerPage').then(m => ({ default: m.DrawerPage })));
+const DatePickerPage = lazy(() => import('./docs/DatePickerPage').then(m => ({ default: m.DatePickerPage })));
+const SliderPage = lazy(() => import('./docs/SliderPage').then(m => ({ default: m.SliderPage })));
+const PaginationPage = lazy(() => import('./docs/PaginationPage').then(m => ({ default: m.PaginationPage })));
+const ImagePage = lazy(() => import('./docs/ImagePage').then(m => ({ default: m.ImagePage })));
+const FileUploadPage = lazy(() => import('./docs/FileUploadPage').then(m => ({ default: m.FileUploadPage })));
+const RatingPage = lazy(() => import('./docs/RatingPage').then(m => ({ default: m.RatingPage })));
+const ChatPage = lazy(() => import('./docs/ChatPage').then(m => ({ default: m.ChatPage })));
+const TagPage = lazy(() => import('./docs/TagPage').then(m => ({ default: m.TagPage })));
+const TimelinePage = lazy(() => import('./docs/TimelinePage').then(m => ({ default: m.TimelinePage })));
+const MenuPage = lazy(() => import('./docs/MenuPage').then(m => ({ default: m.MenuPage })));
+const ClockPage = lazy(() => import('./docs/ClockPage').then(m => ({ default: m.ClockPage })));
+const VideoPlayerPage = lazy(() => import('./docs/VideoPlayerPage').then(m => ({ default: m.VideoPlayerPage })));
+const StepperPage = lazy(() => import('./docs/StepperPage').then(m => ({ default: m.StepperPage })));
+const ColorPickerPage = lazy(() => import('./docs/ColorPickerPage').then(m => ({ default: m.ColorPickerPage })));
+const NumberInputPage = lazy(() => import('./docs/NumberInputPage').then(m => ({ default: m.NumberInputPage })));
+const OTPPage = lazy(() => import('./docs/OTPPage').then(m => ({ default: m.OTPPage })));
+const CommandPage = lazy(() => import('./docs/CommandPage').then(m => ({ default: m.CommandPage })));
+const CarouselPage = lazy(() => import('./docs/CarouselPage').then(m => ({ default: m.CarouselPage })));
+const IconPage = lazy(() => import('./docs/IconPage').then(m => ({ default: m.IconPage })));
+const BreadcrumbPage = lazy(() => import('./docs/BreadcrumbPage').then(m => ({ default: m.BreadcrumbPage })));
+const PopoverPage = lazy(() => import('./docs/PopoverPage').then(m => ({ default: m.PopoverPage })));
+const AutocompletePage = lazy(() => import('./docs/AutocompletePage').then(m => ({ default: m.AutocompletePage })));
+const TreeViewPage = lazy(() => import('./docs/TreeViewPage').then(m => ({ default: m.TreeViewPage })));
+const ToolbarPage = lazy(() => import('./docs/ToolbarPage').then(m => ({ default: m.ToolbarPage })));
+const TransferListPage = lazy(() => import('./docs/TransferListPage').then(m => ({ default: m.TransferListPage })));
+const SpeedDialPage = lazy(() => import('./docs/SpeedDialPage').then(m => ({ default: m.SpeedDialPage })));
+const AppBarPage = lazy(() => import('./docs/AppBarPage').then(m => ({ default: m.AppBarPage })));
+const BottomNavPage = lazy(() => import('./docs/BottomNavPage').then(m => ({ default: m.BottomNavPage })));
+const SnackbarPage = lazy(() => import('./docs/SnackbarPage').then(m => ({ default: m.SnackbarPage })));
+const DataGridPage = lazy(() => import('./docs/DataGridPage').then(m => ({ default: m.DataGridPage })));
+const MasonryPage = lazy(() => import('./docs/MasonryPage').then(m => ({ default: m.MasonryPage })));
+const RichTextDisplayPage = lazy(() => import('./docs/RichTextDisplayPage').then(m => ({ default: m.RichTextDisplayPage })));
+const FormPage = lazy(() => import('./docs/FormPage').then(m => ({ default: m.FormPage })));
+const LayoutPage = lazy(() => import('./docs/LayoutPage').then(m => ({ default: m.LayoutPage })));
+const TypographyPage = lazy(() => import('./docs/TypographyPage').then(m => ({ default: m.TypographyPage })));
+const SpinPage = lazy(() => import('./docs/SpinPage').then(m => ({ default: m.SpinPage })));
+const EmptyPage = lazy(() => import('./docs/EmptyPage').then(m => ({ default: m.EmptyPage })));
+const StatisticPage = lazy(() => import('./docs/StatisticPage').then(m => ({ default: m.StatisticPage })));
+const ConfigProviderPage = lazy(() => import('./docs/ConfigProviderPage').then(m => ({ default: m.ConfigProviderPage })));
 
-// ── Real-Time pages ────────────────────────────────────────────────────────────
-import { LiveFeedPage } from './docs/LiveFeedPage';
-import { LiveMetricsPage } from './docs/LiveMetricsPage';
-import { RealTimeChartPage } from './docs/RealTimeChartPage';
-import { LiveLogPage } from './docs/LiveLogPage';
-import { DataGridInfinitePage } from './docs/DataGridInfinitePage';
+// ── Real-Time pages — lazy loaded ─────────────────────────────────────────────
+const LiveFeedPage = lazy(() => import('./docs/LiveFeedPage').then(m => ({ default: m.LiveFeedPage })));
+const LiveMetricsPage = lazy(() => import('./docs/LiveMetricsPage').then(m => ({ default: m.LiveMetricsPage })));
+const RealTimeChartPage = lazy(() => import('./docs/RealTimeChartPage').then(m => ({ default: m.RealTimeChartPage })));
+const LiveLogPage = lazy(() => import('./docs/LiveLogPage').then(m => ({ default: m.LiveLogPage })));
+const DataGridInfinitePage = lazy(() => import('./docs/DataGridInfinitePage').then(m => ({ default: m.DataGridInfinitePage })));
 
-// ── Quantum AI pages ───────────────────────────────────────────────────────────
-import { QuantumFormPage } from './docs/QuantumFormPage';
-import { ThemeBuilderPage } from './docs/ThemeBuilderPage';
-import { PlaygroundPage } from './docs/PlaygroundPage';
+// ── Quantum AI pages — lazy loaded ────────────────────────────────────────────
+const QuantumFormPage = lazy(() => import('./docs/QuantumFormPage').then(m => ({ default: m.QuantumFormPage })));
+const ThemeBuilderPage = lazy(() => import('./docs/ThemeBuilderPage').then(m => ({ default: m.ThemeBuilderPage })));
+const PlaygroundPage = lazy(() => import('./docs/PlaygroundPage').then(m => ({ default: m.PlaygroundPage })));
 
-// ── Previously missing component pages ────────────────────────────────────────
-import { AnchorPage } from './docs/AnchorPage';
-import { CascaderPage } from './docs/CascaderPage';
-import { MentionsPage } from './docs/MentionsPage';
-import { QRCodePage } from './docs/QRCodePage';
-import { ResultPage } from './docs/ResultPage';
-import { SegmentedPage } from './docs/SegmentedPage';
-import { TourPage } from './docs/TourPage';
-import { WatermarkPage } from './docs/WatermarkPage';
+// ── Previously missing component pages — lazy loaded ──────────────────────────
+const AnchorPage = lazy(() => import('./docs/AnchorPage').then(m => ({ default: m.AnchorPage })));
+const CascaderPage = lazy(() => import('./docs/CascaderPage').then(m => ({ default: m.CascaderPage })));
+const MentionsPage = lazy(() => import('./docs/MentionsPage').then(m => ({ default: m.MentionsPage })));
+const QRCodePage = lazy(() => import('./docs/QRCodePage').then(m => ({ default: m.QRCodePage })));
+const ResultPage = lazy(() => import('./docs/ResultPage').then(m => ({ default: m.ResultPage })));
+const SegmentedPage = lazy(() => import('./docs/SegmentedPage').then(m => ({ default: m.SegmentedPage })));
+const TourPage = lazy(() => import('./docs/TourPage').then(m => ({ default: m.TourPage })));
+const WatermarkPage = lazy(() => import('./docs/WatermarkPage').then(m => ({ default: m.WatermarkPage })));
 
-// ── New section pages ──────────────────────────────────────────────────────────
-import { ChartsPage } from './docs/ChartsPage';
-import { HeadlessPage } from './docs/HeadlessPage';
-import { SecurityPage } from './docs/SecurityPage';
+// ── New section pages — lazy loaded ───────────────────────────────────────────
+const ChartsPage = lazy(() => import('./docs/ChartsPage').then(m => ({ default: m.ChartsPage })));
+const HeadlessPage = lazy(() => import('./docs/HeadlessPage').then(m => ({ default: m.HeadlessPage })));
+const SecurityPage = lazy(() => import('./docs/SecurityPage').then(m => ({ default: m.SecurityPage })));
 
-// ── Template pages ─────────────────────────────────────────────────────────────
-import { DashboardTemplate } from './templates/DashboardTemplate';
-import { PortfolioTemplate } from './templates/PortfolioTemplate';
-import { EcommerceTemplate } from './templates/EcommerceTemplate';
-import { SupplyChainTemplate } from './templates/SupplyChainTemplate';
-import { BlogTemplate } from './templates/BlogTemplate';
-import { AdminSettingsTemplate } from './templates/AdminSettingsTemplate';
-import { LandingPageTemplate } from './templates/LandingPageTemplate';
+// ── Template pages — lazy loaded ──────────────────────────────────────────────
+const DashboardTemplate = lazy(() => import('./templates/DashboardTemplate').then(m => ({ default: m.DashboardTemplate })));
+const PortfolioTemplate = lazy(() => import('./templates/PortfolioTemplate').then(m => ({ default: m.PortfolioTemplate })));
+const EcommerceTemplate = lazy(() => import('./templates/EcommerceTemplate').then(m => ({ default: m.EcommerceTemplate })));
+const SupplyChainTemplate = lazy(() => import('./templates/SupplyChainTemplate').then(m => ({ default: m.SupplyChainTemplate })));
+const BlogTemplate = lazy(() => import('./templates/BlogTemplate').then(m => ({ default: m.BlogTemplate })));
+const AdminSettingsTemplate = lazy(() => import('./templates/AdminSettingsTemplate').then(m => ({ default: m.AdminSettingsTemplate })));
+const LandingPageTemplate = lazy(() => import('./templates/LandingPageTemplate').then(m => ({ default: m.LandingPageTemplate })));
 
 // ── Route → Component map ─────────────────────────────────────────────────────
 type PageComponent = React.ComponentType<{ theme: ThemeTokens }>;
@@ -440,7 +438,15 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
         </div>
 
         <main id="main-content" style={contentStyle} tabIndex={-1}>
-          <PageComponent theme={theme} />
+          <Suspense fallback={
+            <div style={{ padding: '48px 32px', display: 'flex', alignItems: 'center', gap: 12, color: theme.textMuted, fontSize: 14 }}>
+              <span style={{ width: 18, height: 18, border: `2px solid ${theme.border}`, borderTopColor: theme.primary, borderRadius: '50%', display: 'inline-block', animation: 'tkx-spin 0.7s linear infinite' }} />
+              Loading…
+              <style>{`@keyframes tkx-spin { to { transform: rotate(360deg); } } @media (prefers-reduced-motion: reduce) { .tkx-spin-el { animation: none; } }`}</style>
+            </div>
+          }>
+            <PageComponent theme={theme} />
+          </Suspense>
         </main>
       </div>
     </div>

@@ -54,6 +54,10 @@ function injectMetricsStyles() {
 .tkx-metric-shimmer {
   animation: tkx-metric-shimmer 0.6s ease-in-out;
 }
+@media (prefers-reduced-motion: reduce) {
+  .tkx-metric-shimmer { animation: none; }
+  .tkx-metric-pulse   { animation: none; }
+}
   `.trim();
   document.head.appendChild(el);
 }
@@ -80,15 +84,33 @@ function getStatusColor(status: MetricItem['status'], theme: ReturnType<typeof u
 
 // ── useCountUp ───────────────────────────────────────────────────────────────
 
+function useReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false
+  );
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return reduced;
+}
+
 function useCountUp(target: number, duration: number, enabled: boolean): number {
   const [displayed, setDisplayed] = useState(target);
   const startRef = useRef(target);
   const startTimeRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (!enabled) {
+    if (!enabled || reducedMotion) {
       setDisplayed(target);
+      startRef.current = target;
       return;
     }
     const from = startRef.current;
@@ -113,7 +135,7 @@ function useCountUp(target: number, duration: number, enabled: boolean): number 
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, [target, duration, enabled]);
+  }, [target, duration, enabled, reducedMotion]);
 
   return displayed;
 }
