@@ -924,9 +924,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.5.10 · Built with ⚛ Quantum AI · MIT License
         </p>
         <p style={{ margin: 0 }}>
-          © 2024 <a href="https://github.com/007krcs" target="_blank" rel="noreferrer" style={{ color: theme.primary, textDecoration: 'none' }}>007krcs</a> ·
-          {' '}<a href="https://github.com/007krcs/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>GitHub</a> ·
-          {' '}<a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a> ·
+          © 2026 <a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a> ·
           {' '}<a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues" target="_blank" rel="noreferrer" style={{ color: theme.danger, textDecoration: 'none', fontWeight: 600 }}>🐛 Report Issue</a> ·
           {' '}<a href="https://github.com/novaai0401-ui/tekivex-issue-report/stargazers" target="_blank" rel="noreferrer" style={{ color: theme.warning, textDecoration: 'none', fontWeight: 600 }}>⭐ Star on GitHub</a>
         </p>
