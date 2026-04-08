@@ -207,19 +207,23 @@ function evalCode(
       ? `return (${trimmed});`
       : trimmed; // assume the user wrote `const x = ...; return <jsx>;`
 
-    let source = `
+    // Babel transforms the JSX source first, then we inject it into new Function().
+    // IMPORTANT: `return PlaygroundRoot` must NOT be in the Babel-transformed source —
+    // Babel treats the input as a module/script where top-level `return` is a syntax error.
+    // Instead, Babel only sees the function definition; the `return` is appended afterward
+    // as a plain JS string that never passes through Babel.
+    let jsxSource = `
       function PlaygroundRoot() {
         ${componentBody}
       }
-      return PlaygroundRoot;
     `;
 
     const babel = getBabel();
     if (babel) {
-      source = babel.transform(source, {
+      jsxSource = babel.transform(jsxSource, {
         presets: ['react'],
         filename: 'playground.jsx',
-      }).code ?? source;
+      }).code ?? jsxSource;
     }
 
     // SECURITY: new Function() is used intentionally for the live playground.
@@ -236,7 +240,8 @@ function evalCode(
       `
       "use strict";
       const { ${Object.keys(importsObj).join(', ')} } = imports;
-      ${source}
+      ${jsxSource}
+      return PlaygroundRoot;
     `,
     ) as (r: typeof React, i: Record<string, unknown>) => React.ComponentType;
     const Component = fn(React, importsObj);

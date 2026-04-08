@@ -1,6 +1,52 @@
-import { useState, useEffect, lazy, Suspense, type CSSProperties } from 'react';
+import { useState, useEffect, lazy, Suspense, Component, type CSSProperties, type ReactNode } from 'react';
 import { ThemeProvider, useTheme, quantumDark, auroraLight } from '@tekivex/ui';
 import type { ThemeTokens } from '@tekivex/ui';
+
+// ── Chunk error boundary — catches "Failed to fetch dynamically imported module"
+// errors that occur when a new deploy invalidates cached chunk hashes.
+// On first failure: force a hard reload (clears the stale module cache).
+// On repeated failure (already reloaded): show a user-friendly message.
+class ChunkErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean; reloaded: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false, reloaded: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    const isChunkError =
+      error.message.includes('Failed to fetch dynamically imported module') ||
+      error.message.includes('Importing a module script failed') ||
+      error.message.includes('error loading dynamically imported module');
+
+    if (isChunkError && !sessionStorage.getItem('tkx-chunk-reloaded')) {
+      sessionStorage.setItem('tkx-chunk-reloaded', '1');
+      window.location.reload();
+    } else {
+      this.setState({ reloaded: true });
+    }
+  }
+
+  render() {
+    if (this.state.hasError && this.state.reloaded) {
+      return (
+        <div style={{ padding: '48px 32px', color: '#f72585', fontFamily: 'monospace' }}>
+          <strong>⚠ TekiVex UI — Render Error</strong>
+          <p style={{ marginTop: 12, color: '#e8e8f4', fontSize: 14 }}>
+            A page chunk failed to load. Please hard-refresh (Ctrl+Shift+R) to clear the cache.
+          </p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 import { Sidebar } from './layout/Sidebar';
 import { Header } from './layout/Header';
 
@@ -85,6 +131,7 @@ const ThemeBuilderPage = lazy(() => import('./docs/ThemeBuilderPage').then(m => 
 const PlaygroundPage = lazy(() => import('./docs/PlaygroundPage').then(m => ({ default: m.PlaygroundPage })));
 
 // ── Previously missing component pages — lazy loaded ──────────────────────────
+const AffixPage = lazy(() => import('./docs/AffixPage').then(m => ({ default: m.AffixPage })));
 const AnchorPage = lazy(() => import('./docs/AnchorPage').then(m => ({ default: m.AnchorPage })));
 const CascaderPage = lazy(() => import('./docs/CascaderPage').then(m => ({ default: m.CascaderPage })));
 const MentionsPage = lazy(() => import('./docs/MentionsPage').then(m => ({ default: m.MentionsPage })));
@@ -185,6 +232,7 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/theme-builder': ThemeBuilderPage,
   '/playground': PlaygroundPage,
   // ── Previously missing component routes ──────────────────────────────────
+  '/components/affix': AffixPage,
   '/components/anchor': AnchorPage,
   '/components/cascader': CascaderPage,
   '/components/mentions': MentionsPage,
@@ -438,15 +486,17 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
         </div>
 
         <main id="main-content" style={contentStyle} tabIndex={-1}>
-          <Suspense fallback={
-            <div style={{ padding: '48px 32px', display: 'flex', alignItems: 'center', gap: 12, color: theme.textMuted, fontSize: 14 }}>
-              <span style={{ width: 18, height: 18, border: `2px solid ${theme.border}`, borderTopColor: theme.primary, borderRadius: '50%', display: 'inline-block', animation: 'tkx-spin 0.7s linear infinite' }} />
-              Loading…
-              <style>{`@keyframes tkx-spin { to { transform: rotate(360deg); } } @media (prefers-reduced-motion: reduce) { .tkx-spin-el { animation: none; } }`}</style>
-            </div>
-          }>
-            <PageComponent theme={theme} />
-          </Suspense>
+          <ChunkErrorBoundary>
+            <Suspense fallback={
+              <div style={{ padding: '48px 32px', display: 'flex', alignItems: 'center', gap: 12, color: theme.textMuted, fontSize: 14 }}>
+                <span style={{ width: 18, height: 18, border: `2px solid ${theme.border}`, borderTopColor: theme.primary, borderRadius: '50%', display: 'inline-block', animation: 'tkx-spin 0.7s linear infinite' }} />
+                Loading…
+                <style>{`@keyframes tkx-spin { to { transform: rotate(360deg); } } @media (prefers-reduced-motion: reduce) { .tkx-spin-el { animation: none; } }`}</style>
+              </div>
+            }>
+              <PageComponent theme={theme} />
+            </Suspense>
+          </ChunkErrorBoundary>
         </main>
       </div>
     </div>
