@@ -20,7 +20,7 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · Zero-Trust Security · 6 Locales + RTL · 70 Com
 npm install tekivex-ui
 ```
 
-[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://github.com/007krcs/tekivex-ui) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Issues](https://github.com/007krcs/tekivex-ui/issues)
+[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://github.com/007krcs/tekivex-ui) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/novaai0401-ui/tekivex-issue-report/issues)
 
 </div>
 
@@ -528,6 +528,20 @@ Coverage includes unit tests for all 70+ components, 7 chart types, 10 headless 
 - [ ] Third-party WCAG 2.1 AAA accessibility audit certificate
 - [ ] Heatmap, Funnel, Treemap, Gauge chart types
 - [ ] Column pinning and row grouping in DataGrid
+
+---
+
+## Bug Reports & Issues
+
+Found a bug or have a feature request? Please open an issue on our dedicated issue tracker:
+
+**👉 [github.com/novaai0401-ui/tekivex-issue-report/issues](https://github.com/novaai0401-ui/tekivex-issue-report/issues)**
+
+When reporting, please include:
+- tekivex-ui version (`npm list tekivex-ui`)
+- React version
+- Browser / Node version
+- A minimal reproduction (CodeSandbox or code snippet)
 
 ---
 
