@@ -926,7 +926,8 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
         <p style={{ margin: 0 }}>
           © 2024 <a href="https://github.com/007krcs" target="_blank" rel="noreferrer" style={{ color: theme.primary, textDecoration: 'none' }}>007krcs</a> ·
           {' '}<a href="https://github.com/007krcs/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>GitHub</a> ·
-          {' '}<a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a>
+          {' '}<a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a> ·
+          {' '}<a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues" target="_blank" rel="noreferrer" style={{ color: theme.danger, textDecoration: 'none', fontWeight: 600 }}>🐛 Report Issue</a>
         </p>
       </footer>
     </div>
