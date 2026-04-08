@@ -11,10 +11,10 @@ export function getDefaultColors(theme: ThemeTokens): string[] {
     theme.success,
     theme.warning,
     theme.danger,
-    '#a855f7',
-    '#f97316',
-    '#14b8a6',
-    '#e879f9',
+    theme.primary + 'aa',   // primary at 67% opacity
+    theme.secondary + 'aa', // secondary at 67% opacity
+    theme.info + 'aa',      // info at 67% opacity
+    theme.success + 'aa',   // success at 67% opacity
   ];
 }
 

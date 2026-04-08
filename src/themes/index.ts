@@ -1,6 +1,6 @@
 import { createContext, useContext, useLayoutEffect, useEffect, type ReactNode, createElement } from 'react';
 import { cssVar } from '../engine/css';
-import { meetsAA } from '../engine/wcag';
+import { meetsAA, meetsAAA } from '../engine/wcag';
 
 // useLayoutEffect on client, useEffect on server (avoids SSR warning)
 const useIsomorphicLayoutEffect =
@@ -78,6 +78,13 @@ export function createTheme(base: ThemeTokens, overrides?: Partial<ThemeTokens>)
     // eslint-disable-next-line no-console
     console.warn(
       `[TekiVex] Theme contrast warning: primary (${theme.primary}) vs bg (${theme.bg}) does not meet WCAG AA minimum`,
+    );
+  }
+
+  if (!meetsAAA(theme.text, theme.bg)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[TekiVex] Theme contrast warning: text (${theme.text}) vs bg (${theme.bg}) does not meet WCAG AAA minimum (7:1)`,
     );
   }
 

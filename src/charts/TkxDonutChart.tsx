@@ -8,6 +8,7 @@ import {
   Legend,
 } from 'recharts';
 import { useTheme } from '../themes';
+import { useReducedMotion } from '../hooks';
 import { getDefaultColors, tooltipStyle } from './shared';
 
 export interface TkxDonutChartSlice {
@@ -72,14 +73,17 @@ export function TkxDonutChart({
   ariaLabel = 'Donut chart',
 }: TkxDonutChartProps) {
   const theme = useTheme();
+  const reduced = useReducedMotion();
   const colors = getDefaultColors(theme);
   const tt = tooltipStyle(theme);
   // Force ResponsiveContainer to re-measure after the parent layout settles.
-  const [mounted, setMounted] = useState(false);
+  // When reduced motion is preferred, skip the animation and mount immediately.
+  const [mounted, setMounted] = useState(reduced);
   useEffect(() => {
+    if (reduced) { setMounted(true); return; }
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
-  }, []);
+  }, [reduced]);
 
   return (
     <div

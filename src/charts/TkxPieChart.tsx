@@ -8,6 +8,7 @@ import {
   Legend,
 } from 'recharts';
 import { useTheme } from '../themes';
+import { useReducedMotion } from '../hooks';
 import { getDefaultColors, tooltipStyle } from './shared';
 
 export interface TkxPieChartSlice {
@@ -40,16 +41,19 @@ export function TkxPieChart({
   ariaLabel = 'Pie chart',
 }: TkxPieChartProps) {
   const theme = useTheme();
+  const reduced = useReducedMotion();
   const colors = getDefaultColors(theme);
   const tt = tooltipStyle(theme);
   // Force ResponsiveContainer to re-measure after the parent layout settles.
-  // Without this, recharts can compute 0×0 on first paint inside CSS grids/flex
+  // Without this, recharts can compute 0x0 on first paint inside CSS grids/flex
   // and the chart silently disappears.
-  const [mounted, setMounted] = useState(false);
+  // When reduced motion is preferred, skip the animation and mount immediately.
+  const [mounted, setMounted] = useState(reduced);
   useEffect(() => {
+    if (reduced) { setMounted(true); return; }
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
-  }, []);
+  }, [reduced]);
 
   return (
     <div

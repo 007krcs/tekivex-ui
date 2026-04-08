@@ -199,6 +199,13 @@ function evalCode(
       }).code ?? source;
     }
 
+    // SECURITY: new Function() is used intentionally for the live playground.
+    // This executes user-provided JSX in a sandboxed scope with only React and
+    // component imports available. No access to window, document, or globals.
+    // NOTE: new Function() does NOT create a true sandbox — window/document are
+    // still reachable via the global scope. A true sandbox would require an
+    // iframe with a restrictive CSP (e.g., Content-Security-Policy: script-src 'none').
+    // For production deployments, consider wrapping this in a sandboxed iframe.
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const fn = new Function(
       'React',

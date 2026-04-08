@@ -28,7 +28,8 @@ export interface ValidationRule {
   min?: number;
   max?: number;
   pattern?: RegExp;
-  validator?: (value: any) => string | null | Promise<string | null>;
+  /** Custom validator. Receives the field value and all form values for cross-field validation (e.g. "confirm password" patterns). */
+  validator?: (value: unknown, allValues?: Record<string, unknown>) => string | null | Promise<string | null>;
   message?: string;
 }
 
