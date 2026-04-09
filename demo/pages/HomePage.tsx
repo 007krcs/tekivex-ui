@@ -462,6 +462,15 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
 
   const [activeTab, setActiveTab] = useState(0);
   const [codeVisible, setCodeVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false,
+  );
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setCodeVisible(true), 800);
@@ -516,19 +525,19 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       }} />
 
       {/* ── Hero Section ─────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', zIndex: 1, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 32px 60px', textAlign: 'center' }}>
+      <section style={{ position: 'relative', zIndex: 1, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '60px 20px 40px' : '80px 32px 60px', textAlign: 'center' }}>
 
         {/* Morphing background blob */}
         <div style={{
           position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)',
-          width: 600, height: 600, borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%',
+          width: isMobile ? 300 : 600, height: isMobile ? 300 : 600, borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%',
           background: `radial-gradient(ellipse, ${theme.primary}18, #7c3aed12, #06b6d408)`,
           animation: 'tkxMorphBg 8s ease-in-out infinite',
           pointerEvents: 'none',
         }} />
 
-        {/* Orbiting rings */}
-        {[100, 140, 180].map((r, i) => (
+        {/* Orbiting rings — hide on mobile to avoid overflow */}
+        {!isMobile && [100, 140, 180].map((r, i) => (
           <div key={r} style={{
             position: 'absolute', top: '50%', left: '50%',
             width: r * 2, height: r * 2,
@@ -541,11 +550,13 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           }} />
         ))}
 
-        {/* Quantum sphere + Neural Net row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, marginBottom: 32, animation: 'tkxFloat 6s ease-in-out infinite' }}>
-          <div style={{ opacity: 0.8 }}><NeuralNet theme={theme} /></div>
-          <QuantumSphere theme={theme} />
-          <div style={{ opacity: 0.8, transform: 'scaleX(-1)' }}><NeuralNet theme={theme} /></div>
+        {/* Quantum sphere + Neural Net row — side networks hidden on mobile */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: isMobile ? 0 : 40, marginBottom: 32, animation: 'tkxFloat 6s ease-in-out infinite' }}>
+          {!isMobile && <div style={{ opacity: 0.8 }}><NeuralNet theme={theme} /></div>}
+          <div style={{ transform: isMobile ? 'scale(0.75)' : 'none', transformOrigin: 'center' }}>
+            <QuantumSphere theme={theme} />
+          </div>
+          {!isMobile && <div style={{ opacity: 0.8, transform: 'scaleX(-1)' }}><NeuralNet theme={theme} /></div>}
         </div>
 
         {/* Badge */}
@@ -617,7 +628,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
         </div>
 
         {/* Install command */}
-        <div style={{ marginTop: 32, display: 'inline-flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderRadius: 10, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, backdropFilter: 'blur(10px)', fontFamily: 'monospace', fontSize: 14, animation: 'tkxSlideUp 0.7s 0.5s ease both', opacity: 0, animationFillMode: 'both' }}>
+        <div style={{ marginTop: 32, display: 'inline-flex', alignItems: 'center', gap: 12, padding: '10px 20px', borderRadius: 10, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, backdropFilter: 'blur(10px)', fontFamily: 'monospace', fontSize: isMobile ? 12 : 14, maxWidth: '100%', overflowX: 'auto', animation: 'tkxSlideUp 0.7s 0.5s ease both', opacity: 0, animationFillMode: 'both' }}>
           <span style={{ color: theme.textMuted }}>$</span>
           <span style={{ color: theme.text }}>npm install <span style={{ color: theme.primary }}>tekivex-ui</span></span>
           <button
@@ -631,7 +642,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       </section>
 
       {/* ── Stats Section ─────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '0 32px 80px' }}>
+      <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 48px' : '0 32px 80px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20 }}>
           {stats.map(({ value, suffix, label }) => (
             <div key={label} style={{
@@ -649,7 +660,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       </section>
 
       {/* ── Quantum Code Showcase ─────────────────────────────────────── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '0 32px 100px' }}>
+      <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 60px' : '0 32px 100px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 48, alignItems: 'center' }}>
           <div>
             <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 999, background: `${theme.primary}18`, border: `1px solid ${theme.primary}33`, color: theme.primary, fontSize: 12, fontWeight: 700, marginBottom: 16, letterSpacing: '0.05em' }}>
@@ -719,7 +730,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       </section>
 
       {/* ── Feature Cards 3D Grid ─────────────────────────────────────── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '0 32px 100px' }}>
+      <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 60px' : '0 32px 100px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 60 }}>
             <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 999, background: `${theme.primary}18`, border: `1px solid ${theme.primary}33`, color: theme.primary, fontSize: 12, fontWeight: 700, marginBottom: 16, letterSpacing: '0.05em' }}>
@@ -738,7 +749,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       </section>
 
       {/* ── Architecture Tabs ─────────────────────────────────────────── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '0 32px 100px' }}>
+      <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 60px' : '0 32px 100px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>
@@ -767,7 +778,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           </div>
 
           {/* Tab content */}
-          <div style={{ padding: '40px', borderRadius: 20, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, backdropFilter: 'blur(20px)', minHeight: 280 }}>
+          <div style={{ padding: isMobile ? '20px 16px' : '40px', borderRadius: 20, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, backdropFilter: 'blur(20px)', minHeight: 280 }}>
             {activeTab === 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 32 }}>
                 <div>
@@ -799,8 +810,8 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
             )}
             {activeTab === 2 && (
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 60, marginBottom: 32 }}>
-                  <QuantumSphere theme={theme} />
+                <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', justifyContent: 'center', gap: isMobile ? 24 : 60, marginBottom: 32 }}>
+                  <div style={{ transform: isMobile ? 'scale(0.7)' : 'none', transformOrigin: 'center', flexShrink: 0 }}><QuantumSphere theme={theme} /></div>
                   <div style={{ flex: 1, maxWidth: 400 }}>
                     {[
                       { algo: 'Quantum Boltzmann Machine', use: 'Field type inference from names' },
@@ -844,7 +855,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       </section>
 
       {/* ── Competitive Comparison ────────────────────────────────────── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '0 32px 100px' }}>
+      <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 60px' : '0 32px 100px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>
@@ -888,8 +899,8 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       </section>
 
       {/* ── CTA Banner ───────────────────────────────────────────────── */}
-      <section style={{ position: 'relative', zIndex: 1, padding: '0 32px 120px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', padding: '80px 40px', borderRadius: 24, background: `linear-gradient(135deg, ${theme.primary}22, #7c3aed18, #06b6d412)`, border: `1px solid ${theme.primary}33`, backdropFilter: 'blur(20px)', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 80px' : '0 32px 120px' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', padding: isMobile ? '48px 20px' : '80px 40px', borderRadius: 24, background: `linear-gradient(135deg, ${theme.primary}22, #7c3aed18, #06b6d412)`, border: `1px solid ${theme.primary}33`, backdropFilter: 'blur(20px)', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 30% 50%, ${theme.primary}18, transparent 60%), radial-gradient(ellipse at 70% 50%, #7c3aed18, transparent 60%)`, pointerEvents: 'none' }} />
           <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, margin: '0 0 16px', letterSpacing: '-0.02em' }}>
             Ready to build with <HoloText theme={theme}>quantum intelligence</HoloText>?
@@ -907,7 +918,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
               Start Building Free →
             </button>
             <button
-              onClick={() => window.open('https://github.com/007krcs/tekivex-ui', '_blank')}
+              onClick={() => window.open('https://github.com/novaai0401-ui/tekivex-issue-report', '_blank')}
               style={{ padding: '16px 32px', borderRadius: 12, border: `1px solid ${theme.border}`, cursor: 'pointer', background: `${theme.surface}cc`, color: theme.text, fontWeight: 600, fontSize: 16, backdropFilter: 'blur(10px)', transition: 'all 0.2s' }}
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = theme.primary + '66'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = theme.border; }}
@@ -919,7 +930,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       </section>
 
       {/* ── Footer ───────────────────────────────────────────────────── */}
-      <footer style={{ position: 'relative', zIndex: 1, padding: '40px 32px', borderTop: `1px solid ${theme.border}`, textAlign: 'center', color: theme.textMuted, fontSize: 13 }}>
+      <footer style={{ position: 'relative', zIndex: 1, padding: isMobile ? '32px 16px' : '40px 32px', borderTop: `1px solid ${theme.border}`, textAlign: 'center', color: theme.textMuted, fontSize: 13 }}>
         <p style={{ margin: '0 0 8px' }}>
           <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.5.10 · Built with ⚛ Quantum AI · MIT License
         </p>
