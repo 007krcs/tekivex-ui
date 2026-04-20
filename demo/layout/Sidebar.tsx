@@ -161,6 +161,8 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: 'About Us', route: '/about' },
       { label: 'License', route: '/license' },
+      { label: 'Blog', route: '/blog' },
+      { label: 'Privacy Policy', route: '/privacy-policy' },
     ],
   },
 ];
@@ -393,6 +395,20 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
             style={{ fontSize: '11px', color: theme.textMuted, textDecoration: 'none' }}
           >
             License
+          </a>
+          <a
+            href="#/blog"
+            onClick={(e) => { e.preventDefault(); onNavigate('/blog'); }}
+            style={{ fontSize: '11px', color: theme.textMuted, textDecoration: 'none' }}
+          >
+            Blog
+          </a>
+          <a
+            href="#/privacy-policy"
+            onClick={(e) => { e.preventDefault(); onNavigate('/privacy-policy'); }}
+            style={{ fontSize: '11px', color: theme.textMuted, textDecoration: 'none' }}
+          >
+            Privacy
           </a>
           <a
             href="https://github.com/007krcs/tekivex-ui"

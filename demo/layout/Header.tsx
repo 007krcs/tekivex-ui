@@ -106,6 +106,8 @@ const ROUTE_TITLES: Record<string, string> = {
   '/templates/landing-page': 'Landing Page Template',
   '/about': 'About Us',
   '/license': 'License',
+  '/blog': 'Blog',
+  '/privacy-policy': 'Privacy Policy',
 };
 
 // ── Icons ─────────────────────────────────────────────────────────────────────

@@ -56,6 +56,8 @@ import { GettingStartedPage } from './pages/GettingStartedPage';
 import { CSSSystemPage } from './pages/CSSSystemPage';
 import { AboutPage } from './pages/AboutPage';
 import { LicensePage } from './pages/LicensePage';
+import { BlogPage } from './pages/BlogPage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 
 // ── Component doc pages — lazy loaded ────────────────────────────────────────
 const ButtonPage = lazy(() => import('./docs/ButtonPage').then(m => ({ default: m.ButtonPage })));
@@ -267,6 +269,8 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/templates/landing-page': LandingPageTemplate,
   '/about': AboutPage,
   '/license': LicensePage,
+  '/blog': BlogPage,
+  '/privacy-policy': PrivacyPolicyPage,
 };
 
 function getRoute(): string {
