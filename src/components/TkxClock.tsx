@@ -1,4 +1,4 @@
-import {
+import React, {
   useState,
   useEffect,
   useRef,
@@ -210,7 +210,7 @@ function AnalogFace({
   const secondEnd = handPoint(secondAngle, r * 0.85);
   const secondTailEnd = handPoint(secondAngle + 180, r * 0.2);
 
-  const tickMarks: JSX.Element[] = [];
+  const tickMarks: React.JSX.Element[] = [];
 
   if (analogStyle === 'classic') {
     // 12 hour ticks + minor ticks

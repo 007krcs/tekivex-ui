@@ -523,14 +523,16 @@ export function TkxFormField({
   }, [ctx, name]);
 
   // ─── Clone child input with injected props ────────────────────────────
-  const childElement = cloneElement(children, {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const typedChild = children as ReactElement<any>;
+  const childElement = cloneElement(typedChild, {
     value: value ?? '',
     onChange: handleChange,
     onBlur: handleBlur,
     error: safeError ?? undefined,
     isInvalid: !!safeError,
     isRequired,
-    disabled: disabled || children.props.disabled,
+    disabled: disabled || typedChild.props.disabled,
     name,
   });
 

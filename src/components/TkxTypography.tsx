@@ -1,4 +1,4 @@
-import {
+import React, {
   useState,
   useCallback,
   type ReactNode,
@@ -126,7 +126,7 @@ export function TkxTitle({
   const color = useTypeColor(type);
   const theme = useTheme();
   const sizeConfig = TITLE_SIZES[level];
-  const tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const tag = `h${level}` as keyof React.JSX.IntrinsicElements;
 
   const safeChildren = typeof children === 'string' ? sanitizeString(children) : children;
   const textContent = getTextContent(children);

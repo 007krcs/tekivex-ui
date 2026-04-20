@@ -37,12 +37,14 @@ export function TkxTooltip({ content, children, placement = 'top', delay = 300 }
   useEscapeKey(hide, visible);
   useClickOutside(wrapperRef, hide);
 
-  const trigger = cloneElement(children, {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const child = children as ReactElement<any>;
+  const trigger = cloneElement(child, {
     'aria-describedby': visible ? tooltipId : undefined,
-    onMouseEnter: (e: React.MouseEvent) => { children.props.onMouseEnter?.(e); show(); },
-    onMouseLeave: (e: React.MouseEvent) => { children.props.onMouseLeave?.(e); hide(); },
-    onFocus: (e: React.FocusEvent) => { children.props.onFocus?.(e); show(); },
-    onBlur: (e: React.FocusEvent) => { children.props.onBlur?.(e); hide(); },
+    onMouseEnter: (e: React.MouseEvent) => { child.props.onMouseEnter?.(e); show(); },
+    onMouseLeave: (e: React.MouseEvent) => { child.props.onMouseLeave?.(e); hide(); },
+    onFocus: (e: React.FocusEvent) => { child.props.onFocus?.(e); show(); },
+    onBlur: (e: React.FocusEvent) => { child.props.onBlur?.(e); hide(); },
   });
 
   return (
