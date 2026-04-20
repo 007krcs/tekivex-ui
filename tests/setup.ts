@@ -21,6 +21,17 @@ if (typeof (window as unknown as Record<string, unknown>).getBoundingClientRect 
   });
 }
 
+// jsdom does not implement ResizeObserver — recharts v3 calls `new ResizeObserver()`
+// inside ResponsiveContainer, which throws "is not a constructor" without this.
+if (typeof (globalThis as { ResizeObserver?: unknown }).ResizeObserver !== 'function') {
+  class ResizeObserverStub {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  (globalThis as { ResizeObserver?: unknown }).ResizeObserver = ResizeObserverStub;
+}
+
 // jsdom does not implement window.matchMedia — provide a minimal stub
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

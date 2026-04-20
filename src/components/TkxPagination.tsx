@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useId } from 'react';
 import { useTheme } from '../themes';
 import { tkx } from '../engine/tkx';

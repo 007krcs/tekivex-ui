@@ -1,3 +1,5 @@
+'use client';
+
 import {
   useState,
   useRef,
@@ -102,19 +104,74 @@ function isRangeEndpoint(d: Date, start: Date | null, end: Date | null): boolean
   return false;
 }
 
-function formatDate(d: Date | null | undefined, locale = 'en-US'): string {
+/**
+ * Format a date using either a custom token-based `dateFormat` string
+ * (e.g. "YYYY-MM-DD", "DD/MM/YYYY", "MMM D, YYYY") or fall back to the
+ * locale's 2-digit date style.
+ *
+ * Supported tokens: YYYY, YY, MMMM, MMM, MM, M, DD, D.
+ */
+function formatDate(
+  d: Date | null | undefined,
+  locale = 'en-US',
+  dateFormat?: string,
+): string {
   if (!d) return '';
+  if (dateFormat) {
+    const yyyy = String(d.getFullYear());
+    const yy = yyyy.slice(-2);
+    const M = d.getMonth() + 1;
+    const MM = String(M).padStart(2, '0');
+    const MMM = MONTH_ABBR[d.getMonth()];
+    const MMMM = MONTH_NAMES[d.getMonth()];
+    const D = d.getDate();
+    const DD = String(D).padStart(2, '0');
+    // Order matters: longest tokens first so "MM" doesn't clobber "MMM".
+    return dateFormat
+      .replace(/YYYY/g, yyyy)
+      .replace(/YY/g, yy)
+      .replace(/MMMM/g, MMMM)
+      .replace(/MMM/g, MMM)
+      .replace(/MM/g, MM)
+      .replace(/\bM\b/g, String(M))
+      .replace(/DD/g, DD)
+      .replace(/\bD\b/g, String(D));
+  }
   return d.toLocaleDateString(locale, { month: '2-digit', day: '2-digit', year: 'numeric' });
 }
 
-function parseDate(str: string): Date | null {
-  const match = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (!match) return null;
-  const [, m, d, y] = match.map(Number);
-  if (m < 1 || m > 12 || d < 1 || d > 31) return null;
-  const date = new Date(y, m - 1, d);
-  if (date.getMonth() !== m - 1) return null;
-  return date;
+/**
+ * Parse a date string. Accepts US MM/DD/YYYY and common ISO-ish shapes
+ * (YYYY-MM-DD, DD/MM/YYYY, D/M/YYYY). If `dateFormat` is supplied and the
+ * input doesn't match any format, we attempt a token-driven parse.
+ */
+function parseDate(str: string, dateFormat?: string): Date | null {
+  // MM/DD/YYYY (legacy default)
+  const us = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (us) {
+    const [, m, d, y] = us.map(Number);
+    if (m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+      const date = new Date(y, m - 1, d);
+      if (date.getMonth() === m - 1) return date;
+    }
+  }
+  // YYYY-MM-DD
+  const iso = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (iso) {
+    const [, y, m, d] = iso.map(Number);
+    const date = new Date(y, m - 1, d);
+    if (date.getMonth() === m - 1) return date;
+  }
+  // DD/MM/YYYY when user explicitly asked for a DD-first format
+  if (dateFormat && /^DD/.test(dateFormat)) {
+    const eu = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (eu) {
+      const [, d, m, y] = eu.map(Number);
+      const date = new Date(y, m - 1, d);
+      if (date.getMonth() === m - 1) return date;
+    }
+  }
+  return null;
 }
 
 function getDaysInMonth(year: number, month: number): number {
@@ -563,6 +620,7 @@ export function TkxDatePicker({
   maxDate,
   disabledDates,
   locale = 'en-US',
+  dateFormat,
   showTime = false,
   timeValue,
   onTimeChange,
@@ -624,10 +682,10 @@ export function TkxDatePicker({
   // UI
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(() => {
-    if (mode === 'single') return formatDate(selectedDate, locale);
+    if (mode === 'single') return formatDate(selectedDate, locale, dateFormat);
     if (mode === 'range') {
       const [s, e] = selectedRange;
-      if (s && e) return `${formatDate(s, locale)} – ${formatDate(e, locale)}`;
+      if (s && e) return `${formatDate(s, locale, dateFormat)} – ${formatDate(e, locale, dateFormat)}`;
     }
     return '';
   });
@@ -646,13 +704,13 @@ export function TkxDatePicker({
 
   useEffect(() => {
     if (mode === 'single') {
-      setInputValue(formatDate(selectedDate, locale));
+      setInputValue(formatDate(selectedDate, locale, dateFormat));
     } else if (mode === 'range') {
       const [s, e] = selectedRange;
       if (s && e) {
-        setInputValue(`${formatDate(s, locale)} – ${formatDate(e, locale)}`);
+        setInputValue(`${formatDate(s, locale, dateFormat)} – ${formatDate(e, locale, dateFormat)}`);
       } else if (s) {
-        setInputValue(formatDate(s, locale));
+        setInputValue(formatDate(s, locale, dateFormat));
       } else {
         setInputValue('');
       }
@@ -660,7 +718,7 @@ export function TkxDatePicker({
       setInputValue(multiDates.length > 0 ? `${multiDates.length} date${multiDates.length !== 1 ? 's' : ''} selected` : '');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, selectedRange, multiDates, mode, locale]);
+  }, [selectedDate, selectedRange, multiDates, mode, locale, dateFormat]);
 
   // ── Position popup ───────────────────────────────────────────────────────────
 
@@ -734,7 +792,7 @@ export function TkxDatePicker({
         } else {
           if (!isSingleControlled) setInternalDate(d);
           onChange?.(d);
-          setInputValue(formatDate(d, locale));
+          setInputValue(formatDate(d, locale, dateFormat));
           setOpen(false);
         }
       } else if (mode === 'range') {
@@ -820,7 +878,7 @@ export function TkxDatePicker({
   const handleInputChange = (v: string) => {
     setInputValue(v);
     if (mode === 'single') {
-      const parsed = parseDate(v);
+      const parsed = parseDate(v, dateFormat);
       if (parsed && !isDateDisabled(parsed)) {
         if (!isSingleControlled) setInternalDate(parsed);
         onChange?.(parsed);

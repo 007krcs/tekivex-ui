@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { useTheme } from '../themes';
 import { cx, tkx } from '../engine/tkx';
@@ -77,18 +79,39 @@ export function TkxAIChatBubble({
   const fullText = typeof content === 'string' ? sanitizeString(content) : '';
   const [displayed, setDisplayed] = useState(streaming ? '' : fullText);
   const [copied, setCopied] = useState(false);
+  // Debounced text exposed to assistive tech. We deliberately avoid
+  // announcing each keystroke — screen readers would read every character.
+  // Instead we publish on word boundaries (~350ms idle) and on completion.
+  const [liveAnnouncement, setLiveAnnouncement] = useState(streaming ? '' : fullText);
   const idxRef = useRef(0);
+  const liveDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!streaming || typeof content !== 'string') return;
+    if (!streaming || typeof content !== 'string') {
+      setLiveAnnouncement(fullText);
+      return;
+    }
     idxRef.current = 0;
     setDisplayed('');
+    setLiveAnnouncement('');
     const interval = setInterval(() => {
       idxRef.current++;
-      setDisplayed(fullText.slice(0, idxRef.current));
-      if (idxRef.current >= fullText.length) clearInterval(interval);
+      const next = fullText.slice(0, idxRef.current);
+      setDisplayed(next);
+      // Queue a debounced live-region update. Clear prior timer so
+      // only the latest pause flushes — AT hears words, not letters.
+      if (liveDebounceRef.current) clearTimeout(liveDebounceRef.current);
+      liveDebounceRef.current = setTimeout(() => setLiveAnnouncement(next), 350);
+      if (idxRef.current >= fullText.length) {
+        clearInterval(interval);
+        if (liveDebounceRef.current) clearTimeout(liveDebounceRef.current);
+        setLiveAnnouncement(fullText);
+      }
     }, 18);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (liveDebounceRef.current) clearTimeout(liveDebounceRef.current);
+    };
   }, [fullText, streaming, content]);
 
   const handleCopy = () => {
@@ -154,12 +177,36 @@ export function TkxAIChatBubble({
         )}
 
         {/* Bubble */}
-        <div style={bubbleStyle}>
+        <div style={bubbleStyle} role="article" aria-label={isUser ? 'Your message' : 'Assistant message'}>
           {typeof content === 'string' ? (
             <>
-              {streaming ? displayed : sanitizeString(content)}
+              {/* Visible (noisy) streamed text: hidden from AT during streaming
+                  so screen readers aren't spammed with every character. */}
+              <span aria-hidden={streaming ? 'true' : undefined}>
+                {streaming ? displayed : sanitizeString(content)}
+              </span>
               {streaming && displayed.length < fullText.length && (
-                <span style={{ display: 'inline-block', width: 2, height: 14, background: isUser ? '#fff' : theme.primary, marginLeft: 2, animation: 'tkx-blink 1s step-end infinite', verticalAlign: 'text-bottom' }} />
+                <span aria-hidden="true" style={{ display: 'inline-block', width: 2, height: 14, background: isUser ? '#fff' : theme.primary, marginLeft: 2, animation: 'tkx-blink 1s step-end infinite', verticalAlign: 'text-bottom' }} />
+              )}
+              {/* Debounced polite live region — announces completed words, not keystrokes. */}
+              {streaming && (
+                <span
+                  aria-live="polite"
+                  aria-atomic="false"
+                  style={{
+                    position: 'absolute',
+                    width: 1,
+                    height: 1,
+                    padding: 0,
+                    margin: -1,
+                    overflow: 'hidden',
+                    clip: 'rect(0,0,0,0)',
+                    whiteSpace: 'nowrap',
+                    border: 0,
+                  }}
+                >
+                  {liveAnnouncement}
+                </span>
               )}
             </>
           ) : content}

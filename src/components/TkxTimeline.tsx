@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useTheme } from '../themes';
 import { tkx, cx } from '../engine/tkx';

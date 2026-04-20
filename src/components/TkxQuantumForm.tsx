@@ -1,3 +1,5 @@
+'use client';
+
 // ── TkxQuantumForm ────────────────────────────────────────────────────────────
 // Quantum-AI powered smart form. Field types, validation rules, labels, and
 // placeholders are automatically inferred from field names via

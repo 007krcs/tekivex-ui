@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef, type ReactNode, type SVGAttributes } from 'react';
 import { useTheme } from '../themes';
 import { tkx, cx } from '../engine/tkx';

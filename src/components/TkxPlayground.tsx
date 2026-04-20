@@ -1,3 +1,5 @@
+'use client';
+
 // ── TkxPlayground ─────────────────────────────────────────────────────────────
 // In-browser live component playground. Type JSX, see it render instantly.
 // Uses new Function() evaluation, an error boundary, quantum component
@@ -43,6 +45,56 @@ export interface TkxPlaygroundProps {
   examples?: PlaygroundExample[];
   height?: number;
   imports?: Record<string, unknown>;
+  /**
+   * When true, reject code containing high-risk tokens (fetch, XMLHttpRequest,
+   * document.cookie, localStorage, sessionStorage, import(), window.*, eval).
+   * Defense-in-depth — not a true sandbox. Default: true.
+   *
+   * Set to `false` only in trusted developer environments where the playground
+   * input cannot come from an untrusted third party.
+   */
+  strictMode?: boolean;
+  /**
+   * Additional forbidden substrings appended to the default deny list
+   * (when strictMode is on).
+   */
+  forbiddenTokens?: string[];
+}
+
+// Conservative deny list for strictMode. These patterns signal network
+// exfiltration, storage access, or global-scope escape — capabilities that
+// live-playground snippets should never need. Matching is substring-based
+// and case-insensitive; it is intentionally coarse (false-positives are
+// acceptable when the alternative is arbitrary code execution).
+const DEFAULT_FORBIDDEN_TOKENS = [
+  'fetch(',
+  'XMLHttpRequest',
+  'navigator.sendBeacon',
+  'document.cookie',
+  'localStorage',
+  'sessionStorage',
+  'indexedDB',
+  'WebSocket',
+  'EventSource',
+  'import(',
+  'eval(',
+  'new Function(',
+  'postMessage',
+  'window.open',
+  'location.href',
+  'location.replace',
+  'location.assign',
+  'document.write',
+  'crypto.subtle',
+];
+
+function detectForbiddenToken(code: string, extra?: string[]): string | null {
+  const needles = [...DEFAULT_FORBIDDEN_TOKENS, ...(extra ?? [])];
+  const lower = code.toLowerCase();
+  for (const n of needles) {
+    if (lower.includes(n.toLowerCase())) return n;
+  }
+  return null;
 }
 
 // ── Built-in examples ─────────────────────────────────────────────────────────
@@ -194,10 +246,30 @@ function getBabel(): BabelStandalone | null {
 function evalCode(
   code: string,
   importsObj: Record<string, unknown>,
+  opts?: { strictMode?: boolean; forbiddenTokens?: string[] },
 ): { element: ReactNode | null; error: string | null; renderMs: number } {
   const t0 = performance.now();
   try {
     const trimmed = code.trim();
+
+    // Strict-mode defense: block high-risk tokens before evaluation.
+    // Not a sandbox — a layer of protection against accidental exfiltration
+    // when a playground is wired to untrusted input (e.g. shared snippets).
+    if (opts?.strictMode !== false) {
+      const hit = detectForbiddenToken(trimmed, opts?.forbiddenTokens);
+      if (hit) {
+        const renderMs = parseFloat((performance.now() - t0).toFixed(2));
+        return {
+          element: null,
+          error:
+            `Blocked by playground strictMode: code contains "${hit}". ` +
+            `This token is disallowed because playground snippets run in the ` +
+            `page's JavaScript context. If you trust the source, pass ` +
+            `strictMode={false} to <TkxPlayground>.`,
+          renderMs,
+        };
+      }
+    }
 
     // Always wrap user code in a function component so React hooks (useState,
     // useEffect, ...) work — they require an active render context to dispatch.
@@ -335,6 +407,8 @@ export function TkxPlayground({
   examples: userExamples,
   height = 480,
   imports = {},
+  strictMode = true,
+  forbiddenTokens,
 }: TkxPlaygroundProps) {
   const theme = useTheme();
   const allExamples = [...BUILT_IN_EXAMPLES, ...(userExamples ?? [])];
@@ -359,10 +433,10 @@ export function TkxPlayground({
   const runEval = useCallback(
     (src: string) => {
       setBoundaryError(null);
-      const result = evalCode(src, imports);
+      const result = evalCode(src, imports, { strictMode, forbiddenTokens });
       setPreview(result);
     },
-    [imports],
+    [imports, strictMode, forbiddenTokens],
   );
 
   useEffect(() => {

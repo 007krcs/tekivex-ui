@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useState, useRef, useId, type ReactNode, type HTMLAttributes } from 'react';
 import { useTheme } from '../themes';
 import { handleTabsKeyboard } from '../engine/wcag';

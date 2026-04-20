@@ -1,3 +1,5 @@
+'use client';
+
 // ── @tekivex/ui/headless ─────────────────────────────────────────────────────
 // Behavior-only primitives, hooks, and utilities — zero styles shipped.
 // Use these to build completely custom UI on top of TekiVex's battle-tested

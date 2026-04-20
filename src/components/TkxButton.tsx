@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { useTheme } from '../themes';
 import { getAccessibleForeground } from '../engine/wcag';

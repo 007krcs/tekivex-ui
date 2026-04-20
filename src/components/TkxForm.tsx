@@ -1,3 +1,5 @@
+'use client';
+
 // ══════════════════════════════════════════════════════════════════════════════
 // TKX FORM — Enterprise-grade form controller
 // Context-based form state management with field-level validation,
@@ -8,6 +10,7 @@ import {
   createContext,
   useContext,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -411,8 +414,24 @@ export function TkxForm<T extends Record<string, unknown> = Record<string, unkno
     : tkx('flex flex-col gap-5');
 
   // ─── Context Value ─────────────────────────────────────────────────────
-  // When an external form instance is provided via the `form` prop, expose it
-  // through the context so that useTkxForm() inside children returns it.
+  // When an external form instance is provided via the `form` prop, bind its
+  // methods to the live internal instance so programmatic calls (e.g.
+  // form.setFieldValue) drive re-renders. Without this binding the external
+  // instance is just a detached ref store and the UI never updates.
+  useEffect(() => {
+    if (!externalInstance) return;
+    const live = externalInstance as FormInstance;
+    live.getFieldValue = instance.getFieldValue;
+    live.setFieldValue = instance.setFieldValue;
+    live.getFieldsValue = instance.getFieldsValue;
+    live.setFieldsValue = instance.setFieldsValue;
+    live.validateFields = instance.validateFields;
+    live.validateField = instance.validateField;
+    live.resetFields = instance.resetFields;
+    live.getFieldError = instance.getFieldError;
+    live.isFieldTouched = instance.isFieldTouched;
+  }, [externalInstance, instance]);
+
   const activeInstance: FormInstance = (externalInstance as FormInstance | undefined) ?? instance;
 
   const contextValue = useMemo<FormContextValue>(() => ({

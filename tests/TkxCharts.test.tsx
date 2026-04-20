@@ -9,12 +9,14 @@ import { TkxDonutChart } from '../src/charts/TkxDonutChart';
 import { TkxScatterChart } from '../src/charts/TkxScatterChart';
 import { TkxRadarChart } from '../src/charts/TkxRadarChart';
 
-// Recharts uses ResizeObserver internally
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+// Recharts v3 uses `new ResizeObserver()` (constructor) — a vi.fn() mock is
+// not callable as a constructor under strict typings, so use a real class.
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+global.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return <ThemeProvider theme={quantumDark}>{children}</ThemeProvider>;

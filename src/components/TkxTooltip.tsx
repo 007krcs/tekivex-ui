@@ -1,4 +1,6 @@
-import { useState, useRef, useId, type ReactElement, cloneElement } from 'react';
+'use client';
+
+import { useState, useRef, useId, useEffect, type ReactElement, cloneElement } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
 import { useEscapeKey, useClickOutside, useReducedMotion } from '../hooks';
@@ -36,6 +38,17 @@ export function TkxTooltip({ content, children, placement = 'top', delay = 300 }
 
   useEscapeKey(hide, visible);
   useClickOutside(wrapperRef, hide);
+
+  // Clear any pending show-timer on unmount to avoid
+  // setState-after-unmount warnings during fast navigation.
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const child = children as ReactElement<any>;

@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useEffect, useMemo } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';

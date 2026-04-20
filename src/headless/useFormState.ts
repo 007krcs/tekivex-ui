@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useCallback, useRef } from 'react';
 
 export type FormFieldValue = string | number | boolean | string[] | null | undefined;

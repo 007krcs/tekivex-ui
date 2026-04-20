@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';

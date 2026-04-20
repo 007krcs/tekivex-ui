@@ -1,3 +1,5 @@
+'use client';
+
 // ══════════════════════════════════════════════════════════════════════════════
 // TkxThemeBuilder — Quantum-powered visual theme builder component
 // Uses real quantum annealing to optimize color palettes.

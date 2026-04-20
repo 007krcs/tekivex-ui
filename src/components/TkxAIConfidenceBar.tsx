@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, type CSSProperties } from 'react';
 import { useTheme } from '../themes';
 import { cx, tkx } from '../engine/tkx';

@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef, useId, type ButtonHTMLAttributes } from 'react';
 import { useTheme } from '../themes';
 import { useReducedMotion } from '../hooks';

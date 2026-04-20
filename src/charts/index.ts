@@ -1,3 +1,5 @@
+'use client';
+
 // ── @tekivex/ui/charts ───────────────────────────────────────────────────────
 // Theme-aware chart components built on Recharts.
 // Import from '@tekivex/ui/charts' — zero impact on the main bundle.

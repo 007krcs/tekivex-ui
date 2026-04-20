@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useCallback, useRef, type KeyboardEvent } from 'react';
 
 export interface UseRovingTabIndexOptions {

@@ -1,3 +1,5 @@
+'use client';
+
 import { type ReactNode, useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';

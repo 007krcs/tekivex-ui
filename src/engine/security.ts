@@ -11,10 +11,25 @@ const HTML_ENTITIES: Record<string, string> = {
   '&': '&amp;',
   "'": '&#39;',
   '"': '&quot;',
+  // Backticks can break out of unquoted/template-literal contexts in HTML
+  // (legacy IE and some sinks). Escape defensively.
+  '`': '&#96;',
 };
 
+/**
+ * Escape HTML-sensitive characters in a value so it is safe to render as text.
+ * Also strips NUL and most C0 control characters, which can be used to smuggle
+ * payloads past naïve filters, and normalizes newlines.
+ *
+ * This is a defense-in-depth helper — it does NOT allow-list HTML. For rich
+ * HTML input, use a dedicated sanitizer such as DOMPurify.
+ */
 export function sanitizeString(input: unknown): string {
-  return String(input).replace(/[<>&'"]/g, (char) => HTML_ENTITIES[char] ?? char);
+  let s = String(input);
+  // Strip NUL + disallowed C0 controls (keep \t \n \r).
+  // eslint-disable-next-line no-control-regex
+  s = s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
+  return s.replace(/[<>&'"`]/g, (char) => HTML_ENTITIES[char] ?? char);
 }
 
 export function sanitizeProps<T extends Record<string, unknown>>(props: T): T {

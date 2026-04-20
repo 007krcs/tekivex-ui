@@ -1,3 +1,5 @@
+'use client';
+
 // ── Shared chart utilities ───────────────────────────────────────────────────
 
 import type { ThemeTokens } from '../themes';

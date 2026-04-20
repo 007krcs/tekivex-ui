@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef, useState, type ImgHTMLAttributes } from 'react';
 import { useTheme } from '../themes';
 import { getAccessibleForeground } from '../engine/wcag';
