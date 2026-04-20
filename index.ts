@@ -143,6 +143,7 @@ export * from './src/components/TkxSnackbar';
 export * from './src/components/TkxDataGrid';
 export * from './src/components/TkxMasonry';
 export * from './src/components/TkxRichTextDisplay';
+export * from './src/components/TkxMarkdown';
 
 // Core Components (v2.2+)
 export * from './src/components/TkxForm';

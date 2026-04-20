@@ -51,6 +51,7 @@ export * from './TkxSnackbar';
 export * from './TkxDataGrid';
 export * from './TkxMasonry';
 export * from './TkxRichTextDisplay';
+export * from './TkxMarkdown';
 export * from './TkxForm';
 export * from './TkxLayout';
 export * from './TkxConfigProvider';
