@@ -105,18 +105,12 @@ export function PrivacyPolicyPage({ theme }: Props) {
         <p style={prose}>
           You may opt out of Google Analytics by installing the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>Google Analytics Opt-out Browser Add-on</a>, or by using your browser's cookie controls.
         </p>
-        <p style={prose}>
-          Google Analytics Measurement ID: <code style={{ background: theme.surface, padding: '2px 6px', borderRadius: '4px' }}>G-E7HBFMG7BG</code>
-        </p>
       </Section>
 
       {/* 4 */}
       <Section title="4. Google AdSense and Advertising" theme={theme}>
         <p style={prose}>
           We use <strong>Google AdSense</strong> to display advertisements on our site. Google AdSense uses cookies to serve ads based on a user's prior visits to our website or other websites on the Internet. Google's use of advertising cookies enables it and its partners to serve ads based on your visit to our site and/or other sites on the Internet.
-        </p>
-        <p style={prose}>
-          Google AdSense Publisher ID: <code style={{ background: theme.surface, padding: '2px 6px', borderRadius: '4px' }}>ca-pub-4630229006617891</code>
         </p>
         <p style={prose}>Key points about advertising on our site:</p>
         <ul style={{ margin: '0 0 14px', paddingLeft: '24px' }}>

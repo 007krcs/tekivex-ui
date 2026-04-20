@@ -112,6 +112,7 @@ const SnackbarPage = lazy(() => import('./docs/SnackbarPage').then(m => ({ defau
 const DataGridPage = lazy(() => import('./docs/DataGridPage').then(m => ({ default: m.DataGridPage })));
 const MasonryPage = lazy(() => import('./docs/MasonryPage').then(m => ({ default: m.MasonryPage })));
 const RichTextDisplayPage = lazy(() => import('./docs/RichTextDisplayPage').then(m => ({ default: m.RichTextDisplayPage })));
+const MarkdownPage = lazy(() => import('./docs/MarkdownPage').then(m => ({ default: m.MarkdownPage })));
 const FormPage = lazy(() => import('./docs/FormPage').then(m => ({ default: m.FormPage })));
 const LayoutPage = lazy(() => import('./docs/LayoutPage').then(m => ({ default: m.LayoutPage })));
 const TypographyPage = lazy(() => import('./docs/TypographyPage').then(m => ({ default: m.TypographyPage })));
@@ -224,6 +225,7 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/data-grid': DataGridPage,
   '/components/masonry': MasonryPage,
   '/components/rich-text': RichTextDisplayPage,
+  '/components/markdown': MarkdownPage,
   '/components/form': FormPage,
   '/components/layout': LayoutPage,
   '/components/typography': TypographyPage,

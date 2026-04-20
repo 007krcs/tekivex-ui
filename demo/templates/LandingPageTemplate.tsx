@@ -615,7 +615,6 @@ export function LandingPageTemplate({ theme }: { theme: ThemeTokens }) {
       {heroSection}
       {featuresSection}
       <TkxDivider />
-      {pricingSection}
       {testimonialsSection}
       <TkxDivider />
       {faqSection}

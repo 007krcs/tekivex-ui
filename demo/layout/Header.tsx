@@ -74,6 +74,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/components/data-grid': 'Data Grid',
   '/components/masonry': 'Masonry',
   '/components/rich-text': 'Rich Text Display',
+  '/components/markdown': 'Markdown',
   '/components/form': 'Form',
   '/components/layout': 'Layout',
   '/components/typography': 'Typography',

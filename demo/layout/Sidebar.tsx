@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useState, useMemo, type CSSProperties } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -11,6 +11,8 @@ interface NavItem {
 interface NavGroup {
   title: string;
   items: NavItem[];
+  /** If true, items are displayed alphabetically (by label). */
+  sortAlphabetically?: boolean;
 }
 
 interface SidebarProps {
@@ -73,74 +75,76 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     title: 'Components',
+    sortAlphabetically: true,
     items: [
+      { label: 'Accordion', route: '/components/accordion' },
+      { label: 'Affix', route: '/components/affix' },
+      { label: 'Alert', route: '/components/alert' },
+      { label: 'Anchor', route: '/components/anchor' },
+      { label: 'App Bar', route: '/components/app-bar' },
+      { label: 'Autocomplete', route: '/components/autocomplete' },
+      { label: 'Avatar', route: '/components/avatar' },
+      { label: 'Badge', route: '/components/badge' },
+      { label: 'Bottom Nav', route: '/components/bottom-nav' },
+      { label: 'Breadcrumb', route: '/components/breadcrumb' },
       { label: 'Button', route: '/components/button' },
       { label: 'Card', route: '/components/card' },
-      { label: 'Input', route: '/components/input' },
-      { label: 'Badge', route: '/components/badge' },
-      { label: 'Progress', route: '/components/progress' },
-      { label: 'Toggle', route: '/components/toggle' },
-      { label: 'Alert', route: '/components/alert' },
-      { label: 'Modal', route: '/components/modal' },
-      { label: 'Tabs', route: '/components/tabs' },
-      { label: 'Tooltip', route: '/components/tooltip' },
-      { label: 'Skeleton', route: '/components/skeleton' },
-      { label: 'Avatar', route: '/components/avatar' },
-      { label: 'Table', route: '/components/table' },
-      { label: 'Divider', route: '/components/divider' },
-      { label: 'Select', route: '/components/select' },
-      { label: 'Checkbox', route: '/components/checkbox' },
-      { label: 'Radio', route: '/components/radio' },
-      { label: 'Toast', route: '/components/toast' },
-      { label: 'Accordion', route: '/components/accordion' },
-      { label: 'Drawer', route: '/components/drawer' },
-      { label: 'Date Picker', route: '/components/date-picker' },
-      { label: 'Slider', route: '/components/slider' },
-      { label: 'Pagination', route: '/components/pagination' },
-      { label: 'Image', route: '/components/image' },
-      { label: 'File Upload', route: '/components/file-upload' },
-      { label: 'Rating', route: '/components/rating' },
+      { label: 'Carousel', route: '/components/carousel' },
+      { label: 'Cascader', route: '/components/cascader' },
       { label: 'Chat', route: '/components/chat' },
-      { label: 'Tag', route: '/components/tag' },
-      { label: 'Timeline', route: '/components/timeline' },
-      { label: 'Menu', route: '/components/menu' },
+      { label: 'Checkbox', route: '/components/checkbox' },
       { label: 'Clock', route: '/components/clock' },
-      { label: 'Video Player', route: '/components/video-player' },
-      { label: 'Stepper', route: '/components/stepper' },
       { label: 'Color Picker', route: '/components/color-picker' },
+      { label: 'Command', route: '/components/command' },
+      { label: 'Config Provider', route: '/components/config-provider' },
+      { label: 'Data Grid', route: '/components/data-grid' },
+      { label: 'Date Picker', route: '/components/date-picker' },
+      { label: 'Divider', route: '/components/divider' },
+      { label: 'Drawer', route: '/components/drawer' },
+      { label: 'Empty', route: '/components/empty' },
+      { label: 'File Upload', route: '/components/file-upload' },
+      { label: 'Form', route: '/components/form' },
+      { label: 'Icon', route: '/components/icon' },
+      { label: 'Image', route: '/components/image' },
+      { label: 'Input', route: '/components/input' },
+      { label: 'Layout', route: '/components/layout' },
+      { label: 'Markdown', route: '/components/markdown' },
+      { label: 'Masonry', route: '/components/masonry' },
+      { label: 'Mentions', route: '/components/mentions' },
+      { label: 'Menu', route: '/components/menu' },
+      { label: 'Modal', route: '/components/modal' },
       { label: 'Number Input', route: '/components/number-input' },
       { label: 'OTP Input', route: '/components/otp' },
-      { label: 'Command', route: '/components/command' },
-      { label: 'Carousel', route: '/components/carousel' },
-      { label: 'Icon', route: '/components/icon' },
-      { label: 'Breadcrumb', route: '/components/breadcrumb' },
+      { label: 'Pagination', route: '/components/pagination' },
       { label: 'Popover', route: '/components/popover' },
-      { label: 'Autocomplete', route: '/components/autocomplete' },
-      { label: 'Tree View', route: '/components/tree-view' },
-      { label: 'Toolbar', route: '/components/toolbar' },
-      { label: 'Transfer List', route: '/components/transfer-list' },
-      { label: 'Speed Dial', route: '/components/speed-dial' },
-      { label: 'App Bar', route: '/components/app-bar' },
-      { label: 'Bottom Nav', route: '/components/bottom-nav' },
-      { label: 'Snackbar', route: '/components/snackbar' },
-      { label: 'Data Grid', route: '/components/data-grid' },
-      { label: 'Masonry', route: '/components/masonry' },
-      { label: 'Rich Text', route: '/components/rich-text' },
-      { label: 'Form', route: '/components/form' },
-      { label: 'Layout', route: '/components/layout' },
-      { label: 'Typography', route: '/components/typography' },
-      { label: 'Spin', route: '/components/spin' },
-      { label: 'Empty', route: '/components/empty' },
-      { label: 'Statistic', route: '/components/statistic' },
-      { label: 'Config Provider', route: '/components/config-provider' },
-      { label: 'Affix', route: '/components/affix' },
-      { label: 'Anchor', route: '/components/anchor' },
-      { label: 'Cascader', route: '/components/cascader' },
-      { label: 'Mentions', route: '/components/mentions' },
+      { label: 'Progress', route: '/components/progress' },
       { label: 'QR Code', route: '/components/qr-code' },
+      { label: 'Radio', route: '/components/radio' },
+      { label: 'Rating', route: '/components/rating' },
       { label: 'Result', route: '/components/result' },
+      { label: 'Rich Text', route: '/components/rich-text' },
       { label: 'Segmented', route: '/components/segmented' },
+      { label: 'Select', route: '/components/select' },
+      { label: 'Skeleton', route: '/components/skeleton' },
+      { label: 'Slider', route: '/components/slider' },
+      { label: 'Snackbar', route: '/components/snackbar' },
+      { label: 'Speed Dial', route: '/components/speed-dial' },
+      { label: 'Spin', route: '/components/spin' },
+      { label: 'Statistic', route: '/components/statistic' },
+      { label: 'Stepper', route: '/components/stepper' },
+      { label: 'Table', route: '/components/table' },
+      { label: 'Tabs', route: '/components/tabs' },
+      { label: 'Tag', route: '/components/tag' },
+      { label: 'Timeline', route: '/components/timeline' },
+      { label: 'Toast', route: '/components/toast' },
+      { label: 'Toggle', route: '/components/toggle' },
+      { label: 'Toolbar', route: '/components/toolbar' },
+      { label: 'Tooltip', route: '/components/tooltip' },
       { label: 'Tour', route: '/components/tour' },
+      { label: 'Transfer List', route: '/components/transfer-list' },
+      { label: 'Tree View', route: '/components/tree-view' },
+      { label: 'Typography', route: '/components/typography' },
+      { label: 'Video Player', route: '/components/video-player' },
       { label: 'Watermark', route: '/components/watermark' },
     ],
   },
@@ -189,6 +193,15 @@ function IconChevron({ color }: { color: string }) {
   );
 }
 
+function IconSearch({ color }: { color: string }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <circle cx="6" cy="6" r="4.5" stroke={color} strokeWidth="1.5" />
+      <path d="M9.5 9.5L12.5 12.5" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function IconLogo() {
   return (
     <svg
@@ -219,6 +232,25 @@ function IconLogo() {
 // ── Sidebar component ─────────────────────────────────────────────────────────
 
 export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
+  const [query, setQuery] = useState('');
+
+  const filteredGroups = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return NAV_GROUPS.map((group) => {
+      const items = group.sortAlphabetically
+        ? [...group.items].sort((a, b) => a.label.localeCompare(b.label))
+        : group.items;
+      const filtered = q
+        ? items.filter(
+            (item) =>
+              item.label.toLowerCase().includes(q) ||
+              item.route.toLowerCase().includes(q),
+          )
+        : items;
+      return { ...group, items: filtered };
+    }).filter((group) => group.items.length > 0);
+  }, [query]);
+
   const brandStyle: CSSProperties = {
     display: 'flex',
     alignItems: 'center',
@@ -256,6 +288,50 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
     border: `1px solid ${theme.primary}40`,
     letterSpacing: '0.02em',
     width: 'fit-content',
+  };
+
+  const searchWrapperStyle: CSSProperties = {
+    position: 'relative',
+    padding: '10px 12px',
+    borderBottom: `1px solid ${theme.border}`,
+  };
+
+  const searchIconStyle: CSSProperties = {
+    position: 'absolute',
+    left: '22px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    pointerEvents: 'none',
+    display: 'flex',
+  };
+
+  const searchInputStyle: CSSProperties = {
+    width: '100%',
+    padding: '8px 28px 8px 32px',
+    fontSize: '13px',
+    color: theme.text,
+    backgroundColor: theme.surface,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '8px',
+    outline: 'none',
+    fontFamily: 'inherit',
+    boxSizing: 'border-box',
+    transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+  };
+
+  const clearBtnStyle: CSSProperties = {
+    position: 'absolute',
+    right: '22px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    background: 'transparent',
+    border: 'none',
+    color: theme.textMuted,
+    cursor: 'pointer',
+    fontSize: '14px',
+    lineHeight: 1,
+    padding: '2px 6px',
+    borderRadius: '4px',
   };
 
   const navContentStyle: CSSProperties = {
@@ -296,6 +372,13 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
     userSelect: 'none',
   });
 
+  const emptyStateStyle: CSSProperties = {
+    padding: '24px 16px',
+    textAlign: 'center',
+    color: theme.textMuted,
+    fontSize: '13px',
+  };
+
   const footerStyle: CSSProperties = {
     padding: '12px 16px',
     borderTop: `1px solid ${theme.border}`,
@@ -326,51 +409,90 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
         </div>
       </div>
 
+      {/* Search */}
+      <div style={searchWrapperStyle}>
+        <span style={searchIconStyle}>
+          <IconSearch color={theme.textMuted} />
+        </span>
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search components…"
+          aria-label="Search components and pages"
+          style={searchInputStyle}
+          onFocus={(e) => {
+            (e.currentTarget as HTMLInputElement).style.borderColor = theme.primary;
+            (e.currentTarget as HTMLInputElement).style.boxShadow = `0 0 0 3px ${theme.primary}22`;
+          }}
+          onBlur={(e) => {
+            (e.currentTarget as HTMLInputElement).style.borderColor = theme.border;
+            (e.currentTarget as HTMLInputElement).style.boxShadow = 'none';
+          }}
+        />
+        {query && (
+          <button
+            type="button"
+            style={clearBtnStyle}
+            aria-label="Clear search"
+            onClick={() => setQuery('')}
+          >
+            ×
+          </button>
+        )}
+      </div>
+
       {/* Navigation */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
         <nav style={navContentStyle} aria-label="Component navigation">
-          {NAV_GROUPS.map((group) => (
-            <div key={group.title} style={groupStyle}>
-              <div style={groupLabelStyle} aria-hidden="true">
-                {group.title}
-              </div>
-              <ul role="list" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-                {group.items.map((item) => {
-                  const isActive = currentRoute === item.route;
-                  return (
-                    <li key={item.route}>
-                      <a
-                        href={`#${item.route}`}
-                        style={getItemStyle(isActive)}
-                        aria-current={isActive ? 'page' : undefined}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          onNavigate(item.route);
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isActive) {
-                            (e.currentTarget as HTMLElement).style.backgroundColor =
-                              `${theme.primary}08`;
-                            (e.currentTarget as HTMLElement).style.color = theme.text;
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isActive) {
-                            (e.currentTarget as HTMLElement).style.backgroundColor =
-                              'transparent';
-                            (e.currentTarget as HTMLElement).style.color = theme.text;
-                          }
-                        }}
-                      >
-                        <span>{item.label}</span>
-                        {isActive && <IconChevron color={theme.primary} />}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
+          {filteredGroups.length === 0 ? (
+            <div style={emptyStateStyle}>
+              No matches for <strong>{query}</strong>
             </div>
-          ))}
+          ) : (
+            filteredGroups.map((group) => (
+              <div key={group.title} style={groupStyle}>
+                <div style={groupLabelStyle} aria-hidden="true">
+                  {group.title}
+                </div>
+                <ul role="list" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                  {group.items.map((item) => {
+                    const isActive = currentRoute === item.route;
+                    return (
+                      <li key={item.route}>
+                        <a
+                          href={`#${item.route}`}
+                          style={getItemStyle(isActive)}
+                          aria-current={isActive ? 'page' : undefined}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onNavigate(item.route);
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isActive) {
+                              (e.currentTarget as HTMLElement).style.backgroundColor =
+                                `${theme.primary}08`;
+                              (e.currentTarget as HTMLElement).style.color = theme.text;
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isActive) {
+                              (e.currentTarget as HTMLElement).style.backgroundColor =
+                                'transparent';
+                              (e.currentTarget as HTMLElement).style.color = theme.text;
+                            }
+                          }}
+                        >
+                          <span>{item.label}</span>
+                          {isActive && <IconChevron color={theme.primary} />}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))
+          )}
         </nav>
       </div>
 
