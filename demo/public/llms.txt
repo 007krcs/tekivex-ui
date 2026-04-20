@@ -621,7 +621,7 @@ import { TkxTag } from 'tekivex-ui';
 Vertical event timeline.
 ```tsx
 import { TkxTimeline } from 'tekivex-ui';
-<TkxTimeline items={[{ time: '09:00', title: 'Deploy', description: 'v2.5.10 released', color: 'success' }]} />
+<TkxTimeline items={[{ time: '09:00', title: 'Deploy', description: 'v2.5.11 released', color: 'success' }]} />
 ```
 
 ### TkxToast
