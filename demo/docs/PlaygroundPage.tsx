@@ -74,6 +74,70 @@ const DEMO_EXAMPLES = [
   <TkxAlert variant="danger">Decoherence detected in qubit array.</TkxAlert>
 </div>`,
   },
+  {
+    label: '🤖 AI Confidence',
+    code: `<div style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 16, maxWidth: 400 }}>
+  <TkxAIConfidenceBar value={94} label="Field type inference" size="lg" />
+  <TkxAIConfidenceBar value={67} label="Validation rules" />
+  <TkxAIConfidenceBar value={28} label="Locale detection" size="sm" />
+</div>`,
+  },
+  {
+    label: '🤖 AI Chat',
+    code: `(() => {
+  const [msgs, setMsgs] = React.useState([
+    { role: 'assistant', content: 'Hello! I can help you build forms with Quantum AI. What fields do you need?', confidence: 95 },
+    { role: 'user', content: 'I need email, password and phone.' },
+    { role: 'assistant', content: 'Perfect. Inferred: email → type=email + RFC regex, password → min 8 + strength meter, phone → E.164 international format. Adding entanglement: confirm_password auto-paired.', confidence: 88 },
+  ]);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 16, maxWidth: 520 }}>
+      {msgs.map((m, i) => (
+        <TkxAIChatBubble
+          key={i}
+          role={m.role}
+          content={m.content}
+          name={m.role === 'user' ? 'You' : 'Quantum AI'}
+          confidence={m.role === 'assistant' ? m.confidence : undefined}
+          copyable={m.role === 'assistant'}
+        />
+      ))}
+    </div>
+  );
+})()`,
+  },
+  {
+    label: '🤖 AI Thinking',
+    code: `(() => {
+  const [active, setActive] = React.useState(true);
+  const steps = [
+    'Analysing field names…',
+    'Running Boltzmann inference…',
+    'Applying Amplitude Amplification…',
+    'Resolving entangled fields…',
+    'Generating validation rules…',
+  ];
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, padding: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        {['dots', 'pulse', 'wave', 'orbit'].map(v => (
+          <div key={v} style={{ padding: '14px 18px', borderRadius: 10, border: '1px solid #2a2a3e', background: '#12121f' }}>
+            <div style={{ fontSize: 10, color: '#8888aa', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{v}</div>
+            <TkxAIThinking variant={v} active={active} />
+          </div>
+        ))}
+      </div>
+      <TkxAIThinking variant="orbit" size="lg" active={active} steps={steps} />
+      <button
+        onClick={() => setActive(a => !a)}
+        style={{ padding: '8px 18px', borderRadius: 8, border: '1px solid #2a2a3e', background: '#1a1a2e', color: '#00f5d4', fontWeight: 700, cursor: 'pointer', alignSelf: 'flex-start' }}
+      >
+        {active ? 'Set active=false' : 'Set active=true'}
+      </button>
+    </div>
+  );
+})()`,
+  },
 ];
 
 // ── Page ──────────────────────────────────────────────────────────────────────

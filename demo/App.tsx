@@ -146,6 +146,10 @@ const ChartsPage = lazy(() => import('./docs/ChartsPage').then(m => ({ default: 
 const HeadlessPage = lazy(() => import('./docs/HeadlessPage').then(m => ({ default: m.HeadlessPage })));
 const SecurityPage = lazy(() => import('./docs/SecurityPage').then(m => ({ default: m.SecurityPage })));
 const AIComponentsPage = lazy(() => import('./docs/AIComponentsPage').then(m => ({ default: m.AIComponentsPage })));
+// Individual AI component doc pages re-use the same page with hash anchors — single lazy chunk
+const AIConfidenceBarPage = lazy(() => import('./docs/AIComponentsPage').then(m => ({ default: m.AIComponentsPage })));
+const AIChatBubblePage    = lazy(() => import('./docs/AIComponentsPage').then(m => ({ default: m.AIComponentsPage })));
+const AIThinkingPage      = lazy(() => import('./docs/AIComponentsPage').then(m => ({ default: m.AIComponentsPage })));
 
 // ── Growth / meta pages — eager ───────────────────────────────────────────────
 import { RSCPage } from './pages/RSCPage';
@@ -250,6 +254,9 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/headless': HeadlessPage,
   '/security': SecurityPage,
   '/ai-components': AIComponentsPage,
+  '/ai-components/confidence-bar': AIConfidenceBarPage,
+  '/ai-components/chat-bubble': AIChatBubblePage,
+  '/ai-components/thinking': AIThinkingPage,
   '/rsc': RSCPage,
   '/templates/dashboard': DashboardTemplate,
   '/templates/portfolio': PortfolioTemplate,

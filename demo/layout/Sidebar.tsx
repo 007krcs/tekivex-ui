@@ -38,6 +38,9 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Theme Builder', route: '/theme-builder' },
       { label: 'Live Playground', route: '/playground' },
       { label: '🤖 AI Components', route: '/ai-components' },
+      { label: '  ↳ ConfidenceBar', route: '/ai-components/confidence-bar' },
+      { label: '  ↳ ChatBubble', route: '/ai-components/chat-bubble' },
+      { label: '  ↳ Thinking', route: '/ai-components/thinking' },
     ],
   },
   {
