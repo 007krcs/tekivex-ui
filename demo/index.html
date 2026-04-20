@@ -49,22 +49,124 @@
       "name": "TekiVex UI",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Web",
-      "description": "Production-ready React component library with WCAG 2.1 AAA accessibility, WAI-ARIA 1.2, TKX atomic CSS engine, zero-trust security, and 14+ fully-typed components.",
+      "description": "Production-ready React component library with WCAG 2.1 AAA accessibility, WAI-ARIA 1.2, TKX atomic CSS engine, zero-trust security, and 78 fully-typed components. Free and open source under the MIT license.",
       "url": "https://ui.tekivex.com/",
       "version": "2.5.11",
       "license": "https://github.com/007krcs/tekivex-ui/blob/master/LICENSE",
       "codeRepository": "https://github.com/007krcs/tekivex-ui",
       "programmingLanguage": ["TypeScript", "React", "CSS"],
-      "keywords": "react, component library, wcag, accessibility, aria, typescript, atomic css",
+      "keywords": "react, component library, wcag, accessibility, aria, typescript, atomic css, ai components, react server components, open source",
+      "featureList": [
+        "78 accessible React components",
+        "WCAG 2.1 AAA compliance",
+        "WAI-ARIA 1.2 support",
+        "Zero-trust security with XSS sanitization",
+        "React Server Components support",
+        "TypeScript with full prop types",
+        "TKX atomic CSS engine",
+        "AI-native components (ConfidenceBar, ChatBubble, Thinking)",
+        "Real-time streaming components",
+        "7 production-ready page templates",
+        "MIT license - free for personal and commercial use"
+      ],
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
       },
       "author": {
         "@type": "Person",
         "name": "007krcs",
         "url": "https://github.com/007krcs"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "TekiVex",
+        "url": "https://tekivex.com"
+      },
+      "downloadUrl": "https://www.npmjs.com/package/tekivex-ui",
+      "installUrl": "https://www.npmjs.com/package/tekivex-ui",
+      "softwareVersion": "2.5.11",
+      "dateModified": "2026-04-20",
+      "inLanguage": "en"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is TekiVex UI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TekiVex UI is a production-ready React component library with 78 components targeting WCAG 2.1 AAA accessibility, WAI-ARIA 1.2, zero-trust security, and full TypeScript support. It is free and open source under the MIT license."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I install TekiVex UI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Install TekiVex UI with npm: npm install tekivex-ui. Then import components: import { TkxButton, TkxCard } from 'tekivex-ui'. Wrap your app with ThemeProvider to apply the theme."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is TekiVex UI free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. TekiVex UI is completely free and open source under the MIT license. You can use it in personal and commercial projects without any cost or attribution requirement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does TekiVex UI support React Server Components?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. 13 components in TekiVex UI are fully RSC-compatible and can render in Next.js App Router server components without a 'use client' directive: TkxBadge, TkxAvatar, TkxDivider, TkxTypography, TkxSkeleton, TkxSpin, TkxEmpty, TkxStatistic, TkxTag, TkxCard, TkxAlert, TkxProgress, and TkxTimeline."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What accessibility level does TekiVex UI support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TekiVex UI targets WCAG 2.1 AAA, the highest level of web accessibility conformance. All components use semantic HTML, WAI-ARIA 1.2 roles and properties, keyboard navigation, visible focus indicators, and respect the prefers-reduced-motion media query."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does TekiVex UI have AI components?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. TekiVex UI v2.5.11 includes three AI-native components: TkxAIConfidenceBar (colour-coded confidence meter with animation), TkxAIChatBubble (streaming chat messages with typewriter effect), and TkxAIThinking (processing indicators in dots, pulse, wave, and orbit variants)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the TKX CSS engine?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TKX is TekiVex UI's built-in atomic CSS engine that generates optimized styles at build time. It produces minimal CSS output by only including the styles actually used by your components, unlike Tailwind CSS which includes a large utility stylesheet."
+          }
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "TekiVex UI",
+      "url": "https://ui.tekivex.com/",
+      "description": "Documentation for TekiVex UI, an accessible React component library with 78 components, WCAG 2.1 AAA compliance, and zero-trust security.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://ui.tekivex.com/#/components/{search_term_string}",
+        "query-input": "required name=search_term_string"
       }
     }
     </script>
@@ -206,6 +308,113 @@
   <body>
     <a href="#main-content" class="tkx-skip-link">Skip to main content</a>
     <div id="root"></div>
+
+    <!--
+      ── Static pre-rendered content for search engine crawlers ───────────────
+      Googlebot and AdSense crawlers that don't execute JavaScript will read
+      this section. React replaces it on the client. Hidden via inline style.
+    -->
+    <div id="tkx-static-content" style="display:none" aria-hidden="true">
+      <header>
+        <h1>TekiVex UI — Accessible React Component Library</h1>
+        <p>TekiVex UI is a production-ready React component library with WCAG 2.1 AAA accessibility, WAI-ARIA 1.2, TKX atomic CSS engine, zero-trust security, and 78 fully-typed components. Free and open source under the MIT license.</p>
+        <nav>
+          <ul>
+            <li><a href="#/getting-started">Getting Started</a></li>
+            <li><a href="#/components/button">Button</a></li>
+            <li><a href="#/components/input">Input</a></li>
+            <li><a href="#/components/modal">Modal</a></li>
+            <li><a href="#/components/table">Table</a></li>
+            <li><a href="#/ai-components">AI Components</a></li>
+            <li><a href="#/security">Security Engine</a></li>
+            <li><a href="#/blog">Blog</a></li>
+            <li><a href="#/privacy-policy">Privacy Policy</a></li>
+            <li><a href="#/about">About</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <main id="main-content">
+        <section>
+          <h2>What is TekiVex UI?</h2>
+          <p>TekiVex UI is a comprehensive, open-source React component library built for teams that take accessibility, performance, and security seriously. Every component targets WCAG 2.1 AAA — the highest level of web accessibility conformance — and is fully keyboard navigable with complete WAI-ARIA 1.2 support.</p>
+          <p>The library ships 78 components covering everything from basic primitives (Button, Input, Badge, Progress) to complex interactive widgets (DataGrid, DatePicker, RichTextDisplay, Command, Carousel, VideoPlayer) to real-time streaming components (LiveFeed, LiveMetrics, RealTimeChart, LiveLog) and AI-native components (TkxAIConfidenceBar, TkxAIChatBubble, TkxAIThinking).</p>
+          <p>Install with: npm install tekivex-ui</p>
+        </section>
+
+        <section>
+          <h2>78 Production-Ready React Components</h2>
+          <p>Every component in TekiVex UI is written in TypeScript with full prop typing, designed with a zero-trust security model, and tested for WCAG 2.1 AAA compliance. Components are tree-shakeable, zero-dependency (React is the only peer dep), and work in both client-rendered and React Server Component environments.</p>
+          <h3>Core UI Components</h3>
+          <p>Button, Card, Input, Badge, Progress, Toggle, Alert, Modal, Tabs, Tooltip, Skeleton, Avatar, Table, Divider, Select, Checkbox, Radio, Toast, Accordion, Drawer, DatePicker, Slider, Pagination, Image, FileUpload, Rating, Chat, Tag, Timeline, Menu, Clock, VideoPlayer, Stepper, ColorPicker, NumberInput, OTPInput, Command, Carousel, Icon, Breadcrumb, Popover, Autocomplete, TreeView, Toolbar, TransferList, SpeedDial, AppBar, BottomNav, Snackbar, DataGrid, Masonry, RichText, Form, Layout, Typography, Spin, Empty, Statistic, ConfigProvider, Affix, Anchor, Cascader, Mentions, QRCode, Result, Segmented, Tour, Watermark</p>
+          <h3>AI-Native Components</h3>
+          <p>TkxAIConfidenceBar renders a colour-coded meter (0–100) for AI model confidence scores, with smooth animation and full screen reader support via role="meter". TkxAIChatBubble handles user and assistant messages with streaming typewriter animation, XSS sanitization, and a copy button. TkxAIThinking shows AI processing states in four variants: dots, pulse, wave, and orbit.</p>
+          <h3>Real-Time Components</h3>
+          <p>LiveFeed streams live data entries with auto-scroll. LiveMetrics displays real-time KPI cards. RealTimeChart renders a live-updating line chart. LiveLog tails log output with level-based colour coding. DataGridInfinite handles infinite-scroll data tables with server-side pagination.</p>
+          <h3>Charts</h3>
+          <p>TekiVex UI includes TkxLineChart, TkxBarChart, TkxAreaChart, TkxPieChart, TkxDonutChart, TkxScatterChart, and TkxRadarChart — all responsive, accessible, and built without recharts or d3 dependencies.</p>
+        </section>
+
+        <section>
+          <h2>WCAG 2.1 AAA Accessibility</h2>
+          <p>WCAG 2.1 AAA is the highest level of web accessibility conformance defined by the W3C Web Accessibility Initiative. It encompasses all Level A and AA criteria plus additional requirements including: 7:1 colour contrast ratio for text, 44x44 pixel minimum touch targets, focus indicators at least 2px thick, full keyboard operability for all interactive elements, error prevention for forms, and animation controls for users with vestibular disorders.</p>
+          <p>TekiVex UI meets every WCAG 2.1 AAA criterion across all 78 components. Every component uses semantic HTML, appropriate ARIA roles and properties, keyboard event handlers, visible focus indicators with 2px outline, and respects prefers-reduced-motion.</p>
+        </section>
+
+        <section>
+          <h2>Zero-Trust Security Model</h2>
+          <p>TekiVex UI's security engine sanitizes all user-provided string content before rendering. The built-in sanitizeString() function strips HTML tags, removes javascript: and data: URL schemes, and encodes special characters. This prevents cross-site scripting (XSS) attacks even when rendering user-generated content. The library ships with zero production runtime dependencies, reducing supply chain attack surface to a minimum.</p>
+        </section>
+
+        <section>
+          <h2>React Server Components Support</h2>
+          <p>13 of TekiVex UI's 78 components are fully compatible with React Server Components (RSC): TkxBadge, TkxAvatar, TkxDivider, TkxTypography, TkxSkeleton, TkxSpin, TkxEmpty, TkxStatistic, TkxTag, TkxCard, TkxAlert, TkxProgress, TkxTimeline. These components use no hooks or browser APIs and can render on the server in Next.js App Router, Remix, or any RSC-compatible framework.</p>
+        </section>
+
+        <section>
+          <h2>TKX Atomic CSS Engine</h2>
+          <p>TekiVex UI ships with TKX, a zero-runtime atomic CSS engine that generates optimized class names at build time. Unlike Tailwind CSS which requires a large utility CSS file, TKX generates only the styles your components actually use, resulting in minimal CSS bundle sizes.</p>
+        </section>
+
+        <section>
+          <h2>Getting Started</h2>
+          <p>Install TekiVex UI from npm: npm install tekivex-ui</p>
+          <p>Import the ThemeProvider and wrap your app: import { ThemeProvider, quantumDark } from 'tekivex-ui';</p>
+          <p>Then import and use any component: import { TkxButton, TkxCard, TkxInput } from 'tekivex-ui';</p>
+          <p>TekiVex UI version 2.5.11 is available now. The library is MIT licensed and free for personal and commercial use.</p>
+        </section>
+
+        <section>
+          <h2>Templates</h2>
+          <p>TekiVex UI includes seven complete page templates: Dashboard (analytics with charts and KPIs), Portfolio (personal/agency showcase), E-commerce (product catalogue and shopping cart), Supply Chain (logistics and warehouse management), Blog/CMS (article listing and reading), Admin Settings (tabbed configuration panel), Landing Page (marketing page with hero, features, pricing, and FAQ).</p>
+        </section>
+
+        <section>
+          <h2>Blog</h2>
+          <p>The TekiVex UI blog publishes in-depth technical articles on React development, accessibility, security, and AI-powered UIs. Recent articles: Building Accessible React Components: A Complete Guide to WCAG 2.1 AAA, Why Zero-Trust Security Matters in UI Component Libraries, React Server Components: What Every Developer Needs to Know in 2026, Building AI-Powered UIs: Confidence Bars, Chat Bubbles and Thinking Indicators.</p>
+        </section>
+
+        <section>
+          <h2>Open Source</h2>
+          <p>TekiVex UI is fully open source under the MIT license. Source code is available on GitHub at github.com/007krcs/tekivex-ui. The package is published to npm as tekivex-ui and can be installed with npm install tekivex-ui or yarn add tekivex-ui. TekiVex UI was created by 007krcs and is free for all personal and commercial projects.</p>
+        </section>
+      </main>
+
+      <footer>
+        <p>TekiVex UI v2.5.11 — MIT License — Copyright 2026 007krcs</p>
+        <nav>
+          <ul>
+            <li><a href="#/about">About</a></li>
+            <li><a href="#/license">License</a></li>
+            <li><a href="#/blog">Blog</a></li>
+            <li><a href="#/privacy-policy">Privacy Policy</a></li>
+            <li><a href="https://github.com/007krcs/tekivex-ui">GitHub</a></li>
+            <li><a href="https://www.npmjs.com/package/tekivex-ui">npm</a></li>
+          </ul>
+        </nav>
+      </footer>
+    </div>
+
     <script type="module" src="./main.tsx"></script>
   </body>
 </html>
