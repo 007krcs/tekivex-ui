@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
@@ -261,6 +261,58 @@ const log = Shield.getAuditLog(); // → SecurityEvent[]`}
           { prop: 'meetsAAA(fg, bg)', type: '(string, string) → boolean', description: 'Returns true if contrast ratio ≥ 7:1 (WCAG AAA enhanced).' },
         ]}
       />
+
+      {/* ── Competitor XSS Benchmark ──────────────────────────────── */}
+      <div style={{ marginTop: 48 }}>
+        <div style={{ textAlign: 'center', marginBottom: 32 }}>
+          <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: 999, background: `${theme.primary}18`, border: `1px solid ${theme.primary}33`, color: theme.primary, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}>
+            🏆 INDUSTRY BENCHMARK
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', fontWeight: 800, margin: 0, color: theme.text }}>
+            XSS protection vs. other libraries
+          </h2>
+          <p style={{ color: theme.textMuted, fontSize: 14, marginTop: 8 }}>No other major React UI library sanitises props automatically. You're one malicious input away from XSS.</p>
+        </div>
+
+        <div style={{ borderRadius: 16, border: `1px solid ${theme.border}`, overflow: 'hidden', overflowX: 'auto', WebkitOverflowScrolling: 'touch' as CSSProperties['WebkitOverflowScrolling'] }}>
+          <div style={{ minWidth: 640 }}>
+            {[
+              ['Feature', 'tekivex-ui', 'MUI', 'Shadcn/ui', 'Ant Design'],
+              ['Auto-sanitise all text props', '✅', '❌', '❌', '❌'],
+              ['Strip <script> injection', '✅', '❌ manual', '❌ manual', '❌ manual'],
+              ['Block onerror / event attrs', '✅', '❌', '❌', '❌'],
+              ['Block javascript: protocol', '✅', '❌', '❌', '❌'],
+              ['Block data: URI injection', '✅', '❌', '❌', '❌'],
+              ['Immutable security audit log', '✅', '❌', '❌', '❌'],
+              ['Built-in WCAG contrast check', '✅', '🟡 MUI System', '❌', '❌'],
+              ['CSP-compatible (no eval/blob)', '✅', '🟡 partial', '✅', '🟡 partial'],
+              ['Security config required?', 'Zero config', 'Manual DOMPurify', 'Manual DOMPurify', 'Manual DOMPurify'],
+            ].map((row, i) => (
+              <div key={i} style={{
+                display: 'grid', gridTemplateColumns: '2.2fr 1fr 1fr 1fr 1fr',
+                borderBottom: i < 9 ? `1px solid ${theme.border}` : 'none',
+                background: i === 0 ? theme.surface : i % 2 === 0 ? `${theme.surfaceAlt}66` : 'transparent',
+              }}>
+                {row.map((cell, j) => (
+                  <div key={j} style={{
+                    padding: '13px 18px', fontSize: j === 0 ? 13 : 15,
+                    fontWeight: i === 0 ? 700 : j === 1 ? 700 : 400,
+                    color: i === 0 ? theme.textMuted : j === 1 ? theme.primary : theme.text,
+                    textAlign: j === 0 ? 'left' : 'center',
+                    borderLeft: j === 1 ? `2px solid ${theme.primary}33` : 'none',
+                  }}>
+                    {cell}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p style={{ fontSize: 12, color: theme.textMuted, marginTop: 12, textAlign: 'center' }}>
+          ✅ = Built-in, automatic &nbsp;·&nbsp; 🟡 = Partial / opt-in &nbsp;·&nbsp; ❌ = Not included — developer must add manually
+        </p>
+      </div>
     </div>
   );
 }

@@ -201,6 +201,14 @@ export type { TkxInput as TkxUtilityInput } from './src/engine/tkx';
 export { TkxDropdown } from './src/components/TkxDropdown';
 export type { TkxDropdownProps, DropdownItem, DropdownGroup } from './src/components/TkxDropdown';
 
+// ── AI-native components ──────────────────────────────────────────────────────
+export { TkxAIConfidenceBar } from './src/components/TkxAIConfidenceBar';
+export type { TkxAIConfidenceBarProps } from './src/components/TkxAIConfidenceBar';
+export { TkxAIChatBubble } from './src/components/TkxAIChatBubble';
+export type { TkxAIChatBubbleProps, AIRole } from './src/components/TkxAIChatBubble';
+export { TkxAIThinking } from './src/components/TkxAIThinking';
+export type { TkxAIThinkingProps } from './src/components/TkxAIThinking';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → '@tekivex/ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)

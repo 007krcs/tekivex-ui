@@ -72,3 +72,8 @@ export * from './TkxList';
 //   TkxQuantumForm, TkxThemeBuilder, TkxPlayground → '@tekivex/ui/quantum'
 //   TkxLiveFeed, TkxLiveMetrics, TkxRealTimeChart, TkxLiveLog → '@tekivex/ui/realtime'
 export * from './TkxDropdown';
+
+// ── AI-native components ──────────────────────────────────────────────────────
+export * from './TkxAIConfidenceBar';
+export * from './TkxAIChatBubble';
+export * from './TkxAIThinking';

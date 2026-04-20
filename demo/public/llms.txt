@@ -1,0 +1,773 @@
+# TekiVex UI
+
+> Quantum-class React component library — 78 production-grade components, WCAG 2.1 AAA, Quantum AI forms, zero-runtime TKX CSS engine, WAI-ARIA 1.2, full TypeScript, MIT license.
+
+## Install
+
+```
+npm install tekivex-ui
+```
+
+## Quick start
+
+```tsx
+import { ThemeProvider, TkxButton, quantumDark } from 'tekivex-ui';
+import 'tekivex-ui/styles';
+
+export function App() {
+  return (
+    <ThemeProvider theme={quantumDark}>
+      <TkxButton variant="primary" onClick={() => {}}>Hello</TkxButton>
+    </ThemeProvider>
+  );
+}
+```
+
+## Subpackage imports
+
+- `tekivex-ui`           — all components + ThemeProvider
+- `tekivex-ui/styles`    — base CSS (import once at root)
+- `tekivex-ui/themes`    — quantumDark, auroraLight, generatePalette
+- `tekivex-ui/charts`    — TkxCharts (area, bar, line, pie, donut, scatter, radar)
+- `tekivex-ui/headless`  — unstyled hooks (useTabs, useModal, useToast…)
+- `tekivex-ui/i18n`      — I18nProvider, 27 locale strings
+- `tekivex-ui/quantum`   — TkxQuantumForm, QuantumEngine
+- `tekivex-ui/realtime`  — TkxLiveFeed, TkxLiveMetrics, TkxRealTimeChart, TkxLiveLog
+
+## ThemeProvider (required root wrapper)
+
+```tsx
+import { ThemeProvider, quantumDark, auroraLight } from 'tekivex-ui';
+// Wrap your app once:
+<ThemeProvider theme={quantumDark}>{children}</ThemeProvider>
+// Or light:
+<ThemeProvider theme={auroraLight}>{children}</ThemeProvider>
+```
+
+## RSC (React Server Components) compatibility
+
+Components marked ✅ are RSC-safe (no hooks, no browser APIs, pure render).
+Components marked 🖥 require "use client" — they use useState/useEffect/browser APIs.
+
+### RSC-safe (render in Server Components without "use client")
+- TkxBadge ✅
+- TkxButton ✅
+- TkxCard ✅
+- TkxDivider ✅
+- TkxEmpty ✅
+- TkxIcon ✅
+- TkxInput ✅ (uncontrolled; controlled usage needs "use client")
+- TkxList ✅
+- TkxProgress ✅
+- TkxResult ✅
+- TkxSkeleton ✅
+- TkxStepper ✅ (display mode; interactive mode needs "use client")
+- TkxToggle ✅ (uncontrolled; controlled usage needs "use client")
+
+### Requires "use client"
+- TkxAccordion 🖥  TkxAffix 🖥  TkxAlert 🖥  TkxAnchor 🖥  TkxAppBar 🖥
+- TkxAutocomplete 🖥  TkxAvatar 🖥  TkxBottomNav 🖥  TkxBreadcrumb 🖥
+- TkxCarousel 🖥  TkxCascader 🖥  TkxChat 🖥  TkxCheckbox 🖥
+- TkxClock 🖥  TkxColorPicker 🖥  TkxCommand 🖥  TkxConfigProvider 🖥
+- TkxDataGrid 🖥  TkxDatePicker 🖥  TkxDrawer 🖥  TkxDropdown 🖥
+- TkxFileUpload 🖥  TkxForm 🖥  TkxImage 🖥  TkxLayout 🖥
+- TkxLiveFeed 🖥  TkxLiveLog 🖥  TkxLiveMetrics 🖥
+- TkxMasonry 🖥  TkxMentions 🖥  TkxMenu 🖥  TkxModal 🖥
+- TkxNumberInput 🖥  TkxOTP 🖥  TkxPagination 🖥  TkxPlayground 🖥
+- TkxPopover 🖥  TkxQRCode 🖥  TkxQuantumForm 🖥  TkxRadio 🖥
+- TkxRating 🖥  TkxRealTimeChart 🖥  TkxRichTextDisplay 🖥
+- TkxSegmented 🖥  TkxSelect 🖥  TkxSlider 🖥  TkxSnackbar 🖥
+- TkxSpeedDial 🖥  TkxSpin 🖥  TkxStatistic 🖥  TkxTable 🖥
+- TkxTabs 🖥  TkxTag 🖥  TkxThemeBuilder 🖥  TkxTimeline 🖥
+- TkxToast 🖥  TkxToolbar 🖥  TkxTooltip 🖥  TkxTour 🖥
+- TkxTransferList 🖥  TkxTreeView 🖥  TkxTypography 🖥
+- TkxVideoPlayer 🖥  TkxWatermark 🖥
+
+### Next.js / RSC usage pattern
+
+```tsx
+// app/layout.tsx (Server Component — wraps everything)
+import { TkxBadge, TkxButton } from 'tekivex-ui'; // ✅ RSC-safe
+
+// app/components/MyForm.tsx
+'use client'; // required for interactive components
+import { TkxInput, TkxSelect, TkxModal } from 'tekivex-ui';
+```
+
+## Components A–Z
+
+### TkxAccordion
+Interactive expand/collapse sections.
+```tsx
+import { TkxAccordion } from 'tekivex-ui';
+<TkxAccordion
+  items={[{ key: '1', label: 'Title', content: <p>Body</p> }]}
+  defaultOpen={['1']}
+  multiple   // allow multiple open at once
+/>
+```
+
+### TkxAffix
+Sticks element to viewport edge on scroll.
+```tsx
+import { TkxAffix } from 'tekivex-ui';
+<TkxAffix offsetTop={64}><TkxButton>Sticky</TkxButton></TkxAffix>
+```
+
+### TkxAlert
+Status / feedback banners.
+```tsx
+import { TkxAlert } from 'tekivex-ui';
+<TkxAlert type="success" message="Saved!" description="Your changes have been saved." closable />
+<TkxAlert type="error"   message="Failed" />
+<TkxAlert type="warning" message="Low disk space" />
+<TkxAlert type="info"    message="New version available" />
+```
+
+### TkxAnchor
+In-page navigation with scroll spy.
+```tsx
+import { TkxAnchor } from 'tekivex-ui';
+<TkxAnchor items={[{ href: '#section-1', title: 'Section 1' }, { href: '#section-2', title: 'Section 2' }]} />
+```
+
+### TkxAppBar
+Top navigation bar.
+```tsx
+import { TkxAppBar } from 'tekivex-ui';
+<TkxAppBar title="My App" logo={<Logo />} actions={[<TkxButton>Login</TkxButton>]} />
+```
+
+### TkxAutocomplete
+Text input with suggestion dropdown.
+```tsx
+import { TkxAutocomplete } from 'tekivex-ui';
+<TkxAutocomplete
+  options={[{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }]}
+  placeholder="Search frameworks…"
+  onSelect={(val) => console.log(val)}
+/>
+```
+
+### TkxAvatar
+User / entity avatars with fallback initials.
+```tsx
+import { TkxAvatar } from 'tekivex-ui';
+<TkxAvatar src="/user.jpg" alt="Jane" size={48} />
+<TkxAvatar name="Jane Doe" size={48} />          // initials fallback
+<TkxAvatar icon="user" size={32} />              // icon fallback
+```
+
+### TkxBadge ✅ (RSC-safe)
+Status dot / count indicator.
+```tsx
+import { TkxBadge } from 'tekivex-ui';
+<TkxBadge count={5}><TkxButton>Inbox</TkxButton></TkxBadge>
+<TkxBadge dot><TkxAvatar name="A" /></TkxBadge>
+<TkxBadge count={0} showZero />
+```
+
+### TkxBottomNav
+Mobile-first bottom navigation bar.
+```tsx
+import { TkxBottomNav } from 'tekivex-ui';
+<TkxBottomNav
+  items={[{ label: 'Home', icon: '🏠', value: 'home' }, { label: 'Search', icon: '🔍', value: 'search' }]}
+  value="home"
+  onChange={(v) => setTab(v)}
+/>
+```
+
+### TkxBreadcrumb
+Path navigation.
+```tsx
+import { TkxBreadcrumb } from 'tekivex-ui';
+<TkxBreadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Products', href: '/products' }, { label: 'Item' }]} />
+```
+
+### TkxButton ✅ (RSC-safe)
+Primary interactive button.
+```tsx
+import { TkxButton } from 'tekivex-ui';
+<TkxButton variant="primary" size="md" onClick={fn}>Save</TkxButton>
+<TkxButton variant="secondary">Cancel</TkxButton>
+<TkxButton variant="ghost">Learn more</TkxButton>
+<TkxButton variant="danger">Delete</TkxButton>
+<TkxButton loading>Saving…</TkxButton>
+<TkxButton disabled>Disabled</TkxButton>
+<TkxButton leftIcon={<Icon />}>With icon</TkxButton>
+```
+Props: `variant` ("primary"|"secondary"|"ghost"|"danger"|"outline"), `size` ("xs"|"sm"|"md"|"lg"|"xl"), `loading`, `disabled`, `leftIcon`, `rightIcon`, `fullWidth`.
+
+### TkxCard ✅ (RSC-safe)
+Content container with optional header/footer.
+```tsx
+import { TkxCard } from 'tekivex-ui';
+<TkxCard title="Card Title" extra={<TkxButton size="sm">Edit</TkxButton>}>
+  Card body content
+</TkxCard>
+```
+
+### TkxCarousel
+Image / content slider.
+```tsx
+import { TkxCarousel } from 'tekivex-ui';
+<TkxCarousel autoPlay interval={3000} dots arrows>
+  <div>Slide 1</div>
+  <div>Slide 2</div>
+</TkxCarousel>
+```
+
+### TkxCascader
+Multi-level select (region/category picker).
+```tsx
+import { TkxCascader } from 'tekivex-ui';
+<TkxCascader
+  options={[{ value: 'us', label: 'US', children: [{ value: 'ca', label: 'California' }] }]}
+  onChange={(path) => console.log(path)}
+/>
+```
+
+### TkxChat
+Real-time chat UI (bubbles, timestamps, avatars).
+```tsx
+import { TkxChat } from 'tekivex-ui';
+<TkxChat
+  messages={[{ id: '1', text: 'Hello', sender: 'user', timestamp: Date.now() }]}
+  onSend={(text) => sendMessage(text)}
+/>
+```
+
+### TkxCheckbox
+Accessible checkbox with indeterminate state.
+```tsx
+import { TkxCheckbox } from 'tekivex-ui';
+<TkxCheckbox label="Accept terms" checked={val} onChange={setVal} />
+<TkxCheckbox label="Select all" indeterminate />
+```
+
+### TkxClock
+Analog/digital clock display.
+```tsx
+import { TkxClock } from 'tekivex-ui';
+<TkxClock variant="analog" size={200} />
+<TkxClock variant="digital" />
+```
+
+### TkxColorPicker
+HSL/HEX/RGB color selection.
+```tsx
+import { TkxColorPicker } from 'tekivex-ui';
+<TkxColorPicker value="#00f5d4" onChange={(hex) => setColor(hex)} />
+```
+
+### TkxCommand
+⌘K command palette / search.
+```tsx
+import { TkxCommand } from 'tekivex-ui';
+<TkxCommand
+  open={open}
+  onClose={() => setOpen(false)}
+  items={[{ id: 'home', label: 'Go Home', action: () => navigate('/') }]}
+/>
+```
+
+### TkxDataGrid
+High-performance data grid with virtual scrolling, sorting, filtering, pagination.
+```tsx
+import { TkxDataGrid } from 'tekivex-ui';
+<TkxDataGrid
+  columns={[{ field: 'name', headerName: 'Name', width: 200 }, { field: 'age', headerName: 'Age', width: 100 }]}
+  rows={[{ id: 1, name: 'Alice', age: 30 }]}
+  pagination
+  pageSize={25}
+  sortable
+  filterable
+/>
+```
+
+### TkxDatePicker
+Calendar + time picker.
+```tsx
+import { TkxDatePicker } from 'tekivex-ui';
+<TkxDatePicker value={date} onChange={setDate} format="MM/DD/YYYY" />
+<TkxDatePicker range />   // date range picker
+```
+
+### TkxDivider ✅ (RSC-safe)
+Horizontal or vertical separator.
+```tsx
+import { TkxDivider } from 'tekivex-ui';
+<TkxDivider />
+<TkxDivider orientation="vertical" />
+<TkxDivider label="OR" />
+```
+
+### TkxDrawer
+Side panel / off-canvas drawer.
+```tsx
+import { TkxDrawer } from 'tekivex-ui';
+<TkxDrawer open={open} onClose={() => setOpen(false)} placement="right" title="Settings">
+  Content here
+</TkxDrawer>
+```
+
+### TkxDropdown
+Trigger + dropdown menu.
+```tsx
+import { TkxDropdown } from 'tekivex-ui';
+<TkxDropdown items={[{ label: 'Edit', onClick: fn }, { label: 'Delete', danger: true, onClick: fn }]}>
+  <TkxButton>Actions ▾</TkxButton>
+</TkxDropdown>
+```
+
+### TkxEmpty ✅ (RSC-safe)
+Empty state illustration + message.
+```tsx
+import { TkxEmpty } from 'tekivex-ui';
+<TkxEmpty description="No results found" />
+<TkxEmpty image="search" description="Try a different query" action={<TkxButton>Reset</TkxButton>} />
+```
+
+### TkxFileUpload
+Drag & drop file upload zone.
+```tsx
+import { TkxFileUpload } from 'tekivex-ui';
+<TkxFileUpload accept=".pdf,.docx" multiple maxSize={5 * 1024 * 1024} onUpload={(files) => upload(files)} />
+```
+
+### TkxForm
+Form with built-in validation, field-level errors, and submit handling.
+```tsx
+import { TkxForm, TkxFormField, TkxInput } from 'tekivex-ui';
+<TkxForm onSubmit={(values) => console.log(values)}>
+  <TkxFormField name="email" rules={[{ required: true }, { type: 'email' }]}>
+    <TkxInput label="Email" type="email" />
+  </TkxFormField>
+  <TkxButton type="submit">Submit</TkxButton>
+</TkxForm>
+```
+
+### TkxIcon ✅ (RSC-safe)
+SVG icon system (100+ icons).
+```tsx
+import { TkxIcon } from 'tekivex-ui';
+<TkxIcon name="check" size={20} color="#00f5d4" />
+<TkxIcon name="alert-circle" size={16} />
+```
+
+### TkxImage
+Image with lazy loading, blur placeholder, fallback.
+```tsx
+import { TkxImage } from 'tekivex-ui';
+<TkxImage src="/photo.jpg" alt="Photo" width={400} height={300} lazy blurPlaceholder />
+```
+
+### TkxInput ✅ (RSC-safe for uncontrolled)
+Text input with floating label, prefix/suffix, validation states.
+```tsx
+import { TkxInput } from 'tekivex-ui';
+<TkxInput label="Email" type="email" placeholder="you@example.com" />
+<TkxInput label="Search" prefix={<TkxIcon name="search" />} />
+<TkxInput label="Amount" suffix="USD" type="number" />
+<TkxInput label="Password" type="password" showPasswordToggle />
+<TkxInput error="Required" />
+```
+
+### TkxLayout
+Responsive grid/flex layout primitives.
+```tsx
+import { TkxLayout, TkxRow, TkxCol } from 'tekivex-ui';
+<TkxRow gutter={16}>
+  <TkxCol span={12}>Left</TkxCol>
+  <TkxCol span={12}>Right</TkxCol>
+</TkxRow>
+```
+
+### TkxLiveFeed (Real-Time)
+Streaming event feed (WebSocket / SSE).
+```tsx
+import { TkxLiveFeed } from 'tekivex-ui/realtime';
+<TkxLiveFeed url="wss://api.example.com/feed" maxItems={50} />
+```
+
+### TkxLiveMetrics (Real-Time)
+Live dashboard metrics with sparklines.
+```tsx
+import { TkxLiveMetrics } from 'tekivex-ui/realtime';
+<TkxLiveMetrics metrics={[{ label: 'RPS', value: 1240, trend: 'up' }]} refreshMs={1000} />
+```
+
+### TkxLiveLog (Real-Time)
+Streaming log viewer (ANSI color support).
+```tsx
+import { TkxLiveLog } from 'tekivex-ui/realtime';
+<TkxLiveLog url="wss://api.example.com/logs" maxLines={500} />
+```
+
+### TkxMasonry
+Pinterest-style masonry grid layout.
+```tsx
+import { TkxMasonry } from 'tekivex-ui';
+<TkxMasonry columns={3} gap={16}>
+  {items.map(item => <TkxCard key={item.id}>{item.content}</TkxCard>)}
+</TkxMasonry>
+```
+
+### TkxMenu
+Vertical navigation menu with nested submenus.
+```tsx
+import { TkxMenu } from 'tekivex-ui';
+<TkxMenu
+  items={[
+    { key: 'home', label: 'Home', icon: '🏠' },
+    { key: 'products', label: 'Products', children: [{ key: 'list', label: 'All Products' }] },
+  ]}
+  selectedKey="home"
+  onSelect={(key) => navigate(key)}
+/>
+```
+
+### TkxModal
+Accessible dialog / modal overlay.
+```tsx
+import { TkxModal } from 'tekivex-ui';
+<TkxModal open={open} onClose={() => setOpen(false)} title="Confirm Delete" footer={
+  <><TkxButton onClick={() => setOpen(false)}>Cancel</TkxButton>
+    <TkxButton variant="danger" onClick={handleDelete}>Delete</TkxButton></>
+}>
+  Are you sure you want to delete this item?
+</TkxModal>
+```
+
+### TkxNumberInput
+Numeric input with increment/decrement controls.
+```tsx
+import { TkxNumberInput } from 'tekivex-ui';
+<TkxNumberInput label="Quantity" min={1} max={99} step={1} value={qty} onChange={setQty} />
+```
+
+### TkxOTP
+One-time password / PIN input.
+```tsx
+import { TkxOTP } from 'tekivex-ui';
+<TkxOTP length={6} onComplete={(code) => verify(code)} />
+```
+
+### TkxPagination
+Page navigation.
+```tsx
+import { TkxPagination } from 'tekivex-ui';
+<TkxPagination total={200} pageSize={20} current={page} onChange={setPage} showSizeChanger />
+```
+
+### TkxPopover
+Floating content on hover/click.
+```tsx
+import { TkxPopover } from 'tekivex-ui';
+<TkxPopover content={<div>Details here</div>} title="Info" trigger="hover">
+  <TkxButton>Hover me</TkxButton>
+</TkxPopover>
+```
+
+### TkxProgress ✅ (RSC-safe)
+Linear or circular progress bar.
+```tsx
+import { TkxProgress } from 'tekivex-ui';
+<TkxProgress value={75} />
+<TkxProgress value={75} variant="circular" showLabel />
+<TkxProgress value={75} colorScheme="success" />
+```
+Props: `value` (0-100), `variant` ("linear"|"circular"), `colorScheme` ("default"|"success"|"warning"|"danger"), `showLabel`, `size` ("sm"|"md"|"lg").
+
+### TkxQuantumForm
+AI-powered form — infers field types, validation, labels from field names.
+```tsx
+import { TkxQuantumForm } from 'tekivex-ui/quantum';
+// Minimal — AI infers everything:
+<TkxQuantumForm fields={['email', 'password', 'phone', 'confirm_password']} onSubmit={handleSubmit} />
+// With explicit overrides:
+<TkxQuantumForm
+  fields={[{ name: 'email' }, { name: 'budget', type: 'number', label: 'Monthly Budget' }]}
+  onSubmit={handleSubmit}
+  showConfidence   // shows AI confidence score per field
+/>
+```
+
+### TkxRadio
+Radio button group.
+```tsx
+import { TkxRadio, TkxRadioGroup } from 'tekivex-ui';
+<TkxRadioGroup value={val} onChange={setVal}>
+  <TkxRadio value="a" label="Option A" />
+  <TkxRadio value="b" label="Option B" />
+</TkxRadioGroup>
+```
+
+### TkxRating
+Star / emoji rating input.
+```tsx
+import { TkxRating } from 'tekivex-ui';
+<TkxRating value={3.5} max={5} onChange={setRating} allowHalf />
+```
+
+### TkxRealTimeChart (Real-Time)
+Live-updating charts.
+```tsx
+import { TkxRealTimeChart } from 'tekivex-ui/realtime';
+<TkxRealTimeChart type="area" dataKey="rps" url="wss://api.example.com/metrics" windowMs={30000} />
+```
+
+### TkxResult ✅ (RSC-safe)
+Success / error / info result page.
+```tsx
+import { TkxResult } from 'tekivex-ui';
+<TkxResult status="success" title="Payment successful" subTitle="Order #1234" extra={<TkxButton>Continue</TkxButton>} />
+<TkxResult status="error" title="Submission failed" />
+```
+
+### TkxSelect
+Dropdown select with search and multi-select.
+```tsx
+import { TkxSelect } from 'tekivex-ui';
+<TkxSelect label="Country" options={[{ value: 'us', label: 'United States' }]} onChange={setVal} />
+<TkxSelect label="Tags" multiple options={tags} />
+```
+
+### TkxSegmented
+Segmented control (button group toggle).
+```tsx
+import { TkxSegmented } from 'tekivex-ui';
+<TkxSegmented options={['Day', 'Week', 'Month']} value={period} onChange={setPeriod} />
+```
+
+### TkxSkeleton ✅ (RSC-safe)
+Loading placeholder shimmer.
+```tsx
+import { TkxSkeleton } from 'tekivex-ui';
+<TkxSkeleton width={200} height={20} />
+<TkxSkeleton variant="avatar" size={48} />
+<TkxSkeleton variant="card" />
+```
+
+### TkxSlider
+Range/value slider input.
+```tsx
+import { TkxSlider } from 'tekivex-ui';
+<TkxSlider min={0} max={100} value={vol} onChange={setVol} marks />
+<TkxSlider range defaultValue={[20, 80]} />
+```
+
+### TkxSnackbar
+Non-blocking notification toast (bottom of screen).
+```tsx
+import { TkxSnackbar } from 'tekivex-ui';
+<TkxSnackbar open={open} message="File saved" onClose={() => setOpen(false)} autoHideDuration={3000} />
+```
+
+### TkxSpeedDial
+FAB with radial action buttons.
+```tsx
+import { TkxSpeedDial } from 'tekivex-ui';
+<TkxSpeedDial actions={[{ icon: '✏️', label: 'Edit', onClick: fn }, { icon: '🗑', label: 'Delete', onClick: fn }]} />
+```
+
+### TkxSpin ✅ (RSC-safe via CSS animation)
+Loading spinner.
+```tsx
+import { TkxSpin } from 'tekivex-ui';
+<TkxSpin />
+<TkxSpin size="lg" tip="Loading…" />
+```
+
+### TkxStepper ✅ (RSC-safe for display mode)
+Multi-step progress indicator.
+```tsx
+import { TkxStepper } from 'tekivex-ui';
+<TkxStepper
+  steps={[{ title: 'Account' }, { title: 'Profile' }, { title: 'Review' }]}
+  current={1}
+/>
+```
+
+### TkxTable
+Data table with sorting, pagination, row selection.
+```tsx
+import { TkxTable } from 'tekivex-ui';
+<TkxTable
+  columns={[{ key: 'name', title: 'Name', sortable: true }, { key: 'status', title: 'Status' }]}
+  dataSource={rows}
+  rowSelection={{ type: 'checkbox', onChange: setSelected }}
+  pagination={{ pageSize: 10 }}
+/>
+```
+
+### TkxTabs
+Tabbed panel navigation.
+```tsx
+import { TkxTabs } from 'tekivex-ui';
+<TkxTabs items={[{ key: 'overview', label: 'Overview', content: <p>…</p> }, { key: 'settings', label: 'Settings', content: <p>…</p> }]} defaultActiveKey="overview" />
+```
+
+### TkxTag
+Closable label / chip.
+```tsx
+import { TkxTag } from 'tekivex-ui';
+<TkxTag color="primary">React</TkxTag>
+<TkxTag closable onClose={() => removeTag('react')}>TypeScript</TkxTag>
+```
+
+### TkxTimeline
+Vertical event timeline.
+```tsx
+import { TkxTimeline } from 'tekivex-ui';
+<TkxTimeline items={[{ time: '09:00', title: 'Deploy', description: 'v2.5.10 released', color: 'success' }]} />
+```
+
+### TkxToast
+Ephemeral notification (top-right).
+```tsx
+import { TkxToast } from 'tekivex-ui';
+<TkxToast type="success" message="Saved!" duration={3000} />
+```
+Or programmatic:
+```tsx
+import { toast } from 'tekivex-ui';
+toast.success('Saved!');
+toast.error('Failed');
+toast.info('New version available');
+```
+
+### TkxToggle ✅ (RSC-safe for uncontrolled)
+On/off switch.
+```tsx
+import { TkxToggle } from 'tekivex-ui';
+<TkxToggle label="Dark mode" checked={dark} onChange={setDark} />
+```
+
+### TkxToolbar
+Horizontal action bar.
+```tsx
+import { TkxToolbar } from 'tekivex-ui';
+<TkxToolbar items={[{ icon: '✂️', label: 'Cut', onClick: fn }, { icon: '📋', label: 'Paste', onClick: fn }]} />
+```
+
+### TkxTooltip
+Hover tooltip.
+```tsx
+import { TkxTooltip } from 'tekivex-ui';
+<TkxTooltip content="Save changes (⌘S)" placement="top">
+  <TkxButton>Save</TkxButton>
+</TkxTooltip>
+```
+
+### TkxTour
+Step-by-step feature walkthrough.
+```tsx
+import { TkxTour } from 'tekivex-ui';
+<TkxTour
+  open={tourOpen}
+  steps={[{ target: '#save-btn', title: 'Save', description: 'Click to save your work.' }]}
+  onClose={() => setTourOpen(false)}
+/>
+```
+
+### TkxTransferList
+Dual list with move actions (permissions/assignment UI).
+```tsx
+import { TkxTransferList } from 'tekivex-ui';
+<TkxTransferList dataSource={allUsers} targetKeys={assignedIds} onChange={setAssigned} />
+```
+
+### TkxTreeView
+Hierarchical tree with expand/collapse, checkboxes.
+```tsx
+import { TkxTreeView } from 'tekivex-ui';
+<TkxTreeView
+  data={[{ id: '1', label: 'Root', children: [{ id: '1-1', label: 'Child' }] }]}
+  checkable
+  onCheck={setChecked}
+/>
+```
+
+### TkxTypography
+Heading, paragraph, text, link primitives.
+```tsx
+import { TkxTypography } from 'tekivex-ui';
+const { Title, Text, Paragraph, Link } = TkxTypography;
+<Title level={1}>Heading 1</Title>
+<Text type="secondary">Secondary text</Text>
+<Paragraph ellipsis={{ rows: 2 }}>Long paragraph…</Paragraph>
+<Link href="/docs">Docs →</Link>
+```
+
+### TkxVideoPlayer
+HTML5 video player with custom controls.
+```tsx
+import { TkxVideoPlayer } from 'tekivex-ui';
+<TkxVideoPlayer src="/video.mp4" poster="/thumb.jpg" controls captions={[{ src: '/en.vtt', lang: 'en' }]} />
+```
+
+### TkxWatermark
+Repeating watermark overlay (text or image).
+```tsx
+import { TkxWatermark } from 'tekivex-ui';
+<TkxWatermark content="CONFIDENTIAL" rotate={-30} gap={[100, 100]}>
+  <YourContent />
+</TkxWatermark>
+```
+
+## Theming
+
+```tsx
+import { generatePalette, ThemeProvider } from 'tekivex-ui/themes';
+
+// Generate a WCAG-compliant palette from a single brand color
+const myTheme = generatePalette('#6366f1'); // Indigo brand
+<ThemeProvider theme={myTheme}>{children}</ThemeProvider>
+
+// Built-in themes
+import { quantumDark, auroraLight } from 'tekivex-ui';
+```
+
+Theme tokens: `bg`, `surface`, `surfaceAlt`, `border`, `text`, `textMuted`,
+`primary`, `secondary`, `success`, `warning`, `danger`, `info`.
+
+## Headless hooks (tekivex-ui/headless)
+
+```tsx
+import { useTabs, useModal, useToast, useDisclosure, useForm } from 'tekivex-ui/headless';
+
+const { activeTab, setActiveTab } = useTabs({ defaultTab: 0 });
+const { isOpen, open, close } = useDisclosure();
+const { show } = useToast();
+```
+
+## i18n (tekivex-ui/i18n)
+
+```tsx
+import { I18nProvider, locales } from 'tekivex-ui/i18n';
+<I18nProvider locale={locales.fr}>{children}</I18nProvider>
+// 27 locales: en, fr, de, es, pt, it, nl, pl, ru, zh, ja, ko, ar, he, fa, tr, vi, th, id, ms, hi, bn, uk, cs, ro, hu, sv
+```
+
+## TypeScript types
+
+```ts
+import type {
+  TkxButtonProps,
+  TkxInputProps,
+  TkxModalProps,
+  TkxSelectProps,
+  TkxTableProps,
+  TkxDataGridProps,
+  ThemeTokens,
+} from 'tekivex-ui';
+```
+
+## Links
+
+- Docs:    https://ui.tekivex.com
+- npm:     https://npmjs.com/package/tekivex-ui
+- Issues:  https://github.com/novaai0401-ui/tekivex-issue-report/issues
+- License: MIT

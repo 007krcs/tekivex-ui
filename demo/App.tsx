@@ -145,6 +145,10 @@ const WatermarkPage = lazy(() => import('./docs/WatermarkPage').then(m => ({ def
 const ChartsPage = lazy(() => import('./docs/ChartsPage').then(m => ({ default: m.ChartsPage })));
 const HeadlessPage = lazy(() => import('./docs/HeadlessPage').then(m => ({ default: m.HeadlessPage })));
 const SecurityPage = lazy(() => import('./docs/SecurityPage').then(m => ({ default: m.SecurityPage })));
+const AIComponentsPage = lazy(() => import('./docs/AIComponentsPage').then(m => ({ default: m.AIComponentsPage })));
+
+// ── Growth / meta pages — eager ───────────────────────────────────────────────
+import { RSCPage } from './pages/RSCPage';
 
 // ── Template pages — lazy loaded ──────────────────────────────────────────────
 const DashboardTemplate = lazy(() => import('./templates/DashboardTemplate').then(m => ({ default: m.DashboardTemplate })));
@@ -245,6 +249,8 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/charts': ChartsPage,
   '/headless': HeadlessPage,
   '/security': SecurityPage,
+  '/ai-components': AIComponentsPage,
+  '/rsc': RSCPage,
   '/templates/dashboard': DashboardTemplate,
   '/templates/portfolio': PortfolioTemplate,
   '/templates/ecommerce': EcommerceTemplate,

@@ -28,6 +28,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Overview', route: '/' },
       { label: 'Getting Started', route: '/getting-started' },
       { label: 'TKX CSS System', route: '/css-system' },
+      { label: '⚡ RSC Compatibility', route: '/rsc' },
     ],
   },
   {
@@ -36,6 +37,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Quantum Form', route: '/quantum-form' },
       { label: 'Theme Builder', route: '/theme-builder' },
       { label: 'Live Playground', route: '/playground' },
+      { label: '🤖 AI Components', route: '/ai-components' },
     ],
   },
   {
