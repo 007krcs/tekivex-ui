@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
+import { TkxMarkdown } from '../../src/components/TkxMarkdown';
 
 // ── Quantum Particle System ───────────────────────────────────────────────────
 
@@ -568,7 +569,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           animation: 'tkxSlideUp 0.6s ease both',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: theme.primary, display: 'inline-block', animation: 'tkxPulseRing 1.5s ease-out infinite' }} />
-          v2.5.11 · Quantum AI Edition
+          v2.5.15 · Quantum AI Edition
         </div>
 
         {/* Main headline */}
@@ -744,6 +745,74 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
             {features.map(f => (
               <Card3D key={f.title} theme={theme} icon={f.icon} title={f.title} desc={f.desc} color={f.color} delay={f.delay} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── What's New in v2.5.15: TkxMarkdown ────────────────────────── */}
+      <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 60px' : '0 32px 100px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 999, background: `${theme.success}18`, border: `1px solid ${theme.success}44`, color: theme.success, fontSize: 12, fontWeight: 700, marginBottom: 16, letterSpacing: '0.05em' }}>
+              ✨ NEW IN v2.5.15
+            </div>
+            <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+              <HoloText theme={theme}>TkxMarkdown</HoloText> — render .md anywhere
+            </h2>
+            <p style={{ color: theme.textMuted, maxWidth: 640, margin: '0 auto', lineHeight: 1.7 }}>
+              Zero-dependency CommonMark + GFM renderer. Fully responsive, XSS-safe, SSR-ready. Works on every device.
+            </p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20, alignItems: 'stretch' }}>
+            <div style={{ padding: 20, borderRadius: 14, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, backdropFilter: 'blur(20px)' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: theme.textMuted, letterSpacing: '0.08em', marginBottom: 12 }}>INPUT · MARKDOWN</div>
+              <pre style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: theme.text, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+{`# TkxMarkdown
+
+**Production-grade** Markdown with *zero deps*.
+
+- GFM tables, task lists, autolinks
+- XSS-safe: blocks \`javascript:\` URLs
+- Responsive on every device
+
+| Feature | Status |
+| --- | --- |
+| CommonMark | ✓ |
+| GFM | ✓ |
+| SSR | ✓ |
+
+- [x] Inline source
+- [x] Remote \`src\` URL
+- [ ] Your next project
+
+[Learn more](https://ui.tekivex.com/)`}
+              </pre>
+            </div>
+            <div style={{ padding: 20, borderRadius: 14, background: `${theme.surface}cc`, border: `1px solid ${theme.primary}44`, backdropFilter: 'blur(20px)' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: theme.primary, letterSpacing: '0.08em', marginBottom: 12 }}>OUTPUT · RENDERED</div>
+              <TkxMarkdown
+                source={`# TkxMarkdown
+
+**Production-grade** Markdown with *zero deps*.
+
+- GFM tables, task lists, autolinks
+- XSS-safe: blocks \`javascript:\` URLs
+- Responsive on every device
+
+| Feature | Status |
+| --- | --- |
+| CommonMark | ✓ |
+| GFM | ✓ |
+| SSR | ✓ |
+
+- [x] Inline source
+- [x] Remote \`src\` URL
+- [ ] Your next project
+
+[Learn more](https://ui.tekivex.com/)`}
+                compact
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -932,7 +1001,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <footer style={{ position: 'relative', zIndex: 1, padding: isMobile ? '32px 16px' : '40px 32px', borderTop: `1px solid ${theme.border}`, textAlign: 'center', color: theme.textMuted, fontSize: 13 }}>
         <p style={{ margin: '0 0 8px' }}>
-          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.5.11 · Built with ⚛ Quantum AI · MIT License
+          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.5.15 · Built with ⚛ Quantum AI · MIT License
         </p>
         <p style={{ margin: 0 }}>
           © 2026 <a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a> ·

@@ -589,7 +589,7 @@ function Article4({ theme }: { theme: ThemeTokens }) {
   return (
     <>
       <P theme={theme}>
-        The integration of AI into user interfaces has moved from novelty to necessity. Users now expect applications to have contextual understanding, conversational interaction, and intelligent feedback. TekiVex UI v2.5.11 introduces three purpose-built AI components that handle the hardest UX problems in AI-powered interfaces.
+        The integration of AI into user interfaces has moved from novelty to necessity. Users now expect applications to have contextual understanding, conversational interaction, and intelligent feedback. TekiVex UI v2.5.15 introduces three purpose-built AI components that handle the hardest UX problems in AI-powered interfaces.
       </P>
 
       <H2 theme={theme}>The UX Problem with AI Interfaces</H2>
