@@ -81,7 +81,7 @@ export function TkxPieChart({
             outerRadius={outerRadius}
             startAngle={startAngle}
             endAngle={startAngle - 360}
-            label={showLabels ? ({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)` : undefined}
+            label={showLabels ? ({ name, percent }) => `${name} (${((percent ?? 0) * 100).toFixed(0)}%)` : undefined}
             labelLine={showLabels}
             strokeWidth={2}
             stroke={theme.bg}

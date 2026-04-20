@@ -1,6 +1,6 @@
 {
   "name": "tekivex-ui",
-  "version": "2.5.12",
+  "version": "2.5.13",
   "description": "Production-grade React component library — 70+ components, WCAG 2.1 AAA, WAI-ARIA 1.2, built-in charts, headless primitives, zero-runtime CSS engine, TypeScript-first.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -70,14 +70,13 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
-    "recharts": ">=2.0.0"
+    "recharts": ">=2.0.0 || >=3.0.0"
   },
   "peerDependenciesMeta": {
     "recharts": {
       "optional": true
     }
   },
-  "dependencies": {},
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
@@ -94,7 +93,7 @@
     "prettier": "^3.8.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "recharts": "^2.15.4",
+    "recharts": "^3.8.1",
     "typescript": "^5.9.3",
     "vite": "^8.0.9",
     "vitest": "^4.1.4"
