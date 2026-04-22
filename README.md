@@ -163,6 +163,7 @@ import { useDisclosure, useFormState, useListSelection } from 'tekivex-ui/headle
 | `TkxRichTextDisplay` | Render structured rich-text blocks |
 | `TkxWatermark` | Canvas-based watermark overlay |
 | `TkxEmpty` | Empty state with custom illustration |
+| `TkxOrgChart` | Reingold–Tilford org-chart with pan/zoom, collapsible subtrees, custom renderer ✨ v2.6 |
 
 </details>
 
@@ -528,7 +529,7 @@ npm run security:audit
 48 test files · 436 tests · 0 failures
 ```
 
-Coverage includes unit tests for all 70+ components, 7 chart types, 10 headless hooks, the TKX CSS engine, the WCAG engine, and the security (Shield) engine.
+Coverage includes unit tests for all 80+ components, 7 chart types, 10 headless hooks, the TKX CSS engine, the WCAG engine, and the security (Shield) engine.
 
 ---
 

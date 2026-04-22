@@ -90,6 +90,7 @@ const ChatPage = lazy(() => import('./docs/ChatPage').then(m => ({ default: m.Ch
 const TagPage = lazy(() => import('./docs/TagPage').then(m => ({ default: m.TagPage })));
 const TimelinePage = lazy(() => import('./docs/TimelinePage').then(m => ({ default: m.TimelinePage })));
 const MenuPage = lazy(() => import('./docs/MenuPage').then(m => ({ default: m.MenuPage })));
+const OrgChartPage = lazy(() => import('./docs/OrgChartPage').then(m => ({ default: m.OrgChartPage })));
 const ClockPage = lazy(() => import('./docs/ClockPage').then(m => ({ default: m.ClockPage })));
 const VideoPlayerPage = lazy(() => import('./docs/VideoPlayerPage').then(m => ({ default: m.VideoPlayerPage })));
 const StepperPage = lazy(() => import('./docs/StepperPage').then(m => ({ default: m.StepperPage })));
@@ -203,6 +204,7 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/tag': TagPage,
   '/components/timeline': TimelinePage,
   '/components/menu': MenuPage,
+  '/components/org-chart': OrgChartPage,
   '/components/clock': ClockPage,
   '/components/video-player': VideoPlayerPage,
   '/components/stepper': StepperPage,

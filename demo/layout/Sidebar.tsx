@@ -114,6 +114,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Menu', route: '/components/menu' },
       { label: 'Modal', route: '/components/modal' },
       { label: 'Number Input', route: '/components/number-input' },
+      { label: 'Org Chart ✨', route: '/components/org-chart' },
       { label: 'OTP Input', route: '/components/otp' },
       { label: 'Pagination', route: '/components/pagination' },
       { label: 'Popover', route: '/components/popover' },
@@ -405,7 +406,7 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
         <IconLogo />
         <div style={brandTextStyle}>
           <span style={brandNameStyle}>TekiVex UI</span>
-          <span style={versionBadgeStyle}>v2.5.15</span>
+          <span style={versionBadgeStyle}>v2.6.0</span>
         </div>
       </div>
 

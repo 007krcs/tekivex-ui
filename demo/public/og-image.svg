@@ -48,7 +48,7 @@
   <rect x="152" y="154" width="110" height="24" rx="12"
         fill="none" stroke="#00f5d4" stroke-opacity="0.3" stroke-width="1"/>
   <text x="207" y="170" font-family="monospace" font-size="12" font-weight="700"
-        fill="#00f5d4" text-anchor="middle" letter-spacing="0.5">v2.5.15</text>
+        fill="#00f5d4" text-anchor="middle" letter-spacing="0.5">v2.6.0</text>
 
   <!-- Main tagline -->
   <text x="96" y="250" font-family="-apple-system,BlinkMacSystemFont,Inter,sans-serif"

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import type { ThemeTokens } from '@tekivex/ui';
 import { TkxMarkdown } from '../../src/components/TkxMarkdown';
+import { TkxOrgChart } from '../../src/components/TkxOrgChart';
 
 // ── Quantum Particle System ───────────────────────────────────────────────────
 
@@ -569,7 +570,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           animation: 'tkxSlideUp 0.6s ease both',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: theme.primary, display: 'inline-block', animation: 'tkxPulseRing 1.5s ease-out infinite' }} />
-          v2.5.15 · Quantum AI Edition
+          v2.6.0 · SecurityCore Edition
         </div>
 
         {/* Main headline */}
@@ -579,9 +580,9 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
         </h1>
 
         <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', color: theme.textMuted, maxWidth: 640, margin: '0 auto 40px', lineHeight: 1.7, animation: 'tkxSlideUp 0.7s 0.2s ease both', opacity: 0, animationFillMode: 'both' }}>
-          70+ production-grade components powered by genuine quantum-inspired AI —<br />
-          Boltzmann Machine inference, Quantum Annealing optimization, Amplitude Amplification search.
-          <br />WCAG 2.1 AAA · WAI-ARIA 1.2 · TypeScript · Zero-runtime CSS.
+          80+ production-grade components with a built-in security kernel —<br />
+          SecurityCore v2.6: XSS shield, Unicode Trojan Source defense, PII scrubber, clickjacking guard, rate limiter.
+          <br />WCAG 2.1 AAA · WAI-ARIA 1.2 · TypeScript · Zero-runtime CSS · 594 tests.
         </p>
 
         {/* CTA Buttons */}
@@ -749,18 +750,106 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
         </div>
       </section>
 
-      {/* ── What's New in v2.5.15: TkxMarkdown ────────────────────────── */}
+      {/* ── What's New in v2.6.0: SecurityCore + TkxOrgChart ──────────── */}
       <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 60px' : '0 32px 100px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 999, background: `${theme.success}18`, border: `1px solid ${theme.success}44`, color: theme.success, fontSize: 12, fontWeight: 700, marginBottom: 16, letterSpacing: '0.05em' }}>
-              ✨ NEW IN v2.5.15
+              ✨ NEW IN v2.6.0
             </div>
             <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+              <HoloText theme={theme}>SecurityCore</HoloText> + <HoloText theme={theme}>TkxOrgChart</HoloText>
+            </h2>
+            <p style={{ color: theme.textMuted, maxWidth: 720, margin: '0 auto', lineHeight: 1.7 }}>
+              The first React UI library with a security kernel built in. 15 attack classes defended
+              (OWASP Top 10 + CWE + Trojan Source). Plus a new Reingold-Tilford org-chart primitive.
+            </p>
+          </div>
+
+          {/* SecurityCore grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 32 }}>
+            {[
+              { icon: '🛡', title: 'sanitizeHref', desc: 'Blocks javascript:, data:, vbscript:' },
+              { icon: '🧬', title: 'sanitizeUnicode', desc: 'Strips bidi overrides (CVE-2021-42574)' },
+              { icon: '🕵', title: 'scrubPII', desc: 'Redacts SSN, CC, email, phone, API keys' },
+              { icon: '🖼', title: 'isFramed / frame-buster', desc: 'Clickjacking defense + events' },
+              { icon: '⏱', title: 'createRateLimiter', desc: 'Token-bucket per-action throttling' },
+              { icon: '🧾', title: 'buildTkxCSP', desc: 'CSP header with frame-ancestors none' },
+              { icon: '🔬', title: 'sniffMimeType', desc: 'Magic-byte content sniffing' },
+              { icon: '🧊', title: 'deepFreeze', desc: 'Prototype pollution prevention' },
+            ].map(({ icon, title, desc }) => (
+              <div key={title} style={{ padding: 16, borderRadius: 12, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, backdropFilter: 'blur(20px)' }}>
+                <div style={{ fontSize: 22, marginBottom: 6 }}>{icon}</div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: theme.primary, marginBottom: 4, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{title}</div>
+                <div style={{ fontSize: 12, color: theme.textMuted, lineHeight: 1.5 }}>{desc}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <button
+              onClick={() => { window.location.hash = '/security'; }}
+              style={{ padding: '10px 22px', borderRadius: 10, border: `1px solid ${theme.primary}44`, background: `${theme.primary}12`, color: theme.primary, fontWeight: 600, fontSize: 14, cursor: 'pointer', marginRight: 8 }}
+            >
+              🛡 Explore SecurityCore →
+            </button>
+            <button
+              onClick={() => window.open('https://github.com/novaai0401-ui/tekivex-issue-report/blob/main/SECURITY-THREAT-MODEL.md', '_blank')}
+              style={{ padding: '10px 22px', borderRadius: 10, border: `1px solid ${theme.border}`, background: `${theme.surface}cc`, color: theme.text, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}
+            >
+              📄 Threat Model
+            </button>
+          </div>
+
+          {/* TkxOrgChart live demo */}
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20, alignItems: 'stretch' }}>
+            <div style={{ padding: 20, borderRadius: 14, background: `${theme.surface}cc`, border: `1px solid ${theme.border}`, backdropFilter: 'blur(20px)' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: theme.textMuted, letterSpacing: '0.08em', marginBottom: 12 }}>TKXORGCHART · SOURCE</div>
+              <pre style={{ margin: 0, fontSize: 12, lineHeight: 1.6, color: theme.text, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+{`<TkxOrgChart
+  data={{
+    id: 'ceo',
+    label: 'Ada Lovelace',
+    subLabel: 'CEO',
+    children: [
+      { id: 'cto', label: 'Linus T.',   subLabel: 'CTO' },
+      { id: 'cfo', label: 'Grace H.',   subLabel: 'CFO' },
+      { id: 'cpo', label: 'Alan T.',    subLabel: 'CPO' },
+    ],
+  }}
+  height={340}
+/>`}
+              </pre>
+            </div>
+            <div style={{ padding: 20, borderRadius: 14, background: `${theme.surface}cc`, border: `1px solid ${theme.primary}44`, backdropFilter: 'blur(20px)', overflow: 'auto' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: theme.primary, letterSpacing: '0.08em', marginBottom: 12 }}>RENDERED · REINGOLD-TILFORD LAYOUT</div>
+              <TkxOrgChart
+                data={{
+                  id: 'ceo',
+                  label: 'Ada Lovelace',
+                  subLabel: 'CEO',
+                  children: [
+                    { id: 'cto', label: 'Linus T.', subLabel: 'CTO' },
+                    { id: 'cfo', label: 'Grace H.', subLabel: 'CFO' },
+                    { id: 'cpo', label: 'Alan T.',  subLabel: 'CPO' },
+                  ],
+                }}
+                height={340}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Markdown Showcase ──────────────────────────────────────────── */}
+      <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 60px' : '0 32px 100px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
               <HoloText theme={theme}>TkxMarkdown</HoloText> — render .md anywhere
             </h2>
             <p style={{ color: theme.textMuted, maxWidth: 640, margin: '0 auto', lineHeight: 1.7 }}>
-              Zero-dependency CommonMark + GFM renderer. Fully responsive, XSS-safe, SSR-ready. Works on every device.
+              Zero-dependency CommonMark + GFM renderer. Fully responsive, XSS-safe, SSR-ready.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 20, alignItems: 'stretch' }}>
@@ -851,7 +940,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
             {activeTab === 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 32 }}>
                 <div>
-                  <h3 style={{ margin: '0 0 16px', color: theme.text, fontWeight: 700 }}>70+ Production Components</h3>
+                  <h3 style={{ margin: '0 0 16px', color: theme.text, fontWeight: 700 }}>80+ Production Components</h3>
                   <p style={{ color: theme.textMuted, lineHeight: 1.8, margin: 0 }}>From primitives (Button, Input, Badge) to advanced (DataGrid with virtual scrolling, Quantum AI Form, Visual Theme Builder, Live Playground). Every component is TypeScript-first, accessible, and security-hardened.</p>
                 </div>
                 <div>
@@ -1001,7 +1090,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <footer style={{ position: 'relative', zIndex: 1, padding: isMobile ? '32px 16px' : '40px 32px', borderTop: `1px solid ${theme.border}`, textAlign: 'center', color: theme.textMuted, fontSize: 13 }}>
         <p style={{ margin: '0 0 8px' }}>
-          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.5.15 · Built with ⚛ Quantum AI · MIT License
+          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.6.0 · SecurityCore Edition · MIT License
         </p>
         <p style={{ margin: 0 }}>
           © 2026 <a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a> ·
