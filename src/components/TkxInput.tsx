@@ -2,7 +2,7 @@
 
 import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
 import { useTheme } from '../themes';
-import { sanitizeString } from '../engine/security';
+import { sanitizeString, sanitizeUnicode } from '../engine/security';
 import { tkx, cx } from '../engine/tkx';
 
 export interface TkxInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> {
@@ -14,10 +14,16 @@ export interface TkxInputProps extends Omit<InputHTMLAttributes<HTMLInputElement
   rightAddon?: ReactNode;
   isInvalid?: boolean;
   isRequired?: boolean;
+  /**
+   * Strip zero-width and bidi-override Unicode characters on input. Blocks
+   * homograph / Trojan-Source attacks. Default: true. Set false only for
+   * specialized inputs (e.g. translation UIs) that legitimately need them.
+   */
+  unicodeSafe?: boolean;
 }
 
 export const TkxInput = forwardRef<HTMLInputElement, TkxInputProps>(
-  ({ label, id: idProp, error, hint, leftAddon, rightAddon, isInvalid, isRequired, disabled, className, style, ...rest }, ref) => {
+  ({ label, id: idProp, error, hint, leftAddon, rightAddon, isInvalid, isRequired, disabled, className, style, unicodeSafe = true, onChange, ...rest }, ref) => {
     const theme = useTheme();
     const autoId = useId();
     const id = idProp ?? autoId;
@@ -71,6 +77,15 @@ export const TkxInput = forwardRef<HTMLInputElement, TkxInputProps>(
               tkx('flex-1 border-none bg-transparent text-sm font-sans py-2.5 px-3 outline-none min-w-0 focus-visible:focus-ring'),
             )}
             style={{ color: theme.text }}
+            onChange={unicodeSafe
+              ? (e) => {
+                  const clean = sanitizeUnicode(e.target.value);
+                  if (clean !== e.target.value) {
+                    e.target.value = clean;
+                  }
+                  onChange?.(e);
+                }
+              : onChange}
             {...rest}
           />
 

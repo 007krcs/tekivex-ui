@@ -10,7 +10,7 @@ import {
   type ChangeEvent,
 } from 'react';
 import { useTheme } from '../themes';
-import { sanitizeString } from '../engine/security';
+import { sanitizeString, sniffMimeType } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { tkx, cx } from '../engine/tkx';
 
@@ -121,6 +121,11 @@ export function TkxFileUpload({
     if (maxSize && file.size > maxSize) {
       return `"${sanitizeString(file.name)}" exceeds max size of ${formatSize(maxSize)}`;
     }
+    // Reject filenames containing path traversal / null bytes / control chars.
+    // eslint-disable-next-line no-control-regex
+    if (/[\u0000-\u001F\u007F]|\.\.\/|\.\.\\/.test(file.name)) {
+      return `"${sanitizeString(file.name)}" contains forbidden characters`;
+    }
     if (accept) {
       const accepted = accept.split(',').map((s) => s.trim());
       const matched = accepted.some((pattern) => {
@@ -134,6 +139,21 @@ export function TkxFileUpload({
     }
     return undefined;
   }, [accept, maxSize]);
+
+  // Async magic-byte verification — runs after sync validation. If the true
+  // MIME type (from file content) doesn't match the claimed type (from
+  // file.type), flag the file as a forgery.
+  const verifyMagicBytes = useCallback(async (entry: UploadedFile): Promise<void> => {
+    if (entry.error) return;
+    try {
+      const sniffed = await sniffMimeType(entry.file);
+      if (sniffed && entry.file.type && !entry.file.type.startsWith(sniffed.split('/')[0])) {
+        const msg = `"${sanitizeString(entry.file.name)}" file content does not match its type`;
+        setFiles((prev) => prev.map((f) => f.id === entry.id ? { ...f, error: msg } : f));
+        onError?.(msg);
+      }
+    } catch { /* sniff failures are non-fatal */ }
+  }, [onError]);
 
   const processFiles = useCallback((incoming: File[]) => {
     const available = maxFiles ? maxFiles - files.length : Infinity;
@@ -160,6 +180,7 @@ export function TkxFileUpload({
     // Report per-file errors
     newEntries.forEach((entry) => {
       if (entry.error) onError?.(entry.error);
+      else verifyMagicBytes(entry);
     });
 
     // Start progress simulation for valid files

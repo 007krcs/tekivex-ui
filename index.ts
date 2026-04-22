@@ -166,6 +166,9 @@ export * from './src/components/TkxAnchor';
 export * from './src/components/TkxCascader';
 export * from './src/components/TkxList';
 
+export { TkxOrgChart } from './src/components/TkxOrgChart';
+export type { TkxOrgChartProps, OrgNode } from './src/components/TkxOrgChart';
+
 // i18n / RTL — locale strings live in '@tekivex/ui/i18n' to keep the main bundle small.
 // Provider, hooks and direction utils stay here so most apps can use i18n with one English locale or none.
 export { I18nProvider } from './src/i18n/I18nProvider';
@@ -190,7 +193,31 @@ export {
 
 // Engine APIs (public surface)
 export { Quantum, fnv1aHash, LRUCache, memoize, batchUpdate } from './src/engine/quantum';
-export { Shield, sanitizeString, sanitizeProps, validateProps, audit, getAuditLog, verifyAuditIntegrity } from './src/engine/security';
+export {
+  Shield,
+  SecurityCore,
+  sanitizeString,
+  sanitizeHref,
+  sanitizeHTML,
+  sanitizeCSS,
+  sanitizeJSON,
+  sanitizeUnicode,
+  sanitizeProps,
+  validateProps,
+  isSafeAttrName,
+  buildTkxCSP,
+  installTrustedTypes,
+  isFramed,
+  installFrameBuster,
+  createRateLimiter,
+  sniffMimeType,
+  scrubPII,
+  deepFreeze,
+  audit,
+  getAuditLog,
+  verifyAuditIntegrity,
+} from './src/engine/security';
+export type { TkxCSPOptions, RateLimiter } from './src/engine/security';
 export { WCAGEngine, contrastRatio, meetsAA, meetsAAA, getAccessibleForeground, createFocusTrap, prefersReducedMotion, prefersHighContrast } from './src/engine/wcag';
 export { TKX, css, fromObject, responsive, keyframes, cssVar, extractCSS, injectStyles } from './src/engine/css';
 

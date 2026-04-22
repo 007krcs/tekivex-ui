@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
-import { sanitizeString } from '../engine/security';
+import { sanitizeString, isFramed } from '../engine/security';
 import { useFocusTrap, useEscapeKey, useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
 
@@ -115,10 +115,19 @@ export function TkxDrawer({
   useEscapeKey(onClose, closeOnEsc && isOpen);
 
   useEffect(() => {
-    if (isOpen) lockScroll();
-    else unlockScroll();
+    if (isOpen) {
+      lockScroll();
+      // Clickjacking defense: emit event if page is framed cross-origin
+      if (isFramed()) {
+        try {
+          window.dispatchEvent(new CustomEvent('tkx:framed-drawer', {
+            detail: { placement, at: Date.now() },
+          }));
+        } catch { /* sandboxed iframe */ }
+      }
+    } else unlockScroll();
     return () => { if (isOpen) unlockScroll(); };
-  }, [isOpen]);
+  }, [isOpen, placement]);
 
   if (typeof document === 'undefined') return null;
 

@@ -3,7 +3,7 @@
 import { useEffect, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
-import { sanitizeString } from '../engine/security';
+import { sanitizeString, isFramed } from '../engine/security';
 import { useFocusTrap, useEscapeKey, useAnnounce, useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
 
@@ -38,8 +38,19 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
   useEscapeKey(onClose, closeOnEscape && isOpen);
 
   useEffect(() => {
-    if (isOpen) { lockScroll(); announce(safeTitle, 'polite'); }
-    else { unlockScroll(); }
+    if (isOpen) {
+      lockScroll();
+      announce(safeTitle, 'polite');
+      // Clickjacking defense: if the page is framed cross-origin, announce
+      // the fact — consumers can subscribe via window event to block action.
+      if (isFramed()) {
+        try {
+          window.dispatchEvent(new CustomEvent('tkx:framed-modal', {
+            detail: { title: safeTitle, at: Date.now() },
+          }));
+        } catch { /* dispatch can throw in sandboxed iframes */ }
+      }
+    } else { unlockScroll(); }
     return () => { if (isOpen) unlockScroll(); };
   }, [isOpen, safeTitle, announce]);
 
