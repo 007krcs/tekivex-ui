@@ -3,6 +3,14 @@ import type { ThemeTokens } from '@tekivex/ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { sanitizeString, meetsAA, meetsAAA, contrastRatio } from '../../src/headless';
+import {
+  sanitizeHref,
+  sanitizeUnicode,
+  buildTkxCSP,
+  scrubPII,
+  isFramed,
+  createRateLimiter,
+} from '../../src/engine/security';
 import { WCAGBadgeGroup } from '../layout/WCAGBadge';
 
 interface Props { theme: ThemeTokens }
@@ -163,6 +171,206 @@ function AuditDemo({ theme }: { theme: ThemeTokens }) {
   );
 }
 
+// ── v2.6 SecurityCore demos ───────────────────────────────────────────────────
+
+function rowBase(theme: ThemeTokens): CSSProperties {
+  return {
+    borderRadius: 8,
+    border: `1px solid ${theme.border}`,
+    overflow: 'hidden',
+  };
+}
+
+function resultLine(label: string, color: string, text: string): JSX.Element {
+  return (
+    <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', padding: '6px 14px' }}>
+      <span style={{ fontSize: 11, fontWeight: 700, color, minWidth: 60, paddingTop: 1 }}>{label}</span>
+      <code style={{
+        fontSize: 12, color, background: `${color}12`,
+        padding: '2px 8px', borderRadius: 4, wordBreak: 'break-all',
+      }}>{text}</code>
+    </div>
+  );
+}
+
+function UrlDemo({ theme }: { theme: ThemeTokens }) {
+  const cases = [
+    'https://example.com/path',
+    'javascript:alert(1)',
+    'vbscript:msgbox',
+    'data:text/html,<script>alert(1)</script>',
+    'mailto:hello@tekivex.dev',
+    '/relative/path',
+    '#anchor',
+  ];
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {cases.map((u) => {
+        const out = sanitizeHref(u);
+        const safe = out !== null;
+        return (
+          <div key={u} style={rowBase(theme)}>
+            {resultLine('INPUT', theme.textMuted, u)}
+            {resultLine(safe ? 'PASS' : 'BLOCKED', safe ? theme.success : theme.danger, out ?? '(null — rejected)')}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function UnicodeDemo({ theme }: { theme: ThemeTokens }) {
+  const [val, setVal] = useState('admin\u202Eexploit.exe');
+  const out = sanitizeUnicode(val);
+  const inputStyle: CSSProperties = {
+    width: '100%', padding: '10px 12px', borderRadius: 6, fontSize: 13,
+    border: `1px solid ${theme.border}`, background: theme.surface,
+    color: theme.text, outline: 'none', fontFamily: 'monospace', boxSizing: 'border-box',
+  };
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div>
+        <label style={{ fontSize: 12, fontWeight: 600, color: theme.textMuted, display: 'block', marginBottom: 6 }}>
+          Input (try pasting bidi-override text, e.g. a\u202Eb):
+        </label>
+        <input style={inputStyle} value={val} onChange={(e) => setVal(e.target.value)} />
+        <div style={{ fontSize: 11, color: theme.textMuted, marginTop: 4 }}>
+          Original length: <strong style={{ color: theme.text }}>{val.length}</strong> chars
+        </div>
+      </div>
+      <div>
+        <label style={{ fontSize: 12, fontWeight: 600, color: theme.textMuted, display: 'block', marginBottom: 6 }}>
+          Sanitized (zero-width + bidi chars stripped):
+        </label>
+        <div style={{
+          padding: '10px 12px', borderRadius: 6,
+          border: `1px solid ${theme.success}50`, background: `${theme.success}08`,
+          fontFamily: 'monospace', fontSize: 13, color: theme.success, minHeight: 40,
+          wordBreak: 'break-all',
+        }}>{out || <em style={{ color: theme.textMuted }}>(empty)</em>}</div>
+        <div style={{ fontSize: 11, color: theme.textMuted, marginTop: 4 }}>
+          Stripped: <strong style={{ color: val.length !== out.length ? theme.danger : theme.text }}>{val.length - out.length}</strong> invisible chars
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PIIDemo({ theme }: { theme: ThemeTokens }) {
+  const [val, setVal] = useState(
+    'Contact Jane at jane.doe@example.com (555-123-4567). SSN 123-45-6789, card 4111-1111-1111-1111, key sk-abc123xyz4567890abc',
+  );
+  const out = scrubPII(val);
+  const taStyle: CSSProperties = {
+    width: '100%', padding: '10px 12px', borderRadius: 6, fontSize: 13,
+    border: `1px solid ${theme.border}`, background: theme.surface,
+    color: theme.text, outline: 'none', fontFamily: 'monospace', boxSizing: 'border-box',
+    resize: 'vertical',
+  };
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <textarea rows={3} style={taStyle} value={val} onChange={(e) => setVal(e.target.value)} />
+      <div style={{
+        padding: '10px 12px', borderRadius: 6,
+        border: `1px solid ${theme.success}50`, background: `${theme.success}08`,
+        fontFamily: 'monospace', fontSize: 13, color: theme.success, minHeight: 40,
+      }}>{out}</div>
+    </div>
+  );
+}
+
+function CSPDemo({ theme }: { theme: ThemeTokens }) {
+  const csp = buildTkxCSP();
+  const parts = csp.split(';').map((s) => s.trim()).filter(Boolean);
+  return (
+    <div style={{
+      borderRadius: 8, border: `1px solid ${theme.border}`,
+      background: theme.surface, overflow: 'hidden',
+    }}>
+      <div style={{
+        padding: '10px 14px', background: theme.surfaceAlt,
+        fontSize: 11, fontWeight: 700, color: theme.textMuted,
+        textTransform: 'uppercase', letterSpacing: '0.06em',
+      }}>Content-Security-Policy</div>
+      {parts.map((p, i) => (
+        <div key={i} style={{
+          padding: '8px 14px',
+          borderTop: i === 0 ? 'none' : `1px solid ${theme.border}`,
+          fontFamily: 'monospace', fontSize: 12, color: theme.text,
+        }}>
+          <code style={{ color: theme.primary }}>{p.split(' ')[0]}</code>
+          <span style={{ color: theme.textMuted }}> {p.split(' ').slice(1).join(' ')}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FramedDemo({ theme }: { theme: ThemeTokens }) {
+  const framed = isFramed();
+  return (
+    <div style={{
+      padding: '16px 20px', borderRadius: 8,
+      border: `1px solid ${framed ? theme.danger : theme.success}50`,
+      background: `${framed ? theme.danger : theme.success}08`,
+      display: 'flex', alignItems: 'center', gap: 12,
+    }}>
+      <span style={{ fontSize: 20 }}>{framed ? '⚠' : '✓'}</span>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: framed ? theme.danger : theme.success }}>
+          {framed ? 'Page is framed (potential clickjacking)' : 'Page is not framed — safe'}
+        </div>
+        <div style={{ fontSize: 12, color: theme.textMuted, marginTop: 4 }}>
+          isFramed() returns <code>{String(framed)}</code>. TkxModal & TkxDrawer dispatch
+          <code> tkx:framed-*</code> events when opened in a hostile iframe.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RateLimiterDemo({ theme }: { theme: ThemeTokens }) {
+  const [rl] = useState(() => createRateLimiter(3, 2000));
+  const [log, setLog] = useState<string[]>([]);
+  const hit = () => {
+    const ok = rl.check();
+    setLog((l) => [
+      `${new Date().toLocaleTimeString()} — ${ok ? '✓ allowed' : '✗ throttled'}`,
+      ...l,
+    ].slice(0, 6));
+  };
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button onClick={hit} style={{
+          padding: '8px 16px', borderRadius: 6,
+          border: `1px solid ${theme.primary}50`,
+          background: `${theme.primary}15`, color: theme.primary,
+          fontSize: 13, fontWeight: 600, cursor: 'pointer',
+        }}>Tap (3/2s budget)</button>
+        <button onClick={() => { rl.reset(); setLog([]); }} style={{
+          padding: '8px 16px', borderRadius: 6,
+          border: `1px solid ${theme.border}`, background: 'transparent',
+          color: theme.textMuted, fontSize: 13, cursor: 'pointer',
+        }}>Reset</button>
+      </div>
+      <div style={{
+        padding: '10px 14px', borderRadius: 6, background: theme.surfaceAlt,
+        fontFamily: 'monospace', fontSize: 12, minHeight: 100, color: theme.text,
+      }}>
+        {log.length === 0 ? (
+          <em style={{ color: theme.textMuted }}>Tap the button above — first 3 in 2s pass, rest are throttled.</em>
+        ) : log.map((l, i) => (
+          <div key={i} style={{
+            color: l.includes('throttled') ? theme.danger : theme.success,
+            padding: '2px 0',
+          }}>{l}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export function SecurityPage({ theme }: Props) {
@@ -261,6 +469,99 @@ const log = Shield.getAuditLog(); // → SecurityEvent[]`}
           { prop: 'meetsAAA(fg, bg)', type: '(string, string) → boolean', description: 'Returns true if contrast ratio ≥ 7:1 (WCAG AAA enhanced).' },
         ]}
       />
+
+      {/* ── SecurityCore v2.6 — extended defenses ─────────────────── */}
+      <div style={{ marginTop: 48 }}>
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: 999, background: `${theme.success}18`, border: `1px solid ${theme.success}33`, color: theme.success, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}>
+            NEW IN v2.6.0
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', fontWeight: 800, margin: 0, color: theme.text }}>
+            SecurityCore — the full kernel
+          </h2>
+          <p style={{ color: theme.textMuted, fontSize: 14, marginTop: 8 }}>
+            Beyond XSS: URL schemes, Trojan Source, PII, clickjacking, CSP, rate limiting, magic-byte MIME.
+          </p>
+        </div>
+
+        <DemoSection
+          title="sanitizeHref — URL allow-list"
+          description="Blocks javascript:, vbscript:, data:text/html, file:. Accepts http(s), mailto, tel, relative URLs, fragments."
+          theme={theme}
+          code={`sanitizeHref('https://example.com')      // → 'https://example.com'
+sanitizeHref('javascript:alert(1)')       // → null
+sanitizeHref('data:text/html,<script>')   // → null
+sanitizeHref('/relative/path')            // → '/relative/path'`}
+        >
+          <UrlDemo theme={theme} />
+        </DemoSection>
+
+        <DemoSection
+          title="sanitizeUnicode — Trojan Source defense"
+          description="Strips zero-width (U+200B…U+200F) and bidi-override (U+202A…U+202E) characters — the CVE-2021-42574 class of attacks."
+          theme={theme}
+          code={`sanitizeUnicode('admin\\u202Eexploit')
+// → 'adminexploit'  (bidi override removed)
+
+sanitizeUnicode('a\\u200Bb\\u200Cc')
+// → 'abc'  (zero-width chars removed)`}
+        >
+          <UnicodeDemo theme={theme} />
+        </DemoSection>
+
+        <DemoSection
+          title="scrubPII — redact sensitive data before LLMs / analytics"
+          description="Catches SSN, credit cards, emails, phone numbers, and API keys. Use before forwarding user text to third-party services."
+          theme={theme}
+          code={`scrubPII('Email a@b.co, SSN 123-45-6789, key sk-abc123xyz456789abc')
+// → 'Email [redacted-email], SSN [redacted-ssn], key [redacted-key]'`}
+        >
+          <PIIDemo theme={theme} />
+        </DemoSection>
+
+        <DemoSection
+          title="buildTkxCSP — strict Content-Security-Policy header"
+          description="Opinionated CSP that blocks XSS, clickjacking (frame-ancestors 'none'), form injection, and mixed content. Deploy via Next.js middleware or Express."
+          theme={theme}
+          code={`import { buildTkxCSP } from 'tekivex-ui';
+
+res.setHeader('Content-Security-Policy', buildTkxCSP({
+  scriptNonce: crypto.randomBytes(16).toString('base64'),
+  imgHosts: ['https://cdn.example.com'],
+}));`}
+        >
+          <CSPDemo theme={theme} />
+        </DemoSection>
+
+        <DemoSection
+          title="isFramed + Clickjacking defense"
+          description="Detects cross-origin iframe embedding. TkxModal and TkxDrawer dispatch tkx:framed-* events so your app can refuse interaction when redressed."
+          theme={theme}
+          code={`import { isFramed, installFrameBuster } from 'tekivex-ui';
+
+if (isFramed()) {
+  installFrameBuster(() => {
+    console.warn('App loaded in hostile iframe — refusing to render');
+  });
+}`}
+        >
+          <FramedDemo theme={theme} />
+        </DemoSection>
+
+        <DemoSection
+          title="createRateLimiter — client-side DoS guard"
+          description="Token-bucket limiter for user-triggered actions. Use on form submit, file upload, API calls."
+          theme={theme}
+          code={`const rl = createRateLimiter(5, 1000); // 5 actions/sec
+
+<TkxButton onClick={() => {
+  if (!rl.check()) return toast({ title: 'Slow down!' });
+  submitForm();
+}}>Submit</TkxButton>`}
+        >
+          <RateLimiterDemo theme={theme} />
+        </DemoSection>
+      </div>
 
       {/* ── Competitor XSS Benchmark ──────────────────────────────── */}
       <div style={{ marginTop: 48 }}>

@@ -2,9 +2,11 @@
 
 # ⚡ TekiVex UI
 
-**The React component library that refuses to compromise.**
+**The first React UI library with a security kernel built in.**
 
-WCAG 2.1 AAA · WAI-ARIA 1.2 · Zero-Trust Security · 6 Locales + RTL · 70 Components · Zero Dependencies
+WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME) · 80+ Components · Zero Dependencies
+
+📄 **[Security Threat Model](./docs/SECURITY-THREAT-MODEL.md)** — the only mainstream React UI library that publishes one.
 
 [![npm version](https://img.shields.io/npm/v/tekivex-ui?color=00f5d4&label=tekivex-ui&logo=npm)](https://www.npmjs.com/package/tekivex-ui)
 [![npm downloads](https://img.shields.io/npm/dw/tekivex-ui?color=00f5d4)](https://www.npmjs.com/package/tekivex-ui)
@@ -12,7 +14,8 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · Zero-Trust Security · 6 Locales + RTL · 70 Com
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18+-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
 [![WCAG 2.1 AAA](https://img.shields.io/badge/WCAG-2.1%20AAA-00c853.svg)](https://www.w3.org/TR/WCAG21/)
-[![Tests](https://img.shields.io/badge/Tests-240%2B%20passing-00c853.svg)](#testing)
+[![Tests](https://img.shields.io/badge/Tests-594%20passing-00c853.svg)](#testing)
+[![SecurityCore](https://img.shields.io/badge/SecurityCore-v2.6-f72585.svg)](./docs/SECURITY-THREAT-MODEL.md)
 
 <br/>
 
@@ -31,14 +34,24 @@ npm install tekivex-ui
 | Feature | TekiVex UI | MUI | Ant Design | Mantine | shadcn/ui |
 |---|:---:|:---:|:---:|:---:|:---:|
 | WCAG **AAA** (not just AA) | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Auto XSS sanitisation on every prop | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Immutable security audit trail | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **XSS** — automatic sanitisation on every prop | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Clickjacking** — `isFramed()` + `frame-ancestors` CSP | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Trojan Source** — bidi/zero-width stripped on inputs | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Prototype pollution** — safe `JSON.parse` | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **File upload** — magic-byte MIME verification | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **CSP builder** — one-line strict policy | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Trusted Types** — one-call policy install | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **PII redaction** — pre-LLM / pre-analytics | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Rate limiter** — client-side DoS guard | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Immutable security audit trail + integrity check | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Published threat model | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Full-featured DataGrid — **free** | ✅ | 💰 Pro | Partial | Partial | ❌ |
-| 70 production components — **free** | ✅ | ✅ | ✅ | ✅ | 30 |
+| 80+ production components — **free** | ✅ | ✅ | ✅ | ✅ | 30 |
 | Hooks layer (a11y, theme, i18n) | ✅ | ❌ | ❌ | ✅ | ✅ |
-| i18n — 6 locales incl. RTL | ✅ | ✅ | ✅ | Partial | ❌ |
+| i18n — 27 locales incl. RTL | ✅ | ✅ | ✅ | Partial | ❌ |
 | Plugin-extensible CSS engine | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Zero extra dependencies | ✅ | ❌ | ❌ | ❌ | ✅ |
+| **No `src/` in npm tarball** (IP protection) | ✅ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 
