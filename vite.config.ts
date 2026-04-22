@@ -13,6 +13,31 @@ export default defineConfig({
     },
   },
   build: {
+    // Strip sourcemaps from published package — prevents trivial reversal
+    // of our atomic CSS engine, quantum algorithms, and security engine.
+    sourcemap: false,
+    // Use Terser for aggressive mangling + dead-code elimination.
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        passes: 3,
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.debug', 'console.info'],
+        ecma: 2020,
+      },
+      mangle: {
+        toplevel: true,
+        // Mangle any identifier prefixed with an underscore (internal).
+        properties: {
+          regex: /^_[a-zA-Z0-9]/,
+        },
+      },
+      format: {
+        comments: false,
+        ecma: 2020,
+      },
+    },
     lib: {
       // Multiple entry points — each generates its own dist file.
       // index.ts     → dist/index.{js,cjs}
@@ -46,6 +71,9 @@ export default defineConfig({
           'react-dom': 'ReactDOM',
           recharts: 'Recharts',
         },
+        // Hide filename of split chunks so file-names don't leak component
+        // organization (TkxButton.js → chunk-a3f2.js).
+        chunkFileNames: 'chunk-[hash].js',
       },
     },
     cssCodeSplit: false,
