@@ -157,7 +157,7 @@ Next steps:
 
 Docs:       ${C.dim}https://ui.tekivex.com${C.reset}
 Security:   ${C.dim}https://ui.tekivex.com/#/security${C.reset}
-Report bug: ${C.dim}https://github.com/novaai0401-ui/tekivex-issue-report/issues${C.reset}
+Report bug: ${C.dim}https://github.com/007krcs/tekivex-ui/issues${C.reset}
 `);
 }
 

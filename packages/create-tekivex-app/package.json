@@ -24,7 +24,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/novaai0401-ui/tekivex-issue-report",
+    "url": "https://github.com/007krcs/tekivex-ui",
     "directory": "packages/create-tekivex-app"
   },
   "engines": {
