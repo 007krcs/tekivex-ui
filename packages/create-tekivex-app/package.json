@@ -1,0 +1,33 @@
+{
+  "name": "create-tekivex-app",
+  "version": "0.1.0",
+  "description": "Scaffold a secure React + Vite app with tekivex-ui pre-wired \u2014 CSP headers, SecurityCore, dark/light theme, TypeScript, ESLint.",
+  "type": "module",
+  "bin": {
+    "create-tekivex-app": "./bin/create-tekivex-app.mjs"
+  },
+  "files": [
+    "bin",
+    "template",
+    "README.md"
+  ],
+  "keywords": [
+    "tekivex-ui",
+    "react",
+    "vite",
+    "typescript",
+    "scaffolder",
+    "create-app",
+    "security"
+  ],
+  "author": "tekivex-ui contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report",
+    "directory": "packages/create-tekivex-app"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

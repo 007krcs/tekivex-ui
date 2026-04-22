@@ -1,0 +1,31 @@
+{
+  "collectedAt": "2026-04-22T09:16:18.000Z",
+  "date": "2026-04-22",
+  "npm": {
+    "@tekivex/ui": {
+      "weekly": null,
+      "monthly": null
+    },
+    "@tekivex/security-core": {
+      "weekly": null,
+      "monthly": null
+    },
+    "@tekivex/audit": {
+      "weekly": null,
+      "monthly": null
+    },
+    "create-tekivex-app": {
+      "weekly": null,
+      "monthly": null
+    }
+  },
+  "github": {
+    "stars": null,
+    "forks": null,
+    "watchers": null,
+    "openIssues": null,
+    "closedIssues": null,
+    "openPRs": null,
+    "closedPRs": null
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@tekivex/figma-kit",
+  "version": "0.1.0",
+  "description": "Figma-importable token exports and component variant catalog for tekivex-ui. Designers import dist/tokens.figma.json; engineers consume the same source of truth.",
+  "type": "module",
+  "files": [
+    "dist",
+    "scripts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/export-tokens.mjs && node scripts/build-variant-catalog.mjs",
+    "build:tokens": "node scripts/export-tokens.mjs",
+    "build:variants": "node scripts/build-variant-catalog.mjs"
+  },
+  "keywords": [
+    "figma",
+    "design-tokens",
+    "tekivex-ui"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

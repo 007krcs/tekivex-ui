@@ -66,7 +66,9 @@
     "css:build": "node scripts/css-build.mjs",
     "build:demo": "vite build --config ./demo/vite.config.ts",
     "prepublishOnly": "npm run build",
-    "pack:check": "npm pack --dry-run"
+    "pack:check": "npm pack --dry-run",
+    "metrics:collect": "node scripts/collect-metrics.mjs",
+    "figma:build": "node packages/figma-kit/scripts/export-tokens.mjs && node packages/figma-kit/scripts/build-variant-catalog.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
