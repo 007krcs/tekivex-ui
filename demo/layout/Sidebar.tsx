@@ -165,6 +165,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: 'Resources',
     items: [
       { label: 'About Us', route: '/about' },
+      { label: 'Ecosystem ✨', route: '/ecosystem' },
       { label: 'License', route: '/license' },
       { label: 'Blog', route: '/blog' },
       { label: 'Privacy Policy', route: '/privacy-policy' },

@@ -106,6 +106,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/templates/admin-settings': 'Admin Settings Template',
   '/templates/landing-page': 'Landing Page Template',
   '/about': 'About Us',
+  '/ecosystem': 'Ecosystem',
   '/license': 'License',
   '/blog': 'Blog',
   '/privacy-policy': 'Privacy Policy',

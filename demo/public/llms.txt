@@ -781,9 +781,42 @@ import type {
 } from 'tekivex-ui';
 ```
 
+## Ecosystem (v2.7 — preview, publish on demand)
+
+Four companion packages live in the tekivex-ui monorepo. Source-available today, published to npm on request.
+
+### @tekivex/security-core
+Standalone security kernel — framework-agnostic, zero runtime deps. Exports: sanitizeHref, sanitizeUnicode, scrubPII, createRateLimiter, fnv1aHash, installTrustedTypes, installFrameBuster, CSP builders.
+```ts
+import { sanitizeHref } from '@tekivex/security-core';
+const safe = sanitizeHref(userSuppliedUrl);
+```
+
+### @tekivex/audit
+Static-analysis CLI. 15 checks mapped to OWASP / CWE / WCAG. Dogfooded on our own demo.
+```bash
+npx @tekivex/audit . --fail-on warn --format md --out audit.md
+```
+Checks: SEC-001..008 (dangerouslySetInnerHTML, javascript: URL, eval, hardcoded secrets, localStorage tokens, target=_blank, missing CSP, href sanitization), A11Y-001..007 (img alt, empty button, onClick on div/span, empty anchor, input without label, color contrast heuristic, autoFocus).
+
+### create-tekivex-app
+Scaffolder. Two templates: "basic" and "secure" (ships CSP + Trusted Types + live SecurityCore demos).
+```bash
+npm create tekivex-app@latest my-app -- --template secure
+```
+
+### @tekivex/figma-kit
+Machine-readable token + variant exports. 57 tokens × 2 themes in W3C Design Tokens JSON, 69 components × 13,103 variant combinations. Regenerated from src/ — never hand-maintained.
+```bash
+npx @tekivex/figma-kit build
+# → packages/figma-kit/dist/{tokens.figma.json, variants.json}
+```
+
 ## Links
 
-- Docs:    https://ui.tekivex.com
-- npm:     https://npmjs.com/package/tekivex-ui
-- Issues:  https://github.com/novaai0401-ui/tekivex-issue-report/issues
-- License: MIT
+- Docs:      https://ui.tekivex.com
+- Ecosystem: https://ui.tekivex.com/#/ecosystem
+- npm:       https://npmjs.com/package/tekivex-ui
+- GitHub:    https://github.com/007krcs/tekivex-ui
+- Issues:    https://github.com/007krcs/tekivex-ui/issues
+- License:   MIT

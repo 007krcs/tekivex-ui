@@ -55,6 +55,7 @@ import { HomePage } from './pages/HomePage';
 import { GettingStartedPage } from './pages/GettingStartedPage';
 import { CSSSystemPage } from './pages/CSSSystemPage';
 import { AboutPage } from './pages/AboutPage';
+import { EcosystemPage } from './pages/EcosystemPage';
 import { LicensePage } from './pages/LicensePage';
 import { BlogPage } from './pages/BlogPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
@@ -272,6 +273,7 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/templates/admin-settings': AdminSettingsTemplate,
   '/templates/landing-page': LandingPageTemplate,
   '/about': AboutPage,
+  '/ecosystem': EcosystemPage,
   '/license': LicensePage,
   '/blog': BlogPage,
   '/privacy-policy': PrivacyPolicyPage,
