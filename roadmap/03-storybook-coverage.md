@@ -1,11 +1,19 @@
 # Storybook coverage plan
 
-**Status:** 8 / 80 components covered (10%)  
-**Goal:** 100% within 6 weeks of v2.7.0
+**Status:** ⛔ BLOCKED — Storybook 9 peer-requires Vite ≤ 7; tekivex-ui is on Vite 8.  
+**Attempted:** 2026-04-22 — `npm install @storybook/react-vite@^9` failed with ERESOLVE.  
+**Unblocking options:**
+1. Wait for a Storybook release that supports Vite 8 (open issue: storybookjs/storybook)
+2. Maintain a separate Storybook workspace on Vite 7 (dev-time only, not shipped)
+3. Ladle or Histoire as alternatives — both currently support Vite 8
 
-## Covered
+**Recommendation:** option 2 or 3. Revisit when Storybook supports Vite 8.
 
-TkxButton, TkxBadge, TkxAlert, TkxInput, TkxCard, TkxToggle, TkxProgress, TkxAvatar.
+**Goal when unblocked:** 100% component coverage within 6 weeks.
+
+## Covered (draft stories written but not shippable)
+
+TkxButton, TkxBadge, TkxAlert, TkxInput, TkxCard, TkxToggle, TkxProgress, TkxAvatar — eight `.stories.tsx` files written during the initial attempt, held locally until the tooling situation resolves.
 
 ## Next wave (priority: highest-traffic public API)
 

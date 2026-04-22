@@ -43,12 +43,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/novaai0401-ui/tekivex-issue-report",
+    "url": "https://github.com/007krcs/tekivex-ui",
     "directory": "packages/security-core"
   },
   "homepage": "https://ui.tekivex.com/#/security",
   "bugs": {
-    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
+    "url": "https://github.com/007krcs/tekivex-ui/issues"
   },
   "engines": {
     "node": ">=18"
