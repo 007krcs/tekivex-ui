@@ -1,13 +1,13 @@
-# i18n audit — 2026-04-26T18:32:28.294Z
+# i18n audit — 2026-04-26T19:01:11.489Z
 
-**380 hardcoded strings** across 67 files.
+**420 hardcoded strings** across 72 files.
 
 ## Breakdown by kind
 
-- `jsx-text`: 310
-- `prop:aria-label`: 58
+- `jsx-text`: 347
+- `prop:aria-label`: 59
 - `prop:title`: 9
-- `prop:placeholder`: 3
+- `prop:placeholder`: 5
 
 ## Top 20 affected files
 
@@ -19,6 +19,7 @@
 | `src/components/TkxDataGrid.tsx` | 18 |
 | `src/components/TkxVideoPlayer.tsx` | 17 |
 | `src/components/TkxPlayground.tsx` | 16 |
+| `src/components/TkxCheckout.tsx` | 14 |
 | `src/components/TkxImageEditor.tsx` | 13 |
 | `src/components/TkxCommand.tsx` | 11 |
 | `src/components/TkxQuantumForm.tsx` | 11 |
@@ -26,13 +27,12 @@
 | `src/components/TkxDropdown.tsx` | 10 |
 | `src/components/TkxMarkdown.tsx` | 10 |
 | `src/components/TkxImage.tsx` | 9 |
+| `src/components/TkxSortable.tsx` | 9 |
 | `src/components/TkxCarousel.tsx` | 8 |
 | `src/components/TkxChat.tsx` | 8 |
 | `src/components/TkxPhoneInput.tsx` | 8 |
 | `src/components/TkxTable.tsx` | 8 |
 | `src/components/TkxToast.tsx` | 8 |
-| `src/components/TkxPagination.tsx` | 7 |
-| `src/components/TkxColorPicker.tsx` | 6 |
 
 ## Sample findings (first 50)
 
@@ -44,6 +44,15 @@
   );
 
   const openIds: Set` |
+| `src/components/TkxAddressInput.tsx` | 249 | prop `aria-label` | `Matching post offices` |
+| `src/components/TkxAddressInput.tsx` | 288 | prop `placeholder` | `Address line 1` |
+| `src/components/TkxAddressInput.tsx` | 297 | prop `placeholder` | `Address line 2 (optional)` |
+| `src/components/TkxAddressInput.tsx` | 100 | JSX text | `([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setEr` |
+| `src/components/TkxAddressInput.tsx` | 207 | JSX text | `PIN code` |
+| `src/components/TkxAddressInput.tsx` | 225 | JSX text | `City` |
+| `src/components/TkxAddressInput.tsx` | 236 | JSX text | `State` |
 | `src/components/TkxAffix.tsx` | 51 | JSX text | `(null);
   const fixedRef = useRef` |
 | `src/components/TkxAIChatBubble.tsx` | 218 | prop `title` | `Copy message` |
@@ -119,13 +128,3 @@
   return (` |
 | `src/components/TkxChat.tsx` | 97 | prop `aria-label` | `Assistant is thinking` |
 | `src/components/TkxChat.tsx` | 178 | prop `aria-label` | `Error` |
-| `src/components/TkxChat.tsx` | 282 | prop `aria-label` | `Message input` |
-| `src/components/TkxChat.tsx` | 296 | prop `aria-label` | `Send message` |
-| `src/components/TkxChat.tsx` | 331 | prop `aria-label` | `Chat messages` |
-| `src/components/TkxChat.tsx` | 142 | JSX text | `) : (avatarAssistant ??` |
-| `src/components/TkxChat.tsx` | 208 | JSX text | `(null);
-  const textareaRef = useRef` |
-| `src/components/TkxChat.tsx` | 314 | JSX text | `);
-
-  return (` |
-| `src/components/TkxCheckbox.tsx` | 171 | JSX text | `) : isVisuallyChecked ? (` |

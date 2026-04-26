@@ -172,6 +172,17 @@ export * from './src/components/TkxFontProvider';
 export * from './src/components/TkxPhoneInput';
 export * from './src/components/TkxImageEditor';
 
+// Components (v2.8) — gap-closing batch
+export * from './src/components/TkxPaymentButton';
+export * from './src/components/TkxSignaturePad';
+export * from './src/components/TkxAddressInput';
+export * from './src/components/TkxCurrencyInput';
+export * from './src/components/TkxSortable';
+export * from './src/components/TkxConfetti';
+export * from './src/components/TkxSEO';
+export * from './src/components/TkxCalendarLunar';
+export * from './src/components/TkxCheckout';
+
 export { TkxOrgChart } from './src/components/TkxOrgChart';
 export type { TkxOrgChartProps, OrgNode } from './src/components/TkxOrgChart';
 

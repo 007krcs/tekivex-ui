@@ -49,3 +49,28 @@ export type {
   InvoiceLineItem,
   InvoiceTemplateProps,
 } from './templates/invoice';
+
+export { CertificateTemplate } from './templates/certificate';
+export type { CertificateData, CertificateTemplateProps } from './templates/certificate';
+
+export { ResumeTemplate } from './templates/resume';
+export type {
+  ResumeData,
+  ResumeContact,
+  ExperienceItem,
+  EducationItem,
+  ResumeTemplateProps,
+} from './templates/resume';
+
+export { TicketTemplate } from './templates/ticket';
+export type { TicketData, TicketTemplateProps } from './templates/ticket';
+
+export { BoardingPassTemplate } from './templates/boardingPass';
+export type { BoardingPassData, BoardingPassTemplateProps } from './templates/boardingPass';
+
+export { ReceiptTemplate } from './templates/receipt';
+export type {
+  ReceiptData,
+  ReceiptLineItem,
+  ReceiptTemplateProps,
+} from './templates/receipt';

@@ -1,0 +1,143 @@
+{
+  "generatedAt": "2026-04-26T19:00:45.931Z",
+  "totals": {
+    "raw": 1242826,
+    "gz": 358059,
+    "br": 292842
+  },
+  "entries": [
+    {
+      "file": "index.cjs",
+      "raw": 420064,
+      "gz": 113661,
+      "br": 89876
+    },
+    {
+      "file": "index.js",
+      "raw": 414662,
+      "gz": 112715,
+      "br": 89404
+    },
+    {
+      "file": "i18n.cjs",
+      "raw": 58610,
+      "gz": 18513,
+      "br": 14968
+    },
+    {
+      "file": "i18n.js",
+      "raw": 58302,
+      "gz": 18438,
+      "br": 14901
+    },
+    {
+      "file": "quantum.js",
+      "raw": 46741,
+      "gz": 14504,
+      "br": 12862
+    },
+    {
+      "file": "quantum.cjs",
+      "raw": 46407,
+      "gz": 14435,
+      "br": 12802
+    },
+    {
+      "file": "chunk-D7-yknXg.js",
+      "raw": 38431,
+      "gz": 11389,
+      "br": 10046
+    },
+    {
+      "file": "chunk-DcVMayoM.js",
+      "raw": 35973,
+      "gz": 11206,
+      "br": 9915
+    },
+    {
+      "file": "realtime.cjs",
+      "raw": 19462,
+      "gz": 6553,
+      "br": 5818
+    },
+    {
+      "file": "realtime.js",
+      "raw": 17476,
+      "gz": 6480,
+      "br": 5742
+    },
+    {
+      "file": "chunk-BpuJ3-K8.js",
+      "raw": 14086,
+      "gz": 4626,
+      "br": 4051
+    },
+    {
+      "file": "headless.cjs",
+      "raw": 11259,
+      "gz": 3847,
+      "br": 3458
+    },
+    {
+      "file": "chunk-DdHSYetV.js",
+      "raw": 11052,
+      "gz": 4375,
+      "br": 3800
+    },
+    {
+      "file": "headless.js",
+      "raw": 9743,
+      "gz": 3840,
+      "br": 3434
+    },
+    {
+      "file": "charts.js",
+      "raw": 9564,
+      "gz": 2655,
+      "br": 2279
+    },
+    {
+      "file": "charts.cjs",
+      "raw": 9485,
+      "gz": 2455,
+      "br": 2134
+    },
+    {
+      "file": "chunk-VUD-TF9j.js",
+      "raw": 7736,
+      "gz": 2887,
+      "br": 2580
+    },
+    {
+      "file": "chunk-CDGrC2Wo.js",
+      "raw": 7139,
+      "gz": 2860,
+      "br": 2545
+    },
+    {
+      "file": "tekivex-ui.css",
+      "raw": 2392,
+      "gz": 1022,
+      "br": 884
+    },
+    {
+      "file": "chunk-C8Wy8P59.js",
+      "raw": 2178,
+      "gz": 669,
+      "br": 562
+    },
+    {
+      "file": "chunk-BHX35YDv.js",
+      "raw": 1503,
+      "gz": 578,
+      "br": 483
+    },
+    {
+      "file": "chunk-DmRB1Blb.js",
+      "raw": 561,
+      "gz": 351,
+      "br": 298
+    }
+  ],
+  "regressions": []
+}

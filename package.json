@@ -1,6 +1,6 @@
 {
   "name": "tekivex-ui",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "Production-grade React component library — 70+ components, WCAG 2.1 AAA, WAI-ARIA 1.2, built-in charts, headless primitives, zero-runtime CSS engine, TypeScript-first.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -68,7 +68,12 @@
     "prepublishOnly": "npm run build",
     "pack:check": "npm pack --dry-run",
     "metrics:collect": "node scripts/collect-metrics.mjs",
-    "figma:build": "node packages/figma-kit/scripts/export-tokens.mjs && node packages/figma-kit/scripts/build-variant-catalog.mjs"
+    "figma:build": "node packages/figma-kit/scripts/export-tokens.mjs && node packages/figma-kit/scripts/build-variant-catalog.mjs",
+    "verify:zero-deps": "node scripts/verify-zero-deps.mjs",
+    "bundle:report": "node scripts/bundle-report.mjs",
+    "i18n:audit": "node scripts/i18n-audit.mjs",
+    "dev:demo": "vite --config ./demo/vite.config.ts",
+    "test:visual": "playwright test"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

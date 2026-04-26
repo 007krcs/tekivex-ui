@@ -1,6 +1,6 @@
 {
   "name": "@tekivex/pdf",
-  "version": "0.2.0-preview",
+  "version": "0.3.0-preview",
   "description": "TekiVex PDF — render React components to pixel-stable PDFs and PNGs without a headless browser. Wraps @react-pdf/renderer with the tekivex-ui design system.",
   "type": "module",
   "main": "./dist/index.cjs",

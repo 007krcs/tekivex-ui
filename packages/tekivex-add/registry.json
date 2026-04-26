@@ -1,0 +1,1047 @@
+{
+  "schemaVersion": 1,
+  "repo": "https://github.com/007krcs/tekivex-ui",
+  "components": [
+    {
+      "name": "accordion",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAccordion.tsx",
+          "target": "TkxAccordion.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "address-input",
+      "description": "Indian PIN-code → city/state autocomplete.",
+      "files": [
+        {
+          "source": "src/components/TkxAddressInput.tsx",
+          "target": "TkxAddressInput.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "affix",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAffix.tsx",
+          "target": "TkxAffix.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "aichat-bubble",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAIChatBubble.tsx",
+          "target": "TkxAIChatBubble.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "aiconfidence-bar",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAIConfidenceBar.tsx",
+          "target": "TkxAIConfidenceBar.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "aithinking",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAIThinking.tsx",
+          "target": "TkxAIThinking.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "alert",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAlert.tsx",
+          "target": "TkxAlert.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "anchor",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAnchor.tsx",
+          "target": "TkxAnchor.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "app-bar",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAppBar.tsx",
+          "target": "TkxAppBar.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "autocomplete",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAutocomplete.tsx",
+          "target": "TkxAutocomplete.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "avatar",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxAvatar.tsx",
+          "target": "TkxAvatar.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "badge",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxBadge.tsx",
+          "target": "TkxBadge.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "bottom-nav",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxBottomNav.tsx",
+          "target": "TkxBottomNav.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "breadcrumb",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxBreadcrumb.tsx",
+          "target": "TkxBreadcrumb.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "button",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxButton.tsx",
+          "target": "TkxButton.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "calendar-lunar",
+      "description": "multi-calendar date picker.",
+      "files": [
+        {
+          "source": "src/components/TkxCalendarLunar.tsx",
+          "target": "TkxCalendarLunar.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "captcha",
+      "description": "provider-agnostic CAPTCHA wrapper.",
+      "files": [
+        {
+          "source": "src/components/TkxCaptcha.tsx",
+          "target": "TkxCaptcha.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "card",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxCard.tsx",
+          "target": "TkxCard.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "carousel",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxCarousel.tsx",
+          "target": "TkxCarousel.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "cascader",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxCascader.tsx",
+          "target": "TkxCascader.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "chat",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxChat.tsx",
+          "target": "TkxChat.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "checkbox",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxCheckbox.tsx",
+          "target": "TkxCheckbox.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "checkout",
+      "description": "composable multi-step checkout flow.",
+      "files": [
+        {
+          "source": "src/components/TkxCheckout.tsx",
+          "target": "TkxCheckout.tsx"
+        }
+      ],
+      "deps": [
+        "address-input",
+        "payment-button"
+      ]
+    },
+    {
+      "name": "clock",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxClock.tsx",
+          "target": "TkxClock.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "color-picker",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxColorPicker.tsx",
+          "target": "TkxColorPicker.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "command",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxCommand.tsx",
+          "target": "TkxCommand.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "confetti",
+      "description": "celebration burst.",
+      "files": [
+        {
+          "source": "src/components/TkxConfetti.tsx",
+          "target": "TkxConfetti.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "config-provider",
+      "description": "Global configuration provider for TekiVex UI.",
+      "files": [
+        {
+          "source": "src/components/TkxConfigProvider.tsx",
+          "target": "TkxConfigProvider.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "currency-input",
+      "description": "currency-aware number input with Indian lakh/crore",
+      "files": [
+        {
+          "source": "src/components/TkxCurrencyInput.tsx",
+          "target": "TkxCurrencyInput.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "data-grid",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxDataGrid.tsx",
+          "target": "TkxDataGrid.tsx"
+        }
+      ],
+      "deps": [
+        "skeleton"
+      ]
+    },
+    {
+      "name": "date-picker",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxDatePicker.tsx",
+          "target": "TkxDatePicker.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "divider",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxDivider.tsx",
+          "target": "TkxDivider.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "drawer",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxDrawer.tsx",
+          "target": "TkxDrawer.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "dropdown",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxDropdown.tsx",
+          "target": "TkxDropdown.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "empty",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxEmpty.tsx",
+          "target": "TkxEmpty.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "file-upload",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxFileUpload.tsx",
+          "target": "TkxFileUpload.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "font-provider",
+      "description": "lazy-load Google Fonts script subsets on demand.",
+      "files": [
+        {
+          "source": "src/components/TkxFontProvider.tsx",
+          "target": "TkxFontProvider.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "form",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxForm.tsx",
+          "target": "TkxForm.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "icon",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxIcon.tsx",
+          "target": "TkxIcon.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "image",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxImage.tsx",
+          "target": "TkxImage.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "image-editor",
+      "description": "in-browser image cropper with rotation + adjustments.",
+      "files": [
+        {
+          "source": "src/components/TkxImageEditor.tsx",
+          "target": "TkxImageEditor.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "input",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxInput.tsx",
+          "target": "TkxInput.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "layout",
+      "description": "Enterprise layout system with Header, Sider, Content, Footer",
+      "files": [
+        {
+          "source": "src/components/TkxLayout.tsx",
+          "target": "TkxLayout.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "list",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxList.tsx",
+          "target": "TkxList.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "live-feed",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxLiveFeed.tsx",
+          "target": "TkxLiveFeed.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "live-log",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxLiveLog.tsx",
+          "target": "TkxLiveLog.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "live-metrics",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxLiveMetrics.tsx",
+          "target": "TkxLiveMetrics.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "logo",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxLogo.tsx",
+          "target": "TkxLogo.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "markdown",
+      "description": "Zero-dependency, responsive Markdown renderer",
+      "files": [
+        {
+          "source": "src/components/TkxMarkdown.tsx",
+          "target": "TkxMarkdown.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "masonry",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxMasonry.tsx",
+          "target": "TkxMasonry.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "mentions",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxMentions.tsx",
+          "target": "TkxMentions.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "menu",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxMenu.tsx",
+          "target": "TkxMenu.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "modal",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxModal.tsx",
+          "target": "TkxModal.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "number-input",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxNumberInput.tsx",
+          "target": "TkxNumberInput.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "org-chart",
+      "description": "Hierarchical organization chart / data-flow diagram.",
+      "files": [
+        {
+          "source": "src/components/TkxOrgChart.tsx",
+          "target": "TkxOrgChart.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "otp",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxOTP.tsx",
+          "target": "TkxOTP.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "pagination",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxPagination.tsx",
+          "target": "TkxPagination.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "payment-button",
+      "description": "provider-agnostic payment trigger.",
+      "files": [
+        {
+          "source": "src/components/TkxPaymentButton.tsx",
+          "target": "TkxPaymentButton.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "phone-input",
+      "description": "internationalised phone-number input.",
+      "files": [
+        {
+          "source": "src/components/TkxPhoneInput.tsx",
+          "target": "TkxPhoneInput.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "popover",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxPopover.tsx",
+          "target": "TkxPopover.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "progress",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxProgress.tsx",
+          "target": "TkxProgress.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "qrcode",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxQRCode.tsx",
+          "target": "TkxQRCode.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "quantum-form",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxQuantumForm.tsx",
+          "target": "TkxQuantumForm.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "radio",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxRadio.tsx",
+          "target": "TkxRadio.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "rating",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxRating.tsx",
+          "target": "TkxRating.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "real-time-chart",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxRealTimeChart.tsx",
+          "target": "TkxRealTimeChart.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "result",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxResult.tsx",
+          "target": "TkxResult.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "rich-text-display",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxRichTextDisplay.tsx",
+          "target": "TkxRichTextDisplay.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "segmented",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxSegmented.tsx",
+          "target": "TkxSegmented.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "select",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxSelect.tsx",
+          "target": "TkxSelect.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "seo",
+      "description": "head injector for meta + Open Graph + JSON-LD schema.",
+      "files": [
+        {
+          "source": "src/components/TkxSEO.tsx",
+          "target": "TkxSEO.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "signature-pad",
+      "description": "touch + mouse signature capture on canvas.",
+      "files": [
+        {
+          "source": "src/components/TkxSignaturePad.tsx",
+          "target": "TkxSignaturePad.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "skeleton",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxSkeleton.tsx",
+          "target": "TkxSkeleton.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "slider",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxSlider.tsx",
+          "target": "TkxSlider.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "snackbar",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxSnackbar.tsx",
+          "target": "TkxSnackbar.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "sortable",
+      "description": "drag-and-drop reorder primitive.",
+      "files": [
+        {
+          "source": "src/components/TkxSortable.tsx",
+          "target": "TkxSortable.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "speed-dial",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxSpeedDial.tsx",
+          "target": "TkxSpeedDial.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "spin",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxSpin.tsx",
+          "target": "TkxSpin.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "statistic",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxStatistic.tsx",
+          "target": "TkxStatistic.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "stepper",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxStepper.tsx",
+          "target": "TkxStepper.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "table",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTable.tsx",
+          "target": "TkxTable.tsx"
+        }
+      ],
+      "deps": [
+        "skeleton"
+      ]
+    },
+    {
+      "name": "tabs",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTabs.tsx",
+          "target": "TkxTabs.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "tag",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTag.tsx",
+          "target": "TkxTag.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "timeline",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTimeline.tsx",
+          "target": "TkxTimeline.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "toast",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxToast.tsx",
+          "target": "TkxToast.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "toggle",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxToggle.tsx",
+          "target": "TkxToggle.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "toolbar",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxToolbar.tsx",
+          "target": "TkxToolbar.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "tooltip",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTooltip.tsx",
+          "target": "TkxTooltip.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "tour",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTour.tsx",
+          "target": "TkxTour.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "transfer-list",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTransferList.tsx",
+          "target": "TkxTransferList.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "tree-view",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTreeView.tsx",
+          "target": "TkxTreeView.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "typography",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxTypography.tsx",
+          "target": "TkxTypography.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "video-player",
+      "description": "",
+      "files": [
+        {
+          "source": "src/components/TkxVideoPlayer.tsx",
+          "target": "TkxVideoPlayer.tsx"
+        }
+      ],
+      "deps": []
+    },
+    {
+      "name": "watermark",
+      "description": "TkxWatermark v2 — anti-screenshot / anti-leak overlay.",
+      "files": [
+        {
+          "source": "src/components/TkxWatermark.tsx",
+          "target": "TkxWatermark.tsx"
+        }
+      ],
+      "deps": []
+    }
+  ]
+}

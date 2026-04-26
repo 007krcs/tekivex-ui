@@ -33,6 +33,12 @@ export interface TkxOTPProps {
   size?: 'sm' | 'md' | 'lg';
   separator?: ReactNode;
   separatorPosition?: number;
+  /**
+   * Enable WebOTP API auto-fill on Android Chrome / Edge. The browser
+   * intercepts incoming SMS that includes the page origin and offers a
+   * one-tap fill gesture. No-op on unsupported platforms.
+   */
+  webOTP?: boolean;
   className?: string;
   style?: CSSProperties;
 }
@@ -74,6 +80,7 @@ export function TkxOTP({
   size = 'md',
   separator,
   separatorPosition,
+  webOTP = true,
   className,
   style,
 }: TkxOTPProps) {
@@ -129,6 +136,29 @@ export function TkxOTP({
       onComplete?.(joined);
     }
   }, [isControlled, onChange, onComplete]);
+
+  // WebOTP API auto-fill (Android Chrome / Edge).
+  // The browser intercepts incoming SMS that matches the page origin and
+  // offers a one-tap fill gesture. On unsupported platforms this is a no-op.
+  useEffect(() => {
+    if (!webOTP || isDisabled) return;
+    if (typeof window === 'undefined' || !('OTPCredential' in window)) return;
+    const ac = new AbortController();
+    (navigator.credentials as any)
+      ?.get({ otp: { transport: ['sms'] }, signal: ac.signal })
+      .then((cred: any) => {
+        if (!cred?.code) return;
+        const code = String(cred.code).slice(0, length);
+        const next = code.split('').map((c) => filterByType(c, type));
+        while (next.length < length) next.push('');
+        setDigits(next);
+      })
+      .catch(() => {
+        // User declined or no SMS arrived in the timeout — silent fail is fine.
+      });
+    return () => ac.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webOTP, isDisabled, length, type]);
 
   const focusAt = (idx: number) => {
     const clamped = Math.max(0, Math.min(length - 1, idx));

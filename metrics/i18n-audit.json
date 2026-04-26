@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-04-26T18:32:28.294Z",
-  "totalFindings": 380,
-  "filesAffected": 67,
+  "generatedAt": "2026-04-26T19:01:11.489Z",
+  "totalFindings": 420,
+  "filesAffected": 72,
   "byKind": {
-    "jsx-text": 310,
-    "prop:title": 9,
-    "prop:aria-label": 58,
-    "prop:placeholder": 3
+    "jsx-text": 347,
+    "prop:aria-label": 59,
+    "prop:placeholder": 5,
+    "prop:title": 9
   },
   "topFiles": [
     {
@@ -32,6 +32,10 @@
     {
       "file": "src/components/TkxPlayground.tsx",
       "count": 16
+    },
+    {
+      "file": "src/components/TkxCheckout.tsx",
+      "count": 14
     },
     {
       "file": "src/components/TkxImageEditor.tsx",
@@ -62,6 +66,10 @@
       "count": 9
     },
     {
+      "file": "src/components/TkxSortable.tsx",
+      "count": 9
+    },
+    {
       "file": "src/components/TkxCarousel.tsx",
       "count": 8
     },
@@ -80,14 +88,6 @@
     {
       "file": "src/components/TkxToast.tsx",
       "count": 8
-    },
-    {
-      "file": "src/components/TkxPagination.tsx",
-      "count": 7
-    },
-    {
-      "file": "src/components/TkxColorPicker.tsx",
-      "count": 6
     }
   ],
   "allFindings": [
@@ -102,6 +102,51 @@
       "value": "normalizeInitial(defaultOpen)\n  );\n\n  const openIds: Set",
       "line": 298,
       "file": "src/components/TkxAccordion.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Matching post offices",
+      "line": 249,
+      "file": "src/components/TkxAddressInput.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "placeholder",
+      "value": "Address line 1",
+      "line": 288,
+      "file": "src/components/TkxAddressInput.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "placeholder",
+      "value": "Address line 2 (optional)",
+      "line": 297,
+      "file": "src/components/TkxAddressInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n    const [loading, setLoading] = useState(false);\n    const [error, setError] = useState",
+      "line": 100,
+      "file": "src/components/TkxAddressInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "PIN code",
+      "line": 207,
+      "file": "src/components/TkxAddressInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "City",
+      "line": 225,
+      "file": "src/components/TkxAddressInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "State",
+      "line": 236,
+      "file": "src/components/TkxAddressInput.tsx"
     },
     {
       "kind": "jsx-text",
@@ -408,6 +453,90 @@
     },
     {
       "kind": "jsx-text",
+      "value": "Promise",
+      "line": 55,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  /** Initial address (if pre-filled from user profile). */\n  initialAddress?: Partial",
+      "line": 59,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "('address');\n    const [address, setAddress] = useState",
+      "line": 89,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(initialAddress);\n    const [paymentConfig, setPaymentConfig] = useState",
+      "line": 90,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const [error, setError] = useState",
+      "line": 91,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Shipping address",
+      "line": 176,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Continue to payment",
+      "line": 222,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Payment",
+      "line": 231,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Total",
+      "line": 234,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "← Back to address",
+      "line": 262,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Order confirmed",
+      "line": 271,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Order summary",
+      "line": 284,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Shipping",
+      "line": 307,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Total",
+      "line": 320,
+      "file": "src/components/TkxCheckout.tsx"
+    },
+    {
+      "kind": "jsx-text",
       "value": "getTimeInZone(timezone));\n  const [time2, setTime2] = useState",
       "line": 495,
       "file": "src/components/TkxClock.tsx"
@@ -518,6 +647,24 @@
       "value": "close",
       "line": 640,
       "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "//      Re-fires whenever `trigger` flips truthy.\n//   2. Imperative: const ref = useRef",
+      "line": 11,
+      "file": "src/components/TkxConfetti.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const particlesRef = useRef",
+      "line": 84,
+      "file": "src/components/TkxConfetti.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n    const rafRef = useRef",
+      "line": 85,
+      "file": "src/components/TkxConfetti.tsx"
     },
     {
       "kind": "prop",
@@ -1404,20 +1551,26 @@
     },
     {
       "kind": "jsx-text",
+      "value": "filterByType(c, type));\n        while (next.length",
+      "line": 152,
+      "file": "src/components/TkxOTP.tsx"
+    },
+    {
+      "kind": "jsx-text",
       "value": "(e: KeyboardEvent",
-      "line": 138,
+      "line": 168,
       "file": "src/components/TkxOTP.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(e: React.ChangeEvent",
-      "line": 170,
+      "line": 200,
       "file": "src/components/TkxOTP.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(e: ClipboardEvent",
-      "line": 189,
+      "line": 219,
       "file": "src/components/TkxOTP.tsx"
     },
     {
@@ -1860,6 +2013,42 @@
       "file": "src/components/TkxSelect.tsx"
     },
     {
+      "kind": "jsx-text",
+      "value": "Promise",
+      "line": 62,
+      "file": "src/components/TkxSignaturePad.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const canvasRef = useRef",
+      "line": 90,
+      "file": "src/components/TkxSignaturePad.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const strokesRef = useRef",
+      "line": 91,
+      "file": "src/components/TkxSignaturePad.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n    const currentRef = useRef",
+      "line": 92,
+      "file": "src/components/TkxSignaturePad.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const dprRef = useRef",
+      "line": 93,
+      "file": "src/components/TkxSignaturePad.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(1);\n    const [resolvedWidth, setResolvedWidth] = useState",
+      "line": 94,
+      "file": "src/components/TkxSignaturePad.tsx"
+    },
+    {
       "kind": "prop",
       "prop": "aria-label",
       "value": "Loading...",
@@ -1903,6 +2092,60 @@
       "value": "),\n  info: (",
       "line": 76,
       "file": "src/components/TkxSnackbar.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "[];\n  /** Fires on every reorder with the new ordered list. */\n  onChange: (next: TkxSortableItem",
+      "line": 41,
+      "file": "src/components/TkxSortable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  /** Render each item. */\n  renderItem: (item: TkxSortableItem",
+      "line": 43,
+      "file": "src/components/TkxSortable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const [overId, setOverId] = useState",
+      "line": 65,
+      "file": "src/components/TkxSortable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const liveRef = useRef",
+      "line": 66,
+      "file": "src/components/TkxSortable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(e: React.DragEvent",
+      "line": 84,
+      "file": "src/components/TkxSortable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(e: React.DragEvent",
+      "line": 92,
+      "file": "src/components/TkxSortable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(e: React.DragEvent",
+      "line": 104,
+      "file": "src/components/TkxSortable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(e: KeyboardEvent",
+      "line": 114,
+      "file": "src/components/TkxSortable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(props: TkxSortableProps",
+      "line": 200,
+      "file": "src/components/TkxSortable.tsx"
     },
     {
       "kind": "prop",
