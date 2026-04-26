@@ -1,0 +1,29 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Starlight theme overrides — match TekiVex brand (quantum dark accent).
+   ────────────────────────────────────────────────────────────────────── */
+:root {
+  --sl-color-accent: #00f5d4;
+  --sl-color-accent-low: rgba(0, 245, 212, 0.18);
+  --sl-color-accent-high: #00d4b6;
+}
+:root[data-theme='dark'] {
+  --sl-color-bg: #0a0a0f;
+  --sl-color-bg-nav: #12121a;
+  --sl-color-bg-sidebar: #0d0d14;
+  --sl-color-text: #e8e8f4;
+  --sl-color-text-accent: #00f5d4;
+}
+
+/* Slightly tighten code blocks */
+.expressive-code {
+  font-size: 13px;
+}
+
+/* Component preview frames stay flush with theme */
+.tkx-preview {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  background: var(--sl-color-bg-nav);
+}

@@ -1,0 +1,73 @@
+---
+title: TekiVex UI — Accessible React Component Library
+description: 78 components, WCAG 2.1 AAA, zero-trust security, RSC-ready. npm install tekivex-ui.
+template: splash
+hero:
+  tagline: 78 components. WCAG 2.1 AAA. Zero-trust security baked into every prop. MIT licensed.
+  actions:
+    - text: Get started
+      link: /getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/007krcs/tekivex-ui
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What ships in v2.7
+
+<CardGrid>
+  <Card title="78 production components" icon="puzzle">
+    From primitives (Button, Input, Badge) to complex widgets (DataGrid,
+    DatePicker, RichText, Carousel) to AI-native (ConfidenceBar, ChatBubble).
+  </Card>
+  <Card title="WCAG 2.1 AAA" icon="approve-check-circle">
+    7:1 contrast ratios, 44×44 touch targets, full keyboard nav, screen-reader
+    landmarks, prefers-reduced-motion respected.
+  </Card>
+  <Card title="Zero-trust security" icon="seti:lock">
+    SecurityCore kernel sanitises every URL, scrubs PII, defeats Unicode
+    homoglyphs, and rate-limits actions. Defaults — not opt-in.
+  </Card>
+  <Card title="Works with everything" icon="seti:config">
+    Vite, Webpack 5, Next.js (App + Pages), Remix, Parcel, Rollup, Astro.
+    13 components are RSC-compatible out of the box.
+  </Card>
+  <Card title="v2.7 — image editor, phone input, captcha, fonts" icon="rocket">
+    Crop/rotate/adjust, intl phone with E.164, Turnstile/hCaptcha, lazy Indic
+    + RTL fonts, anti-screenshot watermarks, auto dark/light.
+  </Card>
+  <Card title="Companion packages" icon="seti:plan">
+    `@tekivex/security-core`, `@tekivex/audit`, `@tekivex/figma-kit`,
+    `create-tekivex-app` — source-available; published on demand.
+  </Card>
+</CardGrid>
+
+## Install
+
+```bash
+npm install tekivex-ui
+```
+
+```tsx
+import { ThemeProvider, TkxButton } from 'tekivex-ui';
+import 'tekivex-ui/styles';
+
+export default function App() {
+  return (
+    <ThemeProvider mode="auto">
+      <TkxButton variant="primary">Hello tekivex-ui</TkxButton>
+    </ThemeProvider>
+  );
+}
+```
+
+`mode="auto"` follows the OS `prefers-color-scheme` reactively. Pin to
+`"dark"` or `"light"` if you prefer.
+
+## Trusted by
+
+940 weekly downloads on [npm](https://www.npmjs.com/package/tekivex-ui),
+production-deployed across React 18 and React 19 apps.

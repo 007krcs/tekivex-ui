@@ -1,0 +1,13 @@
+# Redirects from the legacy hash-routed SPA → flat URLs.
+# Render and Netlify both honour this file.
+
+/#/                         /                          301
+/#/getting-started          /getting-started/          301
+/#/bundlers                 /bundlers/                 301
+/#/css-system               /themes/                   301
+/#/rsc                      /rsc/                      301
+/#/security                 /security/                 301
+/#/ecosystem                /ecosystem/                301
+/#/license                  /license/                  301
+/#/components/:component    /components/:component/    301
+/#/templates/:template      /templates/:template/      301

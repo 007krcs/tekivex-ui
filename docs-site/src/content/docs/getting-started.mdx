@@ -1,0 +1,96 @@
+---
+title: Get started in 60 seconds
+description: Install tekivex-ui, wrap your app in ThemeProvider, import a component. Done.
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Install
+
+<Tabs syncKey="pkg">
+  <TabItem label="npm">
+    ```bash
+    npm install tekivex-ui
+    ```
+  </TabItem>
+  <TabItem label="pnpm">
+    ```bash
+    pnpm add tekivex-ui
+    ```
+  </TabItem>
+  <TabItem label="yarn">
+    ```bash
+    yarn add tekivex-ui
+    ```
+  </TabItem>
+  <TabItem label="bun">
+    ```bash
+    bun add tekivex-ui
+    ```
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="Package name">
+  The canonical name is **`tekivex-ui`** — unscoped. If you see `@tekivex/ui`
+  anywhere, that's a stale reference. The companion packages
+  (`@tekivex/security-core`, `@tekivex/audit`, etc.) are scoped, but the main
+  library is not.
+</Aside>
+
+## Three steps to a working app
+
+<Steps>
+
+1. **Wrap your app in `ThemeProvider`** and load the stylesheet once.
+
+   ```tsx
+   import { ThemeProvider } from 'tekivex-ui';
+   import 'tekivex-ui/styles';
+
+   export default function App() {
+     return (
+       <ThemeProvider mode="auto">
+         {/* your routes */}
+       </ThemeProvider>
+     );
+   }
+   ```
+
+   `mode="auto"` reactively follows the user's OS dark/light preference.
+
+2. **Use any component.**
+
+   ```tsx
+   import { TkxCard, TkxCardBody, TkxButton, TkxBadge } from 'tekivex-ui';
+
+   export function Hello() {
+     return (
+       <TkxCard>
+         <TkxCardBody>
+           <TkxBadge variant="success">v2.7 ready</TkxBadge>
+           <TkxButton style={{ marginLeft: 12 }}>Click me</TkxButton>
+         </TkxCardBody>
+       </TkxCard>
+     );
+   }
+   ```
+
+3. **Configure your bundler** (most don't need any config). See the
+   [Bundlers page](/bundlers/) for Vite, Webpack 5, Next.js, Remix, and
+   the rest of the matrix.
+
+</Steps>
+
+## What's next
+
+- **[Bundlers](/bundlers/)** — copy-pasteable configs for every major bundler.
+- **[Theme & dark mode](/themes/)** — auto/light/dark, custom themes, palette generators.
+- **[Components](/components/)** — every component, every prop, with live previews.
+- **[Templates](/templates/)** — full-page layouts you can copy verbatim.
+
+## Peer requirements
+
+- React **18 or 19**
+- TypeScript **5.0+** (optional, but the types are first-class)
+- Modern bundler with ESM + conditional-exports support (Vite, Webpack 5+,
+  Parcel 2, Rollup, Next.js 14+)

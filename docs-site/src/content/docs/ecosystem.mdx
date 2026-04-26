@@ -1,0 +1,43 @@
+---
+title: Ecosystem — companion packages
+description: Four companion packages that ship alongside tekivex-ui — security-core, audit CLI, scaffolder, figma-kit.
+---
+
+import { CardGrid, Card } from '@astrojs/starlight/components';
+
+Four packages live alongside `tekivex-ui` in the same repository. Each is
+built, tested, and source-available today. We publish to npm **on demand**
+— [open an issue](https://github.com/007krcs/tekivex-ui/issues/new) and
+we'll tag a release within 48 hours.
+
+<CardGrid>
+  <Card title="@tekivex/security-core" icon="seti:lock">
+    Framework-agnostic security kernel. Same primitives as SecurityCore in
+    `tekivex-ui`, usable in Node/Deno/edge.
+    [Source →](https://github.com/007krcs/tekivex-ui/tree/master/packages/security-core)
+  </Card>
+  <Card title="@tekivex/audit" icon="approve-check-circle">
+    Static-analysis CLI. 15 security + a11y checks with OWASP / CWE / WCAG
+    mappings. CI-shippable.
+    [Source →](https://github.com/007krcs/tekivex-ui/tree/master/packages/tekivex-audit)
+  </Card>
+  <Card title="create-tekivex-app" icon="rocket">
+    Project scaffolder. `npm create tekivex-app@latest`. Two templates:
+    "basic" and "secure" (CSP + Trusted Types + frame-buster preset).
+    [Source →](https://github.com/007krcs/tekivex-ui/tree/master/packages/create-tekivex-app)
+  </Card>
+  <Card title="@tekivex/figma-kit" icon="seti:image">
+    Machine-readable design tokens + 13,103 component variant catalog.
+    Imports into Figma via Tokens Studio.
+    [Source →](https://github.com/007krcs/tekivex-ui/tree/master/packages/figma-kit)
+  </Card>
+</CardGrid>
+
+## Why "publish on demand"?
+
+Every npm package is a maintenance commitment — CVEs to triage, breaking
+changes to manage, release notes to write. We publish when there's a real
+consumer waiting, not speculatively. The code is production-ready in this
+repo today; the GitHub source is the canonical reference.
+
+Need one on npm? Open an issue and we'll publish within 48 hours.

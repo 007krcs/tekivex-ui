@@ -1,0 +1,89 @@
+---
+title: Security model
+description: Zero-trust SecurityCore — URL sanitisation, Unicode homoglyph defence, PII scrubbing, rate limiting. Defaults, not opt-in.
+---
+
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+`tekivex-ui` ships with a security kernel — **SecurityCore** — that runs on
+every component prop where untrusted data could leak. It's not a plugin or
+an opt-in middleware. It's the default.
+
+<CardGrid>
+  <Card title="sanitizeHref()" icon="seti:lock">
+    URL allow-list (http/https/mailto/tel). Blocks `javascript:` and `data:`
+    URI XSS at the prop boundary.
+  </Card>
+  <Card title="sanitizeUnicode()" icon="seti:plan">
+    Strips homoglyph + bidi-override attacks (CVE-2021-42574). Cyrillic 'а'
+    masquerading as Latin 'a' gets caught.
+  </Card>
+  <Card title="scrubPII()" icon="seti:notebook">
+    Redacts emails, phone numbers, SSNs, credit cards before they hit your
+    logs or analytics.
+  </Card>
+  <Card title="createRateLimiter()" icon="seti:clock">
+    Token-bucket implementation for client-side abuse prevention.
+  </Card>
+  <Card title="Trusted Types installer" icon="seti:shield">
+    One-line CSP hardening for the highest browser-level XSS protection.
+  </Card>
+  <Card title="Zero runtime deps" icon="seti:zip">
+    SecurityCore has no production dependencies. Smaller supply-chain
+    surface, no transitive CVE exposure.
+  </Card>
+</CardGrid>
+
+## Direct API
+
+Every primitive is exported from `tekivex-ui`:
+
+```tsx
+import {
+  sanitizeHref,
+  sanitizeUnicode,
+  scrubPII,
+  createRateLimiter,
+  installTrustedTypes,
+  installFrameBuster,
+} from 'tekivex-ui';
+
+// Sanitise a user-supplied URL before rendering it
+<a href={sanitizeHref(userUrl)}>{label}</a>
+
+// Strip log lines of identifying info
+console.log(scrubPII(`User ${email} from ${ipAddress} signed in.`));
+//                  ^- rendered as: User [redacted-email] from … signed in.
+
+// Rate-limit a button to 5 clicks per second
+const limiter = createRateLimiter({ tokens: 5, refillPerSecond: 5 });
+function handleSubmit() {
+  if (!limiter.tryAcquire()) return;
+  // …
+}
+```
+
+## Standalone package
+
+The same kernel ships as `@tekivex/security-core` — framework-agnostic,
+usable in Node services, Deno edge functions, anywhere JS runs. See the
+[Ecosystem page](/ecosystem/) for details.
+
+<Aside type="caution" title="Server-side validation is still required">
+  SecurityCore reduces the blast radius of UI-layer mistakes; it does not
+  replace server-side input validation. Always re-validate untrusted data
+  at the trust boundary closest to your data store.
+</Aside>
+
+## Audit your own code
+
+`@tekivex/audit` is a static-analysis CLI that catches the patterns
+SecurityCore can't see at runtime — `dangerouslySetInnerHTML` without
+DOMPurify, missing `rel="noopener"`, hardcoded API keys. Run it once:
+
+```bash
+npx @tekivex/audit .
+```
+
+It found 9 errors and 67 warnings on the **demo site itself** the first
+time we ran it.

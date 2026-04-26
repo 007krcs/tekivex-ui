@@ -1,0 +1,93 @@
+---
+title: Theme & dark mode
+description: Auto/light/dark with prefers-color-scheme, custom themes, palette generators, and the TKX atomic CSS engine.
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Three modes — pick one
+
+```tsx
+// 1. Auto (default in v2.7) — follows the OS preference reactively
+<ThemeProvider mode="auto">{children}</ThemeProvider>
+
+// 2. Pinned dark
+<ThemeProvider mode="dark">{children}</ThemeProvider>
+
+// 3. Pinned light
+<ThemeProvider mode="light">{children}</ThemeProvider>
+```
+
+`mode="auto"` reads `(prefers-color-scheme: dark)` on mount **and** subscribes
+to changes — flipping themes live when the user switches their OS.
+
+## Read the system preference imperatively
+
+```tsx
+import { usePrefersColorScheme } from 'tekivex-ui';
+
+function MyComponent() {
+  const scheme = usePrefersColorScheme(); // "dark" | "light"
+  return <p>You prefer {scheme}.</p>;
+}
+```
+
+## Custom themes
+
+Built-in: `quantumDark` (default for dark) and `auroraLight` (default for
+light). Compose your own via `createTheme`:
+
+```tsx
+import { ThemeProvider, createTheme, quantumDark } from 'tekivex-ui';
+
+const myDark = createTheme(quantumDark, {
+  primary: '#ff00aa',
+  secondary: '#7700ff',
+});
+
+<ThemeProvider theme={myDark}>{children}</ThemeProvider>
+```
+
+`createTheme` validates every token at runtime — invalid hex throws, and
+contrast that fails WCAG AA logs a console warning.
+
+<Aside type="tip" title="Backward compatibility">
+  Passing `theme={...}` explicitly behaves exactly like v2.6 — the new
+  `mode` prop is purely additive.
+</Aside>
+
+## Palette generator
+
+Generate a 50–900 colour scale from any hex:
+
+```tsx
+import { generatePalette } from 'tekivex-ui';
+
+const brand = generatePalette('#7b2ff7');
+// → { 50: '#…', 100: '…', 200: '…', …, 900: '…' }
+```
+
+## Hooking off the active scheme in CSS
+
+Inside the React tree, `<html>` gets a `data-tkx-scheme="dark"` (or `"light"`)
+attribute. Use that to write scheme-aware CSS:
+
+```css
+html[data-tkx-scheme='dark'] .my-element {
+  background: rgba(255, 255, 255, 0.04);
+}
+```
+
+## TKX atomic CSS
+
+`tkx()` and `cx()` are zero-runtime helpers — atomic class names resolved at
+build time:
+
+```tsx
+import { tkx, cx } from 'tekivex-ui';
+
+<div className={cx('p-4 rounded-lg', isActive && tkx('bg-primary text-white'))} />
+```
+
+No Tailwind dependency. The generated CSS is tree-shaken to only the atoms
+you actually use.

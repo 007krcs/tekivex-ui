@@ -1,0 +1,71 @@
+---
+title: TkxButton
+description: Accessible button with variants, sizes, color schemes, loading state, and icon slots.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+```tsx
+import { TkxButton } from 'tekivex-ui';
+
+<TkxButton variant="primary">Submit</TkxButton>
+```
+
+## Variants
+
+```tsx
+<TkxButton variant="primary">Primary</TkxButton>
+<TkxButton variant="secondary">Secondary</TkxButton>
+<TkxButton variant="outline">Outline</TkxButton>
+<TkxButton variant="ghost">Ghost</TkxButton>
+<TkxButton variant="link">Link</TkxButton>
+```
+
+## Sizes
+
+```tsx
+<TkxButton size="sm">Small</TkxButton>
+<TkxButton size="md">Medium</TkxButton>
+<TkxButton size="lg">Large</TkxButton>
+```
+
+## Loading state
+
+```tsx
+<TkxButton loading>Saving…</TkxButton>
+```
+
+While `loading={true}`, the button is `aria-busy` and `disabled`. The label
+remains visible to screen readers; the spinner is `aria-hidden`.
+
+## With icons
+
+```tsx
+<TkxButton iconLeft={<DownloadIcon />}>Download</TkxButton>
+<TkxButton iconRight={<ArrowIcon />}>Continue</TkxButton>
+```
+
+## Accessibility
+
+- 44×44 minimum touch target on `size="md"` and above
+- `:focus-visible` outline at 2px (configurable via theme)
+- `aria-pressed` when used as a toggle (set `pressed={true}`)
+- Disables all pointer events when `disabled` — never visually-only
+
+<Aside type="caution" title="Don't use `<TkxButton>` as a navigation link">
+  For navigation, use `<TkxButton as="a" href="…">` or wrap a real `<a>` tag.
+  Buttons should perform actions; links should change location.
+</Aside>
+
+## Props
+
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'link'` | `'primary'` | Visual style |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Affects padding + min touch size |
+| `colorScheme` | `'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'primary'` | Token used for accent |
+| `loading` | `boolean` | `false` | Shows spinner, disables click |
+| `disabled` | `boolean` | `false` | Native `disabled` |
+| `iconLeft` / `iconRight` | `ReactNode` | — | Icon slots |
+| `pressed` | `boolean` | — | Adds `aria-pressed` for toggle buttons |
+| `as` | `'button' \| 'a'` | `'button'` | Render as anchor when navigating |

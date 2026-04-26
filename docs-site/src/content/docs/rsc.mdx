@@ -1,0 +1,79 @@
+---
+title: React Server Components
+description: 13 components in tekivex-ui render in Next.js App Router, Remix, and any RSC-capable framework — no "use client" required.
+---
+
+13 components in `tekivex-ui` are RSC-compatible: they use no hooks, no
+browser APIs, and no event handlers, so they render on the server in
+Next.js App Router (or any other RSC framework) without `"use client"`.
+
+## The 13 server-safe components
+
+| Component | Notes |
+|---|---|
+| `TkxBadge` | Status pill |
+| `TkxAvatar` | User avatar with initials fallback |
+| `TkxDivider` | Horizontal/vertical separator |
+| `TkxTypography` | Headings, paragraphs, captions |
+| `TkxSkeleton` | Loading shimmer placeholder |
+| `TkxSpin` | Spinner / loader |
+| `TkxEmpty` | Empty-state placeholder |
+| `TkxStatistic` | Animated numeric KPI |
+| `TkxTag` | Inline tag with optional close button |
+| `TkxCard` | Card container + Header/Body/Footer |
+| `TkxAlert` | Status alert (info/success/warning/danger) |
+| `TkxProgress` | Linear / circular progress |
+| `TkxTimeline` | Vertical timeline of events |
+
+## Usage in Next.js App Router
+
+```tsx
+// app/dashboard/page.tsx — Server Component
+import { TkxCard, TkxCardBody, TkxStatistic } from 'tekivex-ui';
+
+export default async function Dashboard() {
+  const data = await fetch('https://api.example.com/metrics', {
+    cache: 'no-store',
+  }).then(r => r.json());
+
+  return (
+    <TkxCard>
+      <TkxCardBody>
+        <TkxStatistic title="Active users" value={data.active} />
+      </TkxCardBody>
+    </TkxCard>
+  );
+}
+```
+
+No `"use client"`. The HTML ships fully rendered on first byte.
+
+## When you need a client component
+
+Anything interactive — buttons with `onClick`, forms with `onChange`, modals,
+the image editor, the captcha — must be in a client boundary. The convention
+is to keep your `'use client'` boundaries small and leaf-level:
+
+```tsx
+// app/page.tsx — Server
+import { TkxCard, TkxCardBody } from 'tekivex-ui';
+import { LoginForm } from './login-form';
+
+export default function Page() {
+  return (
+    <TkxCard>
+      <TkxCardBody>
+        <LoginForm />
+      </TkxCardBody>
+    </TkxCard>
+  );
+}
+
+// app/login-form.tsx — Client island
+'use client';
+import { TkxInput, TkxButton } from 'tekivex-ui';
+// …
+```
+
+The Server Component still ships the Card structure on first byte; only the
+form hydrates.

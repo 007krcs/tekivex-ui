@@ -1,0 +1,202 @@
+---
+title: Bundler integration
+description: Drop-in recipes for Vite, Webpack 5, Next.js (App + Pages), Remix, Parcel, Rollup, Astro, and CRA.
+---
+
+import { Tabs, TabItem, Aside, Card } from '@astrojs/starlight/components';
+
+`tekivex-ui` works with every major bundler and meta-framework. Pick yours
+below; the recipe is copy-pasteable.
+
+<Aside type="tip" title="Canonical install">
+  `npm install tekivex-ui` — works with npm 7+, pnpm, yarn, bun. The
+  stylesheet loads via `import 'tekivex-ui/styles'` (or as a URL in
+  Remix-style frameworks).
+</Aside>
+
+<Tabs>
+<TabItem label="Vite (recommended)">
+
+`tekivex-ui` is ESM-first with TypeScript declarations. Vite needs zero
+config — just install, import the stylesheet, wrap your app.
+
+```bash
+npm install tekivex-ui react react-dom
+```
+
+```ts
+// vite.config.ts (optional — only for faster dev cold-starts)
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  optimizeDeps: { include: ['tekivex-ui'] },
+});
+```
+
+```tsx
+// main.tsx
+import { createRoot } from 'react-dom/client';
+import { ThemeProvider } from 'tekivex-ui';
+import 'tekivex-ui/styles';
+import App from './App';
+
+createRoot(document.getElementById('root')!).render(
+  <ThemeProvider mode="auto">
+    <App />
+  </ThemeProvider>,
+);
+```
+
+</TabItem>
+
+<TabItem label="Next.js (App)">
+
+13 components are RSC-compatible. Mark interactive ones with `'use client'`;
+use server-safe primitives (Card, Typography, Badge) anywhere.
+
+```bash
+npm install tekivex-ui react react-dom
+```
+
+```js
+// next.config.js
+module.exports = {
+  transpilePackages: ['tekivex-ui'],
+  experimental: { optimizePackageImports: ['tekivex-ui'] },
+};
+```
+
+```tsx
+// app/layout.tsx
+import 'tekivex-ui/styles';
+import { Providers } from './providers';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body><Providers>{children}</Providers></body>
+    </html>
+  );
+}
+```
+
+```tsx
+// app/providers.tsx
+'use client';
+import { ThemeProvider } from 'tekivex-ui';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <ThemeProvider mode="auto">{children}</ThemeProvider>;
+}
+```
+
+</TabItem>
+
+<TabItem label="Next.js (Pages)">
+
+```bash
+npm install tekivex-ui
+```
+
+```js
+// next.config.js
+module.exports = { transpilePackages: ['tekivex-ui'] };
+```
+
+```tsx
+// pages/_app.tsx
+import type { AppProps } from 'next/app';
+import { ThemeProvider } from 'tekivex-ui';
+import 'tekivex-ui/styles';
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <ThemeProvider mode="auto">
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
+}
+```
+
+</TabItem>
+
+<TabItem label="Webpack 5">
+
+```bash
+npm install tekivex-ui
+npm install --save-dev style-loader css-loader
+```
+
+```js
+// webpack.config.js
+module.exports = {
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js', '.jsx', '.mjs'],
+    conditionNames: ['import', 'require', 'default'],
+  },
+  module: {
+    rules: [
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+      { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
+    ],
+  },
+};
+```
+
+</TabItem>
+
+<TabItem label="Remix">
+
+```tsx
+// app/root.tsx
+import type { LinksFunction } from '@remix-run/node';
+import { ThemeProvider } from 'tekivex-ui';
+import tekivexStyles from 'tekivex-ui/dist/style.css?url';
+
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: tekivexStyles },
+];
+```
+
+</TabItem>
+
+<TabItem label="Parcel / Rollup / Astro">
+
+**Parcel 2:** Zero-config. Install + import.
+
+**Rollup (library):** Mark `tekivex-ui` and `/^tekivex-ui\/.*/` as `external`
+so consumers bring their own copy.
+
+**Astro:** Use inside React islands. `npx astro add react`, then load CSS in
+your layout's frontmatter.
+
+</TabItem>
+</Tabs>
+
+## Verify your install
+
+Drop this anywhere:
+
+```tsx
+import { TkxCard, TkxCardBody, TkxButton, TkxBadge } from 'tekivex-ui';
+
+export function HealthCheck() {
+  return (
+    <TkxCard>
+      <TkxCardBody>
+        <TkxBadge variant="success">tekivex-ui v2.7 ready</TkxBadge>
+        <TkxButton style={{ marginLeft: 12 }}>Click me</TkxButton>
+      </TkxCardBody>
+    </TkxCard>
+  );
+}
+```
+
+If you see a styled card and a button, the integration is correct.
+
+<Card title="Bundler not listed?" icon="open-book">
+  [Open an issue](https://github.com/007krcs/tekivex-ui/issues/new) with your
+  config and we'll add a recipe within 48 hours.
+</Card>
