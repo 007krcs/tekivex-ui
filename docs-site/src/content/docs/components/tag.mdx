@@ -1,39 +1,116 @@
 ---
 title: TkxTag
-description: Tag — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Compact label with optional close button. Variants, sizes, and a paired TkxTagInput for tag editing.
 ---
 
 ```tsx
 import { TkxTag } from 'tekivex-ui';
+
+<TkxTag>react</TkxTag>
+<TkxTag variant="primary">react-19</TkxTag>
+<TkxTag variant="success" closable onClose={() => removeTag('typescript')}>
+  typescript
+</TkxTag>
 ```
 
-Tag is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Variants
 
-## Props
+```tsx
+<TkxTag variant="default">default</TkxTag>
+<TkxTag variant="primary">primary</TkxTag>
+<TkxTag variant="success">success</TkxTag>
+<TkxTag variant="warning">warning</TkxTag>
+<TkxTag variant="danger">danger</TkxTag>
+<TkxTag variant="info">info</TkxTag>
+```
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `variant` | `TagVariant` |  |  |
-| `size` | `TagSize` |  |  |
-| `colorScheme` | `TagColorScheme` |  |  |
-| `onRemove` | `() => void` |  |  |
-| `leftIcon` | `ReactNode` |  |  |
-| `isDisabled` | `boolean` |  |  |
-| `clickable` | `boolean` |  |  |
+## Sizes
+
+```tsx
+<TkxTag size="sm">sm</TkxTag>
+<TkxTag size="md">md</TkxTag>
+<TkxTag size="lg">lg</TkxTag>
+```
+
+## With icon
+
+```tsx
+<TkxTag icon={<CheckIcon />} variant="success">verified</TkxTag>
+```
+
+## Closable
+
+```tsx
+const [tags, setTags] = useState(['react', 'typescript', 'tekivex-ui']);
+
+{tags.map((t) => (
+  <TkxTag
+    key={t}
+    closable
+    onClose={() => setTags((xs) => xs.filter((x) => x !== t))}
+  >
+    {t}
+  </TkxTag>
+))}
+```
+
+The close button has localised `aria-label` from the active locale (e.g.
+"Close" / "بند کریں").
+
+## Tag input — multi-tag editor
+
+```tsx
+import { TkxTagInput } from 'tekivex-ui';
+
+const [tags, setTags] = useState<string[]>(['react', 'a11y']);
+
+<TkxTagInput
+  label="Topics"
+  tags={tags}
+  onChange={setTags}
+  placeholder="Add topic and press Enter"
+  suggestions={['react', 'typescript', 'a11y', 'i18n']}
+/>
+```
+
+Press **Enter** or **Comma** to commit a tag, **Backspace** in an empty
+input to remove the last tag. Suggestions auto-complete as the user types.
+
+## RSC compatible
+
+`TkxTag` (without close button) uses no hooks — safe for Next.js Server
+Components. `TkxTagInput` is interactive and requires `'use client'`.
 
 ## Accessibility
 
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+- Tags render as `<span>` by default (decorative). Tags with `closable`
+  render the inner pill as `<span>` and the close button as `<button>`
+- Close button has localised `aria-label`
+- `TkxTagInput` field has full label/hint/error wiring
+- Tag chips inside the input are keyboard-removable via Backspace
+
+## Props
+
+### TkxTag
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `variant` | string | | One of the 6 named variants. |
+| `size` | `'sm' \| 'md' \| 'lg'` | | Defaults to `md`. |
+| `closable` | `boolean` | | Render close button. |
+| `onClose` | `() => void` | | Required when `closable`. |
+| `icon` | `ReactNode` | | Leading icon. |
+
+### TkxTagInput
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `tags` | `string[]` | yes | Controlled tag list. |
+| `onChange` | `(tags: string[]) => void` | yes | List change. |
+| `suggestions` | `string[]` | | Optional autocomplete. |
+| `maxTags` | `number` | | Soft cap. |
+| `allowDuplicates` | `boolean` | | Defaults to `false`. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxTag.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxTag.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/tag).
+[`src/components/TkxTag.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxTag.tsx)

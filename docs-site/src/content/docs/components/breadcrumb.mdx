@@ -1,38 +1,96 @@
 ---
 title: TkxBreadcrumb
-description: Breadcrumb — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Hierarchical navigation trail with auto-collapse on overflow, custom separators, and full WAI-ARIA semantics.
 ---
 
 ```tsx
 import { TkxBreadcrumb } from 'tekivex-ui';
+
+<TkxBreadcrumb
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Components', href: '/components' },
+    { label: 'Breadcrumb' },
+  ]}
+/>
 ```
 
-Breadcrumb is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+The last item (no `href`) is the current page — rendered as plain text
+with `aria-current="page"`.
+
+## Custom separator
+
+```tsx
+<TkxBreadcrumb
+  items={[...]}
+  separator="›"
+/>
+
+<TkxBreadcrumb
+  items={[...]}
+  separator={<ChevronIcon />}
+/>
+```
+
+Default separator is a small chevron SVG.
+
+## With icons
+
+```tsx
+<TkxBreadcrumb
+  items={[
+    { label: 'Home',  href: '/',           icon: <HomeIcon /> },
+    { label: 'Files', href: '/files',      icon: <FolderIcon /> },
+    { label: 'README.md',                  icon: <FileIcon /> },
+  ]}
+/>
+```
+
+## Auto-collapse on long trails
+
+```tsx
+<TkxBreadcrumb
+  items={veryLongTrail}     // 8+ items
+  maxItems={4}              // collapse middle items into an ellipsis
+/>
+{/* renders: Home / … / Folder / Subfolder / README.md */}
+```
+
+Clicking the ellipsis expands the full trail. Localised
+`aria-label="Show hidden breadcrumb items"` on the ellipsis button.
+
+## With router integration
+
+```tsx
+import Link from 'next/link';
+
+<TkxBreadcrumb
+  items={items}
+  renderLink={(props) => <Link href={props.href}>{props.children}</Link>}
+/>
+```
+
+The `renderLink` prop intercepts every linked breadcrumb item, letting
+you route via your framework's `<Link>` component instead of bare `<a>`.
+
+## Accessibility
+
+- `<nav>` element with localised `aria-label` (e.g. "Breadcrumb" /
+  "ਬ੍ਰੈਡਕ੍ਰਮ")
+- `<ol>` list inside — semantic order matters
+- Last item: `aria-current="page"` + plain `<span>` (not a link)
+- Separators: `aria-hidden="true"`
+- Each item is keyboard-reachable
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `items` | `BreadcrumbItem[]` | yes |  |
-| `separator` | `ReactNode` |  |  |
-| `maxItems` | `number` |  |  |
-| `onNavigate` | `(item: BreadcrumbItem, index: number) => void` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `items` | `BreadcrumbItem[]` | yes | `{ label, href?, icon? }`. |
+| `separator` | `ReactNode` | | Custom separator. |
+| `maxItems` | `number` | | Collapse threshold. |
+| `renderLink` | `(props) => ReactElement` | | Router integration. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxBreadcrumb.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxBreadcrumb.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/breadcrumb).
+[`src/components/TkxBreadcrumb.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxBreadcrumb.tsx)

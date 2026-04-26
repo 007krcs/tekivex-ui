@@ -3,6 +3,10 @@ title: TkxSlider
 description: Range input with single or dual handles, marks, step lock, and proper ARIA slider semantics.
 ---
 
+import { SliderSingle, SliderRange, SliderMarks } from '../../../components/demos/SliderDemo';
+
+<SliderSingle client:load />
+
 ```tsx
 import { TkxSlider } from 'tekivex-ui';
 
@@ -19,6 +23,8 @@ const [value, setValue] = useState(50);
 
 ## Range (dual handle)
 
+<SliderRange client:load />
+
 ```tsx
 const [range, setRange] = useState([20, 80]);
 
@@ -33,6 +39,8 @@ const [range, setRange] = useState([20, 80]);
 ```
 
 ## Marks
+
+<SliderMarks client:load />
 
 ```tsx
 <TkxSlider

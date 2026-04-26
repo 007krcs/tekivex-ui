@@ -6,6 +6,7 @@ import {
   type CSSProperties,
 } from 'react';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
@@ -339,6 +340,7 @@ export function TkxRichTextDisplay({
   style,
 }: TkxRichTextDisplayProps) {
   const theme = useTheme();
+  const t = useLocale();
   const reduced = useReducedMotion();
 
   // Memoize the rendered blocks
@@ -382,7 +384,7 @@ export function TkxRichTextDisplay({
 
   return (
     <article
-      aria-label="Rich text content"
+      aria-label={t.richTextContent ?? 'Rich text content'}
       className={tkx('font-sans', className ?? '')}
       style={{
         color: theme.text,

@@ -3,6 +3,10 @@ title: TkxStepper
 description: Multi-step process indicator. Horizontal or vertical, clickable steps, error/completed states, and full keyboard nav.
 ---
 
+import { StepperHorizontal, StepperVertical } from '../../../components/demos/StepperDemo';
+
+<StepperHorizontal client:load />
+
 ```tsx
 import { TkxStepper } from 'tekivex-ui';
 
@@ -17,6 +21,8 @@ const steps = [
 ```
 
 ## Orientation
+
+<StepperVertical client:load />
 
 ```tsx
 <TkxStepper steps={steps} active={1} orientation="horizontal" />  {/* default */}

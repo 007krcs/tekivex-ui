@@ -1,11 +1,11 @@
-# i18n audit — 2026-04-26T14:32:03.413Z
+# i18n audit — 2026-04-26T18:32:28.294Z
 
-**384 hardcoded strings** across 67 files.
+**380 hardcoded strings** across 67 files.
 
 ## Breakdown by kind
 
 - `jsx-text`: 310
-- `prop:aria-label`: 62
+- `prop:aria-label`: 58
 - `prop:title`: 9
 - `prop:placeholder`: 3
 
@@ -80,9 +80,7 @@
   return (` |
 | `src/components/TkxBottomNav.tsx` | 128 | prop `aria-label` | `Bottom navigation` |
 | `src/components/TkxBottomNav.tsx` | 139 | prop `aria-label` | `Navigation tabs` |
-| `src/components/TkxBreadcrumb.tsx` | 79 | prop `aria-label` | `Show hidden breadcrumb items` |
-| `src/components/TkxBreadcrumb.tsx` | 308 | prop `aria-label` | `Breadcrumb` |
-| `src/components/TkxBreadcrumb.tsx` | 96 | JSX text | `&hellip;` |
+| `src/components/TkxBreadcrumb.tsx` | 99 | JSX text | `&hellip;` |
 | `src/components/TkxCaptcha.tsx` | 55 | JSX text | `void;
   /** Optional className applied to the host` |
 | `src/components/TkxCaptcha.tsx` | 56 | JSX text | `. */
@@ -127,3 +125,7 @@
 | `src/components/TkxChat.tsx` | 142 | JSX text | `) : (avatarAssistant ??` |
 | `src/components/TkxChat.tsx` | 208 | JSX text | `(null);
   const textareaRef = useRef` |
+| `src/components/TkxChat.tsx` | 314 | JSX text | `);
+
+  return (` |
+| `src/components/TkxCheckbox.tsx` | 171 | JSX text | `) : isVisuallyChecked ? (` |

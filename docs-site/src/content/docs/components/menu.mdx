@@ -1,40 +1,102 @@
 ---
 title: TkxMenu
-description: Menu — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Right-click and trigger-driven menus. Nested submenus, keyboard navigation, separators, and shortcuts.
 ---
 
 ```tsx
-import { TkxMenu } from 'tekivex-ui';
+import { TkxMenu, TkxMenuItem, TkxMenuSeparator } from 'tekivex-ui';
+
+<TkxMenu trigger={<TkxButton>Actions</TkxButton>}>
+  <TkxMenuItem onSelect={() => copy()}>Copy</TkxMenuItem>
+  <TkxMenuItem onSelect={() => paste()}>Paste</TkxMenuItem>
+  <TkxMenuSeparator />
+  <TkxMenuItem onSelect={() => del()} variant="danger">Delete</TkxMenuItem>
+</TkxMenu>
 ```
 
-Menu is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## With shortcuts
+
+```tsx
+<TkxMenuItem shortcut="⌘C" onSelect={copy}>Copy</TkxMenuItem>
+<TkxMenuItem shortcut="⌘V" onSelect={paste}>Paste</TkxMenuItem>
+<TkxMenuItem shortcut="⌘Z" onSelect={undo}>Undo</TkxMenuItem>
+```
+
+The `shortcut` prop is purely visual — it doesn't bind the keys. Use a
+keyboard library (`useHotkeys`, etc.) to wire the actual handlers.
+
+## Submenus
+
+```tsx
+<TkxMenu trigger={<TkxButton>File</TkxButton>}>
+  <TkxMenuItem onSelect={newDoc}>New</TkxMenuItem>
+  <TkxMenu.Submenu label="Open recent">
+    <TkxMenuItem onSelect={() => open(1)}>document-1.md</TkxMenuItem>
+    <TkxMenuItem onSelect={() => open(2)}>document-2.md</TkxMenuItem>
+    <TkxMenuItem onSelect={() => open(3)}>document-3.md</TkxMenuItem>
+  </TkxMenu.Submenu>
+  <TkxMenuItem onSelect={save}>Save</TkxMenuItem>
+</TkxMenu>
+```
+
+Submenus open on hover (after a short delay) or on `→` arrow press.
+
+## Context (right-click) menu
+
+```tsx
+import { TkxContextMenu } from 'tekivex-ui';
+
+<TkxContextMenu items={[
+  { label: 'Copy',   onSelect: copy },
+  { label: 'Paste',  onSelect: paste },
+  { type: 'separator' },
+  { label: 'Delete', onSelect: del, variant: 'danger' },
+]}>
+  <div>Right-click anywhere in this region</div>
+</TkxContextMenu>
+```
+
+## Disabled items
+
+```tsx
+<TkxMenuItem disabled>Cut</TkxMenuItem>
+```
+
+Disabled items skip during keyboard navigation and don't fire `onSelect`.
+
+## Accessibility — what's automatic
+
+- Trigger gets `aria-haspopup="menu"` + `aria-expanded`
+- Menu container: `role="menu"` + `aria-orientation`
+- Each item: `role="menuitem"`
+- **Keyboard**:
+  - Open with `↓` or `Enter` on the trigger
+  - `↑` / `↓` move between items
+  - `→` opens submenu, `←` closes
+  - `Enter` / `Space` select; `Escape` closes
+  - First-letter type-ahead jumps to matching items
+- Focus returns to the trigger on close
 
 ## Props
 
+### TkxMenu
+
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `trigger` | `ReactNode` | yes |  |
-| `items` | `MenuItem[]` | yes |  |
-| `placement` | `MenuPlacement` |  |  |
-| `isDisabled` | `boolean` |  |  |
-| `onOpen` | `() => void` |  |  |
-| `onClose` | `() => void` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
+| `trigger` | `ReactElement` | yes | The element that opens the menu. |
+| `placement` | `'bottom-start' \| 'bottom-end' \| 'top-start' \| 'top-end'` | | Defaults to `bottom-start`. |
+| `children` | `ReactNode` | yes | `TkxMenuItem` / `TkxMenuSeparator` / submenus. |
 
-## Accessibility
+### TkxMenuItem
 
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `onSelect` | `() => void` | | Activation handler. |
+| `shortcut` | `string` | | Visual-only shortcut hint. |
+| `variant` | `'default' \| 'danger'` | | Danger renders red. |
+| `disabled` | `boolean` | | |
+| `icon` | `ReactNode` | | Leading icon. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxMenu.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxMenu.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/menu).
+[`src/components/TkxMenu.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxMenu.tsx)

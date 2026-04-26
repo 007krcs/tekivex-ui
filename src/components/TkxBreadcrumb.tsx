@@ -7,6 +7,7 @@ import {
   type KeyboardEvent,
 } from 'react';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
@@ -58,11 +59,13 @@ function EllipsisButton({
   bgColor,
   hoverColor,
   textColor,
+  label,
 }: {
   onClick: () => void;
   bgColor: string;
   hoverColor: string;
   textColor: string;
+  label: string;
 }) {
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -76,7 +79,7 @@ function EllipsisButton({
       type="button"
       onClick={onClick}
       onKeyDown={handleKeyDown}
-      aria-label="Show hidden breadcrumb items"
+      aria-label={label}
       className={tkx(
         'inline-flex items-center justify-center rounded px-1.5 py-0.5',
         'text-sm font-medium cursor-pointer border-none outline-none',
@@ -110,6 +113,7 @@ export function TkxBreadcrumb({
   style,
 }: TkxBreadcrumbProps) {
   const theme = useTheme();
+  const t = useLocale();
   const reducedMotion = useReducedMotion();
 
   // Collapse logic: show first, last, and ellipsis when items exceed maxItems
@@ -290,6 +294,7 @@ export function TkxBreadcrumb({
             bgColor={theme.surfaceAlt}
             hoverColor={theme.surface}
             textColor={theme.textMuted}
+            label={t.showHiddenItems ?? 'Show hidden breadcrumb items'}
           />
         </li>,
       );
@@ -305,7 +310,7 @@ export function TkxBreadcrumb({
 
   return (
     <nav
-      aria-label="Breadcrumb"
+      aria-label={t.breadcrumb ?? 'Breadcrumb'}
       className={tkx('font-sans', className ?? '')}
       style={{
         ...style,

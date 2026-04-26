@@ -4,6 +4,9 @@ description: Single-date or range picker with built-in presets, time selection, 
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { DatePickerSingle, DatePickerRange } from '../../../components/demos/DatePickerDemo';
+
+<DatePickerSingle client:load />
 
 ```tsx
 import { TkxDatePicker } from 'tekivex-ui';
@@ -18,6 +21,8 @@ const [date, setDate] = useState<Date | null>(null);
 ```
 
 ## Range mode
+
+<DatePickerRange client:load />
 
 ```tsx
 const [range, setRange] = useState<[Date | null, Date | null]>([null, null]);

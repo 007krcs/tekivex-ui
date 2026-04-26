@@ -1,56 +1,101 @@
 ---
 title: TkxNumberInput
-description: NumberInput — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Numeric input with stepper buttons, hold-to-repeat, locale-aware formatting, and min/max/step validation.
 ---
 
 ```tsx
 import { TkxNumberInput } from 'tekivex-ui';
+
+<TkxNumberInput
+  label="Quantity"
+  min={1}
+  max={99}
+  value={qty}
+  onChange={setQty}
+/>
 ```
 
-NumberInput is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Step + precision
+
+```tsx
+<TkxNumberInput min={0} max={1} step={0.1} precision={1} />
+<TkxNumberInput min={0} max={100} step={5} />
+```
+
+`precision` controls how many decimal places are displayed; `step` controls
+the increment per click/keypress.
+
+## Currency
+
+```tsx
+<TkxNumberInput
+  label="Price"
+  value={price}
+  onChange={setPrice}
+  format="currency"
+  currency="USD"
+  locale="en-US"
+/>
+```
+
+`format="currency"` uses `Intl.NumberFormat` for locale-aware grouping
+and the right currency symbol.
+
+## Indian numbering (lakh / crore)
+
+```tsx
+<TkxNumberInput
+  label="Annual income"
+  value={salary}
+  onChange={setSalary}
+  format="currency"
+  currency="INR"
+  locale="en-IN"
+/>
+{/* renders 1,23,456 instead of 123,456 */}
+```
+
+## Hold-to-repeat
+
+The `+` and `−` buttons accept a press-and-hold gesture: after a 400ms
+delay, they repeat at 60ms intervals. Useful for fast adjustment of large
+ranges. Localised `aria-label`s ("Increment" / "Decrement") follow the
+active locale.
+
+## Sizes
+
+```tsx
+<TkxNumberInput size="sm" {...props} />
+<TkxNumberInput size="md" {...props} />   {/* default */}
+<TkxNumberInput size="lg" {...props} />
+```
+
+## Accessibility
+
+- `role="spinbutton"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`
+- Stepper buttons get localised `aria-label`s
+- Keyboard:
+  - **Arrow Up / Down** — increment / decrement by `step`
+  - **Page Up / Down** — increment / decrement by `step * 10`
+  - **Home / End** — jump to min / max
+- Mouse wheel support (opt-in via `wheelStep` prop)
+- Mobile: native numeric keyboard via `inputMode="decimal"`
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `value` | `number` |  |  |
-| `defaultValue` | `number` |  |  |
-| `onChange` | `(value: number \| null) => void` |  |  |
-| `min` | `number` |  |  |
-| `max` | `number` |  |  |
-| `step` | `number` |  |  |
-| `precision` | `number` |  |  |
-| `prefix` | `string` |  |  |
-| `suffix` | `string` |  |  |
-| `format` | `'decimal' \| 'currency' \| 'percent'` |  |  |
-| `currency` | `string` |  |  |
-| `locale` | `string` |  |  |
-| `clampOnBlur` | `boolean` |  |  |
-| `allowMouseWheel` | `boolean` |  |  |
-| `size` | `'sm' \| 'md' \| 'lg'` |  |  |
-| `label` | `string` |  |  |
-| `hint` | `string` |  |  |
-| `isDisabled` | `boolean` |  |  |
-| `isReadOnly` | `boolean` |  |  |
-| `isInvalid` | `boolean` |  |  |
-| `errorMessage` | `string` |  |  |
-| `id` | `string` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `value` | `number` | | Controlled value. |
+| `onChange` | `(value: number) => void` | | Value change. |
+| `min` / `max` | `number` | | Bounds. |
+| `step` | `number` | | Defaults to `1`. |
+| `precision` | `number` | | Decimal places shown. |
+| `format` | `'decimal' \| 'currency' \| 'percent'` | | Number formatter. |
+| `currency` | `string` | | ISO 4217 code (USD, EUR, INR…). |
+| `locale` | `string` | | BCP 47 locale for formatting. |
+| `wheelStep` | `boolean` | | Enable mouse-wheel adjustment. |
+| `size` | `'sm' \| 'md' \| 'lg'` | | |
 
 ## Source
 
-The implementation lives at [`src/components/TkxNumberInput.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxNumberInput.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/number-input).
+[`src/components/TkxNumberInput.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxNumberInput.tsx)

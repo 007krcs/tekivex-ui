@@ -11,6 +11,7 @@ import {
   type WheelEvent,
 } from 'react';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { tkx, cx } from '../engine/tkx';
 import { sanitizeString } from '../engine/security';
 
@@ -110,9 +111,11 @@ interface StepperBtnProps {
   textMuted: string;
   iconSz: number;
   onStep: (dir: 1 | -1) => void;
+  incrementLabel: string;
+  decrementLabel: string;
 }
 
-function StepperBtn({ direction, isDisabled, btnW, height, primaryColor, borderColor, textMuted, iconSz, onStep }: StepperBtnProps) {
+function StepperBtn({ direction, isDisabled, btnW, height, primaryColor, borderColor, textMuted, iconSz, onStep, incrementLabel, decrementLabel }: StepperBtnProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const dir = direction === 'inc' ? 1 : -1;
@@ -136,7 +139,7 @@ function StepperBtn({ direction, isDisabled, btnW, height, primaryColor, borderC
   return (
     <button
       type="button"
-      aria-label={isInc ? 'Increment' : 'Decrement'}
+      aria-label={isInc ? incrementLabel : decrementLabel}
       disabled={isDisabled}
       onMouseDown={startHold}
       onMouseUp={stopHold}
@@ -206,6 +209,9 @@ export function TkxNumberInput({
   style,
 }: TkxNumberInputProps) {
   const theme = useTheme();
+  const t = useLocale();
+  const incrementLabel = t.increment ?? 'Increment';
+  const decrementLabel = t.decrement ?? 'Decrement';
   const autoId = useId();
   const id = idProp ?? autoId;
   const hintId = `${id}-hint`;
@@ -310,6 +316,8 @@ export function TkxNumberInput({
           textMuted={theme.textMuted}
           iconSz={sz.iconSz}
           onStep={step_}
+          incrementLabel={incrementLabel}
+          decrementLabel={decrementLabel}
         />
 
         {/* Input area */}
@@ -387,6 +395,8 @@ export function TkxNumberInput({
           textMuted={theme.textMuted}
           iconSz={sz.iconSz}
           onStep={step_}
+          incrementLabel={incrementLabel}
+          decrementLabel={decrementLabel}
         />
       </div>
 

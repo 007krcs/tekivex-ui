@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-04-26T14:32:03.413Z",
-  "totalFindings": 384,
+  "generatedAt": "2026-04-26T18:32:28.294Z",
+  "totalFindings": 380,
   "filesAffected": 67,
   "byKind": {
     "jsx-text": 310,
     "prop:title": 9,
-    "prop:aria-label": 62,
+    "prop:aria-label": 58,
     "prop:placeholder": 3
   },
   "topFiles": [
@@ -243,23 +243,9 @@
       "file": "src/components/TkxBottomNav.tsx"
     },
     {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "Show hidden breadcrumb items",
-      "line": 79,
-      "file": "src/components/TkxBreadcrumb.tsx"
-    },
-    {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "Breadcrumb",
-      "line": 308,
-      "file": "src/components/TkxBreadcrumb.tsx"
-    },
-    {
       "kind": "jsx-text",
       "value": "&hellip;",
-      "line": 96,
+      "line": 99,
       "file": "src/components/TkxBreadcrumb.tsx"
     },
     {
@@ -1377,13 +1363,13 @@
     {
       "kind": "jsx-text",
       "value": "(null);\n  const intervalRef = useRef",
-      "line": 116,
+      "line": 119,
       "file": "src/components/TkxNumberInput.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "stopHold(), [stopHold]);\n\n  const isInc = direction === 'inc';\n\n  return (",
-      "line": 132,
+      "line": 135,
       "file": "src/components/TkxNumberInput.tsx"
     },
     {
@@ -1417,28 +1403,21 @@
       "file": "src/components/TkxOrgChart.tsx"
     },
     {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "One-time password",
-      "line": 211,
-      "file": "src/components/TkxOTP.tsx"
-    },
-    {
       "kind": "jsx-text",
       "value": "(e: KeyboardEvent",
-      "line": 136,
+      "line": 138,
       "file": "src/components/TkxOTP.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(e: React.ChangeEvent",
-      "line": 168,
+      "line": 170,
       "file": "src/components/TkxOTP.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(e: ClipboardEvent",
-      "line": 187,
+      "line": 189,
       "file": "src/components/TkxOTP.tsx"
     },
     {
@@ -1778,34 +1757,27 @@
       "file": "src/components/TkxRealTimeChart.tsx"
     },
     {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "Rich text content",
-      "line": 385,
-      "file": "src/components/TkxRichTextDisplay.tsx"
-    },
-    {
       "kind": "jsx-text",
       "value": "),\n  warning: (",
-      "line": 39,
+      "line": 40,
       "file": "src/components/TkxRichTextDisplay.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "),\n  success: (",
-      "line": 44,
+      "line": 45,
       "file": "src/components/TkxRichTextDisplay.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "),\n  danger: (",
-      "line": 49,
+      "line": 50,
       "file": "src/components/TkxRichTextDisplay.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "sanitizeString(item));\n\n  return (",
-      "line": 189,
+      "line": 190,
       "file": "src/components/TkxRichTextDisplay.tsx"
     },
     {

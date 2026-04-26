@@ -4,6 +4,9 @@ description: Slide carousel with autoplay, pause-on-hover, indicators, swipe, an
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { CarouselBasic, CarouselAutoplay } from '../../../components/demos/CarouselDemo';
+
+<CarouselBasic client:load />
 
 ```tsx
 import { TkxCarousel, TkxCarouselSlide } from 'tekivex-ui';
@@ -22,6 +25,8 @@ import { TkxCarousel, TkxCarouselSlide } from 'tekivex-ui';
 ```
 
 ## Autoplay
+
+<CarouselAutoplay client:load />
 
 ```tsx
 <TkxCarousel autoplay autoplayInterval={5000} pauseOnHover>

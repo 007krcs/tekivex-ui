@@ -12,6 +12,7 @@ import {
   type KeyboardEvent,
 } from 'react';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { tkx, cx } from '../engine/tkx';
 import { sanitizeString } from '../engine/security';
 
@@ -77,6 +78,7 @@ export function TkxOTP({
   style,
 }: TkxOTPProps) {
   const theme = useTheme();
+  const t = useLocale();
   const groupId = useId();
   const hintId = `${groupId}-hint`;
   const errorId = `${groupId}-error`;
@@ -208,7 +210,7 @@ export function TkxOTP({
     <div className={cx(tkx('flex flex-col gap-2 w-fit'), className)} style={style}>
       <div
         role="group"
-        aria-label="One-time password"
+        aria-label={t.oneTimePassword ?? 'One-time password'}
         aria-describedby={describedBy}
         className={tkx('flex items-center')}
         style={{ gap: sz.gap }}

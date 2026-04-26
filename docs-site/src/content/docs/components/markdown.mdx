@@ -1,44 +1,87 @@
 ---
 title: TkxMarkdown
-description: Markdown — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Safe Markdown renderer. CommonMark + GFM tables, sanitised by SecurityCore, syntax-highlighted code blocks.
 ---
+
+import { Aside } from '@astrojs/starlight/components';
 
 ```tsx
 import { TkxMarkdown } from 'tekivex-ui';
+
+<TkxMarkdown source={`
+# Hello
+This is **markdown** rendered by *tekivex-ui*.
+
+- Item one
+- Item two
+
+[Link](https://example.com)
+`} />
 ```
 
-Markdown is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Supported syntax
+
+- **CommonMark**: headings, paragraphs, emphasis, lists, blockquotes,
+  inline code, code blocks, links, images, hr
+- **GFM tables**:
+  ```md
+  | Column A | Column B |
+  |----------|----------|
+  | Cell 1   | Cell 2   |
+  ```
+- **GFM task lists**: `- [x] done` / `- [ ] todo`
+- **Strikethrough**: `~~deleted~~`
+- **Auto-linking**: bare URLs become anchors
+
+## Security
+
+Every Markdown source string passes through SecurityCore before parsing:
+
+- HTML tags are stripped (no embedded `<script>`)
+- URLs go through `sanitizeHref()` — `javascript:` and `data:` schemes
+  blocked
+- Image `src` allowed only for `http`, `https`, `data:image/*`
+- Unicode homoglyph + bidi-override characters removed
+
+This makes `TkxMarkdown` safe for **untrusted user content** (forum posts,
+comments, profile bios) — XSS-resistant by default.
+
+<Aside type="caution" title="Server-side validation still required">
+  Even with SecurityCore, you should rate-limit and length-cap submissions
+  on the server. SecurityCore prevents XSS but not abuse.
+</Aside>
+
+## Code highlighting
+
+```md
+```js
+const x = 42;
+console.log(x);
+```
+```
+
+Renders with token colouring. Pass `highlightTheme="dark" | "light"` to
+override the auto-detection.
+
+## Custom link target
+
+```tsx
+<TkxMarkdown
+  source={src}
+  linkTarget="_blank"   // automatically adds rel="noopener noreferrer"
+/>
+```
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `source` | `string` |  | Markdown source string. Takes precedence over `src`. |
-| `src` | `string` |  | Remote URL (or relative path) to a .md file. Fetched on mount. |
-| `maxWidth` | `number \| string` |  | Max content width. Default: '100%'. |
-| `compact` | `boolean` |  | Render in a visually compact variant (smaller headings/line-heights). |
-| `copyableCode` | `boolean` |  | Show a copy button on fenced code blocks. Default: true. |
-| `onLinkClick` | `(href: string, ev: React.MouseEvent<HTMLAnchorElement>) => boolean \| void` |  | Called when a link is clicked. Return false to suppress navigation. |
-| `externalLinkRel` | `string` |  | Custom rel= value for external links. Default: 'noopener noreferrer'. |
-| `externalLinkTarget` | `'_blank' \| '_self' \| '_parent' \| '_top'` |  | target= for external links. Default: '_blank'. |
-| `loadingFallback` | `ReactNode` |  | Replace the loading / error fallback. |
-| `errorFallback` | `(error: string) => ReactNode` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `source` | `string` | yes | Markdown source. |
+| `linkTarget` | `'_self' \| '_blank'` | | Defaults to `_self`. |
+| `highlightTheme` | `'dark' \| 'light' \| 'auto'` | | Defaults to `auto` (follows ThemeProvider). |
+| `allowImages` | `boolean` | | Defaults to `true`. Disable for ultra-safe contexts. |
+| `maxLength` | `number` | | Truncate input. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxMarkdown.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxMarkdown.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/markdown).
+[`src/components/TkxMarkdown.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxMarkdown.tsx)

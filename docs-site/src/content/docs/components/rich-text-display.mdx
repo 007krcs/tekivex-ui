@@ -1,35 +1,84 @@
 ---
 title: TkxRichTextDisplay
-description: RichTextDisplay — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Schema-typed rich-text renderer. Block-based, sanitised, supports paragraphs, headings, lists, quotes, code, images, embeds.
 ---
 
 ```tsx
 import { TkxRichTextDisplay } from 'tekivex-ui';
+
+const blocks = [
+  { type: 'heading', level: 2, text: 'Welcome' },
+  { type: 'paragraph', text: 'This is the first paragraph with **bold** spans.' },
+  { type: 'list', ordered: false, items: ['One', 'Two', 'Three'] },
+  { type: 'quote', text: 'A pithy quotation.', cite: 'Anonymous' },
+  { type: 'code', language: 'tsx', text: 'const hello = "world";' },
+];
+
+<TkxRichTextDisplay blocks={blocks} />
 ```
 
-RichTextDisplay is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Why blocks instead of HTML?
+
+Block schemas are **easier to validate, sanitise, and version** than HTML.
+Every `block` has a known `type`, and only known types render. Unknown
+types are silently dropped — there's no escape hatch for embedding raw
+HTML, which means no XSS surface.
+
+Use this for content that comes from a CMS, database, or LLM output where
+you want strict control over what can render.
+
+## Block types
+
+| Type | Fields |
+|---|---|
+| `paragraph` | `text` |
+| `heading` | `level (1–6)`, `text` |
+| `list` | `ordered`, `items[]` |
+| `quote` | `text`, `cite?` |
+| `code` | `language?`, `text` |
+| `image` | `src`, `alt`, `caption?` |
+| `divider` | (no fields) |
+| `embed` | `provider` ('youtube' \| 'vimeo' \| 'codepen'), `id` |
+
+## Inline formatting in `text` fields
+
+`paragraph` / `heading` / `quote` text fields support a tiny inline
+syntax:
+
+- `**bold**` → `<strong>`
+- `*italic*` → `<em>`
+- `` `code` `` → `<code>`
+- `[label](url)` → `<a>` (URL passes through `sanitizeHref()`)
+
+That's it. No HTML, no Markdown extensions, no image inlining.
+
+## Embeds
+
+```tsx
+{ type: 'embed', provider: 'youtube', id: 'dQw4w9WgXcQ' }
+```
+
+Renders an `<iframe>` only for the listed providers, with a strict CSP
+sandbox attribute. Other providers render as a fallback link.
+
+## Accessibility
+
+- Container: `<article>` with localised `aria-label` (e.g. "Rich text content"
+  → "حتوى نص منسق" in Arabic)
+- Headings keep semantic levels — page authors are responsible for
+  ensuring level order makes sense
+- `image` blocks require non-empty `alt` (errors at runtime if missing)
+- `code` blocks render as `<pre><code>` with no syntax highlighting fallback
+  (fully readable to screen readers)
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `blocks` | `RichTextBlock[]` | yes |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `blocks` | `RichTextBlock[]` | yes | Array of block objects. |
+| `className` | `string` | | |
+| `style` | `CSSProperties` | | |
 
 ## Source
 
-The implementation lives at [`src/components/TkxRichTextDisplay.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxRichTextDisplay.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/rich-text-display).
+[`src/components/TkxRichTextDisplay.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxRichTextDisplay.tsx)

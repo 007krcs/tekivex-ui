@@ -3,6 +3,10 @@ title: TkxAccordion
 description: Vertically-stacked, expandable panels — single or multi-expand, keyboard-driven, with smooth height animation.
 ---
 
+import { AccordionBasic, AccordionMultiple, AccordionWithBadge } from '../../../components/demos/AccordionDemo';
+
+<AccordionBasic client:load />
+
 ```tsx
 import { TkxAccordion, TkxAccordionItem } from 'tekivex-ui';
 
@@ -20,6 +24,8 @@ import { TkxAccordion, TkxAccordionItem } from 'tekivex-ui';
 ```
 
 ## Single vs multi expand
+
+<AccordionMultiple client:load />
 
 ```tsx
 <TkxAccordion expandMode="single">     {/* default — only one panel open at a time */}
@@ -45,6 +51,8 @@ const [open, setOpen] = useState<string[]>([]);
 ```
 
 ## Custom title slot
+
+<AccordionWithBadge client:load />
 
 `title` accepts any `ReactNode`, so you can compose icons or counters:
 

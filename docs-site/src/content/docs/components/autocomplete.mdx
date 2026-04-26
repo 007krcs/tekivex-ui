@@ -3,6 +3,10 @@ title: TkxAutocomplete
 description: Type-ahead text input with filtered suggestions, free-solo mode, async loading, and proper ARIA combobox semantics.
 ---
 
+import { AutocompleteBasic, AutocompleteFreeSolo } from '../../../components/demos/AutocompleteDemo';
+
+<AutocompleteBasic client:load />
+
 ```tsx
 import { TkxAutocomplete } from 'tekivex-ui';
 
@@ -18,6 +22,8 @@ import { TkxAutocomplete } from 'tekivex-ui';
 ```
 
 ## Free-solo (accept arbitrary input)
+
+<AutocompleteFreeSolo client:load />
 
 ```tsx
 <TkxAutocomplete
