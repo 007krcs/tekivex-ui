@@ -165,3 +165,25 @@
     forced-color-adjust: none;
   }
 }
+
+/* ── RTL flip helpers (v2.7) ─────────────────────────────────────────────── */
+/* Components built with logical properties (margin-inline-start, inset-inline)
+   flip automatically. These rules patch the legacy physical-property cases. */
+
+[dir='rtl'] .tkx-flip-icon {
+  transform: scaleX(-1);
+}
+
+[dir='rtl'] .tkx-drawer-left {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+[dir='rtl'] .tkx-drawer-right {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+}
+
+[dir='rtl'] .tkx-pagination-prev svg,
+[dir='rtl'] .tkx-pagination-next svg {
+  transform: scaleX(-1);
+}
