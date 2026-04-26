@@ -3,6 +3,8 @@ title: TkxBadge
 description: Compact status pill — variants, sizes, outlined style. RSC-compatible.
 ---
 
+import { BadgeVariants, BadgeSizes, BadgeOutlined } from '../../../components/demos/BadgeDemo';
+
 ```tsx
 import { TkxBadge } from 'tekivex-ui';
 
@@ -10,6 +12,8 @@ import { TkxBadge } from 'tekivex-ui';
 ```
 
 ## Variants
+
+<BadgeVariants client:load />
 
 ```tsx
 <TkxBadge variant="primary">primary</TkxBadge>
@@ -22,6 +26,8 @@ import { TkxBadge } from 'tekivex-ui';
 
 ## Sizes
 
+<BadgeSizes client:load />
+
 ```tsx
 <TkxBadge size="sm">small</TkxBadge>
 <TkxBadge size="md">medium</TkxBadge>
@@ -29,6 +35,8 @@ import { TkxBadge } from 'tekivex-ui';
 ```
 
 ## Outlined
+
+<BadgeOutlined client:load />
 
 ```tsx
 <TkxBadge variant="primary" outlined>v2.7</TkxBadge>

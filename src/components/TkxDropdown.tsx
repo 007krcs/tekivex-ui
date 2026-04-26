@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -174,7 +175,7 @@ interface DropdownMenuProps {
   selectedKeys: string[];
   multiSelect: boolean;
   searchable: boolean;
-  searchPlaceholder: string;
+  searchPlaceholder: string | undefined;
   onSelect: (key: string, item: DropdownItem) => void;
   onClose: () => void;
   renderItem?: (item: DropdownItem, selected: boolean) => ReactNode;
@@ -200,6 +201,8 @@ function DropdownMenu({
   menuId,
 }: DropdownMenuProps) {
   const theme = useTheme();
+  const t = useLocale();
+  const resolvedSearchPlaceholder = searchPlaceholder ?? `${t.search}…`;
   const [query, setQuery] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(0);
   const [openSubmenuKey, setOpenSubmenuKey] = useState<string | null>(null);
@@ -358,8 +361,8 @@ function DropdownMenu({
               setQuery(e.target.value);
               setFocusedIndex(0);
             }}
-            placeholder={searchPlaceholder}
-            aria-label="Search items"
+            placeholder={resolvedSearchPlaceholder}
+            aria-label={`${t.search} items`}
             style={{
               width: '100%',
               boxSizing: 'border-box',
@@ -671,7 +674,7 @@ export function TkxDropdown({
   selectedKeys: controlledSelectedKeys,
   multiSelect = false,
   searchable = false,
-  searchPlaceholder = 'Search…',
+  searchPlaceholder,
   closeOnSelect,
   disabled = false,
   maxHeight = 320,

@@ -1,38 +1,95 @@
 ---
 title: TkxProgress
-description: Progress — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Linear and circular progress bars — determinate or indeterminate, with proper ARIA progressbar semantics.
 ---
 
 ```tsx
 import { TkxProgress } from 'tekivex-ui';
+
+<TkxProgress value={66} />
+<TkxProgress value={66} max={100} label="Uploading" />
 ```
 
-Progress is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Variants
+
+```tsx
+<TkxProgress value={50} variant="linear" />     {/* default */}
+<TkxProgress value={50} variant="circular" />
+```
+
+## Color schemes
+
+```tsx
+<TkxProgress value={75} colorScheme="primary" />
+<TkxProgress value={75} colorScheme="success" />
+<TkxProgress value={75} colorScheme="warning" />
+<TkxProgress value={75} colorScheme="danger" />
+```
+
+## Sizes
+
+```tsx
+<TkxProgress value={50} size="sm" />
+<TkxProgress value={50} size="md" />   {/* default */}
+<TkxProgress value={50} size="lg" />
+```
+
+## Indeterminate
+
+When the eventual completion is unknown:
+
+```tsx
+<TkxProgress indeterminate label="Reticulating splines…" />
+```
+
+The bar animates continuously; screen readers announce "loading"
+without a percentage.
+
+## With label
+
+```tsx
+<TkxProgress
+  value={42}
+  label="Uploading photo.jpg"
+  showValue              // renders "42%" inside the bar
+/>
+```
+
+## Buffer (download / upload progress)
+
+For two-phase progress (e.g. data downloaded vs played in a video):
+
+```tsx
+<TkxProgress value={30} buffer={60} />
+{/* primary fill at 30%, lighter buffer fill at 60% */}
+```
+
+## RSC compatible
+
+`TkxProgress` uses no hooks. Renders in Next.js Server Components.
+
+## Accessibility
+
+- `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`
+- Indeterminate omits `aria-valuenow` per WAI-ARIA spec
+- `aria-label` derived from `label` prop, or pass explicitly via `aria-label`
+- Animation respects `prefers-reduced-motion` — shimmer pauses, bar still
+  reflects current value
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `value` | `number` |  |  |
-| `variant` | `ProgressVariant` |  |  |
-| `size` | `ProgressSize` |  |  |
-| `label` | `string` |  |  |
-| `showValue` | `boolean` |  |  |
-| `color` | `string` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `value` | `number` | | Current progress. Omit when `indeterminate`. |
+| `max` | `number` | | Defaults to `100`. |
+| `buffer` | `number` | | Secondary buffer fill. |
+| `variant` | `'linear' \| 'circular'` | | Defaults to `linear`. |
+| `colorScheme` | `'primary' \| 'success' \| 'warning' \| 'danger' \| 'info'` | | |
+| `size` | `'sm' \| 'md' \| 'lg'` | | |
+| `label` | `string` | | Accessible label + optional visible label. |
+| `showValue` | `boolean` | | Show "%". |
+| `indeterminate` | `boolean` | | Continuous animation, no `aria-valuenow`. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxProgress.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxProgress.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/progress).
+[`src/components/TkxProgress.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxProgress.tsx)

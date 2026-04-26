@@ -1,44 +1,92 @@
 ---
 title: TkxPagination
-description: Pagination — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Page navigation — first/prev/next/last + numbered pages, sibling count, page size selector. Localised in 35 languages.
 ---
 
 ```tsx
 import { TkxPagination } from 'tekivex-ui';
+
+<TkxPagination
+  total={250}
+  pageSize={10}
+  page={current}
+  onChange={setCurrent}
+/>
 ```
 
-Pagination is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Sibling count
+
+Controls how many pages on each side of the current page are shown:
+
+```tsx
+<TkxPagination total={1000} pageSize={10} siblingCount={1} />  {/* default */}
+<TkxPagination total={1000} pageSize={10} siblingCount={2} />  {/* wider */}
+<TkxPagination total={1000} pageSize={10} siblingCount={0} />  {/* compact */}
+```
+
+When the gap is too large, an ellipsis (`…`) renders instead of consecutive
+page numbers.
+
+## With first/last buttons
+
+```tsx
+<TkxPagination total={500} pageSize={10} showEdges />
+```
+
+The first/last buttons are useful for very large data sets. They share
+the localised "First page" / "Last page" `aria-label`.
+
+## With page size selector
+
+```tsx
+<TkxPagination
+  total={total}
+  page={page}
+  onChange={setPage}
+  pageSize={pageSize}
+  showPageSize
+  pageSizeOptions={[10, 25, 50, 100]}
+  onPageSizeChange={setPageSize}
+/>
+```
+
+## Sizes
+
+```tsx
+<TkxPagination size="sm" {...props} />
+<TkxPagination size="md" {...props} />  {/* default */}
+<TkxPagination size="lg" {...props} />
+```
+
+## Localisation
+
+Pagination renders the "Showing X–Y of Z items" line, "Page N" labels for
+buttons, and "Previous page" / "Next page" `aria-label`s — all from the
+active locale, with English fallbacks for the optional fields.
+
+## Accessibility
+
+- Renders as `<nav aria-label="Pagination">`
+- Disabled buttons get the native `disabled` attribute (not just visual)
+- Active page button has `aria-current="page"`
+- Each page button gets `aria-label="Page N"`
+- Edge buttons (first/last) hidden when `showEdges={false}`
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `total` | `number` | yes |  |
-| `pageSize` | `number` |  |  |
-| `page` | `number` |  |  |
-| `defaultPage` | `number` |  |  |
-| `onChange` | `(page: number) => void` |  |  |
-| `siblingCount` | `number` |  |  |
-| `showEdges` | `boolean` |  |  |
-| `showPageSize` | `boolean` |  |  |
-| `onPageSizeChange` | `(size: number) => void` |  |  |
-| `pageSizeOptions` | `number[]` |  |  |
-| `size` | `'sm' \| 'md' \| 'lg'` |  |  |
-| `variant` | `'default' \| 'outline' \| 'ghost'` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `total` | `number` | yes | Total item count. |
+| `pageSize` | `number` | | Defaults to `10`. |
+| `page` | `number` | | Controlled current page (1-based). |
+| `defaultPage` | `number` | | Uncontrolled initial page. |
+| `onChange` | `(page: number) => void` | | Page change callback. |
+| `siblingCount` | `number` | | Pages on each side of current. Defaults to `1`. |
+| `showEdges` | `boolean` | | First/last buttons. Defaults to `true`. |
+| `showPageSize` | `boolean` | | Render page-size dropdown. |
+| `pageSizeOptions` | `number[]` | | Defaults to `[10, 25, 50, 100]`. |
+| `size` | `'sm' \| 'md' \| 'lg'` | | Defaults to `md`. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxPagination.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxPagination.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/pagination).
+[`src/components/TkxPagination.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxPagination.tsx)

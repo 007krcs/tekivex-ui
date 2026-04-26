@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-04-26T13:39:48.453Z",
-  "totalFindings": 386,
+  "generatedAt": "2026-04-26T14:16:36.377Z",
+  "totalFindings": 385,
   "filesAffected": 68,
   "byKind": {
     "jsx-text": 310,
     "prop:title": 9,
-    "prop:aria-label": 64,
+    "prop:aria-label": 63,
     "prop:placeholder": 3
   },
   "topFiles": [
@@ -42,16 +42,16 @@
       "count": 11
     },
     {
-      "file": "src/components/TkxDropdown.tsx",
-      "count": 11
-    },
-    {
       "file": "src/components/TkxQuantumForm.tsx",
       "count": 11
     },
     {
       "file": "src/components/TkxSelect.tsx",
       "count": 11
+    },
+    {
+      "file": "src/components/TkxDropdown.tsx",
+      "count": 10
     },
     {
       "file": "src/components/TkxMarkdown.tsx",
@@ -537,115 +537,115 @@
       "kind": "prop",
       "prop": "aria-label",
       "value": "Pagination",
-      "line": 273,
+      "line": 274,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "prop",
       "prop": "aria-label",
       "value": "First page",
-      "line": 282,
+      "line": 283,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "prop",
       "prop": "aria-label",
       "value": "Previous page",
-      "line": 290,
+      "line": 291,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "prop",
       "prop": "aria-label",
       "value": "Next page",
-      "line": 322,
+      "line": 323,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "prop",
       "prop": "aria-label",
       "value": "Last page",
-      "line": 330,
+      "line": 331,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "prop",
       "prop": "aria-label",
       "value": "Data grid",
-      "line": 600,
+      "line": 603,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "prop",
       "prop": "aria-label",
       "value": "Column filters",
-      "line": 720,
+      "line": 723,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "ReactNode;\n  renderHeader?: (col: DataGridColumn",
-      "line": 30,
+      "line": 31,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "void | Promise",
-      "line": 72,
+      "line": 73,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ") : direction === 'desc' ? (",
-      "line": 94,
+      "line": 95,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "void;\n  totalRows: number;\n  selectedCount: number;\n  theme: ReturnType",
-      "line": 186,
+      "line": 187,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Export CSV",
-      "line": 232,
+      "line": 233,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "void;\n  theme: ReturnType",
-      "line": 254,
+      "line": 255,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(null);\n  const [sortDir, setSortDir] = useState",
-      "line": 377,
+      "line": 380,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "= 50;\n\n  const scrollContainerRef = useRef",
-      "line": 448,
+      "line": 451,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(null);\n  const loadingRef = useRef",
-      "line": 478,
+      "line": 481,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "c.filterable);\n\n  return (",
-      "line": 595,
+      "line": 598,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "✓ All rows loaded",
-      "line": 922,
+      "line": 925,
       "file": "src/components/TkxDataGrid.tsx"
     },
     {
@@ -800,68 +800,61 @@
       "kind": "prop",
       "prop": "aria-label",
       "value": "Dropdown menu",
-      "line": 339,
-      "file": "src/components/TkxDropdown.tsx"
-    },
-    {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "Search items",
-      "line": 362,
+      "line": 342,
       "file": "src/components/TkxDropdown.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "ReactNode;\n  menuRef: React.RefObject",
-      "line": 180,
+      "line": 181,
       "file": "src/components/TkxDropdown.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(null);\n  const [submenuFocusedIndex, setSubmenuFocusedIndex] = useState(0);\n  const searchRef = useRef",
-      "line": 205,
-      "file": "src/components/TkxDropdown.tsx"
-    },
-    {
-      "kind": "jsx-text",
-      "value": "(null);\n  const itemRefs = useRef",
-      "line": 207,
-      "file": "src/components/TkxDropdown.tsx"
-    },
-    {
-      "kind": "jsx-text",
-      "value": "([]);\n  const submenuItemRefs = useRef",
       "line": 208,
       "file": "src/components/TkxDropdown.tsx"
     },
     {
       "kind": "jsx-text",
+      "value": "(null);\n  const itemRefs = useRef",
+      "line": 210,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n  const submenuItemRefs = useRef",
+      "line": 211,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
       "value": "No results found",
-      "line": 386,
+      "line": 389,
       "file": "src/components/TkxDropdown.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ");\n\n            return (",
-      "line": 428,
+      "line": 431,
       "file": "src/components/TkxDropdown.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "([]);\n  const [menuPosition, setMenuPosition] = useState",
-      "line": 686,
-      "file": "src/components/TkxDropdown.tsx"
-    },
-    {
-      "kind": "jsx-text",
-      "value": "(null);\n  const menuRef = useRef",
       "line": 689,
       "file": "src/components/TkxDropdown.tsx"
     },
     {
       "kind": "jsx-text",
+      "value": "(null);\n  const menuRef = useRef",
+      "line": 692,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
       "value": ") : null;\n\n  return (",
-      "line": 780,
+      "line": 783,
       "file": "src/components/TkxDropdown.tsx"
     },
     {
@@ -886,67 +879,61 @@
       "kind": "prop",
       "prop": "aria-label",
       "value": "Form",
-      "line": 457,
+      "line": 496,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "string | null | Promise",
-      "line": 35,
+      "line": 36,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "= Record",
-      "line": 41,
+      "line": 42,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "void | Promise",
-      "line": 42,
-      "file": "src/components/TkxForm.tsx"
-    },
-    {
-      "kind": "jsx-text",
-      "value": ";\n  onValuesChange?: (changed: Partial",
-      "line": 42,
-      "file": "src/components/TkxForm.tsx"
-    },
-    {
-      "kind": "jsx-text",
-      "value": "void;\n  initialValues?: Partial",
       "line": 43,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
-      "value": "= Record",
-      "line": 73,
+      "value": ";\n  onValuesChange?: (changed: Partial",
+      "line": 43,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
-      "value": "T[K] | undefined;\n  setFieldValue:",
+      "value": "void;\n  initialValues?: Partial",
+      "line": 44,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= Record",
       "line": 74,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
+      "value": "T[K] | undefined;\n  setFieldValue:",
+      "line": 75,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
       "value": "Partial",
-      "line": 76,
+      "line": 77,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ";\n  setFieldsValue: (values: Partial",
-      "line": 76,
-      "file": "src/components/TkxForm.tsx"
-    },
-    {
-      "kind": "jsx-text",
-      "value": "Promise",
-      "line": 78,
+      "line": 77,
       "file": "src/components/TkxForm.tsx"
     },
     {
@@ -957,68 +944,74 @@
     },
     {
       "kind": "jsx-text",
-      "value": ";\n  errors: Record",
-      "line": 92,
+      "value": "Promise",
+      "line": 80,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
-      "value": ";\n  touched: Record",
+      "value": ";\n  errors: Record",
       "line": 93,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
+      "value": ";\n  touched: Record",
+      "line": 94,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
       "value": ";\n  layout: 'vertical' | 'horizontal' | 'inline';\n  disabled: boolean;\n  fieldMeta: React.MutableRefObject",
-      "line": 99,
+      "line": 100,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Promise",
-      "line": 108,
+      "line": 109,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ": returns the form's live instance (reads/writes real field state).\n * - Outside a",
-      "line": 200,
+      "line": 227,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ": returns a standalone instance backed by a ref store.\n *   Pass it to",
-      "line": 201,
+      "line": 228,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Reset",
-      "line": 208,
+      "line": 235,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Log",
-      "line": 219,
+      "line": 246,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "= Record",
-      "line": 259,
+      "line": 286,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ");\n\n  // Build the label element\n  const labelElement = safeLabel ? (",
-      "line": 566,
+      "line": 605,
       "file": "src/components/TkxForm.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ") : null;\n\n  // Build the help / error messaging\n  const messageElement = (",
-      "line": 584,
+      "line": 623,
       "file": "src/components/TkxForm.tsx"
     },
     {
@@ -1488,13 +1481,13 @@
     {
       "kind": "jsx-text",
       "value": ");\n\n  return (",
-      "line": 265,
+      "line": 267,
       "file": "src/components/TkxPagination.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Rows per page",
-      "line": 374,
+      "line": 376,
       "file": "src/components/TkxPagination.tsx"
     },
     {

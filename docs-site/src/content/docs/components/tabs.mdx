@@ -3,6 +3,10 @@ title: TkxTabs
 description: Tabbed interface with arrow-key navigation, ARIA tablist semantics, and lazy-rendered panels.
 ---
 
+import { TabsBasic, TabsControlled } from '../../../components/demos/TabsDemo';
+
+<TabsBasic client:load />
+
 ```tsx
 import { TkxTabs, TkxTab, TkxTabPanel } from 'tekivex-ui';
 
@@ -18,6 +22,8 @@ import { TkxTabs, TkxTab, TkxTabPanel } from 'tekivex-ui';
 ```
 
 ## Controlled
+
+<TabsControlled client:load />
 
 ```tsx
 const [active, setActive] = useState('overview');

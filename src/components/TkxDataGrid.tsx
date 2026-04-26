@@ -13,6 +13,7 @@ import {
   type ChangeEvent,
 } from 'react';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { TkxSkeleton } from './TkxSkeleton';
@@ -349,7 +350,7 @@ export function TkxDataGrid<T = any>({
   sortable = false,
   onSort,
   loading = false,
-  emptyMessage = 'No data to display',
+  emptyMessage,
   stickyHeader = false,
   striped = false,
   bordered = false,
@@ -370,6 +371,8 @@ export function TkxDataGrid<T = any>({
   loadMoreThreshold = 200,
 }: TkxDataGridProps<T>) {
   const theme = useTheme();
+  const t = useLocale();
+  const resolvedEmpty = emptyMessage ?? t.noRows ?? t.noData ?? 'No data to display';
   const reduced = useReducedMotion();
   const gridId = useId();
 
@@ -589,7 +592,7 @@ export function TkxDataGrid<T = any>({
   };
 
   const borderRight = bordered ? `1px solid ${theme.border}` : 'none';
-  const safeEmpty = sanitizeString(emptyMessage);
+  const safeEmpty = sanitizeString(resolvedEmpty);
   const totalCols = columns.length + (selectable ? 1 : 0);
 
   const hasFilterableColumns = columns.some(c => c.filterable);
@@ -597,7 +600,7 @@ export function TkxDataGrid<T = any>({
   return (
     <div
       role="grid"
-      aria-label="Data grid"
+      aria-label="Data grid" /* a11y label not yet localised — pending broader sweep */
       aria-rowcount={totalRows}
       id={gridId}
       className={tkx('font-sans rounded-lg overflow-hidden')}
@@ -748,7 +751,7 @@ export function TkxDataGrid<T = any>({
                         onChange={(e: ChangeEvent<HTMLInputElement>) =>
                           handleFilterChange(col.key, e.target.value)
                         }
-                        placeholder={`Filter ${col.header}…`}
+                        placeholder={`${t.filterPlaceholder.replace(/[.…]+$/, '')} ${col.header}…`}
                         aria-label={`Filter by ${col.header}`}
                         style={{
                           width: '100%',

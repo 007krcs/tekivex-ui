@@ -3,6 +3,10 @@ title: TkxFileUpload
 description: Drag-and-drop file uploader with validation, previews, simulated progress, and full keyboard support.
 ---
 
+import { FileUploadDropzone, FileUploadButton } from '../../../components/demos/FileUploadDemo';
+
+<FileUploadDropzone client:load />
+
 ```tsx
 import { TkxFileUpload } from 'tekivex-ui';
 
@@ -17,6 +21,8 @@ import { TkxFileUpload } from 'tekivex-ui';
 ```
 
 ## Variants
+
+<FileUploadButton client:load />
 
 ```tsx
 {/* Default — full drop zone with icon and CTA */}

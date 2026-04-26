@@ -76,6 +76,18 @@ export interface LocaleStrings {
 
   // Drawer
   closeDrawer?: string;
+
+  // Form validation
+  fieldRequired?: string;
+  invalidFormat?: string;
+  minLength?: (n: number) => string;
+  maxLength?: (n: number) => string;
+  minValue?: (n: number) => string;
+  maxValue?: (n: number) => string;
+
+  // DataGrid extras
+  noRows?: string;
+  resetFilters?: string;
 }
 
 // ── Helper — build a locale without having to re-type every key ─────────────
@@ -140,6 +152,31 @@ export const esES = locale({
   filterPlaceholder: 'Filtrar...',
   exportCsv: 'Exportar CSV',
   rowsSelected: (n) => `${n} fila${n === 1 ? '' : 's'} seleccionada${n === 1 ? '' : 's'}`,
+  // v2.7 optional fields
+  firstPage: 'Primera página',
+  lastPage: 'Última página',
+  previousPage: 'Página anterior',
+  nextPage: 'Página siguiente',
+  showingRange: (s, e, total) => `Mostrando ${s}–${e} de ${total}`,
+  itemsPerPage: 'Por página',
+  uploadFiles: 'Subir archivos',
+  yesterday: 'Ayer',
+  last7Days: 'Últimos 7 días',
+  last30Days: 'Últimos 30 días',
+  thisMonth: 'Este mes',
+  lastMonth: 'Mes pasado',
+  notifications: 'Notificaciones',
+  commandSearch: 'Escribir un comando o buscar…',
+  noCommandsFound: 'No se encontraron comandos',
+  closeDrawer: 'Cerrar panel',
+  fieldRequired: 'Este campo es obligatorio',
+  invalidFormat: 'Formato inválido',
+  minLength: (n) => `Mínimo ${n} caracteres`,
+  maxLength: (n) => `Máximo ${n} caracteres`,
+  minValue: (n) => `Mínimo ${n}`,
+  maxValue: (n) => `Máximo ${n}`,
+  noRows: 'Sin filas',
+  resetFilters: 'Restablecer filtros',
 });
 
 // Portuguese (Brazil)
@@ -224,6 +261,31 @@ export const frFR = locale({
   filterPlaceholder: 'Filtrer...',
   exportCsv: 'Exporter CSV',
   rowsSelected: (n) => `${n} ligne${n === 1 ? '' : 's'} sélectionnée${n === 1 ? '' : 's'}`,
+  // v2.7 optional fields
+  firstPage: 'Première page',
+  lastPage: 'Dernière page',
+  previousPage: 'Page précédente',
+  nextPage: 'Page suivante',
+  showingRange: (s, e, total) => `Affichage de ${s}–${e} sur ${total}`,
+  itemsPerPage: 'Par page',
+  uploadFiles: 'Téléverser des fichiers',
+  yesterday: 'Hier',
+  last7Days: '7 derniers jours',
+  last30Days: '30 derniers jours',
+  thisMonth: 'Ce mois-ci',
+  lastMonth: 'Le mois dernier',
+  notifications: 'Notifications',
+  commandSearch: 'Tapez une commande ou recherchez…',
+  noCommandsFound: 'Aucune commande trouvée',
+  closeDrawer: 'Fermer le panneau',
+  fieldRequired: 'Ce champ est obligatoire',
+  invalidFormat: 'Format invalide',
+  minLength: (n) => `Au moins ${n} caractères`,
+  maxLength: (n) => `Au plus ${n} caractères`,
+  minValue: (n) => `Au moins ${n}`,
+  maxValue: (n) => `Au plus ${n}`,
+  noRows: 'Aucune ligne',
+  resetFilters: 'Réinitialiser les filtres',
 });
 
 // German (Germany)
@@ -252,6 +314,31 @@ export const deDE = locale({
   filterPlaceholder: 'Filtern...',
   exportCsv: 'CSV exportieren',
   rowsSelected: (n) => `${n} Zeile${n === 1 ? '' : 'n'} ausgewählt`,
+  // v2.7 optional fields
+  firstPage: 'Erste Seite',
+  lastPage: 'Letzte Seite',
+  previousPage: 'Vorherige Seite',
+  nextPage: 'Nächste Seite',
+  showingRange: (s, e, total) => `${s}–${e} von ${total} angezeigt`,
+  itemsPerPage: 'Pro Seite',
+  uploadFiles: 'Dateien hochladen',
+  yesterday: 'Gestern',
+  last7Days: 'Letzte 7 Tage',
+  last30Days: 'Letzte 30 Tage',
+  thisMonth: 'Dieser Monat',
+  lastMonth: 'Letzter Monat',
+  notifications: 'Benachrichtigungen',
+  commandSearch: 'Befehl eingeben oder suchen…',
+  noCommandsFound: 'Keine Befehle gefunden',
+  closeDrawer: 'Panel schließen',
+  fieldRequired: 'Dieses Feld ist erforderlich',
+  invalidFormat: 'Ungültiges Format',
+  minLength: (n) => `Mindestens ${n} Zeichen`,
+  maxLength: (n) => `Höchstens ${n} Zeichen`,
+  minValue: (n) => `Mindestens ${n}`,
+  maxValue: (n) => `Höchstens ${n}`,
+  noRows: 'Keine Zeilen',
+  resetFilters: 'Filter zurücksetzen',
 });
 
 // Italian (Italy)
@@ -560,6 +647,31 @@ export const arSA = locale({
   filterPlaceholder: '...فلترة',
   exportCsv: 'تصدير CSV',
   rowsSelected: (n) => `تم تحديد ${n} صفوف`,
+  // v2.7 optional fields
+  firstPage: 'الصفحة الأولى',
+  lastPage: 'الصفحة الأخيرة',
+  previousPage: 'الصفحة السابقة',
+  nextPage: 'الصفحة التالية',
+  showingRange: (s, e, total) => `عرض ${s}–${e} من ${total}`,
+  itemsPerPage: 'لكل صفحة',
+  uploadFiles: 'رفع الملفات',
+  yesterday: 'الأمس',
+  last7Days: 'آخر 7 أيام',
+  last30Days: 'آخر 30 يوم',
+  thisMonth: 'هذا الشهر',
+  lastMonth: 'الشهر الماضي',
+  notifications: 'إشعارات',
+  commandSearch: 'اكتب أمرًا أو ابحث…',
+  noCommandsFound: 'لم يتم العثور على أوامر',
+  closeDrawer: 'إغلاق اللوحة',
+  fieldRequired: 'هذا الحقل مطلوب',
+  invalidFormat: 'تنسيق غير صالح',
+  minLength: (n) => `الحد الأدنى ${n} حرفًا`,
+  maxLength: (n) => `الحد الأقصى ${n} حرفًا`,
+  minValue: (n) => `الحد الأدنى ${n}`,
+  maxValue: (n) => `الحد الأقصى ${n}`,
+  noRows: 'لا توجد صفوف',
+  resetFilters: 'إعادة ضبط الفلاتر',
 });
 
 // Hebrew (Israel) — RTL
@@ -644,6 +756,31 @@ export const jaJP = locale({
   filterPlaceholder: 'フィルター...',
   exportCsv: 'CSVエクスポート',
   rowsSelected: (n) => `${n}行選択中`,
+  // v2.7 optional fields
+  firstPage: '最初のページ',
+  lastPage: '最後のページ',
+  previousPage: '前のページ',
+  nextPage: '次のページ',
+  showingRange: (s, e, total) => `${total}件中 ${s}–${e}件を表示`,
+  itemsPerPage: 'ページあたり',
+  uploadFiles: 'ファイルをアップロード',
+  yesterday: '昨日',
+  last7Days: '過去7日間',
+  last30Days: '過去30日間',
+  thisMonth: '今月',
+  lastMonth: '先月',
+  notifications: '通知',
+  commandSearch: 'コマンドを入力するか検索…',
+  noCommandsFound: 'コマンドが見つかりません',
+  closeDrawer: 'パネルを閉じる',
+  fieldRequired: 'この項目は必須です',
+  invalidFormat: '無効な形式',
+  minLength: (n) => `${n}文字以上で入力してください`,
+  maxLength: (n) => `${n}文字以内で入力してください`,
+  minValue: (n) => `${n}以上`,
+  maxValue: (n) => `${n}以下`,
+  noRows: '行がありません',
+  resetFilters: 'フィルターをリセット',
 });
 
 // Korean (South Korea)
@@ -873,6 +1010,31 @@ export const hiIN = locale({
   filterPlaceholder: 'फ़िल्टर...',
   exportCsv: 'CSV निर्यात करें',
   rowsSelected: (n) => `${n} पंक्ति${n === 1 ? '' : 'याँ'} चयनित`,
+  // v2.7 optional fields
+  firstPage: 'पहला पृष्ठ',
+  lastPage: 'अंतिम पृष्ठ',
+  previousPage: 'पिछला पृष्ठ',
+  nextPage: 'अगला पृष्ठ',
+  showingRange: (s, e, total) => `${total} में से ${s}–${e} दिखा रहे हैं`,
+  itemsPerPage: 'प्रति पृष्ठ',
+  uploadFiles: 'फ़ाइलें अपलोड करें',
+  yesterday: 'कल',
+  last7Days: 'पिछले 7 दिन',
+  last30Days: 'पिछले 30 दिन',
+  thisMonth: 'इस महीने',
+  lastMonth: 'पिछले महीने',
+  notifications: 'सूचनाएँ',
+  commandSearch: 'कमांड खोजें या टाइप करें…',
+  noCommandsFound: 'कोई कमांड नहीं मिली',
+  closeDrawer: 'पैनल बंद करें',
+  fieldRequired: 'यह फ़ील्ड आवश्यक है',
+  invalidFormat: 'अमान्य प्रारूप',
+  minLength: (n) => `कम से कम ${n} वर्ण होने चाहिए`,
+  maxLength: (n) => `${n} वर्णों से अधिक नहीं हो सकते`,
+  minValue: (n) => `${n} या उससे अधिक होना चाहिए`,
+  maxValue: (n) => `${n} या उससे कम होना चाहिए`,
+  noRows: 'कोई पंक्ति नहीं',
+  resetFilters: 'फ़िल्टर रीसेट करें',
 });
 
 // Marathi (India)
@@ -957,6 +1119,31 @@ export const taIN = locale({
   filterPlaceholder: 'வடிகட்டு...',
   exportCsv: 'CSV ஏற்றுமதி',
   rowsSelected: (n) => `${n} வரிசை${n === 1 ? '' : 'கள்'} தேர்ந்தெடுக்கப்பட்டது`,
+  // v2.7 optional fields
+  firstPage: 'முதல் பக்கம்',
+  lastPage: 'கடைசி பக்கம்',
+  previousPage: 'முந்தைய பக்கம்',
+  nextPage: 'அடுத்த பக்கம்',
+  showingRange: (s, e, total) => `${total}-ல் ${s}–${e} காட்டப்படுகிறது`,
+  itemsPerPage: 'பக்கத்திற்கு',
+  uploadFiles: 'கோப்புகளை பதிவேற்று',
+  yesterday: 'நேற்று',
+  last7Days: 'கடந்த 7 நாட்கள்',
+  last30Days: 'கடந்த 30 நாட்கள்',
+  thisMonth: 'இந்த மாதம்',
+  lastMonth: 'கடந்த மாதம்',
+  notifications: 'அறிவிப்புகள்',
+  commandSearch: 'கட்டளை தட்டச்சு செய்யவும் அல்லது தேடவும்…',
+  noCommandsFound: 'கட்டளைகள் இல்லை',
+  closeDrawer: 'பலகத்தை மூடு',
+  fieldRequired: 'இந்த புலம் அவசியம்',
+  invalidFormat: 'தவறான வடிவம்',
+  minLength: (n) => `குறைந்தது ${n} எழுத்துகள்`,
+  maxLength: (n) => `அதிகபட்சம் ${n} எழுத்துகள்`,
+  minValue: (n) => `குறைந்தது ${n}`,
+  maxValue: (n) => `அதிகபட்சம் ${n}`,
+  noRows: 'வரிசைகள் இல்லை',
+  resetFilters: 'வடிகட்டிகளை மீட்டமை',
 });
 
 // Telugu (India)

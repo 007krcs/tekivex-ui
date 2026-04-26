@@ -4,6 +4,9 @@ description: Hover/focus tooltip with collision detection, hover-delay, and prop
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { TooltipPlacements, TooltipMultiline } from '../../../components/demos/TooltipDemo';
+
+<TooltipPlacements client:load />
 
 ```tsx
 import { TkxTooltip, TkxButton } from 'tekivex-ui';
@@ -36,6 +39,8 @@ to the opposite side automatically.
 Default open delay: 200ms. Close delay: 0ms.
 
 ## Multiline content
+
+<TooltipMultiline client:load />
 
 ```tsx
 <TkxTooltip

@@ -1,54 +1,105 @@
 ---
 title: TkxSelect
-description: Select — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Searchable, multi-select capable dropdown — keyboard-driven, virtualised, clearable, with grouped options.
 ---
 
 ```tsx
 import { TkxSelect } from 'tekivex-ui';
+
+const options = [
+  { value: 'us', label: 'United States' },
+  { value: 'in', label: 'India' },
+  { value: 'jp', label: 'Japan' },
+];
+
+<TkxSelect
+  label="Country"
+  options={options}
+  onChange={(value) => console.log(value)}
+/>
 ```
 
-Select is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Searchable
+
+```tsx
+<TkxSelect
+  label="Country"
+  options={options}
+  searchable
+/>
+```
+
+The search input filters options by label. `placeholder` and the search
+input's `aria-label` come from the active locale.
+
+## Multiple selection
+
+```tsx
+const [values, setValues] = useState<string[]>([]);
+
+<TkxSelect
+  label="Tags"
+  options={tagOptions}
+  multiple
+  clearable
+  value={values}
+  onChange={setValues}
+/>
+```
+
+Selected tags render as chips inside the field. `clearable` adds a clear
+button with a localised `aria-label`.
+
+## Grouped options
+
+```tsx
+const options = [
+  { value: 'us', label: 'United States', group: 'Americas' },
+  { value: 'br', label: 'Brazil',        group: 'Americas' },
+  { value: 'in', label: 'India',         group: 'Asia' },
+  { value: 'jp', label: 'Japan',         group: 'Asia' },
+];
+```
+
+Group headers render as non-interactive list items.
+
+## Virtualised list
+
+For very long option lists (5000+), enable virtual scroll:
+
+```tsx
+<TkxSelect
+  options={hugeList}
+  virtualScroll
+  optionHeight={36}
+  maxMenuHeight={280}
+/>
+```
+
+## Accessibility
+
+- ARIA `combobox` + `listbox` pattern (WAI-ARIA 1.2)
+- Keyboard: arrows navigate, `Enter` selects, `Escape` closes,
+  `Home` / `End` jump to first / last option, type-ahead jump
+- Active descendant tracked via `aria-activedescendant`
+- Selected state via `aria-selected`
+- Disabled options skipped during keyboard navigation
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `options` | `SelectOption[]` | yes |  |
-| `value` | `string \| string[]` |  |  |
-| `defaultValue` | `string \| string[]` |  |  |
-| `placeholder` | `string` |  |  |
-| `size` | `SelectSize` |  |  |
-| `isDisabled` | `boolean` |  |  |
-| `isInvalid` | `boolean` |  |  |
-| `label` | `string` |  |  |
-| `hint` | `string` |  |  |
-| `errorMessage` | `string` |  |  |
-| `multiple` | `boolean` |  |  |
-| `searchable` | `boolean` |  |  |
-| `clearable` | `boolean` |  |  |
-| `isLoading` | `boolean` |  |  |
-| `onChange` | `(value: string \| string[]) => void` |  |  |
-| `renderOption` | `(option: SelectOption, isSelected: boolean) => ReactNode` |  |  |
-| `maxMenuHeight` | `number` |  |  |
-| `virtualScroll` | `boolean` |  | Enable virtual scrolling for the dropdown. Defaults to auto (enabled when 100+ options). |
-| `optionHeight` | `number` |  | Fixed option height in pixels for virtual scroll calculations. Default: 36 |
-| `id` | `string` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `options` | `SelectOption[]` | yes | `{ value, label, group?, disabled?, icon?, description? }`. |
+| `value` | `string \| string[]` | | Controlled value. |
+| `defaultValue` | `string \| string[]` | | Uncontrolled initial value. |
+| `placeholder` | `string` | | Localised by default. |
+| `multiple` | `boolean` | | Multi-select mode. |
+| `searchable` | `boolean` | | Enable filter input. |
+| `clearable` | `boolean` | | Show clear button. |
+| `isLoading` | `boolean` | | Show loading state in menu. |
+| `renderOption` | `(opt) => ReactNode` | | Custom option row. |
+| `virtualScroll` | `boolean` | | For long lists. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxSelect.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxSelect.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/select).
+[`src/components/TkxSelect.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxSelect.tsx)

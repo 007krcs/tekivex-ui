@@ -1,31 +1,102 @@
 ---
-title: TkxToastProvider
-description: ToastProvider — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+title: TkxToast
+description: Imperatively-triggered toast notifications. Position, variants, action button, auto-dismiss with pause-on-hover.
 ---
 
 ```tsx
-import { TkxToastProvider } from 'tekivex-ui';
+import { TkxToastProvider, useToast } from 'tekivex-ui';
+
+// 1. Mount the provider once at app root
+<TkxToastProvider position="top-right">
+  <App />
+</TkxToastProvider>
+
+// 2. Trigger from anywhere
+function SaveButton() {
+  const toast = useToast();
+  return (
+    <TkxButton
+      onClick={async () => {
+        await save();
+        toast({ variant: 'success', title: 'Saved', description: 'Your changes are live.' });
+      }}
+    >
+      Save
+    </TkxButton>
+  );
+}
 ```
 
-ToastProvider is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Variants
 
-## Props
+```tsx
+toast({ variant: 'default', title: 'Plain notification' });
+toast({ variant: 'success', title: 'Saved' });
+toast({ variant: 'warning', title: 'Disk space low' });
+toast({ variant: 'danger',  title: 'Connection lost' });
+```
 
-_This component takes no props, or its props are inherited from a base type._
+## Position
+
+`TkxToastProvider` accepts a single `position` prop that applies to every
+toast it shows:
+
+```tsx
+<TkxToastProvider position="top-right">     {/* default */}
+<TkxToastProvider position="top-left">
+<TkxToastProvider position="top-center">
+<TkxToastProvider position="bottom-right">
+<TkxToastProvider position="bottom-left">
+<TkxToastProvider position="bottom-center">
+```
+
+## Auto-dismiss
+
+```tsx
+toast({ title: 'Saved', duration: 4000 }); // ms; default 4000
+toast({ title: 'Read me', duration: Infinity }); // never auto-dismiss
+```
+
+The countdown pauses while the user hovers or focuses the toast.
+
+## With action
+
+```tsx
+toast({
+  variant: 'success',
+  title: 'Item deleted',
+  action: {
+    label: 'Undo',
+    onClick: () => restore(),
+  },
+});
+```
 
 ## Accessibility
 
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+- The portal mounts at `<body>` end with `aria-label="Notifications"`
+  (localised) and `role="region"`.
+- Each toast is a live region — `role="status"` for info/success,
+  `role="alert"` for danger so it announces immediately.
+- Dismiss button has localised `aria-label`.
+- Auto-dismiss respects `prefers-reduced-motion` — animations are skipped
+  but the timer still runs.
+
+## API
+
+```ts
+const toast = useToast();
+toast({
+  variant: 'default' | 'success' | 'warning' | 'danger';
+  title: string;
+  description?: string;
+  duration?: number;       // ms; default 4000; Infinity for sticky
+  action?: { label: string; onClick: () => void };
+}): string;                // returns id
+
+toast.dismiss(id?: string);  // dismiss specific or all
+```
 
 ## Source
 
-The implementation lives at [`src/components/TkxToast.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxToast.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/toast-provider).
+[`src/components/TkxToast.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxToast.tsx)

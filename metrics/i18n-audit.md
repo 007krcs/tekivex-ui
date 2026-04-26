@@ -1,11 +1,11 @@
-# i18n audit — 2026-04-26T13:39:48.453Z
+# i18n audit — 2026-04-26T14:16:36.377Z
 
-**386 hardcoded strings** across 68 files.
+**385 hardcoded strings** across 68 files.
 
 ## Breakdown by kind
 
 - `jsx-text`: 310
-- `prop:aria-label`: 64
+- `prop:aria-label`: 63
 - `prop:title`: 9
 - `prop:placeholder`: 3
 
@@ -21,9 +21,9 @@
 | `src/components/TkxPlayground.tsx` | 16 |
 | `src/components/TkxImageEditor.tsx` | 13 |
 | `src/components/TkxCommand.tsx` | 11 |
-| `src/components/TkxDropdown.tsx` | 11 |
 | `src/components/TkxQuantumForm.tsx` | 11 |
 | `src/components/TkxSelect.tsx` | 11 |
+| `src/components/TkxDropdown.tsx` | 10 |
 | `src/components/TkxMarkdown.tsx` | 10 |
 | `src/components/TkxImage.tsx` | 9 |
 | `src/components/TkxCarousel.tsx` | 8 |

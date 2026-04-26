@@ -4,6 +4,7 @@ description: Status callout with info / success / warning / danger variants. Opt
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { AlertVariants, AlertWithTitle, AlertDismissible } from '../../../components/demos/AlertDemo';
 
 ```tsx
 import { TkxAlert } from 'tekivex-ui';
@@ -12,6 +13,8 @@ import { TkxAlert } from 'tekivex-ui';
 ```
 
 ## Variants
+
+<AlertVariants client:load />
 
 ```tsx
 <TkxAlert variant="info">Information message</TkxAlert>
@@ -31,6 +34,8 @@ The variant determines both the visual style **and** the WAI-ARIA role:
 
 ## With title
 
+<AlertWithTitle client:load />
+
 ```tsx
 <TkxAlert variant="success" title="Deploy succeeded">
   Your changes are live at <code>my-app.example.com</code>.
@@ -38,6 +43,8 @@ The variant determines both the visual style **and** the WAI-ARIA role:
 ```
 
 ## Dismissible
+
+<AlertDismissible client:load />
 
 ```tsx
 const [open, setOpen] = useState(true);

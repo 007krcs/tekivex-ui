@@ -3,6 +3,10 @@ title: TkxDrawer
 description: Side sheet that slides in from any edge — focus-trapped, scroll-locked, RTL-aware.
 ---
 
+import { DrawerBasic, DrawerSides } from '../../../components/demos/DrawerDemo';
+
+<DrawerBasic client:load />
+
 ```tsx
 import { TkxDrawer, TkxButton } from 'tekivex-ui';
 import { useState } from 'react';
@@ -26,6 +30,8 @@ function Example() {
 ```
 
 ## Sides
+
+<DrawerSides client:load />
 
 ```tsx
 <TkxDrawer side="left"   {...props}>From left</TkxDrawer>

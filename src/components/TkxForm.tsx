@@ -21,6 +21,7 @@ import {
   type FormEvent,
 } from 'react';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { tkx, cx } from '../engine/tkx';
 
@@ -123,14 +124,36 @@ function useFormContext(): FormContextValue {
 
 // ── Validation Engine ───────────────────────────────────────────────────────
 
-async function runValidation(value: any, rules: ValidationRule[]): Promise<string | null> {
+interface ValidationMessages {
+  required: string;
+  invalidFormat: string;
+  minLength: (n: number) => string;
+  maxLength: (n: number) => string;
+  minValue: (n: number) => string;
+  maxValue: (n: number) => string;
+}
+
+const DEFAULT_MESSAGES: ValidationMessages = {
+  required: 'This field is required',
+  invalidFormat: 'Invalid format',
+  minLength: (n) => `Must be at least ${n} characters`,
+  maxLength: (n) => `Must be no more than ${n} characters`,
+  minValue: (n) => `Must be at least ${n}`,
+  maxValue: (n) => `Must be no more than ${n}`,
+};
+
+async function runValidation(
+  value: any,
+  rules: ValidationRule[],
+  messages: ValidationMessages = DEFAULT_MESSAGES,
+): Promise<string | null> {
   for (const rule of rules) {
     // Required check
     if (rule.required) {
       const empty = value === undefined || value === null || value === '' ||
         (Array.isArray(value) && value.length === 0);
       if (empty) {
-        return rule.message ?? 'This field is required';
+        return rule.message ?? messages.required;
       }
     }
 
@@ -142,27 +165,27 @@ async function runValidation(value: any, rules: ValidationRule[]): Promise<strin
     // Min length / min value
     if (rule.min !== undefined) {
       if (typeof value === 'string' && value.length < rule.min) {
-        return rule.message ?? `Must be at least ${rule.min} characters`;
+        return rule.message ?? messages.minLength(rule.min);
       }
       if (typeof value === 'number' && value < rule.min) {
-        return rule.message ?? `Must be at least ${rule.min}`;
+        return rule.message ?? messages.minValue(rule.min);
       }
     }
 
     // Max length / max value
     if (rule.max !== undefined) {
       if (typeof value === 'string' && value.length > rule.max) {
-        return rule.message ?? `Must be no more than ${rule.max} characters`;
+        return rule.message ?? messages.maxLength(rule.max);
       }
       if (typeof value === 'number' && value > rule.max) {
-        return rule.message ?? `Must be no more than ${rule.max}`;
+        return rule.message ?? messages.maxValue(rule.max);
       }
     }
 
     // Pattern check
     if (rule.pattern) {
       if (typeof value === 'string' && !rule.pattern.test(value)) {
-        return rule.message ?? 'Invalid format';
+        return rule.message ?? messages.invalidFormat;
       }
     }
 
@@ -179,10 +202,14 @@ async function runValidation(value: any, rules: ValidationRule[]): Promise<strin
 }
 
 /** Merge the `required` shortcut prop into the rules array. */
-function mergeRequiredRule(rules: ValidationRule[] | undefined, required?: boolean): ValidationRule[] {
+function mergeRequiredRule(
+  rules: ValidationRule[] | undefined,
+  required?: boolean,
+  requiredMessage = DEFAULT_MESSAGES.required,
+): ValidationRule[] {
   const base = rules ? [...rules] : [];
   if (required && !base.some(r => r.required)) {
-    base.unshift({ required: true, message: 'This field is required' });
+    base.unshift({ required: true, message: requiredMessage });
   }
   return base;
 }
@@ -268,6 +295,18 @@ export function TkxForm<T extends Record<string, unknown> = Record<string, unkno
   form: externalInstance,
 }: TkxFormProps<T>) {
   const theme = useTheme();
+  const tStrings = useLocale();
+
+  // Localised validation messages — falls back to English when the active
+  // locale doesn't yet ship the optional form keys.
+  const validationMessages: ValidationMessages = useMemo(() => ({
+    required: tStrings.fieldRequired ?? DEFAULT_MESSAGES.required,
+    invalidFormat: tStrings.invalidFormat ?? DEFAULT_MESSAGES.invalidFormat,
+    minLength: tStrings.minLength ?? DEFAULT_MESSAGES.minLength,
+    maxLength: tStrings.maxLength ?? DEFAULT_MESSAGES.maxLength,
+    minValue: tStrings.minValue ?? DEFAULT_MESSAGES.minValue,
+    maxValue: tStrings.maxValue ?? DEFAULT_MESSAGES.maxValue,
+  }), [tStrings]);
 
   // ─── State ──────────────────────────────────────────────────────────────
   const [state, setState] = useState<FormState>({
@@ -322,14 +361,14 @@ export function TkxForm<T extends Record<string, unknown> = Record<string, unkno
     if (!meta) return true;
 
     const value = stateRef.current.values[name];
-    const error = await runValidation(value, meta.rules);
+    const error = await runValidation(value, meta.rules, validationMessages);
     setState(prev => ({
       ...prev,
       errors: { ...prev.errors, [name]: error },
       touched: { ...prev.touched, [name]: true },
     }));
     return error === null;
-  }, []);
+  }, [validationMessages]);
 
   const validateFields = useCallback(async (): Promise<T> => {
     const fieldNames = Object.keys(fieldMetaRef.current);
@@ -337,7 +376,7 @@ export function TkxForm<T extends Record<string, unknown> = Record<string, unkno
       fieldNames.map(async (name) => {
         const meta = fieldMetaRef.current[name];
         const value = stateRef.current.values[name];
-        const error = await runValidation(value, meta.rules);
+        const error = await runValidation(value, meta.rules, validationMessages);
         return { name, error };
       }),
     );

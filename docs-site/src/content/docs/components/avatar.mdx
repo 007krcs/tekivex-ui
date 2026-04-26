@@ -1,38 +1,101 @@
 ---
 title: TkxAvatar
-description: Avatar — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: User avatar with image, initials fallback, status dot, and group composition. RSC-compatible.
 ---
 
 ```tsx
 import { TkxAvatar } from 'tekivex-ui';
+
+<TkxAvatar src="/path/to/photo.jpg" alt="Aisha Khan" />
 ```
 
-Avatar is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Initials fallback
+
+When `src` fails or isn't provided, the avatar renders initials derived
+from `alt`:
+
+```tsx
+<TkxAvatar alt="Aisha Khan" />            {/* renders "AK" */}
+<TkxAvatar alt="Marcus Lee" />            {/* renders "ML" */}
+<TkxAvatar alt="李伟" />                   {/* renders "李" */}
+```
+
+The colour is derived from the name hash, so each user consistently gets
+the same background.
+
+## Sizes
+
+```tsx
+<TkxAvatar size="xs" {...props} />   {/* 24px */}
+<TkxAvatar size="sm" {...props} />   {/* 32px */}
+<TkxAvatar size="md" {...props} />   {/* 40px (default) */}
+<TkxAvatar size="lg" {...props} />   {/* 56px */}
+<TkxAvatar size="xl" {...props} />   {/* 80px */}
+```
+
+Custom size:
+
+```tsx
+<TkxAvatar size={64} {...props} />
+```
+
+## Status dot
+
+```tsx
+<TkxAvatar src="..." alt="..." status="online" />
+<TkxAvatar src="..." alt="..." status="busy" />
+<TkxAvatar src="..." alt="..." status="away" />
+<TkxAvatar src="..." alt="..." status="offline" />
+```
+
+## Avatar group
+
+Compose multiple avatars with overlap and an overflow count:
+
+```tsx
+import { TkxAvatarGroup } from 'tekivex-ui';
+
+<TkxAvatarGroup max={3}>
+  <TkxAvatar alt="Aisha Khan" src="..." />
+  <TkxAvatar alt="Marcus Lee" src="..." />
+  <TkxAvatar alt="Priya Sharma" src="..." />
+  <TkxAvatar alt="Dan Choi" src="..." />
+  <TkxAvatar alt="Eve Park" src="..." />
+</TkxAvatarGroup>
+{/* renders 3 avatars + "+2" pill */}
+```
+
+## Shape
+
+```tsx
+<TkxAvatar shape="circle" {...props} />   {/* default */}
+<TkxAvatar shape="rounded" {...props} />  {/* rounded square */}
+<TkxAvatar shape="square" {...props} />
+```
+
+## RSC compatible
+
+`TkxAvatar` uses no hooks. Safe for Next.js Server Components.
+
+## Accessibility
+
+- `alt` is required and used both as `<img alt>` and as the source for
+  the initials fallback. Never use the empty string — it makes the
+  avatar invisible to screen readers.
+- The status dot is decorative (`aria-hidden`); convey status text in
+  the surrounding context if it matters.
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `src` | `string` |  |  |
-| `alt` | `string` | yes |  |
-| `initials` | `string` |  |  |
-| `size` | `AvatarSize` |  |  |
-| `shape` | `AvatarShape` |  |  |
-| `status` | `AvatarStatus` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `src` | `string` | | Image URL. |
+| `alt` | `string` | yes | Accessibility text + initials source. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| number` | | Defaults to `md`. |
+| `shape` | `'circle' \| 'rounded' \| 'square'` | | Defaults to `circle`. |
+| `status` | `'online' \| 'busy' \| 'away' \| 'offline'` | | Status dot. |
+| `bgColor` | `string` | | Override the auto-derived initials background. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxAvatar.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAvatar.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/avatar).
+[`src/components/TkxAvatar.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAvatar.tsx)
