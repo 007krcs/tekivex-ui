@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useLocale, type LocaleStrings } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 
@@ -206,17 +207,31 @@ function getDecadeStart(year: number): number {
 
 // ── Built-in presets ──────────────────────────────────────────────────────────
 
-function buildBuiltinPresets(): DatePreset[] {
+function buildBuiltinPresets(t?: LocaleStrings): DatePreset[] {
+  // Optional locale strings — falls back to English. The new optional fields
+  // (yesterday, last7Days, last30Days, thisMonth, lastMonth) are translated
+  // gradually across the 35 locales.
+  const lbl = {
+    today: t?.today ?? 'Today',
+    yesterday: t?.yesterday ?? 'Yesterday',
+    last7: t?.last7Days ?? 'Last 7 days',
+    last30: t?.last30Days ?? 'Last 30 days',
+    last90: 'Last 90 days',
+    thisWeek: 'This week',
+    lastWeek: 'Last week',
+    thisMonth: t?.thisMonth ?? 'This month',
+    lastMonth: t?.lastMonth ?? 'Last month',
+  };
   return [
     {
-      label: 'Today',
+      label: lbl.today,
       getValue: () => {
-        const t = startOfDay(new Date());
-        return [t, t];
+        const d = startOfDay(new Date());
+        return [d, d];
       },
     },
     {
-      label: 'Yesterday',
+      label: lbl.yesterday,
       getValue: () => {
         const y = startOfDay(new Date());
         y.setDate(y.getDate() - 1);
@@ -224,7 +239,7 @@ function buildBuiltinPresets(): DatePreset[] {
       },
     },
     {
-      label: 'Last 7 days',
+      label: lbl.last7,
       getValue: () => {
         const end = startOfDay(new Date());
         const start = new Date(end);
@@ -233,7 +248,7 @@ function buildBuiltinPresets(): DatePreset[] {
       },
     },
     {
-      label: 'Last 30 days',
+      label: lbl.last30,
       getValue: () => {
         const end = startOfDay(new Date());
         const start = new Date(end);
@@ -242,7 +257,7 @@ function buildBuiltinPresets(): DatePreset[] {
       },
     },
     {
-      label: 'Last 90 days',
+      label: lbl.last90,
       getValue: () => {
         const end = startOfDay(new Date());
         const start = new Date(end);
@@ -251,7 +266,7 @@ function buildBuiltinPresets(): DatePreset[] {
       },
     },
     {
-      label: 'This week',
+      label: lbl.thisWeek,
       getValue: () => {
         const today = startOfDay(new Date());
         const start = new Date(today);
@@ -262,7 +277,7 @@ function buildBuiltinPresets(): DatePreset[] {
       },
     },
     {
-      label: 'Last week',
+      label: lbl.lastWeek,
       getValue: () => {
         const today = startOfDay(new Date());
         const end = new Date(today);
@@ -273,7 +288,7 @@ function buildBuiltinPresets(): DatePreset[] {
       },
     },
     {
-      label: 'This month',
+      label: lbl.thisMonth,
       getValue: () => {
         const t = new Date();
         return [
@@ -283,7 +298,7 @@ function buildBuiltinPresets(): DatePreset[] {
       },
     },
     {
-      label: 'Last month',
+      label: lbl.lastMonth,
       getValue: () => {
         const t = new Date();
         return [
@@ -638,6 +653,7 @@ export function TkxDatePicker({
   style,
 }: TkxDatePickerProps) {
   const theme = useTheme();
+  const localeStrings = useLocale();
   const autoId = useId();
   const id = idProp ?? autoId;
   const reduced = useReducedMotion();
@@ -944,7 +960,7 @@ export function TkxDatePicker({
 
   // ── Preset selection ──────────────────────────────────────────────────────────
 
-  const allPresets = customPresets ?? buildBuiltinPresets();
+  const allPresets = customPresets ?? buildBuiltinPresets(localeStrings);
 
   const applyPreset = (preset: DatePreset) => {
     const [start, end] = preset.getValue();

@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { tkx, cx } from '../engine/tkx';
 import { sanitizeString } from '../engine/security';
 
@@ -240,7 +241,7 @@ export function TkxCommand({
   items,
   isOpen = false,
   onClose,
-  placeholder = 'Type a command or search…',
+  placeholder,
   emptyMessage,
   maxItems = 8,
   onItemSelect,
@@ -248,6 +249,8 @@ export function TkxCommand({
   style,
 }: TkxCommandProps) {
   const theme = useTheme();
+  const t = useLocale();
+  const resolvedPlaceholder = placeholder ?? t.commandSearch ?? 'Type a command or search…';
   const [query, setQuery] = useState('');
   const [activeIdx, setActiveIdx] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -319,8 +322,9 @@ export function TkxCommand({
 
   if (!isOpen || typeof document === 'undefined') return null;
 
-  const safePlaceholder = sanitizeString(placeholder);
-  const safeEmptyMsg = emptyMessage ? sanitizeString(emptyMessage) : `No results for "${sanitizeString(query)}"`;
+  const safePlaceholder = sanitizeString(resolvedPlaceholder);
+  const fallbackEmpty = t.noCommandsFound ?? `No results for "${sanitizeString(query)}"`;
+  const safeEmptyMsg = emptyMessage ? sanitizeString(emptyMessage) : fallbackEmpty;
 
   // Shimmer CSS injection (idempotent)
   if (typeof document !== 'undefined' && !document.getElementById('tkx-shimmer-style')) {
@@ -430,7 +434,7 @@ export function TkxCommand({
           {query && (
             <button
               type="button"
-              aria-label="Clear search"
+              aria-label={t.clearSelection}
               onClick={() => { setQuery(''); setActiveIdx(0); inputRef.current?.focus(); }}
               style={{
                 border: 'none',

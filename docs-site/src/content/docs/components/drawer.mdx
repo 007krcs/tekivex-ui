@@ -1,41 +1,100 @@
 ---
 title: TkxDrawer
-description: Drawer — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Side sheet that slides in from any edge — focus-trapped, scroll-locked, RTL-aware.
 ---
 
 ```tsx
-import { TkxDrawer } from 'tekivex-ui';
+import { TkxDrawer, TkxButton } from 'tekivex-ui';
+import { useState } from 'react';
+
+function Example() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <TkxButton onClick={() => setOpen(true)}>Open drawer</TkxButton>
+      <TkxDrawer
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        side="right"
+        title="Filters"
+      >
+        {/* drawer body */}
+      </TkxDrawer>
+    </>
+  );
+}
 ```
 
-Drawer is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Sides
+
+```tsx
+<TkxDrawer side="left"   {...props}>From left</TkxDrawer>
+<TkxDrawer side="right"  {...props}>From right (default)</TkxDrawer>
+<TkxDrawer side="top"    {...props}>From top</TkxDrawer>
+<TkxDrawer side="bottom" {...props}>From bottom (mobile sheet)</TkxDrawer>
+```
+
+In RTL locales, `side="left"` and `side="right"` flip automatically — the
+drawer always slides from the **inline-end** edge unless you pin it.
+
+## Sizes
+
+```tsx
+<TkxDrawer size="sm" {...props} />   // 320px (or 40vw on small screens)
+<TkxDrawer size="md" {...props} />   // 480px (default)
+<TkxDrawer size="lg" {...props} />   // 640px
+<TkxDrawer size="full" {...props} /> // 100%
+```
+
+## With footer
+
+```tsx
+<TkxDrawer
+  isOpen={open}
+  onClose={onClose}
+  title="New report"
+  footer={
+    <>
+      <TkxButton variant="ghost" onClick={onClose}>Cancel</TkxButton>
+      <TkxButton variant="primary" onClick={save}>Save</TkxButton>
+    </>
+  }
+>
+  {/* form */}
+</TkxDrawer>
+```
+
+## Accessibility — what's automatic
+
+- `role="dialog"` + `aria-modal="true"`
+- `aria-labelledby` linked to the title
+- **Focus trap** — Tab cycles only within the drawer
+- **Initial focus** on the first interactive element (or via `initialFocusRef`)
+- **Restored focus** to the trigger on close
+- **Escape closes** unless `closeOnEsc={false}`
+- **Scroll lock** on the page beneath
+- **RTL**: `side="left"` and `side="right"` flip via logical properties
+
+## Use a drawer (vs modal) when…
+
+- The user benefits from seeing the page context behind the surface
+- The interaction involves filtering or browsing rather than confirming
+- The flow is taller than wide (mobile sheets, settings panels)
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `isOpen` | `boolean` | yes |  |
-| `onClose` | `() => void` | yes |  |
-| `placement` | `DrawerPlacement` |  |  |
-| `size` | `DrawerSize` |  |  |
-| `title` | `ReactNode` |  |  |
-| `children` | `ReactNode` | yes |  |
-| `footer` | `ReactNode` |  |  |
-| `closeOnOverlayClick` | `boolean` |  |  |
-| `closeOnEsc` | `boolean` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `isOpen` | `boolean` | yes | Controlled open state. |
+| `onClose` | `() => void` | yes | Called on close gesture. |
+| `side` | `'left' \| 'right' \| 'top' \| 'bottom'` | | Defaults to `right`. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'full'` | | Defaults to `md`. |
+| `title` | `ReactNode` | | Heading shown in header. |
+| `footer` | `ReactNode` | | Footer content. |
+| `closeOnEsc` | `boolean` | | Defaults to `true`. |
+| `closeOnBackdropClick` | `boolean` | | Defaults to `true`. |
+| `initialFocusRef` | `React.RefObject` | | Override auto-focus target. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxDrawer.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxDrawer.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/drawer).
+[`src/components/TkxDrawer.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxDrawer.tsx)

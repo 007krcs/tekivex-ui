@@ -1,40 +1,82 @@
 ---
 title: TkxAlert
-description: Alert — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Status callout with info / success / warning / danger variants. Optional title, dismissible, accessible roles.
 ---
+
+import { Aside } from '@astrojs/starlight/components';
 
 ```tsx
 import { TkxAlert } from 'tekivex-ui';
+
+<TkxAlert variant="info">Update available — restart to apply.</TkxAlert>
 ```
 
-Alert is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Variants
+
+```tsx
+<TkxAlert variant="info">Information message</TkxAlert>
+<TkxAlert variant="success">Operation completed</TkxAlert>
+<TkxAlert variant="warning">Disk space low</TkxAlert>
+<TkxAlert variant="danger">Connection lost — retrying</TkxAlert>
+```
+
+The variant determines both the visual style **and** the WAI-ARIA role:
+
+| Variant | Role | Announcement |
+|---|---|---|
+| `info` | `status` | polite — does not interrupt |
+| `success` | `status` | polite |
+| `warning` | `status` | polite |
+| `danger` | `alert` | assertive — interrupts current speech |
+
+## With title
+
+```tsx
+<TkxAlert variant="success" title="Deploy succeeded">
+  Your changes are live at <code>my-app.example.com</code>.
+</TkxAlert>
+```
+
+## Dismissible
+
+```tsx
+const [open, setOpen] = useState(true);
+
+{open && (
+  <TkxAlert
+    variant="warning"
+    title="Beta feature"
+    onClose={() => setOpen(false)}
+  >
+    This feature may change without notice.
+  </TkxAlert>
+)}
+```
+
+The close button gets `aria-label` from the active locale (defaults to "Close").
+
+## RSC compatible
+
+`TkxAlert` is one of the 13 components that render in Next.js Server
+Components without `'use client'` — useful for status messages from
+`searchParams` or server-fetched data.
+
+<Aside type="caution" title="Don't auto-dismiss critical alerts">
+  Alerts with `variant="danger"` should never auto-dismiss. Screen readers
+  announce them assertively; auto-hiding before the user has read them
+  defeats the purpose. Only dismiss on explicit user action.
+</Aside>
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `variant` | `AlertVariant` | yes |  |
-| `title` | `string` |  |  |
-| `children` | `ReactNode` | yes |  |
-| `dismissible` | `boolean` |  |  |
-| `onDismiss` | `() => void` |  |  |
-| `icon` | `ReactNode` |  |  |
-| `style` | `React.CSSProperties` |  |  |
-| `className` | `string` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `variant` | `'info' \| 'success' \| 'warning' \| 'danger'` | yes | Visual + role mapping. |
+| `title` | `ReactNode` | | Bold heading row. |
+| `onClose` | `() => void` | | Renders the close button. |
+| `icon` | `ReactNode` | | Override the default per-variant icon. |
+| `children` | `ReactNode` | yes | Body content. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxAlert.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAlert.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/alert).
+[`src/components/TkxAlert.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAlert.tsx)

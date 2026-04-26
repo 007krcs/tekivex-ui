@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
@@ -157,6 +158,7 @@ interface ToastCardProps {
 
 function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
   const theme = useTheme();
+  const t = useLocale();
   const labelId = useId();
 
   const variantColorMap: Record<ToastVariant, string> = {
@@ -215,7 +217,7 @@ function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
       </div>
 
       <button
-        aria-label="Dismiss notification"
+        aria-label={t.close}
         onClick={() => onDismiss(toast.id)}
         className={tkx('bg-transparent border-none cursor-pointer rounded p-[2px] shrink-0 flex items-center justify-center focus-visible:focus-ring')}
         style={{ color: theme.textMuted }}
@@ -233,6 +235,7 @@ function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
 export function TkxToastProvider({ position = 'top-right', children }: TkxToastProps) {
   const [toasts, setToasts] = useState<ToastItem[]>([...visible]);
   const reduced = useReducedMotion();
+  const tStrings = useLocale();
 
   useEffect(() => {
     setToasts([...visible]);
@@ -272,7 +275,7 @@ export function TkxToastProvider({ position = 'top-right', children }: TkxToastP
 
   return <>{children}{createPortal(
     <div
-      aria-label="Notifications"
+      aria-label={tStrings.notifications ?? 'Notifications'}
       className={tkx('fixed z-[9999] flex flex-col gap-2 pointer-events-none')}
       style={posStyle}
     >

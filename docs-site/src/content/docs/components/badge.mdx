@@ -1,37 +1,67 @@
 ---
 title: TkxBadge
-description: Badge — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Compact status pill — variants, sizes, outlined style. RSC-compatible.
 ---
 
 ```tsx
 import { TkxBadge } from 'tekivex-ui';
+
+<TkxBadge variant="success">active</TkxBadge>
 ```
 
-Badge is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Variants
+
+```tsx
+<TkxBadge variant="primary">primary</TkxBadge>
+<TkxBadge variant="secondary">secondary</TkxBadge>
+<TkxBadge variant="success">success</TkxBadge>
+<TkxBadge variant="warning">warning</TkxBadge>
+<TkxBadge variant="danger">danger</TkxBadge>
+<TkxBadge variant="info">info</TkxBadge>
+```
+
+## Sizes
+
+```tsx
+<TkxBadge size="sm">small</TkxBadge>
+<TkxBadge size="md">medium</TkxBadge>
+<TkxBadge size="lg">large</TkxBadge>
+```
+
+## Outlined
+
+```tsx
+<TkxBadge variant="primary" outlined>v2.7</TkxBadge>
+<TkxBadge variant="success" outlined>open source</TkxBadge>
+```
+
+Outlined badges have a transparent fill — useful when stacked over coloured
+backgrounds where a solid pill would be too loud.
+
+## With dot
+
+```tsx
+<TkxBadge variant="success" dot>online</TkxBadge>
+<TkxBadge variant="danger" dot>error</TkxBadge>
+```
+
+The dot is decorative; screen readers announce only the text.
+
+## RSC compatible
+
+`TkxBadge` uses no hooks or browser APIs. It renders in Next.js Server
+Components without `'use client'`.
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `variant` | `BadgeVariant` |  |  |
-| `size` | `BadgeSize` |  |  |
-| `dot` | `boolean` |  |  |
-| `pulse` | `boolean` |  |  |
-| `outlined` | `boolean` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `variant` | `'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger' \| 'info'` | | Defaults to `primary`. |
+| `size` | `'sm' \| 'md' \| 'lg'` | | Defaults to `md`. |
+| `outlined` | `boolean` | | Transparent fill, coloured border. |
+| `dot` | `boolean` | | Renders a leading status dot. |
+| `children` | `ReactNode` | yes | Badge label. Sanitised before render. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxBadge.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxBadge.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/badge).
+[`src/components/TkxBadge.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxBadge.tsx)

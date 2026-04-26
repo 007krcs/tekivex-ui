@@ -4,6 +4,7 @@ description: Container component for grouping related content — header, body, 
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { CardVariants, CardWithHeaderFooter, CardWithBadge } from '../../../components/demos/CardDemo';
 
 ```tsx
 import { TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter } from 'tekivex-ui';
@@ -20,6 +21,8 @@ import { TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter } from 'tekivex-ui';
 ```
 
 ## Variants
+
+<CardVariants client:load />
 
 <Tabs>
 <TabItem label="Default">
@@ -51,6 +54,10 @@ import { TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter } from 'tekivex-ui';
 ```
 </TabItem>
 </Tabs>
+
+<CardWithHeaderFooter client:load />
+
+<CardWithBadge client:load />
 
 ## Padding scale
 

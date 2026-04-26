@@ -1,39 +1,82 @@
 ---
 title: TkxTabs
-description: Tabs — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Tabbed interface with arrow-key navigation, ARIA tablist semantics, and lazy-rendered panels.
 ---
 
 ```tsx
-import { TkxTabs } from 'tekivex-ui';
+import { TkxTabs, TkxTab, TkxTabPanel } from 'tekivex-ui';
+
+<TkxTabs defaultActive="overview">
+  <TkxTab id="overview">Overview</TkxTab>
+  <TkxTab id="activity">Activity</TkxTab>
+  <TkxTab id="settings">Settings</TkxTab>
+
+  <TkxTabPanel id="overview">Overview content</TkxTabPanel>
+  <TkxTabPanel id="activity">Activity feed</TkxTabPanel>
+  <TkxTabPanel id="settings">Settings form</TkxTabPanel>
+</TkxTabs>
 ```
 
-Tabs is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Controlled
+
+```tsx
+const [active, setActive] = useState('overview');
+
+<TkxTabs active={active} onChange={setActive}>
+  {/* … */}
+</TkxTabs>
+```
+
+## Variants
+
+```tsx
+<TkxTabs variant="line">    {/* underline indicator (default) */}
+<TkxTabs variant="solid">   {/* filled active tab */}
+<TkxTabs variant="enclosed"> {/* boxed tabs */}
+```
+
+## Lazy rendering
+
+Tab panels render only when first activated by default. Pass `forceMount`
+to render every panel up front (useful when forms inside tabs need their
+state preserved across tab switches):
+
+```tsx
+<TkxTabPanel id="settings" forceMount>
+  <SettingsForm />
+</TkxTabPanel>
+```
+
+## Accessibility — what's automatic
+
+- `role="tablist"` on the container with `aria-orientation`
+- `role="tab"` + `aria-selected` + `aria-controls` on every tab
+- `role="tabpanel"` + `aria-labelledby` on every panel
+- **Arrow keys** move focus between tabs (Left/Right or Up/Down)
+- **Home / End** jump to first / last tab
+- Manual activation by default (focus follows arrows but doesn't
+  switch the panel until `Enter` / `Space`)
+
+Pass `activationMode="auto"` to switch panels on focus instead — only
+appropriate when panel mounting is cheap.
 
 ## Props
 
+### TkxTabs
+
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `defaultIndex` | `number` |  |  |
-| `activeIndex` | `number` |  |  |
-| `onChange` | `(i: number) => void` |  |  |
-| `children` | `ReactNode` | yes |  |
-| `tabCount` | `number` |  |  |
-| `style` | `React.CSSProperties` |  |  |
-| `className` | `string` |  |  |
+| `defaultActive` | `string` | | Uncontrolled initial tab id. |
+| `active` | `string` | | Controlled active tab id. |
+| `onChange` | `(id: string) => void` | | Fires on tab activation. |
+| `variant` | `'line' \| 'solid' \| 'enclosed'` | | Defaults to `line`. |
+| `orientation` | `'horizontal' \| 'vertical'` | | Defaults to `horizontal`. |
+| `activationMode` | `'manual' \| 'auto'` | | Defaults to `manual`. |
 
-## Accessibility
+### TkxTab / TkxTabPanel
 
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+Both require an `id` that links the tab to its panel.
 
 ## Source
 
-The implementation lives at [`src/components/TkxTabs.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxTabs.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/tabs).
+[`src/components/TkxTabs.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxTabs.tsx)

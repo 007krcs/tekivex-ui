@@ -4,12 +4,15 @@ description: Accessible text input with label, hint, error states, addons, and b
 ---
 
 import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+import { InputBasic, InputWithHint, InputError, InputUnicodeSafety } from '../../../components/demos/InputDemo';
 
 ```tsx
 import { TkxInput } from 'tekivex-ui';
 
 <TkxInput label="Email" type="email" />
 ```
+
+<InputBasic client:load />
 
 ## Variants
 
@@ -49,7 +52,13 @@ import { TkxInput } from 'tekivex-ui';
 </TabItem>
 </Tabs>
 
+<InputWithHint client:load />
+
+<InputError client:load />
+
 ## Built-in Unicode safety
+
+<InputUnicodeSafety client:load />
 
 By default, every `TkxInput` strips zero-width and bidi-override Unicode
 characters on input — defending against the Trojan Source attack class

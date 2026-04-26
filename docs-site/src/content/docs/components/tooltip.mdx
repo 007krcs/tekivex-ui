@@ -1,36 +1,93 @@
 ---
 title: TkxTooltip
-description: Tooltip — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Hover/focus tooltip with collision detection, hover-delay, and proper ARIA wiring.
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
 ```tsx
-import { TkxTooltip } from 'tekivex-ui';
+import { TkxTooltip, TkxButton } from 'tekivex-ui';
+
+<TkxTooltip label="Save changes (Ctrl+S)">
+  <TkxButton>Save</TkxButton>
+</TkxTooltip>
 ```
 
-Tooltip is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Placement
+
+```tsx
+<TkxTooltip label="Top" placement="top"><span>top</span></TkxTooltip>
+<TkxTooltip label="Bottom" placement="bottom"><span>bottom</span></TkxTooltip>
+<TkxTooltip label="Left" placement="left"><span>left</span></TkxTooltip>
+<TkxTooltip label="Right" placement="right"><span>right</span></TkxTooltip>
+```
+
+When the preferred placement would clip the viewport, the tooltip flips
+to the opposite side automatically.
+
+## Delay
+
+```tsx
+<TkxTooltip label="Saved" delay={400}>
+  <TkxButton>Save</TkxButton>
+</TkxTooltip>
+```
+
+Default open delay: 200ms. Close delay: 0ms.
+
+## Multiline content
+
+```tsx
+<TkxTooltip
+  label={
+    <>
+      <strong>Keyboard shortcut</strong>
+      <br />
+      Hold Shift while clicking to open in a new tab.
+    </>
+  }
+>
+  <a href="...">Link</a>
+</TkxTooltip>
+```
+
+## Accessibility
+
+- The tooltip content is connected via `aria-describedby` on the trigger
+- Opens on **mouse hover** AND **keyboard focus** — never just hover
+- Closes on **mouse leave**, **focus blur**, or **Escape**
+- Touch devices: long-press to open, tap elsewhere to close
+
+<Aside type="caution" title="Tooltips are supplementary, not primary">
+  Don't put critical information in a tooltip. Touch users won't see it,
+  and screen readers may announce it inconsistently. Use a tooltip for
+  *additional* context only — the primary affordance must work without it.
+</Aside>
+
+## Don't wrap interactive children inside Link/Button
+
+Wrap the tooltip *around* an existing interactive element. Don't make the
+tooltip itself interactive — that breaks the trigger pattern.
+
+```tsx
+{/* ✅ Correct — TkxTooltip wraps the trigger */}
+<TkxTooltip label="Save"><TkxButton>S</TkxButton></TkxTooltip>
+
+{/* ❌ Wrong — tooltip on a non-interactive span */}
+<TkxTooltip label="Save"><span onClick={save}>S</span></TkxTooltip>
+```
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `content` | `string` | yes |  |
-| `children` | `ReactElement` | yes |  |
-| `placement` | `TooltipPlacement` |  |  |
-| `delay` | `number` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `label` | `ReactNode` | yes | Tooltip content. Plain string for simple cases. |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | | Defaults to `top`. |
+| `delay` | `number` | | Open delay in ms. Defaults to `200`. |
+| `closeDelay` | `number` | | Close delay in ms. Defaults to `0`. |
+| `disabled` | `boolean` | | Disables the tooltip without affecting the child. |
+| `children` | `ReactElement` | yes | The trigger element. Must be a single React element. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxTooltip.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxTooltip.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/tooltip).
+[`src/components/TkxTooltip.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxTooltip.tsx)

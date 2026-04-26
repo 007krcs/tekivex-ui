@@ -1,44 +1,115 @@
 ---
 title: TkxFileUpload
-description: FileUpload — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Drag-and-drop file uploader with validation, previews, simulated progress, and full keyboard support.
 ---
 
 ```tsx
 import { TkxFileUpload } from 'tekivex-ui';
+
+<TkxFileUpload
+  multiple
+  accept="image/*,application/pdf"
+  maxSize={10 * 1024 * 1024}
+  maxFiles={5}
+  onChange={(files) => console.log(files)}
+  hint="JPG, PNG or PDF. Up to 10MB each."
+/>
 ```
 
-FileUpload is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Variants
+
+```tsx
+{/* Default — full drop zone with icon and CTA */}
+<TkxFileUpload variant="dropzone" />
+
+{/* Compact — single button, no drop zone */}
+<TkxFileUpload variant="button" label="Choose files" />
+```
+
+## Validation
+
+```tsx
+<TkxFileUpload
+  accept=".pdf,.docx"          // file picker filter
+  maxSize={5 * 1024 * 1024}    // 5MB per file
+  maxFiles={3}                 // up to 3 files
+  onError={(err) => toast.error(err.message)}
+/>
+```
+
+Errors fire when:
+- File MIME type doesn't match `accept`
+- File size exceeds `maxSize`
+- Total file count exceeds `maxFiles`
+
+## With image previews
+
+```tsx
+<TkxFileUpload
+  accept="image/*"
+  preview                    // shows thumbnail per file
+  onChange={handleFiles}
+/>
+```
+
+Previews use `URL.createObjectURL` + auto-revoke on unmount, so memory
+leaks are handled.
+
+## i18n
+
+The default label, drop-zone text, and hint follow the active locale. Set
+`<I18nProvider locale="hi-IN">` and the component picks up Hindi strings.
+
+```tsx
+{/* Spanish auto-localised */}
+<I18nProvider locale="es-ES">
+  <TkxFileUpload />
+  {/* renders with "Soltar archivos aquí o" + "Explorar" */}
+</I18nProvider>
+```
+
+## Accessibility
+
+- The drop zone is a real `<button>` — keyboard reachable, focus indicators
+- File picker opens on **click** AND **Enter / Space**
+- Drag-over state announces via `aria-busy` on the dropzone
+- Each accepted file gets a labelled remove button
+- Progress bars use `role="progressbar"` with `aria-valuenow`
+- Error state uses `role="alert"` so screen readers announce immediately
+
+## Server upload
+
+`TkxFileUpload` only handles the client side — collecting and validating
+files. Wire your own POST/PUT to the server:
+
+```tsx
+<TkxFileUpload
+  onChange={async (files) => {
+    for (const f of files) {
+      const fd = new FormData();
+      fd.append('file', f.file);
+      await fetch('/api/upload', { method: 'POST', body: fd });
+    }
+  }}
+/>
+```
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `accept` | `string` |  |  |
-| `multiple` | `boolean` |  |  |
-| `maxSize` | `number` |  |  |
-| `maxFiles` | `number` |  |  |
-| `onChange` | `(files: File[]) => void` |  |  |
-| `onError` | `(error: string) => void` |  |  |
-| `label` | `string` |  |  |
-| `hint` | `string` |  |  |
-| `isDisabled` | `boolean` |  |  |
-| `preview` | `boolean` |  |  |
-| `dragDrop` | `boolean` |  |  |
-| `variant` | `'dropzone' \| 'button'` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `accept` | `string` | | Native `<input accept>` filter (e.g. `'image/*,.pdf'`). |
+| `multiple` | `boolean` | | Allow multiple selection. Defaults to `false`. |
+| `maxSize` | `number` | | Per-file size cap in bytes. |
+| `maxFiles` | `number` | | Total file count cap. |
+| `onChange` | `(files: UploadedFile[]) => void` | | Fires on every accept. |
+| `onError` | `(err: Error) => void` | | Validation errors. |
+| `label` | `string` | | Drop-zone CTA. Localised by default. |
+| `hint` | `string` | | Helper text below CTA. |
+| `preview` | `boolean` | | Show image previews. Defaults to `true`. |
+| `dragDrop` | `boolean` | | Enable drag-and-drop. Defaults to `true`. |
+| `variant` | `'dropzone' \| 'button'` | | Defaults to `dropzone`. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxFileUpload.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxFileUpload.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/file-upload).
+[`src/components/TkxFileUpload.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxFileUpload.tsx)

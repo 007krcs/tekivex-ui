@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-04-26T13:22:07.020Z",
-  "totalFindings": 389,
+  "generatedAt": "2026-04-26T13:39:48.453Z",
+  "totalFindings": 386,
   "filesAffected": 68,
   "byKind": {
     "jsx-text": 310,
     "prop:title": 9,
-    "prop:aria-label": 67,
+    "prop:aria-label": 64,
     "prop:placeholder": 3
   },
   "topFiles": [
@@ -39,7 +39,7 @@
     },
     {
       "file": "src/components/TkxCommand.tsx",
-      "count": 12
+      "count": 11
     },
     {
       "file": "src/components/TkxDropdown.tsx",
@@ -55,10 +55,6 @@
     },
     {
       "file": "src/components/TkxMarkdown.tsx",
-      "count": 10
-    },
-    {
-      "file": "src/components/TkxToast.tsx",
       "count": 10
     },
     {
@@ -79,6 +75,10 @@
     },
     {
       "file": "src/components/TkxTable.tsx",
+      "count": 8
+    },
+    {
+      "file": "src/components/TkxToast.tsx",
       "count": 8
     },
     {
@@ -469,75 +469,68 @@
       "kind": "prop",
       "prop": "aria-label",
       "value": "Command palette",
-      "line": 366,
-      "file": "src/components/TkxCommand.tsx"
-    },
-    {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "Clear search",
-      "line": 433,
+      "line": 370,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "prop",
       "prop": "aria-label",
       "value": "Command results",
-      "line": 458,
+      "line": 462,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ");\n    parts.push(",
-      "line": 173,
+      "line": 174,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ");\n\n  return",
-      "line": 181,
+      "line": 182,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(null);\n  const listRef = useRef",
-      "line": 254,
+      "line": 257,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "))\n          ) : flatResults.length === 0 ? (\n            /* Empty state */",
-      "line": 463,
+      "line": 467,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "acc + g.items.length, 0);\n\n              return (",
-      "line": 488,
+      "line": 492,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "navigate",
-      "line": 630,
+      "line": 634,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "select",
-      "line": 633,
+      "line": 637,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Esc",
-      "line": 636,
+      "line": 640,
       "file": "src/components/TkxCommand.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "close",
-      "line": 636,
+      "line": 640,
       "file": "src/components/TkxCommand.tsx"
     },
     {
@@ -659,134 +652,134 @@
       "kind": "prop",
       "prop": "aria-label",
       "value": "Date picker",
-      "line": 1000,
+      "line": 1016,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "prop",
       "prop": "aria-label",
       "value": "Clear selection",
-      "line": 1558,
+      "line": 1574,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "lo && t",
-      "line": 98,
+      "line": 99,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "= 1 && m",
-      "line": 153,
+      "line": 154,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "= 1 && d",
-      "line": 153,
+      "line": 154,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "void;\n  label: string;\n  theme: ReturnType",
-      "line": 370,
+      "line": 385,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "([]);\n  const containerRef = useRef",
-      "line": 377,
+      "line": 392,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "String(v).padStart(2, '0'));\n\n  return (",
-      "line": 387,
+      "line": 402,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "void;\n  theme: ReturnType",
-      "line": 455,
+      "line": 470,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "([null, null]);\n  const [pendingDate, setPendingDate] = useState",
-      "line": 669,
+      "line": 685,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "('day');\n\n  // Time\n  const [internalTime, setInternalTime] = useState",
-      "line": 676,
-      "file": "src/components/TkxDatePicker.tsx"
-    },
-    {
-      "kind": "jsx-text",
-      "value": "(null);\n  const [hoverDate, setHoverDate] = useState",
       "line": 692,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
+      "value": "(null);\n  const [hoverDate, setHoverDate] = useState",
+      "line": 708,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
       "value": "(null);\n  const [popupPos, setPopupPos] = useState",
-      "line": 693,
+      "line": 709,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "x + 1, 0);\n\n  const anchorRef = useRef",
-      "line": 695,
+      "line": 711,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(null);\n  const popupRef = useRef",
-      "line": 697,
+      "line": 713,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "(null);\n  const inputRef = useRef",
-      "line": 698,
+      "line": 714,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "i);\n\n  const popupContent = (",
-      "line": 994,
+      "line": 1010,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Quick select",
-      "line": 1049,
+      "line": 1065,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Today",
-      "line": 1424,
+      "line": 1440,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Cancel",
-      "line": 1445,
+      "line": 1461,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Apply",
-      "line": 1462,
+      "line": 1478,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ");\n\n  return (",
-      "line": 1469,
+      "line": 1485,
       "file": "src/components/TkxDatePicker.tsx"
     },
     {
@@ -2229,65 +2222,51 @@
       "file": "src/components/TkxTimeline.tsx"
     },
     {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "Dismiss notification",
-      "line": 218,
-      "file": "src/components/TkxToast.tsx"
-    },
-    {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "Notifications",
-      "line": 275,
-      "file": "src/components/TkxToast.tsx"
-    },
-    {
       "kind": "jsx-text",
       "value": "void;\n\nconst MAX_VISIBLE = 5;\nlet queue: ToastItem[] = [];\nlet visible: ToastItem[] = [];\nconst listeners = new Set",
-      "line": 38,
+      "line": 39,
       "file": "src/components/TkxToast.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "();\nconst timers = new Map",
-      "line": 43,
+      "line": 44,
       "file": "src/components/TkxToast.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "0 && visible.length",
-      "line": 62,
+      "line": 63,
       "file": "src/components/TkxToast.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "),\n  success: (",
-      "line": 106,
+      "line": 107,
       "file": "src/components/TkxToast.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "),\n  danger: (",
-      "line": 111,
+      "line": 112,
       "file": "src/components/TkxToast.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "),\n  warning: (",
-      "line": 116,
+      "line": 117,
       "file": "src/components/TkxToast.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "),\n  info: (",
-      "line": 121,
+      "line": 122,
       "file": "src/components/TkxToast.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ";\n\n  const ordered = isBottom ? [...toasts].reverse() : toasts;\n\n  return",
-      "line": 269,
+      "line": 272,
       "file": "src/components/TkxToast.tsx"
     },
     {

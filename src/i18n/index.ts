@@ -61,6 +61,21 @@ export interface LocaleStrings {
   clearDate?: string;
   previousMonth?: string;
   nextMonth?: string;
+  yesterday?: string;
+  last7Days?: string;
+  last30Days?: string;
+  thisMonth?: string;
+  lastMonth?: string;
+
+  // Toast / notifications
+  notifications?: string;
+
+  // Command palette
+  commandSearch?: string;
+  noCommandsFound?: string;
+
+  // Drawer
+  closeDrawer?: string;
 }
 
 // ── Helper — build a locale without having to re-type every key ─────────────

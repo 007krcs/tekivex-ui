@@ -1,11 +1,11 @@
-# i18n audit — 2026-04-26T13:22:07.020Z
+# i18n audit — 2026-04-26T13:39:48.453Z
 
-**389 hardcoded strings** across 68 files.
+**386 hardcoded strings** across 68 files.
 
 ## Breakdown by kind
 
 - `jsx-text`: 310
-- `prop:aria-label`: 67
+- `prop:aria-label`: 64
 - `prop:title`: 9
 - `prop:placeholder`: 3
 
@@ -20,17 +20,17 @@
 | `src/components/TkxVideoPlayer.tsx` | 17 |
 | `src/components/TkxPlayground.tsx` | 16 |
 | `src/components/TkxImageEditor.tsx` | 13 |
-| `src/components/TkxCommand.tsx` | 12 |
+| `src/components/TkxCommand.tsx` | 11 |
 | `src/components/TkxDropdown.tsx` | 11 |
 | `src/components/TkxQuantumForm.tsx` | 11 |
 | `src/components/TkxSelect.tsx` | 11 |
 | `src/components/TkxMarkdown.tsx` | 10 |
-| `src/components/TkxToast.tsx` | 10 |
 | `src/components/TkxImage.tsx` | 9 |
 | `src/components/TkxCarousel.tsx` | 8 |
 | `src/components/TkxChat.tsx` | 8 |
 | `src/components/TkxPhoneInput.tsx` | 8 |
 | `src/components/TkxTable.tsx` | 8 |
+| `src/components/TkxToast.tsx` | 8 |
 | `src/components/TkxPagination.tsx` | 7 |
 | `src/components/TkxColorPicker.tsx` | 6 |
 

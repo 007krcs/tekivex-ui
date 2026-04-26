@@ -4,6 +4,7 @@ description: Accessible button with variants, sizes, color schemes, loading stat
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { ButtonVariants, ButtonSizes, ButtonLoading, ButtonColorSchemes } from '../../../components/demos/ButtonDemo';
 
 ```tsx
 import { TkxButton } from 'tekivex-ui';
@@ -12,6 +13,8 @@ import { TkxButton } from 'tekivex-ui';
 ```
 
 ## Variants
+
+<ButtonVariants client:load />
 
 ```tsx
 <TkxButton variant="primary">Primary</TkxButton>
@@ -23,13 +26,27 @@ import { TkxButton } from 'tekivex-ui';
 
 ## Sizes
 
+<ButtonSizes client:load />
+
 ```tsx
 <TkxButton size="sm">Small</TkxButton>
 <TkxButton size="md">Medium</TkxButton>
 <TkxButton size="lg">Large</TkxButton>
 ```
 
+## Color schemes
+
+<ButtonColorSchemes client:load />
+
+```tsx
+<TkxButton colorScheme="success">Success</TkxButton>
+<TkxButton colorScheme="warning">Warning</TkxButton>
+<TkxButton colorScheme="danger">Danger</TkxButton>
+```
+
 ## Loading state
+
+<ButtonLoading client:load />
 
 ```tsx
 <TkxButton loading>Saving…</TkxButton>
