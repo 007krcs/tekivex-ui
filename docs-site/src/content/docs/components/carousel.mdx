@@ -1,51 +1,123 @@
 ---
 title: TkxCarousel
-description: Carousel — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Slide carousel with autoplay, pause-on-hover, indicators, swipe, and full keyboard control.
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
 ```tsx
-import { TkxCarousel } from 'tekivex-ui';
+import { TkxCarousel, TkxCarouselSlide } from 'tekivex-ui';
+
+<TkxCarousel>
+  <TkxCarouselSlide>
+    <img src="/slide-1.jpg" alt="Mountain at dawn" />
+  </TkxCarouselSlide>
+  <TkxCarouselSlide>
+    <img src="/slide-2.jpg" alt="Forest path" />
+  </TkxCarouselSlide>
+  <TkxCarouselSlide>
+    <img src="/slide-3.jpg" alt="Coastline" />
+  </TkxCarouselSlide>
+</TkxCarousel>
 ```
 
-Carousel is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Autoplay
+
+```tsx
+<TkxCarousel autoplay autoplayInterval={5000} pauseOnHover>
+  {/* slides */}
+</TkxCarousel>
+```
+
+Autoplay pauses on hover, focus, AND when the user prefers reduced
+motion (`prefers-reduced-motion: reduce` is automatic).
+
+## Indicators
+
+```tsx
+<TkxCarousel indicators="dots">    {/* default — small dots */}
+<TkxCarousel indicators="bars">    {/* progress bars */}
+<TkxCarousel indicators="numbers"> {/* "1 / 5" counter */}
+<TkxCarousel indicators="none">    {/* no indicators */}
+```
+
+## Multi-slide view
+
+Show multiple slides at once (e.g. product cards):
+
+```tsx
+<TkxCarousel slidesPerView={3} gap={16}>
+  {products.map(p => (
+    <TkxCarouselSlide key={p.id}>
+      <ProductCard product={p} />
+    </TkxCarouselSlide>
+  ))}
+</TkxCarousel>
+```
+
+`slidesPerView` accepts a number or a responsive object:
+
+```tsx
+<TkxCarousel
+  slidesPerView={{ base: 1, md: 2, lg: 3, xl: 4 }}
+  gap={16}
+>
+```
+
+## Loop
+
+```tsx
+<TkxCarousel loop>
+  {/* infinite loop — going past the last slide returns to the first */}
+</TkxCarousel>
+```
+
+## Controlled
+
+```tsx
+const [active, setActive] = useState(0);
+
+<TkxCarousel active={active} onChange={setActive}>
+  {/* … */}
+</TkxCarousel>
+```
+
+## Accessibility — what's automatic
+
+- Carousel container: `role="region"` + `aria-roledescription="carousel"`
+- Each slide: `role="group"` + `aria-roledescription="slide"` +
+  `aria-label="Slide N of M"`
+- Live region announces slide changes to screen readers
+- **Previous / Next** buttons with localised `aria-label`s
+- Indicator buttons have `aria-current="true"` on the active one
+- Keyboard:
+  - **Left / Right** — previous / next slide
+  - **Home / End** — first / last slide
+- **Pause on focus** — autoplay always pauses when keyboard focus enters
+  the carousel (required for WCAG 2.2.2)
+
+<Aside type="caution" title="Image alts are required">
+  Every `<img>` inside a carousel slide MUST have a meaningful `alt`. Empty
+  `alt=""` is appropriate only when the image is purely decorative — but
+  a decorative image probably doesn't belong in a carousel.
+</Aside>
 
 ## Props
 
+### TkxCarousel
+
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `slides` | `CarouselSlide[]` | yes |  |
-| `autoPlay` | `boolean` |  |  |
-| `autoPlayInterval` | `number` |  |  |
-| `pauseOnHover` | `boolean` |  |  |
-| `loop` | `boolean` |  |  |
-| `showArrows` | `boolean` |  |  |
-| `showDots` | `boolean` |  |  |
-| `showThumbnails` | `boolean` |  |  |
-| `orientation` | `'horizontal' \| 'vertical'` |  |  |
-| `slidesToShow` | `number` |  |  |
-| `gap` | `number` |  |  |
-| `transitionDuration` | `number` |  |  |
-| `swipeable` | `boolean` |  |  |
-| `initialIndex` | `number` |  |  |
-| `onChange` | `(index: number) => void` |  |  |
-| `arrowPosition` | `'inside' \| 'outside'` |  |  |
-| `height` | `string \| number` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `autoplay` | `boolean` | | Defaults to `false`. |
+| `autoplayInterval` | `number` | | ms between slides. Defaults to `5000`. |
+| `pauseOnHover` | `boolean` | | Defaults to `true` when autoplay is on. |
+| `loop` | `boolean` | | Wrap from last to first slide. |
+| `slidesPerView` | `number \| Record<Breakpoint, number>` | | Defaults to `1`. |
+| `gap` | `number` | | Gap between slides in px. |
+| `indicators` | `'dots' \| 'bars' \| 'numbers' \| 'none'` | | Defaults to `dots`. |
+| `active` | `number` | | Controlled active slide index. |
+| `onChange` | `(index: number) => void` | | Active slide change. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxCarousel.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxCarousel.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/carousel).
+[`src/components/TkxCarousel.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxCarousel.tsx)

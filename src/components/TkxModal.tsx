@@ -3,6 +3,7 @@
 import { useEffect, useId, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString, isFramed } from '../engine/security';
 import { useFocusTrap, useEscapeKey, useAnnounce, useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
@@ -28,6 +29,7 @@ function unlockScroll() { if (--scrollLockCount <= 0) { scrollLockCount = 0; doc
 
 export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayClick = true, closeOnEscape = true, children, footer }: TkxModalProps) {
   const theme = useTheme();
+  const t = useLocale();
   const titleId = useId();
   const trapRef = useFocusTrap(isOpen);
   const reducedMotion = useReducedMotion();
@@ -99,7 +101,7 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
           </h2>
           <button
             onClick={onClose}
-            aria-label="Close dialog"
+            aria-label={t.close}
             className={tkx('bg-transparent border-none cursor-pointer rounded p-1 flex items-center justify-center focus-visible:focus-ring')}
             style={{ color: theme.textMuted }}
           >

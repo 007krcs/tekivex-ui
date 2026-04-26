@@ -3,6 +3,10 @@ title: TkxProgress
 description: Linear and circular progress bars — determinate or indeterminate, with proper ARIA progressbar semantics.
 ---
 
+import { ProgressColors, ProgressLive, ProgressIndeterminate, ProgressCircular } from '../../../components/demos/ProgressDemo';
+
+<ProgressLive client:load />
+
 ```tsx
 import { TkxProgress } from 'tekivex-ui';
 
@@ -11,6 +15,8 @@ import { TkxProgress } from 'tekivex-ui';
 ```
 
 ## Variants
+
+<ProgressColors client:load />
 
 ```tsx
 <TkxProgress value={50} variant="linear" />     {/* default */}
@@ -35,6 +41,8 @@ import { TkxProgress } from 'tekivex-ui';
 ```
 
 ## Indeterminate
+
+<ProgressIndeterminate client:load />
 
 When the eventual completion is unknown:
 
@@ -63,6 +71,10 @@ For two-phase progress (e.g. data downloaded vs played in a video):
 <TkxProgress value={30} buffer={60} />
 {/* primary fill at 30%, lighter buffer fill at 60% */}
 ```
+
+## Circular variant
+
+<ProgressCircular client:load />
 
 ## RSC compatible
 

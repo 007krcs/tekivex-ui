@@ -3,6 +3,10 @@ title: TkxSkeleton
 description: Loading placeholder shimmer. RSC-compatible, respects prefers-reduced-motion.
 ---
 
+import { SkeletonShapes, SkeletonCard } from '../../../components/demos/SkeletonDemo';
+
+<SkeletonShapes client:load />
+
 ```tsx
 import { TkxSkeleton } from 'tekivex-ui';
 
@@ -29,6 +33,8 @@ import { TkxSkeleton } from 'tekivex-ui';
 ```
 
 ## Compose a card skeleton
+
+<SkeletonCard client:load />
 
 ```tsx
 <TkxCard>

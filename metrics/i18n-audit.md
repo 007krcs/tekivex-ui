@@ -1,11 +1,11 @@
-# i18n audit — 2026-04-26T14:16:36.377Z
+# i18n audit — 2026-04-26T14:32:03.413Z
 
-**385 hardcoded strings** across 68 files.
+**384 hardcoded strings** across 67 files.
 
 ## Breakdown by kind
 
 - `jsx-text`: 310
-- `prop:aria-label`: 63
+- `prop:aria-label`: 62
 - `prop:title`: 9
 - `prop:placeholder`: 3
 
@@ -67,12 +67,12 @@
 | `src/components/TkxAppBar.tsx` | 203 | prop `aria-label` | `Main navigation` |
 | `src/components/TkxAppBar.tsx` | 242 | prop `aria-label` | `Main navigation` |
 | `src/components/TkxAppBar.tsx` | 74 | JSX text | `setIsMobile(window.innerWidth` |
-| `src/components/TkxAutocomplete.tsx` | 133 | JSX text | `(null);
+| `src/components/TkxAutocomplete.tsx` | 136 | JSX text | `(null);
   const wrapperRef = useRef` |
-| `src/components/TkxAutocomplete.tsx` | 242 | JSX text | `= 0 && activeIndex` |
-| `src/components/TkxAutocomplete.tsx` | 299 | JSX text | `Loading...` |
-| `src/components/TkxAutocomplete.tsx` | 301 | JSX text | `) : filtered.length === 0 ? (` |
-| `src/components/TkxAutocomplete.tsx` | 380 | JSX text | `,
+| `src/components/TkxAutocomplete.tsx` | 245 | JSX text | `= 0 && activeIndex` |
+| `src/components/TkxAutocomplete.tsx` | 302 | JSX text | `Loading...` |
+| `src/components/TkxAutocomplete.tsx` | 304 | JSX text | `) : filtered.length === 0 ? (` |
+| `src/components/TkxAutocomplete.tsx` | 383 | JSX text | `,
           document.body,
         )
       : null;

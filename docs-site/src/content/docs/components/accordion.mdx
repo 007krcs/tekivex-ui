@@ -1,44 +1,96 @@
 ---
 title: TkxAccordion
-description: Accordion — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Vertically-stacked, expandable panels — single or multi-expand, keyboard-driven, with smooth height animation.
 ---
 
 ```tsx
-import { TkxAccordion } from 'tekivex-ui';
+import { TkxAccordion, TkxAccordionItem } from 'tekivex-ui';
+
+<TkxAccordion>
+  <TkxAccordionItem id="profile" title="Profile settings">
+    Edit your name, photo, and bio.
+  </TkxAccordionItem>
+  <TkxAccordionItem id="notifications" title="Notifications">
+    Email + in-app notification preferences.
+  </TkxAccordionItem>
+  <TkxAccordionItem id="security" title="Security">
+    Two-factor, sessions, recovery codes.
+  </TkxAccordionItem>
+</TkxAccordion>
 ```
 
-Accordion is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Single vs multi expand
+
+```tsx
+<TkxAccordion expandMode="single">     {/* default — only one panel open at a time */}
+<TkxAccordion expandMode="multiple">   {/* multiple panels open simultaneously */}
+```
+
+## Default open
+
+```tsx
+<TkxAccordion defaultOpen={['notifications']}>
+  {/* notifications panel starts expanded */}
+</TkxAccordion>
+```
+
+For controlled mode, pass `open` + `onChange`:
+
+```tsx
+const [open, setOpen] = useState<string[]>([]);
+
+<TkxAccordion open={open} onChange={setOpen}>
+  {/* … */}
+</TkxAccordion>
+```
+
+## Custom title slot
+
+`title` accepts any `ReactNode`, so you can compose icons or counters:
+
+```tsx
+<TkxAccordionItem
+  id="messages"
+  title={
+    <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <MessageIcon />
+      Messages
+      <TkxBadge variant="primary" size="sm">3</TkxBadge>
+    </span>
+  }
+>
+  {/* … */}
+</TkxAccordionItem>
+```
+
+## Accessibility — what's automatic
+
+- Panel triggers are real `<button>`s with `aria-expanded` + `aria-controls`
+- Each panel has `role="region"` + `aria-labelledby` linked to its trigger
+- **Arrow keys** move focus between triggers (Up/Down)
+- **Home / End** jump to first / last trigger
+- Disabled items skip during keyboard navigation
+- Height animation respects `prefers-reduced-motion` (snap-to-state instead)
 
 ## Props
 
+### TkxAccordion
+
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `items` | `AccordionItem[]` | yes |  |
-| `multiple` | `boolean` |  |  |
-| `defaultOpen` | `string \| string[]` |  |  |
-| `value` | `string \| string[]` |  |  |
-| `onChange` | `(value: string \| string[]) => void` |  |  |
-| `variant` | `AccordionVariant` |  |  |
-| `size` | `AccordionSize` |  |  |
-| `iconPosition` | `'left' \| 'right'` |  |  |
-| `iconStyle` | `'chevron' \| 'plus' \| 'arrow'` |  |  |
-| `flush` | `boolean` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
+| `expandMode` | `'single' \| 'multiple'` | | Defaults to `single`. |
+| `defaultOpen` | `string[]` | | Uncontrolled initially-open ids. |
+| `open` | `string[]` | | Controlled open ids. |
+| `onChange` | `(open: string[]) => void` | | Open-state change. |
 
-## Accessibility
+### TkxAccordionItem
 
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `id` | `string` | yes | Unique within the accordion. |
+| `title` | `ReactNode` | yes | Trigger content. |
+| `disabled` | `boolean` | | Item won't respond to clicks/keys. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxAccordion.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAccordion.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/accordion).
+[`src/components/TkxAccordion.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAccordion.tsx)

@@ -3,6 +3,10 @@ title: TkxSelect
 description: Searchable, multi-select capable dropdown — keyboard-driven, virtualised, clearable, with grouped options.
 ---
 
+import { SelectBasic, SelectSearchable, SelectMultiple } from '../../../components/demos/SelectDemo';
+
+<SelectBasic client:load />
+
 ```tsx
 import { TkxSelect } from 'tekivex-ui';
 
@@ -21,6 +25,8 @@ const options = [
 
 ## Searchable
 
+<SelectSearchable client:load />
+
 ```tsx
 <TkxSelect
   label="Country"
@@ -33,6 +39,8 @@ The search input filters options by label. `placeholder` and the search
 input's `aria-label` come from the active locale.
 
 ## Multiple selection
+
+<SelectMultiple client:load />
 
 ```tsx
 const [values, setValues] = useState<string[]>([]);

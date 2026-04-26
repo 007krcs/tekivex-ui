@@ -13,6 +13,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion, useEscapeKey } from '../hooks';
 import { tkx } from '../engine/tkx';
@@ -119,13 +120,15 @@ export function TkxAutocomplete({
   placeholder = '',
   label,
   isLoading = false,
-  emptyMessage = 'No results found',
+  emptyMessage,
   filterFn,
   freeSolo = false,
   className,
   style,
 }: TkxAutocompleteProps) {
   const theme = useTheme();
+  const t = useLocale();
+  const resolvedEmpty = emptyMessage ?? t.noResults;
   const reducedMotion = useReducedMotion();
   const inputId = useId();
   const listboxId = useId();
@@ -154,7 +157,7 @@ export function TkxAutocomplete({
   }, [options, inputValue, isOpen, filter]);
 
   const safeLabel = sanitizeString(label);
-  const safeEmptyMessage = sanitizeString(emptyMessage);
+  const safeEmptyMessage = sanitizeString(resolvedEmpty);
 
   // Position the dropdown
   useEffect(() => {

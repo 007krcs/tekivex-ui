@@ -3,6 +3,10 @@ title: TkxAvatar
 description: User avatar with image, initials fallback, status dot, and group composition. RSC-compatible.
 ---
 
+import { AvatarSizes, AvatarInitials, AvatarStatus } from '../../../components/demos/AvatarDemo';
+
+<AvatarSizes client:load />
+
 ```tsx
 import { TkxAvatar } from 'tekivex-ui';
 
@@ -10,6 +14,8 @@ import { TkxAvatar } from 'tekivex-ui';
 ```
 
 ## Initials fallback
+
+<AvatarInitials client:load />
 
 When `src` fails or isn't provided, the avatar renders initials derived
 from `alt`:
@@ -40,6 +46,8 @@ Custom size:
 ```
 
 ## Status dot
+
+<AvatarStatus client:load />
 
 ```tsx
 <TkxAvatar src="..." alt="..." status="online" />

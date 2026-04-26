@@ -3,6 +3,10 @@ title: TkxPagination
 description: Page navigation — first/prev/next/last + numbered pages, sibling count, page size selector. Localised in 35 languages.
 ---
 
+import { PaginationBasic, PaginationCompact, PaginationWithPageSize } from '../../../components/demos/PaginationDemo';
+
+<PaginationBasic client:load />
+
 ```tsx
 import { TkxPagination } from 'tekivex-ui';
 
@@ -15,6 +19,8 @@ import { TkxPagination } from 'tekivex-ui';
 ```
 
 ## Sibling count
+
+<PaginationCompact client:load />
 
 Controls how many pages on each side of the current page are shown:
 
@@ -37,6 +43,8 @@ The first/last buttons are useful for very large data sets. They share
 the localised "First page" / "Last page" `aria-label`.
 
 ## With page size selector
+
+<PaginationWithPageSize client:load />
 
 ```tsx
 <TkxPagination

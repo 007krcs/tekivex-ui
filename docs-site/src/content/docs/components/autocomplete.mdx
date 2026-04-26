@@ -1,44 +1,94 @@
 ---
 title: TkxAutocomplete
-description: Autocomplete — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Type-ahead text input with filtered suggestions, free-solo mode, async loading, and proper ARIA combobox semantics.
 ---
 
 ```tsx
 import { TkxAutocomplete } from 'tekivex-ui';
+
+<TkxAutocomplete
+  label="City"
+  options={[
+    { value: 'tokyo', label: 'Tokyo' },
+    { value: 'osaka', label: 'Osaka' },
+    { value: 'kyoto', label: 'Kyoto' },
+  ]}
+  onChange={(value) => console.log(value)}
+/>
 ```
 
-Autocomplete is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+## Free-solo (accept arbitrary input)
+
+```tsx
+<TkxAutocomplete
+  label="Tag"
+  options={tagOptions}
+  freeSolo
+  onChange={(v) => /* may be one of options OR a typed string */}
+/>
+```
+
+Without `freeSolo`, the input rejects values that don't match an option.
+
+## Async loading
+
+```tsx
+const [options, setOptions] = useState([]);
+const [loading, setLoading] = useState(false);
+
+<TkxAutocomplete
+  label="Search users"
+  options={options}
+  isLoading={loading}
+  onInputChange={async (q) => {
+    if (q.length < 2) return;
+    setLoading(true);
+    const res = await fetch(`/api/users?q=${q}`).then(r => r.json());
+    setOptions(res);
+    setLoading(false);
+  }}
+/>
+```
+
+## Custom filter
+
+```tsx
+<TkxAutocomplete
+  options={users}
+  filterFn={(opt, query) => {
+    // Match on label OR email
+    const q = query.toLowerCase();
+    return opt.label.toLowerCase().includes(q) || opt.email.includes(q);
+  }}
+/>
+```
+
+## Accessibility — what's automatic
+
+- ARIA `combobox` + `listbox` pattern (WAI-ARIA 1.2)
+- Input has `role="combobox"` with `aria-expanded`, `aria-controls`,
+  `aria-activedescendant`
+- Options have `role="option"` + `aria-selected`
+- Keyboard: arrows navigate, `Enter` selects, `Escape` closes,
+  `Tab` accepts current selection (free-solo only)
+- The empty state message is localised via the active locale
+- Loading state announces via `aria-busy`
 
 ## Props
 
 | Prop | Type | Required | Description |
 |---|---|---|---|
-| `options` | `AutocompleteOption[]` | yes |  |
-| `value` | `string` |  |  |
-| `onChange` | `(value: string) => void` |  |  |
-| `onInputChange` | `(input: string) => void` |  |  |
-| `placeholder` | `string` |  |  |
-| `label` | `string` | yes |  |
-| `isLoading` | `boolean` |  |  |
-| `emptyMessage` | `string` |  |  |
-| `filterFn` | `(option: AutocompleteOption, input: string) => boolean` |  |  |
-| `freeSolo` | `boolean` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
-
-## Accessibility
-
-- Keyboard navigation supported on all interactive elements
-- `:focus-visible` outline at 2px (theme-token `primary`)
-- ARIA roles and properties applied per WAI-ARIA 1.2
-- Respects `prefers-reduced-motion`
-- Minimum 44×44 touch target where applicable
+| `options` | `AutocompleteOption[]` | yes | `{ value, label }`. |
+| `value` | `string` | | Controlled value. |
+| `onChange` | `(value: string) => void` | | Selected option change. |
+| `onInputChange` | `(query: string) => void` | | Fires on every keystroke (use for async). |
+| `placeholder` | `string` | | |
+| `label` | `string` | yes | WCAG-required label. |
+| `isLoading` | `boolean` | | Show loading state. |
+| `emptyMessage` | `string` | | Localised by default. |
+| `filterFn` | `(opt, query) => boolean` | | Custom matcher. |
+| `freeSolo` | `boolean` | | Accept arbitrary text. |
 
 ## Source
 
-The implementation lives at [`src/components/TkxAutocomplete.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAutocomplete.tsx).
-
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/autocomplete).
+[`src/components/TkxAutocomplete.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAutocomplete.tsx)

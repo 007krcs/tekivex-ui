@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-04-26T14:16:36.377Z",
-  "totalFindings": 385,
-  "filesAffected": 68,
+  "generatedAt": "2026-04-26T14:32:03.413Z",
+  "totalFindings": 384,
+  "filesAffected": 67,
   "byKind": {
     "jsx-text": 310,
     "prop:title": 9,
-    "prop:aria-label": 63,
+    "prop:aria-label": 62,
     "prop:placeholder": 3
   },
   "topFiles": [
@@ -201,31 +201,31 @@
     {
       "kind": "jsx-text",
       "value": "(null);\n  const wrapperRef = useRef",
-      "line": 133,
+      "line": 136,
       "file": "src/components/TkxAutocomplete.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "= 0 && activeIndex",
-      "line": 242,
+      "line": 245,
       "file": "src/components/TkxAutocomplete.tsx"
     },
     {
       "kind": "jsx-text",
       "value": "Loading...",
-      "line": 299,
+      "line": 302,
       "file": "src/components/TkxAutocomplete.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ") : filtered.length === 0 ? (",
-      "line": 301,
+      "line": 304,
       "file": "src/components/TkxAutocomplete.tsx"
     },
     {
       "kind": "jsx-text",
       "value": ",\n          document.body,\n        )\n      : null;\n\n  return (",
-      "line": 380,
+      "line": 383,
       "file": "src/components/TkxAutocomplete.tsx"
     },
     {
@@ -1373,13 +1373,6 @@
       "value": "(null);\n  const triggerRef = useRef",
       "line": 934,
       "file": "src/components/TkxMenu.tsx"
-    },
-    {
-      "kind": "prop",
-      "prop": "aria-label",
-      "value": "Close dialog",
-      "line": 102,
-      "file": "src/components/TkxModal.tsx"
     },
     {
       "kind": "jsx-text",
