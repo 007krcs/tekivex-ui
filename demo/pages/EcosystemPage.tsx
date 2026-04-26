@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxCard, TkxCardHeader, TkxCardBody, TkxBadge, TkxButton, TkxDivider } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxCard, TkxCardHeader, TkxCardBody, TkxBadge, TkxButton, TkxDivider } from 'tekivex-ui';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // EcosystemPage — advertises the four companion packages that ship with the

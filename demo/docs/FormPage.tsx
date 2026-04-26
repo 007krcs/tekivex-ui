@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import {
   TkxForm,
   TkxFormField,
   TkxInput,
   TkxButton,
   useTkxForm,
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 

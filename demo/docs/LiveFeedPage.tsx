@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { TkxLiveFeed } from '../../src/realtime';
 import type { FeedItem } from '../../src/realtime';
 import { DemoSection } from '../layout/DemoSection';

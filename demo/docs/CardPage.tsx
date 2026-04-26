@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import {
   TkxCard,
   TkxCardHeader,
@@ -7,7 +7,7 @@ import {
   TkxCardFooter,
   TkxBadge,
   TkxButton,
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { WCAGBadge, WCAGBadgeGroup } from '../layout/WCAGBadge';
@@ -471,7 +471,7 @@ export function CardPage({ theme }: { theme: ThemeTokens }) {
         title="Custom CSS — tkx() and style overrides"
         description="Pass className to merge tkx() utility classes, or use style to apply one-off inline overrides. Both are merged after the variant styles so you always win."
         theme={theme}
-        code={`import { tkx } from '@tekivex/ui';
+        code={`import { tkx } from 'tekivex-ui';
 
 // Use the tkx() atomic CSS engine for utility classes
 <TkxCard className={tkx('border-2 border-dashed')}>

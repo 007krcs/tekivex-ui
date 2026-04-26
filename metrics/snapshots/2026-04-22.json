@@ -2,7 +2,7 @@
   "collectedAt": "2026-04-22T09:16:18.000Z",
   "date": "2026-04-22",
   "npm": {
-    "@tekivex/ui": {
+    "tekivex-ui": {
       "weekly": null,
       "monthly": null
     },

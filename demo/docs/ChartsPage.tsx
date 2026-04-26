@@ -1,4 +1,4 @@
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import {
@@ -117,7 +117,7 @@ export function ChartsPage({ theme }: Props) {
       <p style={subStyle}>
         Production-ready chart components built on Recharts. Zero additional setup — import from{' '}
         <code style={{ backgroundColor: theme.surfaceAlt, padding: '1px 6px', borderRadius: 4, fontSize: '0.9em' }}>
-          @tekivex/ui/charts
+          tekivex-ui/charts
         </code>{' '}
         and render beautiful, accessible, theme-aware visualisations.
       </p>
@@ -132,7 +132,7 @@ export function ChartsPage({ theme }: Props) {
         title="Area Chart"
         description="Smooth area chart with multiple series, stacking, and responsive layout."
         theme={theme}
-        code={`import { TkxAreaChart } from '@tekivex/ui/charts';
+        code={`import { TkxAreaChart } from 'tekivex-ui/charts';
 
 <TkxAreaChart
   data={monthlyRevenue}
@@ -169,7 +169,7 @@ export function ChartsPage({ theme }: Props) {
         title="Bar Chart"
         description="Grouped bar chart with multi-series data. Supports horizontal layout, stacking, and gradient fills."
         theme={theme}
-        code={`import { TkxBarChart } from '@tekivex/ui/charts';
+        code={`import { TkxBarChart } from 'tekivex-ui/charts';
 
 <TkxBarChart
   data={sessionData}
@@ -204,7 +204,7 @@ export function ChartsPage({ theme }: Props) {
         title="Line Chart"
         description="Multi-series line chart with reference lines, smooth curves, and customisable dots."
         theme={theme}
-        code={`import { TkxLineChart } from '@tekivex/ui/charts';
+        code={`import { TkxLineChart } from 'tekivex-ui/charts';
 
 <TkxLineChart
   data={monthlyRevenue}
@@ -239,7 +239,7 @@ export function ChartsPage({ theme }: Props) {
         title="Pie & Donut Charts"
         description="Slice-based charts for proportional data. Donut supports a center label overlay."
         theme={theme}
-        code={`import { TkxPieChart, TkxDonutChart } from '@tekivex/ui/charts';
+        code={`import { TkxPieChart, TkxDonutChart } from 'tekivex-ui/charts';
 
 <TkxPieChart data={trafficData} showLegend showTooltip showLabels />
 <TkxDonutChart data={trafficData} centerLabel="Total" centerSublabel="14,400" showLegend />`}
@@ -270,7 +270,7 @@ export function ChartsPage({ theme }: Props) {
         title="Radar Chart"
         description="Spider / radar chart ideal for multi-dimensional comparisons."
         theme={theme}
-        code={`import { TkxRadarChart } from '@tekivex/ui/charts';
+        code={`import { TkxRadarChart } from 'tekivex-ui/charts';
 
 <TkxRadarChart
   data={performanceData}
@@ -301,7 +301,7 @@ export function ChartsPage({ theme }: Props) {
         title="Scatter / Bubble Chart"
         description="X-Y scatter plot with optional Z-axis bubble sizing."
         theme={theme}
-        code={`import { TkxScatterChart } from '@tekivex/ui/charts';
+        code={`import { TkxScatterChart } from 'tekivex-ui/charts';
 
 <TkxScatterChart
   series={scatterSeries}

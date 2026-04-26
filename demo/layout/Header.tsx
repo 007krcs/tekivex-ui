@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -17,6 +17,7 @@ interface HeaderProps {
 const ROUTE_TITLES: Record<string, string> = {
   '/': 'Overview',
   '/getting-started': 'Getting Started',
+  '/bundlers': 'Bundler Integration',
   '/css-system': 'TKX CSS System',
   '/components/button': 'Button',
   '/components/card': 'Card',

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TkxCommand, useTkxCommand, type ThemeTokens, type CommandItem } from '@tekivex/ui';
+import { TkxCommand, useTkxCommand, type ThemeTokens, type CommandItem } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 
 const COMMANDS: CommandItem[] = [
@@ -245,8 +245,8 @@ export function CommandPage({ theme }: { theme: ThemeTokens }) {
         title="Live Demo"
         description="Click the button or press Cmd+K / Ctrl+K to open the command palette. Try searching for commands."
         theme={theme}
-        code={`import { TkxCommand, useTkxCommand } from '@tekivex/ui';
-import type { CommandItem } from '@tekivex/ui';
+        code={`import { TkxCommand, useTkxCommand } from 'tekivex-ui';
+import type { CommandItem } from 'tekivex-ui';
 
 const commands: CommandItem[] = [
   { id: 'save', label: 'Save', shortcut: '\u2318S', group: 'File' },

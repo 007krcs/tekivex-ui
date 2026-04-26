@@ -1,5 +1,5 @@
 import { useState, useMemo, type CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -29,6 +29,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: 'Overview', route: '/' },
       { label: 'Getting Started', route: '/getting-started' },
+      { label: 'Bundler Integration', route: '/bundlers' },
       { label: 'TKX CSS System', route: '/css-system' },
       { label: '⚡ RSC Compatibility', route: '/rsc' },
     ],

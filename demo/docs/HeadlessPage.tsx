@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import {
@@ -240,7 +240,7 @@ export function HeadlessPage({ theme }: Props) {
       <p style={subStyle}>
         Framework-agnostic React hooks exported from{' '}
         <code style={{ backgroundColor: theme.surfaceAlt, padding: '1px 6px', borderRadius: 4, fontSize: '0.9em' }}>
-          @tekivex/ui/headless
+          tekivex-ui/headless
         </code>
         . Bring your own UI — no styles imposed. Perfect for building design systems on top of TekiVex.
       </p>

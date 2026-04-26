@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
-import { tkx, extractAtomicCSS, resetAtomicCSS } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { tkx, extractAtomicCSS, resetAtomicCSS } from 'tekivex-ui';
 import { CodeBlock } from '../layout/CodeBlock';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -11,7 +11,7 @@ interface CSSSystemPageProps {
 
 // ── Code snippets ─────────────────────────────────────────────────────────────
 
-const BASICS_SNIPPET = `import { tkx, tx, cx } from '@tekivex/ui';
+const BASICS_SNIPPET = `import { tkx, tx, cx } from 'tekivex-ui';
 
 // tkx() — full atomic CSS engine. Injects styles, returns className.
 const cls = tkx('flex items-center gap-4 p-4 rounded-lg bg-surface text-primary');
@@ -22,7 +22,7 @@ const cls2 = tx('font-bold text-xl hover:opacity-80');
 // cx() — className merger only. NO style injection. Use for combining strings.
 const merged = cx('base-class', isActive && 'active', 'extra');`;
 
-const CONFLICT_SNIPPET = `import { tkx } from '@tekivex/ui';
+const CONFLICT_SNIPPET = `import { tkx } from 'tekivex-ui';
 
 // Without TKX: Tailwind gives you a battle
 // "p-4 p-8" → both classes are in the DOM, cascade decides (bad)
@@ -48,7 +48,7 @@ function Button({ size }: { size: 'sm' | 'lg' }) {
   );
 }`;
 
-const VARIANTS_SNIPPET = `import { tkx } from '@tekivex/ui';
+const VARIANTS_SNIPPET = `import { tkx } from 'tekivex-ui';
 
 // Pseudo-class variants
 const cls = tkx(
@@ -85,7 +85,7 @@ const themed = tkx(
   'dark:bg-gray-900 dark:text-white',
 );`;
 
-const SPACING_SNIPPET = `import { tkx } from '@tekivex/ui';
+const SPACING_SNIPPET = `import { tkx } from 'tekivex-ui';
 
 // All spacing utilities follow the same scale:
 // 1 = 4px, 2 = 8px, 3 = 12px, 4 = 16px, 5 = 20px, 6 = 24px
@@ -123,7 +123,7 @@ const arbitrary = tkx(
   'p-[2rem]',
 );`;
 
-const TYPOGRAPHY_SNIPPET = `import { tkx } from '@tekivex/ui';
+const TYPOGRAPHY_SNIPPET = `import { tkx } from 'tekivex-ui';
 
 const typography = tkx(
   // Font size (with matching line-height auto-set)
@@ -160,7 +160,7 @@ const typography = tkx(
   'tracking-widest', // 0.1em
 );`;
 
-const COLORS_SNIPPET = `import { tkx } from '@tekivex/ui';
+const COLORS_SNIPPET = `import { tkx } from 'tekivex-ui';
 
 // Theme tokens — automatically follow ThemeContext
 const themed = tkx(
@@ -189,7 +189,7 @@ const arbitrary = tkx(
   'border-[hsl(280,70%,50%)]',
 );`;
 
-const LAYOUT_SNIPPET = `import { tkx } from '@tekivex/ui';
+const LAYOUT_SNIPPET = `import { tkx } from 'tekivex-ui';
 
 const layout = tkx(
   // Display
@@ -217,7 +217,7 @@ const layout = tkx(
   'truncate',
 );`;
 
-const BORDERS_EFFECTS_SNIPPET = `import { tkx } from '@tekivex/ui';
+const BORDERS_EFFECTS_SNIPPET = `import { tkx } from 'tekivex-ui';
 
 const borders = tkx(
   // Border width
@@ -253,7 +253,7 @@ const borders = tkx(
   'skew-x-3',
 );`;
 
-const SSR_SNIPPET = `import { extractAtomicCSS, resetAtomicCSS } from '@tekivex/ui';
+const SSR_SNIPPET = `import { extractAtomicCSS, resetAtomicCSS } from 'tekivex-ui';
 import { renderToString } from 'react-dom/server';
 
 // ── Express / Node.js example ──────────────────────────────────────────────
@@ -987,7 +987,7 @@ tkx('hover:bg-[#ff6b35]', '@md:w-[640px]', 'focus:ring-[3px]')`}
             1. Responsive Card Grid
           </div>
           <CodeBlock
-            code={`import { tkx } from '@tekivex/ui';
+            code={`import { tkx } from 'tekivex-ui';
 
 // Container: centers content, responsive padding
 const container = tkx('max-w-[1200px] mx-auto px-4 @md:px-6 @lg:px-8');
@@ -1032,7 +1032,7 @@ function ProductGrid() {
             2. Form with Validation
           </div>
           <CodeBlock
-            code={`import { tkx, cx } from '@tekivex/ui';
+            code={`import { tkx, cx } from 'tekivex-ui';
 
 const form = tkx('flex flex-col gap-5 max-w-[480px]');
 
@@ -1086,7 +1086,7 @@ function LoginForm() {
             3. Responsive Navigation Bar
           </div>
           <CodeBlock
-            code={`import { tkx } from '@tekivex/ui';
+            code={`import { tkx } from 'tekivex-ui';
 
 const nav = tkx(
   'fixed top-0 left-0 right-0 z-50',
@@ -1129,7 +1129,7 @@ const cta = tkx(
             4. Dashboard Stat Cards
           </div>
           <CodeBlock
-            code={`import { tkx } from '@tekivex/ui';
+            code={`import { tkx } from 'tekivex-ui';
 
 const statsGrid = tkx('grid grid-cols-2 @lg:grid-cols-4 gap-4');
 

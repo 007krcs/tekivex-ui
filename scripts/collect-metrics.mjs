@@ -9,7 +9,7 @@
 //   metrics/snapshots/YYYY-MM-DD.json — historical
 //
 // Metrics pulled (no auth required):
-//   - npm weekly downloads for @tekivex/ui, @tekivex/security-core,
+//   - npm weekly downloads for tekivex-ui, @tekivex/security-core,
 //     @tekivex/audit, create-tekivex-app
 //   - npm dependent count (via registry `dependents` endpoint)
 //   - GitHub stars, forks, open issues, open PRs for 007krcs/tekivex-ui
@@ -28,7 +28,7 @@ const METRICS_DIR = join(ROOT, 'metrics');
 const SNAPSHOTS_DIR = join(METRICS_DIR, 'snapshots');
 
 const NPM_PACKAGES = [
-  '@tekivex/ui',
+  'tekivex-ui',
   '@tekivex/security-core',
   '@tekivex/audit',
   'create-tekivex-app',

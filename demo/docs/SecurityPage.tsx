@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { sanitizeString, meetsAA, meetsAAA, contrastRatio } from '../../src/headless';
@@ -411,7 +411,7 @@ export function SecurityPage({ theme }: Props) {
         title="XSS Sanitisation (Shield Engine)"
         description="All TekiVex components automatically sanitise string props. Script tags, event handlers, data URIs, and JS protocol links are stripped before rendering."
         theme={theme}
-        code={`import { sanitizeString } from '@tekivex/ui/headless';
+        code={`import { sanitizeString } from 'tekivex-ui/headless';
 
 // Automatically called inside every TekiVex component:
 sanitizeString('<script>alert("XSS")</script>Hello')
@@ -427,7 +427,7 @@ sanitizeString('<img src=x onerror="steal(document.cookie)" />')
         title="Live Sanitisation Playground"
         description="Type any HTML — including XSS payloads — and see the Shield engine neutralise it in real time."
         theme={theme}
-        code={`import { sanitizeString } from '@tekivex/ui/headless';
+        code={`import { sanitizeString } from 'tekivex-ui/headless';
 const safe = sanitizeString(userInput);`}
       >
         <SanitizerPlayground theme={theme} />
@@ -437,7 +437,7 @@ const safe = sanitizeString(userInput);`}
         title="WCAG AAA Contrast Checker"
         description="Built-in colour accessibility utilities. meetsAA() requires 4.5:1 ratio for normal text. meetsAAA() requires 7:1. Pick any two colours and see results instantly."
         theme={theme}
-        code={`import { contrastRatio, meetsAA, meetsAAA } from '@tekivex/ui/headless';
+        code={`import { contrastRatio, meetsAA, meetsAAA } from 'tekivex-ui/headless';
 
 const ratio = contrastRatio('#00f5d4', '#0a0a1a'); // → 8.21
 const aa  = meetsAA('#00f5d4', '#0a0a1a');          // → true (4.5:1 threshold)
@@ -452,7 +452,7 @@ const aaa = meetsAAA('#00f5d4', '#0a0a1a');         // → true (7:1 threshold)`
         theme={theme}
         code={`// Audit trail is automatic — no configuration needed.
 // Future: export for SIEM / compliance systems.
-import { Shield } from '@tekivex/ui';
+import { Shield } from 'tekivex-ui';
 const log = Shield.getAuditLog(); // → SecurityEvent[]`}
       >
         <AuditDemo theme={theme} />

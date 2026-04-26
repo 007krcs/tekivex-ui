@@ -1,6 +1,6 @@
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { TkxPlayground } from '../../src/quantum';
-import * as TekivexComponents from '@tekivex/ui';
+import * as TekivexComponents from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 
@@ -10,7 +10,7 @@ const PLAYGROUND_PROPS = [
   { name: 'defaultCode', type: 'string', description: 'Initial JSX code shown in the editor when the playground first mounts. If omitted, the first example from the examples array is used (or the first built-in example).' },
   { name: 'examples', type: 'PlaygroundExample[]', description: 'Array of preset examples shown in the example picker. Each object has a label string and a code string. Prepended before built-in examples in the dropdown.' },
   { name: 'height', type: 'number', default: '480', description: 'Total height of the playground panel in pixels, split between the code editor and the live preview pane.' },
-  { name: 'imports', type: 'Record<string, unknown>', description: 'Object whose keys become available as variables inside evaluated JSX. Pass the entire @tekivex/ui namespace to make all components available without explicit imports.' },
+  { name: 'imports', type: 'Record<string, unknown>', description: 'Object whose keys become available as variables inside evaluated JSX. Pass the entire tekivex-ui namespace to make all components available without explicit imports.' },
 ];
 
 const EXAMPLE_PROPS = [
@@ -198,7 +198,7 @@ export function PlaygroundPage({ theme }: { theme: ThemeTokens }) {
         </code>{' '}
         and every component from{' '}
         <code style={{ fontSize: '12px', backgroundColor: `${theme.primary}14`, color: theme.primary, padding: '1px 5px', borderRadius: '4px', border: `1px solid ${theme.primary}20` }}>
-          @tekivex/ui
+          tekivex-ui
         </code>{' '}
         becomes available in the sandbox by name.
       </p>
@@ -221,9 +221,9 @@ export function PlaygroundPage({ theme }: { theme: ThemeTokens }) {
       {/* ── 1. Full Playground ── */}
       <DemoSection
         title="Full Playground — All Tekivex Components"
-        description="The complete playground with all @tekivex/ui components available in the sandbox. Select from 5 built-in examples or write your own JSX. Render-time metrics appear in the status bar."
+        description="The complete playground with all tekivex-ui components available in the sandbox. Select from 5 built-in examples or write your own JSX. Render-time metrics appear in the status bar."
         theme={theme}
-        code={`import * as TekivexComponents from '@tekivex/ui';
+        code={`import * as TekivexComponents from 'tekivex-ui';
 
 <TkxPlayground
   imports={TekivexComponents}
@@ -364,7 +364,7 @@ export function PlaygroundPage({ theme }: { theme: ThemeTokens }) {
         </code>{' '}
         all exported members of{' '}
         <code style={{ fontSize: '12px', backgroundColor: `${theme.primary}14`, color: theme.primary, padding: '1px 5px', borderRadius: '4px', border: `1px solid ${theme.primary}20` }}>
-          @tekivex/ui
+          tekivex-ui
         </code>{' '}
         become top-level variables inside the playground sandbox.
         You can use any component directly by name without an import statement:
@@ -399,7 +399,7 @@ export function PlaygroundPage({ theme }: { theme: ThemeTokens }) {
 <TkxProgress />        // progress bars
 <TkxQuantumForm />     // quantum form
 <TkxThemeBuilder />    // theme builder
-// ...and every other export from @tekivex/ui`}
+// ...and every other export from tekivex-ui`}
         </pre>
       </div>
 

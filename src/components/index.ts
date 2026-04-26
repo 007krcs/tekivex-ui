@@ -71,8 +71,8 @@ export * from './TkxCascader';
 export * from './TkxList';
 export * from './TkxOrgChart';
 // Heavy components moved to subpath entries to keep main bundle lean:
-//   TkxQuantumForm, TkxThemeBuilder, TkxPlayground → '@tekivex/ui/quantum'
-//   TkxLiveFeed, TkxLiveMetrics, TkxRealTimeChart, TkxLiveLog → '@tekivex/ui/realtime'
+//   TkxQuantumForm, TkxThemeBuilder, TkxPlayground → 'tekivex-ui/quantum'
+//   TkxLiveFeed, TkxLiveMetrics, TkxRealTimeChart, TkxLiveLog → 'tekivex-ui/realtime'
 export * from './TkxDropdown';
 
 // ── AI-native components ──────────────────────────────────────────────────────

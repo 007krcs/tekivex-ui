@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import {
   TkxButton, TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter,
   TkxBadge, TkxInput, TkxAccordion, TkxAvatar, TkxDivider, TkxAlert, TkxRating
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { DemoSection } from '../layout/DemoSection';
 

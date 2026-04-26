@@ -1,5 +1,5 @@
 import { type CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable, type PropDef } from '../layout/PropTable';
 import { WCAGBadgeGroup } from '../layout/WCAGBadge';
@@ -599,7 +599,7 @@ export function IconPage({ theme }: Props) {
       <DemoSection
         title="Icon Gallery"
         description="All 60+ built-in icons organized by category. Hover to highlight."
-        code={`import { TkxIcon } from '@tekivex/ui';
+        code={`import { TkxIcon } from 'tekivex-ui';
 
 // Basic usage
 <TkxIcon name="home" size={24} />
@@ -724,7 +724,7 @@ export function IconPage({ theme }: Props) {
       <DemoSection
         title="Default Logo"
         description="The default TekiVex logo with a hexagonal quantum mark, brand name, and optional tagline."
-        code={`import { TkxLogo } from '@tekivex/ui';
+        code={`import { TkxLogo } from 'tekivex-ui';
 
 <TkxLogo />
 
@@ -837,7 +837,7 @@ const myMark = (
       </p>
 
       <CodeBlock
-        code={`import { TkxIcon } from '@tekivex/ui';
+        code={`import { TkxIcon } from 'tekivex-ui';
 
 // 1. Custom path as children
 <TkxIcon size={24} color="primary" label="Quantum ring">

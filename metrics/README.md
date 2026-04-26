@@ -20,7 +20,7 @@ Automated weekly snapshots of tekivex-ui adoption, trust, and revenue signals. S
   "collectedAt": "2026-04-22T12:00:00Z",
   "date": "2026-04-22",
   "npm": {
-    "@tekivex/ui": { "weekly": 0, "monthly": 0 },
+    "tekivex-ui": { "weekly": 0, "monthly": 0 },
     ...
   },
   "github": {

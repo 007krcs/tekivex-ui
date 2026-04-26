@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxNumberInput } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxNumberInput } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 
 export function NumberInputPage({ theme }: { theme: ThemeTokens }) {
@@ -18,7 +18,7 @@ export function NumberInputPage({ theme }: { theme: ThemeTokens }) {
         title="Basic"
         description="A controlled number input with min/max constraints."
         theme={theme}
-        code={`import { TkxNumberInput } from '@tekivex/ui';
+        code={`import { TkxNumberInput } from 'tekivex-ui';
 import { useState } from 'react';
 
 const [value, setValue] = useState(0);

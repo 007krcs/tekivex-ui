@@ -129,7 +129,15 @@
     "animation",
     "tekivex",
     "enterprise",
-    "zero-runtime"
+    "zero-runtime",
+    "react-19",
+    "react-server-components",
+    "rsc",
+    "vite",
+    "nextjs",
+    "remix",
+    "webpack",
+    "atomic-css"
   ],
   "author": {
     "name": "007krcs",

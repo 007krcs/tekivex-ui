@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import {
   TkxButton, TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter,
   TkxBadge, TkxInput, TkxToggle, TkxSelect, TkxCheckbox, TkxRadio, TkxRadioGroup,
   TkxSlider, TkxAvatar, TkxDivider, TkxAlert, TkxTabs, TkxTabList, TkxTab,
   TkxTabPanels, TkxTabPanel, TkxModal
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import { DemoSection } from '../layout/DemoSection';
 

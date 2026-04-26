@@ -1,5 +1,5 @@
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxAvatar, TkxBadge, TkxCard } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxAvatar, TkxBadge, TkxCard } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { WCAGBadgeGroup } from '../layout/WCAGBadge';

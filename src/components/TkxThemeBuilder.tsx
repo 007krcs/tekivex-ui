@@ -3,7 +3,7 @@
 // ══════════════════════════════════════════════════════════════════════════════
 // TkxThemeBuilder — Quantum-powered visual theme builder component
 // Uses real quantum annealing to optimize color palettes.
-// Fully self-contained with inline styles; no imports from @tekivex/ui.
+// Fully self-contained with inline styles; no imports from tekivex-ui.
 // ══════════════════════════════════════════════════════════════════════════════
 
 import { useState, useCallback, useRef } from 'react';

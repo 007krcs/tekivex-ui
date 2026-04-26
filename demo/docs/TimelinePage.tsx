@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import {
   TkxTimeline,
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { WCAGBadge, WCAGBadgeGroup } from '../layout/WCAGBadge';

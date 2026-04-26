@@ -52,7 +52,7 @@ For CVE reports, supply-chain compromises, and availability incidents in `@tekiv
 
 1. Tag from hotfix branch, signed (`git tag -s`)
 2. `npm publish` with `--provenance` flag
-3. Verify install: `npm i @tekivex/ui@<new>` in a scratch repo, confirm fix
+3. Verify install: `npm i tekivex-ui@<new>` in a scratch repo, confirm fix
 4. Publish GitHub Security Advisory
 5. Publish CVE via MITRE if not already
 6. Public changelog entry with advisory link

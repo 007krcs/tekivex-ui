@@ -20,7 +20,7 @@ Pro-tier customers: see SLA terms in your contract.
 - **GitHub Security Advisories:** <https://github.com/007krcs/tekivex-ui/security/advisories/new>
 
 Include:
-- Affected package and version (`@tekivex/ui@2.6.0`, `@tekivex/security-core@0.1.0`, etc.)
+- Affected package and version (`tekivex-ui@2.6.0`, `@tekivex/security-core@0.1.0`, etc.)
 - Proof-of-concept or reproduction steps
 - Your assessment of impact
 - Whether you want credit in the advisory
@@ -44,7 +44,7 @@ Include:
 
 ## What's in scope
 
-- `@tekivex/ui` — all exports
+- `tekivex-ui` — all exports
 - `@tekivex/security-core` — all exports
 - `@tekivex/audit` — check accuracy, CLI safety
 - `create-tekivex-app` — scaffolded-output safety

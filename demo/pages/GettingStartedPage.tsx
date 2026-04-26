@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { CodeBlock } from '../layout/CodeBlock';
 import { WCAGBadge } from '../layout/WCAGBadge';
 
@@ -11,14 +11,14 @@ interface GettingStartedPageProps {
 
 // ── Code snippets ─────────────────────────────────────────────────────────────
 
-const INSTALL_SNIPPET = `npm install @tekivex/ui
+const INSTALL_SNIPPET = `npm install tekivex-ui
 # or
-yarn add @tekivex/ui
+yarn add tekivex-ui
 # or
-pnpm add @tekivex/ui`;
+pnpm add tekivex-ui`;
 
 const THEME_PROVIDER_SNIPPET = `// main.tsx or App.tsx
-import { ThemeProvider, quantumDark } from '@tekivex/ui';
+import { ThemeProvider, quantumDark } from 'tekivex-ui';
 import { App } from './App';
 
 // Wrap your entire application in ThemeProvider.
@@ -30,7 +30,7 @@ createRoot(document.getElementById('root')!).render(
   </ThemeProvider>
 );`;
 
-const FIRST_COMPONENT_SNIPPET = `import { TkxButton, TkxCard, TkxCardHeader, TkxCardBody } from '@tekivex/ui';
+const FIRST_COMPONENT_SNIPPET = `import { TkxButton, TkxCard, TkxCardHeader, TkxCardBody } from 'tekivex-ui';
 
 export function WelcomeCard() {
   return (
@@ -51,7 +51,7 @@ export function WelcomeCard() {
   );
 }`;
 
-const CUSTOM_THEME_SNIPPET = `import { createTheme, quantumDark, ThemeProvider } from '@tekivex/ui';
+const CUSTOM_THEME_SNIPPET = `import { createTheme, quantumDark, ThemeProvider } from 'tekivex-ui';
 
 // createTheme() validates hex values and checks WCAG AA contrast.
 // It will console.warn() if text/bg contrast drops below 4.5:1.
@@ -70,7 +70,7 @@ export function App() {
   );
 }`;
 
-const TKX_CSS_SNIPPET = `import { tkx, cx, useTheme } from '@tekivex/ui';
+const TKX_CSS_SNIPPET = `import { tkx, cx, useTheme } from 'tekivex-ui';
 
 function MyComponent() {
   const theme = useTheme();
@@ -105,7 +105,7 @@ function MyComponent() {
 }`;
 
 const SSR_SNIPPET = `// SSR usage — extract atomic CSS before sending HTML
-import { extractAtomicCSS, resetAtomicCSS } from '@tekivex/ui';
+import { extractAtomicCSS, resetAtomicCSS } from 'tekivex-ui';
 import { renderToString } from 'react-dom/server';
 
 export function handleRequest(req, res) {
@@ -328,7 +328,7 @@ export function GettingStartedPage({ theme }: GettingStartedPageProps) {
           Render Your First Component
         </h2>
         <p style={descStyle}>
-          Import components directly from <code style={{ fontFamily: 'monospace', color: theme.primary, fontSize: '13px' }}>@tekivex/ui</code>.
+          Import components directly from <code style={{ fontFamily: 'monospace', color: theme.primary, fontSize: '13px' }}>tekivex-ui</code>.
           Every component inherits theme tokens automatically — no className wiring needed.
         </p>
         <CodeBlock code={FIRST_COMPONENT_SNIPPET} language="tsx" showLineNumbers title="WelcomeCard.tsx" />

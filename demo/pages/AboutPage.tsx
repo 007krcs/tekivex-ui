@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxCard, TkxCardBody, TkxBadge, TkxDivider, TkxButton, TkxProgress } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxCard, TkxCardBody, TkxBadge, TkxDivider, TkxButton, TkxProgress } from 'tekivex-ui';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
 interface Props { theme: ThemeTokens }

@@ -6,8 +6,8 @@
 
     <!-- ── Primary SEO ──────────────────────────────────────────────────────── -->
     <title>TekiVex UI — Accessible React Component Library | WCAG 2.1 AAA</title>
-    <meta name="description" content="TekiVex UI is a production-ready React component library with WCAG 2.1 AAA accessibility, WAI-ARIA 1.2, TKX atomic CSS engine, zero-trust security, and 14+ fully-typed components. Free and open source." />
-    <meta name="keywords" content="react component library, accessible components, wcag 2.1, aria, typescript, ui library, tekivex, atomic css, open source react, tailwind alternative, react ui kit, wcag aaa components" />
+    <meta name="description" content="TekiVex UI — production-ready React component library with 78 components, WCAG 2.1 AAA accessibility, zero-trust XSS sanitisation, and zero runtime dependencies. Works with Vite, Webpack, Next.js, Remix, Parcel. npm install tekivex-ui. MIT licensed." />
+    <meta name="keywords" content="tekivex-ui, tekivex, react component library, accessible components, wcag 2.1 aaa, wai-aria, typescript ui library, atomic css, open source react, tailwind alternative, react ui kit, react 19, react server components, vite react components, webpack react components, next.js component library, react xss protection, zero runtime css" />
     <meta name="author" content="007krcs" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <link rel="canonical" href="https://ui.tekivex.com/" />
@@ -111,6 +111,38 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Install TekiVex UI with npm: npm install tekivex-ui. Then import components: import { TkxButton, TkxCard } from 'tekivex-ui'. Wrap your app with ThemeProvider to apply the theme."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which bundlers and frameworks does TekiVex UI support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TekiVex UI works with Vite (5/6/7/8), Webpack 5, Next.js (App Router and Pages Router), Remix, React Router 7, Parcel 2, Rollup, Astro, and Create React App. Full configuration recipes for every bundler are available at https://ui.tekivex.com/#/bundlers — copy-pasteable webpack.config.js, vite.config.ts, next.config.js, and rollup.config.js snippets included."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does TekiVex UI work with Vite?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. TekiVex UI is ESM-first and ships TypeScript declarations, so Vite needs no special config. Install with npm install tekivex-ui, import the stylesheet via 'tekivex-ui/styles', and wrap your app in ThemeProvider. Optionally add 'tekivex-ui' to optimizeDeps.include for faster cold starts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does TekiVex UI work with Next.js App Router?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. TekiVex UI fully supports Next.js App Router with 13 RSC-compatible components that render on the server without 'use client'. Add 'tekivex-ui' to transpilePackages and optimizePackageImports in next.config.js, then create a client-component Providers wrapper that mounts ThemeProvider."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does TekiVex UI work with Webpack?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. TekiVex UI works with Webpack 5. Add style-loader and css-loader to handle the 'tekivex-ui/styles' import, ensure conditionNames includes 'import' for the export map, and import 'tekivex-ui/styles' in your entry point. Modern Webpack tree-shakes unused components automatically thanks to the package's sideEffects field."
           }
         },
         {
@@ -321,6 +353,8 @@
         <nav>
           <ul>
             <li><a href="#/getting-started">Getting Started</a></li>
+            <li><a href="#/bundlers">Bundler Integration (Vite, Webpack, Next.js, Remix, Parcel)</a></li>
+            <li><a href="#/ecosystem">Ecosystem (security-core, audit, figma-kit, scaffolder)</a></li>
             <li><a href="#/components/button">Button</a></li>
             <li><a href="#/components/input">Input</a></li>
             <li><a href="#/components/modal">Modal</a></li>
@@ -374,6 +408,23 @@
         <section>
           <h2>TKX Atomic CSS Engine</h2>
           <p>TekiVex UI ships with TKX, a zero-runtime atomic CSS engine that generates optimized class names at build time. Unlike Tailwind CSS which requires a large utility CSS file, TKX generates only the styles your components actually use, resulting in minimal CSS bundle sizes.</p>
+        </section>
+
+        <section>
+          <h2>Bundler Integration — Vite, Webpack, Next.js, Remix, Parcel, Astro</h2>
+          <p>TekiVex UI works with every major React bundler and meta-framework. Drop-in integration recipes are available at /bundlers.</p>
+          <h3>Vite (recommended)</h3>
+          <p>npm install tekivex-ui — then import 'tekivex-ui/styles' and wrap your app in ThemeProvider. No special vite.config.ts changes required. Optionally add tekivex-ui to optimizeDeps.include for faster dev cold-starts.</p>
+          <h3>Next.js App Router</h3>
+          <p>Add 'tekivex-ui' to transpilePackages and optimizePackageImports in next.config.js. Create a client-component Providers wrapper for ThemeProvider. 13 RSC-compatible components (TkxBadge, TkxAvatar, TkxCard, TkxAlert, TkxProgress, TkxTimeline, etc.) render on the server without 'use client'.</p>
+          <h3>Next.js Pages Router</h3>
+          <p>Same as App Router but mount ThemeProvider in pages/_app.tsx. transpilePackages required.</p>
+          <h3>Webpack 5</h3>
+          <p>Configure style-loader and css-loader for the CSS import. Set resolve.conditionNames to ['import', 'require', 'default'] for export-map resolution. Tree-shaking works automatically via the sideEffects field.</p>
+          <h3>Remix / React Router 7</h3>
+          <p>Load the stylesheet via the route module's links() function: import tekivexStyles from 'tekivex-ui/dist/style.css?url'.</p>
+          <h3>Parcel, Rollup, Astro, CRA</h3>
+          <p>Parcel 2 is zero-config. Rollup library consumers should externalise tekivex-ui as a peer. Astro works via React islands with client:load. Create React App is supported but we recommend migrating to Vite for faster builds.</p>
         </section>
 
         <section>

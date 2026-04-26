@@ -1,4 +1,4 @@
-// ── @tekivex/ui/quantum ──────────────────────────────────────────────────────
+// ── tekivex-ui/quantum ──────────────────────────────────────────────────────
 // Quantum-inspired AI components: form inference (Boltzmann machines),
 // theme optimization (quantum annealing), and live JSX playground (Grover's
 // amplitude amplification for component suggestions).
@@ -6,7 +6,7 @@
 // This entry point is split out so consumers who don't use quantum AI features
 // don't pay for the ~100 KB of math + components in their bundle.
 //
-// Import from '@tekivex/ui/quantum'.
+// Import from 'tekivex-ui/quantum'.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export { TkxQuantumForm } from '../components/TkxQuantumForm';

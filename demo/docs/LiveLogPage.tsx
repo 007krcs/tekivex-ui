@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { TkxLiveLog } from '../../src/realtime';
 import type { LogEntry, LogLevel } from '../../src/realtime';
 import { DemoSection } from '../layout/DemoSection';

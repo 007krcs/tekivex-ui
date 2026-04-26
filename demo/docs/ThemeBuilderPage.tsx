@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { TkxThemeBuilder } from '../../src/quantum';
 import type { ThemeColorState } from '../../src/quantum';
 import { DemoSection } from '../layout/DemoSection';

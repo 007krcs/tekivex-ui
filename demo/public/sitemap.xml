@@ -3,7 +3,9 @@
 
   <!-- ── Core pages ──────────────────────────────────────────────────────── -->
   <url><loc>https://ui.tekivex.com/</loc><lastmod>2026-04-20</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://ui.tekivex.com/#/getting-started</loc><lastmod>2026-04-20</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ui.tekivex.com/#/getting-started</loc><lastmod>2026-04-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ui.tekivex.com/#/bundlers</loc><lastmod>2026-04-26</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ui.tekivex.com/#/ecosystem</loc><lastmod>2026-04-26</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://ui.tekivex.com/#/css-system</loc><lastmod>2026-04-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://ui.tekivex.com/#/rsc</loc><lastmod>2026-04-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://ui.tekivex.com/#/security</loc><lastmod>2026-04-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>

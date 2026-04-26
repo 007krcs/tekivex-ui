@@ -169,11 +169,11 @@ export * from './src/components/TkxList';
 export { TkxOrgChart } from './src/components/TkxOrgChart';
 export type { TkxOrgChartProps, OrgNode } from './src/components/TkxOrgChart';
 
-// i18n / RTL — locale strings live in '@tekivex/ui/i18n' to keep the main bundle small.
+// i18n / RTL — locale strings live in 'tekivex-ui/i18n' to keep the main bundle small.
 // Provider, hooks and direction utils stay here so most apps can use i18n with one English locale or none.
 export { I18nProvider } from './src/i18n/I18nProvider';
 export { useI18n, useLocale, useDirection, isRTL, I18nContext } from './src/i18n';
-// Note: locale strings (enUS, esES, frFR, ...) and LOCALES are now exported from '@tekivex/ui/i18n'
+// Note: locale strings (enUS, esES, frFR, ...) and LOCALES are now exported from 'tekivex-ui/i18n'
 export type { LocaleStrings, LocaleCode, Direction, I18nContextValue } from './src/i18n';
 export type { I18nProviderProps } from './src/i18n/I18nProvider';
 
@@ -238,10 +238,10 @@ export { TkxAIThinking } from './src/components/TkxAIThinking';
 export type { TkxAIThinkingProps } from './src/components/TkxAIThinking';
 
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
-//   Quantum AI components & engine  → '@tekivex/ui/quantum'
+//   Quantum AI components & engine  → 'tekivex-ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
-//   Real-Time UI components         → '@tekivex/ui/realtime'
+//   Real-Time UI components         → 'tekivex-ui/realtime'
 //     (TkxLiveFeed, TkxLiveMetrics, TkxRealTimeChart, TkxLiveLog)
-//   27-locale i18n strings          → '@tekivex/ui/i18n'
-//   Charts (recharts wrapper)       → '@tekivex/ui/charts'
-//   Headless hooks                  → '@tekivex/ui/headless'
+//   27-locale i18n strings          → 'tekivex-ui/i18n'
+//   Charts (recharts wrapper)       → 'tekivex-ui/charts'
+//   Headless hooks                  → 'tekivex-ui/headless'

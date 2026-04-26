@@ -41,7 +41,7 @@ A Figma library that 1:1 mirrors tekivex-ui runtime output so designers hand off
 
 - Published as a Figma Community resource (free, discoverable)
 - Pro customers get a private duplicate with edit rights + templates
-- Version tied to npm version (Figma `v2.6.x` kit ↔ npm `@tekivex/ui@2.6.x`)
+- Version tied to npm version (Figma `v2.6.x` kit ↔ npm `tekivex-ui@2.6.x`)
 
 ## Success criteria
 

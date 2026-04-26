@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@tekivex/ui': resolve(__dirname, '../index.ts'),
+      'tekivex-ui': resolve(__dirname, '../index.ts'),
       '@engine': resolve(__dirname, '../src/engine'),
       '@themes': resolve(__dirname, '../src/themes'),
       '@hooks': resolve(__dirname, '../src/hooks'),

@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { useTheme } from '@tekivex/ui';
+import { useTheme } from 'tekivex-ui';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

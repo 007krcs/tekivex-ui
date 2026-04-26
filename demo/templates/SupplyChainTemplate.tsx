@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import {
   TkxButton, TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter,
   TkxBadge, TkxInput, TkxProgress, TkxToggle, TkxAlert, TkxTabs,
   TkxTabList, TkxTab, TkxTabPanels, TkxTabPanel, TkxAvatar, TkxTable,
   TkxDivider, TkxSkeleton, TkxTooltip, tkx, cx
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 
 interface Props { theme: ThemeTokens }
 

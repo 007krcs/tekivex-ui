@@ -58,7 +58,7 @@ export default defineConfig({
     },
     rollupOptions: {
       // recharts is a dependency but mark it external to keep bundle lean.
-      // Consumers install it alongside @tekivex/ui.
+      // Consumers install it alongside tekivex-ui.
       external: [
         'react',
         'react-dom',

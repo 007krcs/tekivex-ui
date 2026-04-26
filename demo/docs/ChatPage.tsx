@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import {
   TkxChat,
   TkxChatBubble,
   TkxThinkingIndicator,
   TkxButton,
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { WCAGBadge, WCAGBadgeGroup } from '../layout/WCAGBadge';

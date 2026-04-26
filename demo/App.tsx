@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense, Component, type CSSProperties, type ReactNode } from 'react';
-import { ThemeProvider, useTheme, quantumDark, auroraLight } from '@tekivex/ui';
-import type { ThemeTokens } from '@tekivex/ui';
+import { ThemeProvider, useTheme, quantumDark, auroraLight } from 'tekivex-ui';
+import type { ThemeTokens } from 'tekivex-ui';
 
 // ── Chunk error boundary — catches "Failed to fetch dynamically imported module"
 // errors that occur when a new deploy invalidates cached chunk hashes.
@@ -53,6 +53,7 @@ import { Header } from './layout/Header';
 // ── Critical pages — eager (small, always needed) ─────────────────────────────
 import { HomePage } from './pages/HomePage';
 import { GettingStartedPage } from './pages/GettingStartedPage';
+import { BundlersPage } from './pages/BundlersPage';
 import { CSSSystemPage } from './pages/CSSSystemPage';
 import { AboutPage } from './pages/AboutPage';
 import { EcosystemPage } from './pages/EcosystemPage';
@@ -174,6 +175,7 @@ type PageComponent = React.ComponentType<{ theme: ThemeTokens }>;
 const ROUTE_MAP: Record<string, PageComponent> = {
   '/': HomePage,
   '/getting-started': GettingStartedPage,
+  '/bundlers': BundlersPage,
   '/css-system': CSSSystemPage,
   '/components/button': ButtonPage,
   '/components/card': CardPage,

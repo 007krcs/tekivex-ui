@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import {
   TkxBadge,
   TkxButton,
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { WCAGBadge, WCAGBadgeGroup } from '../layout/WCAGBadge';
@@ -443,7 +443,7 @@ function StatusRow({ label, variant, pulse = false }) {
         title="Custom Color via Theme — createTheme"
         description="TkxBadge reads variant colors from the active ThemeProvider. Use createTheme to replace any color token — all badges using that variant update automatically."
         theme={theme}
-        code={`import { createTheme, ThemeProvider, TkxBadge } from '@tekivex/ui';
+        code={`import { createTheme, ThemeProvider, TkxBadge } from 'tekivex-ui';
 
 // Override primary with your brand color
 const brandTheme = createTheme({

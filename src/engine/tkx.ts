@@ -1031,7 +1031,7 @@ export function cx(...classes: (string | false | null | undefined)[]): string {
  *
  * @example
  * ```tsx
- * import { tkxPlugin, tkx } from '@tekivex/ui';
+ * import { tkxPlugin, tkx } from 'tekivex-ui';
  *
  * // Register custom utilities
  * tkxPlugin({

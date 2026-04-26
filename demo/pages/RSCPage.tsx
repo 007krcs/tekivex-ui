@@ -1,4 +1,4 @@
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 
 interface Props { theme: ThemeTokens }
 

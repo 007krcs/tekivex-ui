@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxToggle, TkxBadge } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxToggle, TkxBadge } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { WCAGBadgeGroup } from '../layout/WCAGBadge';

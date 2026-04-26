@@ -13,10 +13,10 @@ We need to know: *is tekivex-ui working as a product, or are we shipping into a 
 ### Axis 1 — Adoption (reach)
 | Metric | Source | Healthy trend |
 |---|---|---|
-| npm weekly downloads (`@tekivex/ui`) | npmjs API | +10% MoM after launch, steady |
+| npm weekly downloads (`tekivex-ui`) | npmjs API | +10% MoM after launch, steady |
 | GitHub stars | GH API | +50 / week sustained for 3 months |
-| `create-tekivex-app` invocations | npm downloads | >20% of `@tekivex/ui` installs |
-| `@tekivex/audit` weekly runs | npm downloads | >5% of `@tekivex/ui` installs |
+| `create-tekivex-app` invocations | npm downloads | >20% of `tekivex-ui` installs |
+| `@tekivex/audit` weekly runs | npm downloads | >5% of `tekivex-ui` installs |
 | Unique docs visitors (tekivex.dev) | server logs | growing WoW |
 | Dependents on npm | npmjs API | >50 within 6mo |
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TkxOTP, type ThemeTokens } from '@tekivex/ui';
+import { TkxOTP, type ThemeTokens } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 
 export function OTPPage({ theme }: { theme: ThemeTokens }) {
@@ -60,7 +60,7 @@ export function OTPPage({ theme }: { theme: ThemeTokens }) {
       </p>
       <p style={{ fontSize: '13px', color: theme.textMuted, lineHeight: '1.6', maxWidth: '640px', margin: '0 0 48px' }}>
         <strong style={{ color: theme.text }}>Import:</strong>{' '}
-        <code style={codeInline}>{'import { TkxOTP } from \'@tekivex/ui\''}</code>
+        <code style={codeInline}>{'import { TkxOTP } from \'tekivex-ui\''}</code>
       </p>
 
       {/* Basic 6-digit */}
@@ -69,7 +69,7 @@ export function OTPPage({ theme }: { theme: ThemeTokens }) {
         description="The default 6-box OTP input. Type a digit and focus auto-advances to the next box. Paste support fills all boxes at once."
         theme={theme}
         code={`import { useState } from 'react';
-import { TkxOTP } from '@tekivex/ui';
+import { TkxOTP } from 'tekivex-ui';
 
 function MyOTP() {
   const [value, setValue] = useState('');

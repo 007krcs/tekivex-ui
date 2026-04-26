@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { TkxQuantumForm } from '../../src/quantum';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';

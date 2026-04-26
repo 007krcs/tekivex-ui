@@ -1,5 +1,5 @@
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxResult, TkxButton } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxResult, TkxButton } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 

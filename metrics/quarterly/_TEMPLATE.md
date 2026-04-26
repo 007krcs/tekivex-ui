@@ -14,7 +14,7 @@
 
 | Metric | Start | End | Δ | Healthy? |
 |---|---|---|---|---|
-| npm weekly (@tekivex/ui) |  |  |  | |
+| npm weekly (tekivex-ui) |  |  |  | |
 | GitHub stars |  |  |  | |
 | create-tekivex-app weekly |  |  |  | |
 | @tekivex/audit weekly |  |  |  | |

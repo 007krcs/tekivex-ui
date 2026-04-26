@@ -1,5 +1,5 @@
 import { useState, type ReactNode, type CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { CodeBlock } from './CodeBlock';
 
 // ── Types ─────────────────────────────────────────────────────────────────────

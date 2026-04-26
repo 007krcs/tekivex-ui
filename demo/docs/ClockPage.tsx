@@ -1,5 +1,5 @@
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxClock } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxClock } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 
 export function ClockPage({ theme }: { theme: ThemeTokens }) {
@@ -14,7 +14,7 @@ export function ClockPage({ theme }: { theme: ThemeTokens }) {
         title="Analog Clocks"
         description="Three visual styles for the analog clock face: classic, minimal, and modern."
         theme={theme}
-        code={`import { TkxClock } from '@tekivex/ui';
+        code={`import { TkxClock } from 'tekivex-ui';
 
 <TkxClock variant="analog" analogStyle="classic" size="md" />
 <TkxClock variant="analog" analogStyle="minimal" size="md" />

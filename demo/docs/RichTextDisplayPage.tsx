@@ -1,6 +1,6 @@
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxRichTextDisplay } from '@tekivex/ui';
-import type { RichTextBlock } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxRichTextDisplay } from 'tekivex-ui';
+import type { RichTextBlock } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 
@@ -16,7 +16,7 @@ const ALL_BLOCKS: RichTextBlock[] = [
   { type: 'heading', content: 'Installation', level: 2 },
   {
     type: 'code',
-    content: 'npm install @tekivex/ui',
+    content: 'npm install tekivex-ui',
     language: 'bash',
   },
   { type: 'divider' },
@@ -68,7 +68,7 @@ const CODE_BLOCK: RichTextBlock[] = [
   { type: 'heading', content: 'Code Example', level: 3 },
   {
     type: 'code',
-    content: `import { TkxRichTextDisplay } from '@tekivex/ui';
+    content: `import { TkxRichTextDisplay } from 'tekivex-ui';
 
 const blocks = [
   { type: 'heading', content: 'Hello', level: 1 },
@@ -138,7 +138,7 @@ export function RichTextDisplayPage({ theme }: { theme: ThemeTokens }) {
   blocks={[
     { type: 'heading', content: 'Getting Started', level: 1 },
     { type: 'paragraph', content: 'Introductory text...' },
-    { type: 'code', content: 'npm install @tekivex/ui', language: 'bash' },
+    { type: 'code', content: 'npm install tekivex-ui', language: 'bash' },
     { type: 'divider' },
     { type: 'list', items: ['Item A', 'Item B'], ordered: false },
     { type: 'blockquote', content: 'A notable quote.' },

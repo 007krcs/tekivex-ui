@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxAffix, TkxButton, TkxBadge, TkxCard, TkxCardBody } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxAffix, TkxButton, TkxBadge, TkxCard, TkxCardBody } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 

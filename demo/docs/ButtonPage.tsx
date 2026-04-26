@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import {
   TkxButton,
-} from '@tekivex/ui';
+} from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { WCAGBadge, WCAGBadgeGroup } from '../layout/WCAGBadge';
@@ -391,7 +391,7 @@ function handleSubmit() {
         title="Build Your Own — createTheme Brand Colors"
         description="createTheme lets you inject any brand palette. TkxButton reads colorScheme values from the active theme, so swapping the theme instantly rebrands all buttons."
         theme={theme}
-        code={`import { createTheme, ThemeProvider, TkxButton } from '@tekivex/ui';
+        code={`import { createTheme, ThemeProvider, TkxButton } from 'tekivex-ui';
 
 const brandTheme = createTheme({
   primary: '#ff6b35',   // brand orange

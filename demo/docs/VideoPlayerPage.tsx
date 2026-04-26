@@ -1,5 +1,5 @@
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxVideoPlayer } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxVideoPlayer } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 
 export function VideoPlayerPage({ theme }: { theme: ThemeTokens }) {
@@ -14,7 +14,7 @@ export function VideoPlayerPage({ theme }: { theme: ThemeTokens }) {
         title="Basic Player"
         description="A video player with poster image and default controls."
         theme={theme}
-        code={`import { TkxVideoPlayer } from '@tekivex/ui';
+        code={`import { TkxVideoPlayer } from 'tekivex-ui';
 
 <TkxVideoPlayer
   src="https://www.w3schools.com/html/mov_bbb.mp4"

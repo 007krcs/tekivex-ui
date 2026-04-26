@@ -1,6 +1,6 @@
 # Release checklist
 
-For every publish of `@tekivex/ui`, `@tekivex/security-core`, `@tekivex/audit`, or `create-tekivex-app`. Paste into the release PR and tick through.
+For every publish of `tekivex-ui`, `@tekivex/security-core`, `@tekivex/audit`, or `create-tekivex-app`. Paste into the release PR and tick through.
 
 ## Pre-flight
 
@@ -40,7 +40,7 @@ For every publish of `@tekivex/ui`, `@tekivex/security-core`, `@tekivex/audit`, 
 
 - [ ] Tag created and signed: `git tag -s vX.Y.Z -m "..."`
 - [ ] `npm publish --provenance --access public`
-- [ ] Verify: `npm view @tekivex/ui dist-tags`
+- [ ] Verify: `npm view tekivex-ui dist-tags`
 - [ ] Smoke install: `npx create-tekivex-app@latest /tmp/smoke && cd /tmp/smoke && npm run build`
 - [ ] GitHub release created with CHANGELOG excerpt
 - [ ] Docs deployed: `tekivex.dev` serves new version header
@@ -54,6 +54,6 @@ For every publish of `@tekivex/ui`, `@tekivex/security-core`, `@tekivex/audit`, 
 
 ## If anything goes wrong
 
-- **Bad version published** → `npm deprecate @tekivex/ui@X.Y.Z "..."`, publish patch, do not unpublish (breaks consumers' lockfiles)
+- **Bad version published** → `npm deprecate tekivex-ui@X.Y.Z "..."`, publish patch, do not unpublish (breaks consumers' lockfiles)
 - **Tag pushed but publish failed** → delete tag, fix, re-tag with same version
 - **Secret committed by accident** → rotate immediately (see incident-response.md), force-push only if unreleased

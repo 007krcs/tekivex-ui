@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxDropdown } from '@tekivex/ui';
-import type { DropdownItem, DropdownGroup } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxDropdown } from 'tekivex-ui';
+import type { DropdownItem, DropdownGroup } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 

@@ -1,14 +1,14 @@
 'use client';
 
-// ── @tekivex/ui/headless ─────────────────────────────────────────────────────
+// ── tekivex-ui/headless ─────────────────────────────────────────────────────
 // Behavior-only primitives, hooks, and utilities — zero styles shipped.
 // Use these to build completely custom UI on top of TekiVex's battle-tested
 // accessibility, form, and interaction logic.
 //
-// Import from '@tekivex/ui/headless' — no CSS, no theme tokens, no components.
+// Import from 'tekivex-ui/headless' — no CSS, no theme tokens, no components.
 //
 // @example
-// import { useDisclosure, useFocusTrap, useFormState, useRovingTabIndex } from '@tekivex/ui/headless';
+// import { useDisclosure, useFocusTrap, useFormState, useRovingTabIndex } from 'tekivex-ui/headless';
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ── Accessibility hooks ──────────────────────────────────────────────────────

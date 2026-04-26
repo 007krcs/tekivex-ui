@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
 import { TkxMarkdown } from '../../src/components/TkxMarkdown';
 import { TkxOrgChart } from '../../src/components/TkxOrgChart';
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxMenu, TkxButton, TkxBadge } from '@tekivex/ui';
-import type { MenuItem } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxMenu, TkxButton, TkxBadge } from 'tekivex-ui';
+import type { MenuItem } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
 import { WCAGBadgeGroup } from '../layout/WCAGBadge';
@@ -227,7 +227,7 @@ export function MenuPage({ theme }: { theme: ThemeTokens }) {
         title="Basic Menu"
         description="Pass any ReactNode as the trigger and an array of MenuItem objects as items. The menu opens on click and closes on selection, outside click, or Escape."
         theme={theme}
-        code={`import { TkxMenu, TkxButton } from '@tekivex/ui';
+        code={`import { TkxMenu, TkxButton } from 'tekivex-ui';
 
 <TkxMenu
   trigger={<TkxButton colorScheme="primary" size="sm">Actions ▾</TkxButton>}

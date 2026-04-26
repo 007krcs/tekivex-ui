@@ -1,6 +1,6 @@
-import type { ThemeTokens } from '@tekivex/ui';
-import { TkxCarousel } from '@tekivex/ui';
-import type { CarouselSlide } from '@tekivex/ui';
+import type { ThemeTokens } from 'tekivex-ui';
+import { TkxCarousel } from 'tekivex-ui';
+import type { CarouselSlide } from 'tekivex-ui';
 import { DemoSection } from '../layout/DemoSection';
 
 const SLIDES: CarouselSlide[] = [
@@ -54,8 +54,8 @@ export function CarouselPage({ theme }: { theme: ThemeTokens }) {
         title="Basic Carousel"
         description="A carousel with arrow navigation and dot indicators."
         theme={theme}
-        code={`import { TkxCarousel } from '@tekivex/ui';
-import type { CarouselSlide } from '@tekivex/ui';
+        code={`import { TkxCarousel } from 'tekivex-ui';
+import type { CarouselSlide } from 'tekivex-ui';
 
 const slides: CarouselSlide[] = [
   { id: 'slide-1', content: <div>Slide One</div> },
