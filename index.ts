@@ -4,8 +4,8 @@
 import './src/styles/global.css';
 
 // Theme System
-export { ThemeProvider, ThemeContext, useTheme, createTheme, quantumDark, auroraLight, generatePalette, typography, spacing, breakpoints, shadows, zIndex, radii } from './src/themes';
-export type { ThemeTokens, ThemeProviderProps, ColorPalette } from './src/themes';
+export { ThemeProvider, ThemeContext, useTheme, usePrefersColorScheme, createTheme, quantumDark, auroraLight, generatePalette, typography, spacing, breakpoints, shadows, zIndex, radii } from './src/themes';
+export type { ThemeTokens, ThemeProviderProps, ColorPalette, ColorScheme } from './src/themes';
 
 // Components
 export { TkxButton } from './src/components/TkxButton';
@@ -165,6 +165,12 @@ export * from './src/components/TkxAffix';
 export * from './src/components/TkxAnchor';
 export * from './src/components/TkxCascader';
 export * from './src/components/TkxList';
+
+// Components (v2.7) — Phase 1 quick wins
+export * from './src/components/TkxCaptcha';
+export * from './src/components/TkxFontProvider';
+export * from './src/components/TkxPhoneInput';
+export * from './src/components/TkxImageEditor';
 
 export { TkxOrgChart } from './src/components/TkxOrgChart';
 export type { TkxOrgChartProps, OrgNode } from './src/components/TkxOrgChart';

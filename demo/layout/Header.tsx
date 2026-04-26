@@ -18,6 +18,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/': 'Overview',
   '/getting-started': 'Getting Started',
   '/bundlers': 'Bundler Integration',
+  '/v2-7': 'v2.7 Showcase',
   '/css-system': 'TKX CSS System',
   '/components/button': 'Button',
   '/components/card': 'Card',

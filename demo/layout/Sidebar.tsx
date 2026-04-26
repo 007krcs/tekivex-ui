@@ -30,6 +30,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Overview', route: '/' },
       { label: 'Getting Started', route: '/getting-started' },
       { label: 'Bundler Integration', route: '/bundlers' },
+      { label: 'v2.7 Showcase ✨', route: '/v2-7' },
       { label: 'TKX CSS System', route: '/css-system' },
       { label: '⚡ RSC Compatibility', route: '/rsc' },
     ],

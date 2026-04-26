@@ -1,4 +1,4 @@
-import { createContext, useContext, useLayoutEffect, useEffect, type ReactNode, createElement } from 'react';
+import { createContext, useContext, useLayoutEffect, useEffect, useState, type ReactNode, createElement } from 'react';
 import { cssVar } from '../engine/css';
 import { meetsAA, meetsAAA } from '../engine/wcag';
 
@@ -95,17 +95,84 @@ export function createTheme(base: ThemeTokens, overrides?: Partial<ThemeTokens>)
 
 export const ThemeContext = createContext<ThemeTokens>(quantumDark);
 
+export type ColorScheme = 'light' | 'dark' | 'auto';
+
 export interface ThemeProviderProps {
+  /** Explicit theme tokens. When provided, takes precedence over `mode`. */
   theme?: ThemeTokens;
+  /**
+   * Color-scheme strategy.
+   * - "dark" / "light": pin to the corresponding built-in theme.
+   * - "auto" (default if no `theme` provided): follow `prefers-color-scheme`,
+   *   reacting live to system changes.
+   * Ignored when `theme` is explicitly set.
+   */
+  mode?: ColorScheme;
+  /** Theme used when system prefers light. Defaults to {@link auroraLight}. */
+  lightTheme?: ThemeTokens;
+  /** Theme used when system prefers dark. Defaults to {@link quantumDark}. */
+  darkTheme?: ThemeTokens;
   children: ReactNode;
 }
 
-export function ThemeProvider({ theme = quantumDark, children }: ThemeProviderProps) {
+/**
+ * Reads `prefers-color-scheme` and re-evaluates on system changes.
+ * Returns true while the OS reports dark mode; false during SSR.
+ */
+function usePrefersDark(enabled: boolean): boolean {
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (!enabled || typeof window === 'undefined' || !window.matchMedia) return true;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (!enabled || typeof window === 'undefined' || !window.matchMedia) return;
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    // Safari < 14 only supports the deprecated addListener API.
+    if (mql.addEventListener) {
+      mql.addEventListener('change', handler);
+      return () => mql.removeEventListener('change', handler);
+    } else {
+      mql.addListener(handler);
+      return () => mql.removeListener(handler);
+    }
+  }, [enabled]);
+
+  return isDark;
+}
+
+export function ThemeProvider({
+  theme,
+  mode,
+  lightTheme = auroraLight,
+  darkTheme = quantumDark,
+  children,
+}: ThemeProviderProps) {
+  // Resolution rules:
+  //  1. If `theme` is explicitly provided, honour it (pre-2.7 behaviour).
+  //  2. Else if `mode` is "light"/"dark", pin to that built-in theme.
+  //  3. Else (mode === "auto" or unset), track prefers-color-scheme.
+  const explicit = theme !== undefined;
+  const followSystem = !explicit && (mode === 'auto' || mode === undefined);
+  const prefersDark = usePrefersDark(followSystem);
+
+  let resolved: ThemeTokens;
+  if (explicit) {
+    resolved = theme!;
+  } else if (mode === 'light') {
+    resolved = lightTheme;
+  } else if (mode === 'dark') {
+    resolved = darkTheme;
+  } else {
+    resolved = prefersDark ? darkTheme : lightTheme;
+  }
+
   // useLayoutEffect fires synchronously after DOM mutations and before paint,
   // eliminating the flash-of-unstyled-content that useEffect causes.
   // The isomorphic alias silently falls back to useEffect during SSR.
   useIsomorphicLayoutEffect(() => {
-    const vars = (Object.entries(theme) as [keyof ThemeTokens, string][])
+    const vars = (Object.entries(resolved) as [keyof ThemeTokens, string][])
       .map(([key, value]) => cssVar(key, value))
       .join(' ');
     let styleEl = document.getElementById('tkx-theme') as HTMLStyleElement | null;
@@ -122,12 +189,18 @@ export function ThemeProvider({ theme = quantumDark, children }: ThemeProviderPr
       }
     }
     styleEl.textContent = `:root { ${vars} }`;
-  }, [theme]);
+    // Also expose the active scheme on <html> for consumers who want to
+    // hook off it via [data-tkx-scheme] selectors.
+    document.documentElement.setAttribute(
+      'data-tkx-scheme',
+      resolved === darkTheme ? 'dark' : resolved === lightTheme ? 'light' : 'custom',
+    );
+  }, [resolved, darkTheme, lightTheme]);
 
   // Also set CSS variables as inline style on the provider wrapper so that
   // SSR-rendered HTML already contains the correct values without a round-trip.
   const inlineVars = Object.fromEntries(
-    (Object.entries(theme) as [keyof ThemeTokens, string][]).map(([key, value]) => [
+    (Object.entries(resolved) as [keyof ThemeTokens, string][]).map(([key, value]) => [
       `--tkx-${key}`,
       value,
     ]),
@@ -135,13 +208,41 @@ export function ThemeProvider({ theme = quantumDark, children }: ThemeProviderPr
 
   return createElement(
     ThemeContext.Provider,
-    { value: theme },
+    { value: resolved },
     createElement('div', { style: { display: 'contents', ...inlineVars } }, children),
   );
 }
 
 export function useTheme(): ThemeTokens {
   return useContext(ThemeContext);
+}
+
+/**
+ * Returns the user's OS-level color-scheme preference, reactively.
+ * Useful for consumers managing their own theme switching.
+ *
+ * @example
+ * const scheme = usePrefersColorScheme();
+ * // => "dark" | "light"
+ */
+export function usePrefersColorScheme(): 'light' | 'dark' {
+  const [scheme, setScheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => setScheme(e.matches ? 'dark' : 'light');
+    if (mql.addEventListener) {
+      mql.addEventListener('change', handler);
+      return () => mql.removeEventListener('change', handler);
+    } else {
+      mql.addListener(handler);
+      return () => mql.removeListener(handler);
+    }
+  }, []);
+  return scheme;
 }
 
 // ── Color Palette Generator ─────────────────────────────────────────────────

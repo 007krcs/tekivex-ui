@@ -54,6 +54,7 @@ import { Header } from './layout/Header';
 import { HomePage } from './pages/HomePage';
 import { GettingStartedPage } from './pages/GettingStartedPage';
 import { BundlersPage } from './pages/BundlersPage';
+const V27Page = lazy(() => import('./docs/v27Page').then(m => ({ default: m.V27Page })));
 import { CSSSystemPage } from './pages/CSSSystemPage';
 import { AboutPage } from './pages/AboutPage';
 import { EcosystemPage } from './pages/EcosystemPage';
@@ -176,6 +177,7 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/': HomePage,
   '/getting-started': GettingStartedPage,
   '/bundlers': BundlersPage,
+  '/v2-7': V27Page,
   '/css-system': CSSSystemPage,
   '/components/button': ButtonPage,
   '/components/card': CardPage,
