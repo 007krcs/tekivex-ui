@@ -1,5 +1,6 @@
 'use client';
 
+import { useLocale } from '../i18n';
 import {
   useState,
   useRef,
@@ -81,7 +82,7 @@ export function TkxFileUpload({
   maxFiles,
   onChange,
   onError,
-  label = 'Upload files',
+  label,
   hint,
   isDisabled = false,
   preview = true,
@@ -89,6 +90,10 @@ export function TkxFileUpload({
   variant = 'dropzone',
 }: TkxFileUploadProps) {
   const theme = useTheme();
+  const t = useLocale();
+  // Localised default label — `label` prop still wins.
+  const resolvedLabel = label ?? (t.uploadFiles ?? 'Upload files');
+  const dropFilesText = t.dropFiles?.replace(/^.*$/, t.dropFiles) ?? 'Drop files here';
   const reducedMotion = useReducedMotion();
   const hintId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -226,7 +231,7 @@ export function TkxFileUpload({
   }, [isDisabled]);
 
   const borderColor = isDragOver ? theme.primary : theme.border;
-  const safeLabel = sanitizeString(label);
+  const safeLabel = sanitizeString(resolvedLabel);
   const safeHint = hint ? sanitizeString(hint) : '';
 
   const dropzoneContent = (
@@ -258,7 +263,7 @@ export function TkxFileUpload({
       </svg>
       <div className={tkx('text-center')}>
         <p className={tkx('m-0 text-sm font-medium')} style={{ color: theme.text }}>
-          {isDragOver ? 'Drop files here' : safeLabel}
+          {isDragOver ? dropFilesText : safeLabel}
         </p>
         {safeHint && (
           <p id={hintId} className={tkx('m-0 text-xs mt-1')} style={{ color: theme.textMuted }}>
@@ -315,7 +320,7 @@ export function TkxFileUpload({
         <ul
           role="status"
           aria-live="polite"
-          aria-label="Uploaded files"
+          aria-label={t.uploadFiles ?? 'Uploaded files'}
           className={tkx('m-0 p-0 flex flex-col gap-2')}
           style={{ listStyle: 'none' }}
         >

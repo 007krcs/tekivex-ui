@@ -42,6 +42,25 @@ export interface LocaleStrings {
   filterPlaceholder: string;
   exportCsv: string;
   rowsSelected: (n: number) => string;
+
+  // Pagination — optional, English fallback used at the call site if missing.
+  // (Optional so adding these does not break the 35 existing locale literals.)
+  firstPage?: string;
+  lastPage?: string;
+  previousPage?: string;
+  nextPage?: string;
+  showingRange?: (start: number, end: number, total: number) => string;
+  itemsPerPage?: string;
+
+  // FileUpload extras
+  uploadFiles?: string;
+  acceptedFormats?: (formats: string) => string;
+  maxFileSize?: (size: string) => string;
+
+  // DatePicker extras
+  clearDate?: string;
+  previousMonth?: string;
+  nextMonth?: string;
 }
 
 // ── Helper — build a locale without having to re-type every key ─────────────

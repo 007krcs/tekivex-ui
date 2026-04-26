@@ -46,20 +46,21 @@ export function renderToPDFStream(element: ReactElement): NodeJS.ReadableStream 
 /**
  * Render the first page of a PDF document tree to a PNG Buffer.
  *
- * Implementation note: @react-pdf/renderer doesn't expose a direct PDF→PNG
- * pipeline, so we delegate to the runtime's PDF rasterisation. In Node 20+
- * environments with Sharp installed, callers should pipe renderToPDFStream
- * through `pdf-img-convert` or `sharp().pdf()`. We document the canonical
- * pattern here rather than bundling a heavy raster dep into the core package.
+ * **Now implemented in v0.2** via the optional `@tekivex/pdf/raster`
+ * sub-export. This wrapper keeps the import path simple but requires
+ * `sharp` to be installed by the consumer.
  *
- * @throws Error — implementation must be provided by the caller for now.
- *                 See the README for the recommended Sharp / pdf-img-convert
- *                 wiring example.
+ * For full control (multi-page, JPEG/WebP, custom DPI/resize), import
+ * directly from `@tekivex/pdf/raster`:
+ *
+ * @example
+ * import { renderToImage } from '@tekivex/pdf/raster';
+ * const png = await renderToImage(<Doc/>, { format: 'png', dpi: 200 });
  */
-export async function renderToPNG(_element: ReactElement): Promise<Buffer> {
-  throw new Error(
-    'renderToPNG requires a raster backend. See https://ui.tekivex.com/pdf/render-to-png/ for Sharp / pdf-img-convert recipes.',
-  );
+export async function renderToPNG(element: ReactElement): Promise<Buffer> {
+  // Lazy-load to keep Sharp out of the main bundle path.
+  const mod: any = await import('./raster.js').catch(() => import('./raster'));
+  return mod.renderToImage(element, { format: 'png' });
 }
 
 /**

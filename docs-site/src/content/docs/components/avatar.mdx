@@ -1,0 +1,38 @@
+---
+title: TkxAvatar
+description: Avatar — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxAvatar } from 'tekivex-ui';
+```
+
+Avatar is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `src` | `string` |  |  |
+| `alt` | `string` | yes |  |
+| `initials` | `string` |  |  |
+| `size` | `AvatarSize` |  |  |
+| `shape` | `AvatarShape` |  |  |
+| `status` | `AvatarStatus` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxAvatar.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAvatar.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/avatar).

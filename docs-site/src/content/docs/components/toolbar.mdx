@@ -1,0 +1,39 @@
+---
+title: TkxToolbar
+description: Toolbar — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxToolbar } from 'tekivex-ui';
+```
+
+Toolbar is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `items` | `ToolbarItem[]` | yes |  |
+| `orientation` | `'horizontal' \| 'vertical'` |  |  |
+| `size` | `'sm' \| 'md' \| 'lg'` |  |  |
+| `variant` | `'default' \| 'outlined' \| 'filled'` |  |  |
+| `ariaLabel` | `string` |  |  |
+| `className` | `string` |  |  |
+| `style` | `CSSProperties` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxToolbar.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxToolbar.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/toolbar).

@@ -1,0 +1,88 @@
+---
+title: TkxModal
+description: Accessible modal dialog with focus trap, scrim, escape-to-close, and full keyboard support.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+```tsx
+import { TkxModal, TkxButton } from 'tekivex-ui';
+import { useState } from 'react';
+
+function Example() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <TkxButton onClick={() => setOpen(true)}>Open modal</TkxButton>
+      <TkxModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title="Confirm action"
+      >
+        Are you sure you want to delete this item?
+      </TkxModal>
+    </>
+  );
+}
+```
+
+## Sizes
+
+```tsx
+<TkxModal size="sm" {...props}>Small — for confirmations</TkxModal>
+<TkxModal size="md" {...props}>Default</TkxModal>
+<TkxModal size="lg" {...props}>For longer forms</TkxModal>
+<TkxModal size="full" {...props}>Full-screen — mobile sheets</TkxModal>
+```
+
+## With footer
+
+```tsx
+<TkxModal
+  isOpen={open}
+  onClose={() => setOpen(false)}
+  title="Delete account"
+  footer={
+    <>
+      <TkxButton variant="ghost" onClick={() => setOpen(false)}>Cancel</TkxButton>
+      <TkxButton colorScheme="danger" onClick={handleDelete}>Delete</TkxButton>
+    </>
+  }
+>
+  This action cannot be undone.
+</TkxModal>
+```
+
+## Accessibility — what's automatic
+
+- `role="dialog"` and `aria-modal="true"` on the surface
+- `aria-labelledby` automatically points at the title
+- **Focus trap** — Tab cycles only within the modal until closed
+- **Initial focus** — first focusable element receives focus on open
+- **Restored focus** — closes return focus to the trigger element
+- **Escape closes** — unless `closeOnEsc={false}`
+- **Scroll lock** — the page beneath cannot scroll
+- **Backdrop click closes** — unless `closeOnBackdropClick={false}`
+
+<Aside type="caution" title="Avoid nested modals">
+  Nesting modals creates a confusing focus order and is rarely the right
+  pattern. Use a different surface (Drawer, Popover, BottomSheet) for the
+  inner flow.
+</Aside>
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `isOpen` | `boolean` | yes | Controlled open state. |
+| `onClose` | `() => void` | yes | Called on Escape, backdrop click, or close button. |
+| `title` | `ReactNode` | | Heading shown in the header. Linked via `aria-labelledby`. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'full'` | | Defaults to `md`. |
+| `closeOnEsc` | `boolean` | | Defaults to `true`. |
+| `closeOnBackdropClick` | `boolean` | | Defaults to `true`. |
+| `footer` | `ReactNode` | | Footer content (typically action buttons). |
+| `initialFocusRef` | `React.RefObject` | | Override the auto-focused element on open. |
+
+## Source
+
+[`src/components/TkxModal.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxModal.tsx)

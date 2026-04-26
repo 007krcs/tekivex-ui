@@ -1,0 +1,38 @@
+---
+title: TkxSpeedDial
+description: SpeedDial — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxSpeedDial } from 'tekivex-ui';
+```
+
+SpeedDial is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `actions` | `SpeedDialAction[]` | yes |  |
+| `icon` | `ReactNode` |  |  |
+| `direction` | `'up' \| 'down' \| 'left' \| 'right'` |  |  |
+| `position` | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` |  |  |
+| `className` | `string` |  |  |
+| `style` | `CSSProperties` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxSpeedDial.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxSpeedDial.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/speed-dial).

@@ -2,6 +2,7 @@
 
 import { useState, useId } from 'react';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { tkx } from '../engine/tkx';
 import { sanitizeString } from '../engine/security';
 
@@ -160,7 +161,22 @@ export function TkxPagination({
   variant = 'default',
 }: TkxPaginationProps) {
   const theme = useTheme();
+  const t = useLocale();
   const selectId = useId();
+
+  // i18n strings with English fallbacks. The optional locale fields
+  // (firstPage, lastPage, etc.) land gradually across the 35 locales —
+  // until then, fall back to the existing strings or English.
+  const labels = {
+    pagination: 'Pagination',
+    firstPage: t.firstPage ?? 'First page',
+    lastPage: t.lastPage ?? 'Last page',
+    previousPage: t.previousPage ?? t.previous,
+    nextPage: t.nextPage ?? t.next,
+    pageN: (n: number) => t.pageOf(n, totalPages),
+    showing: (s: number, e: number, total: number) =>
+      t.showingRange ? t.showingRange(s, e, total) : `Showing ${s}–${e} of ${total} items`,
+  };
 
   const isControlled = page !== undefined;
   const [internalPage, setInternalPage] = useState(defaultPage);
@@ -250,11 +266,11 @@ export function TkxPagination({
   );
 
   return (
-    <nav aria-label="Pagination" className={tkx('flex flex-col gap-2')}>
+    <nav aria-label={labels.pagination} className={tkx('flex flex-col gap-2')}>
       {/* Showing X-Y of Z */}
       {total > 0 && (
         <p className={tkx('text-sm')} style={{ color: theme.textMuted, fontSize: s.fontSize }}>
-          {sanitizeString(`Showing ${itemStart}–${itemEnd} of ${total} items`)}
+          {sanitizeString(labels.showing(itemStart, itemEnd, total))}
         </p>
       )}
 
@@ -263,7 +279,7 @@ export function TkxPagination({
         {showEdges && (
           <button
             type="button"
-            aria-label="First page"
+            aria-label={labels.firstPage}
             disabled={currentPage === 1}
             onClick={() => goTo(1)}
             style={getButtonStyle(false, currentPage === 1)}
@@ -276,7 +292,7 @@ export function TkxPagination({
         {/* Prev */}
         <button
           type="button"
-          aria-label="Previous page"
+          aria-label={labels.previousPage}
           disabled={currentPage === 1}
           onClick={() => goTo(currentPage - 1)}
           style={getButtonStyle(false, currentPage === 1)}
@@ -313,7 +329,7 @@ export function TkxPagination({
             <button
               key={pageNum}
               type="button"
-              aria-label={`Page ${pageNum}`}
+              aria-label={labels.pageN(pageNum)}
               aria-current={isActive ? 'page' : undefined}
               onClick={() => goTo(pageNum)}
               style={getButtonStyle(isActive, false)}
@@ -326,7 +342,7 @@ export function TkxPagination({
         {/* Next */}
         <button
           type="button"
-          aria-label="Next page"
+          aria-label={labels.nextPage}
           disabled={currentPage === totalPages}
           onClick={() => goTo(currentPage + 1)}
           style={getButtonStyle(false, currentPage === totalPages)}
@@ -338,7 +354,7 @@ export function TkxPagination({
         {showEdges && (
           <button
             type="button"
-            aria-label="Last page"
+            aria-label={labels.lastPage}
             disabled={currentPage === totalPages}
             onClick={() => goTo(totalPages)}
             style={getButtonStyle(false, currentPage === totalPages)}

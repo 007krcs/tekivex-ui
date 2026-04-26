@@ -1,0 +1,2508 @@
+{
+  "generatedAt": "2026-04-26T13:22:07.020Z",
+  "totalFindings": 389,
+  "filesAffected": 68,
+  "byKind": {
+    "jsx-text": 310,
+    "prop:title": 9,
+    "prop:aria-label": 67,
+    "prop:placeholder": 3
+  },
+  "topFiles": [
+    {
+      "file": "src/components/TkxThemeBuilder.tsx",
+      "count": 27
+    },
+    {
+      "file": "src/components/TkxForm.tsx",
+      "count": 23
+    },
+    {
+      "file": "src/components/TkxDatePicker.tsx",
+      "count": 22
+    },
+    {
+      "file": "src/components/TkxDataGrid.tsx",
+      "count": 18
+    },
+    {
+      "file": "src/components/TkxVideoPlayer.tsx",
+      "count": 17
+    },
+    {
+      "file": "src/components/TkxPlayground.tsx",
+      "count": 16
+    },
+    {
+      "file": "src/components/TkxImageEditor.tsx",
+      "count": 13
+    },
+    {
+      "file": "src/components/TkxCommand.tsx",
+      "count": 12
+    },
+    {
+      "file": "src/components/TkxDropdown.tsx",
+      "count": 11
+    },
+    {
+      "file": "src/components/TkxQuantumForm.tsx",
+      "count": 11
+    },
+    {
+      "file": "src/components/TkxSelect.tsx",
+      "count": 11
+    },
+    {
+      "file": "src/components/TkxMarkdown.tsx",
+      "count": 10
+    },
+    {
+      "file": "src/components/TkxToast.tsx",
+      "count": 10
+    },
+    {
+      "file": "src/components/TkxImage.tsx",
+      "count": 9
+    },
+    {
+      "file": "src/components/TkxCarousel.tsx",
+      "count": 8
+    },
+    {
+      "file": "src/components/TkxChat.tsx",
+      "count": 8
+    },
+    {
+      "file": "src/components/TkxPhoneInput.tsx",
+      "count": 8
+    },
+    {
+      "file": "src/components/TkxTable.tsx",
+      "count": 8
+    },
+    {
+      "file": "src/components/TkxPagination.tsx",
+      "count": 7
+    },
+    {
+      "file": "src/components/TkxColorPicker.tsx",
+      "count": 6
+    }
+  ],
+  "allFindings": [
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const innerRef = useRef",
+      "line": 174,
+      "file": "src/components/TkxAccordion.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "normalizeInitial(defaultOpen)\n  );\n\n  const openIds: Set",
+      "line": 298,
+      "file": "src/components/TkxAccordion.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const fixedRef = useRef",
+      "line": 51,
+      "file": "src/components/TkxAffix.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Copy message",
+      "line": 218,
+      "file": "src/components/TkxAIChatBubble.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ",\n    pulse:",
+      "line": 120,
+      "file": "src/components/TkxAIThinking.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ",\n    wave:",
+      "line": 121,
+      "file": "src/components/TkxAIThinking.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ",\n    orbit:",
+      "line": 122,
+      "file": "src/components/TkxAIThinking.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "⚛ Quantum AI · Amplitude Amplification",
+      "line": 154,
+      "file": "src/components/TkxAIThinking.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Dismiss alert",
+      "line": 82,
+      "file": "src/components/TkxAlert.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  success: (",
+      "line": 26,
+      "file": "src/components/TkxAlert.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  warning: (",
+      "line": 31,
+      "file": "src/components/TkxAlert.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  danger: (",
+      "line": 36,
+      "file": "src/components/TkxAlert.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Anchor navigation",
+      "line": 173,
+      "file": "src/components/TkxAnchor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  theme: ReturnType",
+      "line": 53,
+      "file": "src/components/TkxAnchor.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Main navigation",
+      "line": 203,
+      "file": "src/components/TkxAppBar.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Main navigation",
+      "line": 242,
+      "file": "src/components/TkxAppBar.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "setIsMobile(window.innerWidth",
+      "line": 74,
+      "file": "src/components/TkxAppBar.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const wrapperRef = useRef",
+      "line": 133,
+      "file": "src/components/TkxAutocomplete.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 0 && activeIndex",
+      "line": 242,
+      "file": "src/components/TkxAutocomplete.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Loading...",
+      "line": 299,
+      "file": "src/components/TkxAutocomplete.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : filtered.length === 0 ? (",
+      "line": 301,
+      "file": "src/components/TkxAutocomplete.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ",\n          document.body,\n        )\n      : null;\n\n  return (",
+      "line": 380,
+      "file": "src/components/TkxAutocomplete.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Bottom navigation",
+      "line": 128,
+      "file": "src/components/TkxBottomNav.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Navigation tabs",
+      "line": 139,
+      "file": "src/components/TkxBottomNav.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Show hidden breadcrumb items",
+      "line": 79,
+      "file": "src/components/TkxBreadcrumb.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Breadcrumb",
+      "line": 308,
+      "file": "src/components/TkxBreadcrumb.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "&hellip;",
+      "line": 96,
+      "file": "src/components/TkxBreadcrumb.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  /** Optional className applied to the host",
+      "line": 55,
+      "file": "src/components/TkxCaptcha.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ". */\n  className?: string;\n  /** Optional inline style applied to the host",
+      "line": 56,
+      "file": "src/components/TkxCaptcha.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const widgetIdRef = useRef",
+      "line": 139,
+      "file": "src/components/TkxCaptcha.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const tokenRef = useRef",
+      "line": 140,
+      "file": "src/components/TkxCaptcha.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "[TkxCaptcha test mode — auto-verifying with TEST_TOKEN]",
+      "line": 299,
+      "file": "src/components/TkxCaptcha.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Content carousel",
+      "line": 343,
+      "file": "src/components/TkxCarousel.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Slide indicators",
+      "line": 425,
+      "file": "src/components/TkxCarousel.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Slide thumbnails",
+      "line": 479,
+      "file": "src/components/TkxCarousel.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ")\n      ) : isPrev ? (",
+      "line": 112,
+      "file": "src/components/TkxCarousel.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const autoPlayRef = useRef",
+      "line": 165,
+      "file": "src/components/TkxCarousel.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n\n  // Drag / swipe state\n  const dragStartRef = useRef",
+      "line": 166,
+      "file": "src/components/TkxCarousel.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const dragDeltaRef = useRef",
+      "line": 169,
+      "file": "src/components/TkxCarousel.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0;\n  const canNext = loop || currentIdx",
+      "line": 332,
+      "file": "src/components/TkxCarousel.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const dropdownRef = useRef",
+      "line": 82,
+      "file": "src/components/TkxCascader.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [open, setOpen] = useState(false);\n  const [hoverPath, setHoverPath] = useState",
+      "line": 83,
+      "file": "src/components/TkxCascader.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ",\n        document.body,\n      )\n    : null;\n\n  return (",
+      "line": 223,
+      "file": "src/components/TkxCascader.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Assistant is thinking",
+      "line": 97,
+      "file": "src/components/TkxChat.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Error",
+      "line": 178,
+      "file": "src/components/TkxChat.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Message input",
+      "line": 282,
+      "file": "src/components/TkxChat.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Send message",
+      "line": 296,
+      "file": "src/components/TkxChat.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Chat messages",
+      "line": 331,
+      "file": "src/components/TkxChat.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : (avatarAssistant ??",
+      "line": 142,
+      "file": "src/components/TkxChat.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const textareaRef = useRef",
+      "line": 208,
+      "file": "src/components/TkxChat.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  return (",
+      "line": 314,
+      "file": "src/components/TkxChat.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : isVisuallyChecked ? (",
+      "line": 171,
+      "file": "src/components/TkxCheckbox.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "getTimeInZone(timezone));\n  const [time2, setTime2] = useState",
+      "line": 495,
+      "file": "src/components/TkxClock.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Color picker",
+      "line": 539,
+      "file": "src/components/TkxColorPicker.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Hex color value",
+      "line": 570,
+      "file": "src/components/TkxColorPicker.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Alpha channel",
+      "line": 602,
+      "file": "src/components/TkxColorPicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const popoverRef = useRef",
+      "line": 322,
+      "file": "src/components/TkxColorPicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "A%",
+      "line": 604,
+      "file": "src/components/TkxColorPicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Presets",
+      "line": 612,
+      "file": "src/components/TkxColorPicker.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Command palette",
+      "line": 366,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Clear search",
+      "line": 433,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Command results",
+      "line": 458,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n    parts.push(",
+      "line": 173,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  return",
+      "line": 181,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const listRef = useRef",
+      "line": 254,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "))\n          ) : flatResults.length === 0 ? (\n            /* Empty state */",
+      "line": 463,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "acc + g.items.length, 0);\n\n              return (",
+      "line": 488,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "navigate",
+      "line": 630,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "select",
+      "line": 633,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Esc",
+      "line": 636,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "close",
+      "line": 636,
+      "file": "src/components/TkxCommand.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Pagination",
+      "line": 273,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "First page",
+      "line": 282,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Previous page",
+      "line": 290,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Next page",
+      "line": 322,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Last page",
+      "line": 330,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Data grid",
+      "line": 600,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Column filters",
+      "line": 720,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "ReactNode;\n  renderHeader?: (col: DataGridColumn",
+      "line": 30,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void | Promise",
+      "line": 72,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : direction === 'desc' ? (",
+      "line": 94,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  totalRows: number;\n  selectedCount: number;\n  theme: ReturnType",
+      "line": 186,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Export CSV",
+      "line": 232,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  theme: ReturnType",
+      "line": 254,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [sortDir, setSortDir] = useState",
+      "line": 377,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 50;\n\n  const scrollContainerRef = useRef",
+      "line": 448,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const loadingRef = useRef",
+      "line": 478,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "c.filterable);\n\n  return (",
+      "line": 595,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "✓ All rows loaded",
+      "line": 922,
+      "file": "src/components/TkxDataGrid.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Date picker",
+      "line": 1000,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Clear selection",
+      "line": 1558,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "lo && t",
+      "line": 98,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 1 && m",
+      "line": 153,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 1 && d",
+      "line": 153,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  label: string;\n  theme: ReturnType",
+      "line": 370,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n  const containerRef = useRef",
+      "line": 377,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "String(v).padStart(2, '0'));\n\n  return (",
+      "line": 387,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  theme: ReturnType",
+      "line": 455,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([null, null]);\n  const [pendingDate, setPendingDate] = useState",
+      "line": 669,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "('day');\n\n  // Time\n  const [internalTime, setInternalTime] = useState",
+      "line": 676,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [hoverDate, setHoverDate] = useState",
+      "line": 692,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [popupPos, setPopupPos] = useState",
+      "line": 693,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "x + 1, 0);\n\n  const anchorRef = useRef",
+      "line": 695,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const popupRef = useRef",
+      "line": 697,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const inputRef = useRef",
+      "line": 698,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "i);\n\n  const popupContent = (",
+      "line": 994,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Quick select",
+      "line": 1049,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Today",
+      "line": 1424,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Cancel",
+      "line": 1445,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Apply",
+      "line": 1462,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  return (",
+      "line": 1469,
+      "file": "src/components/TkxDatePicker.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Close drawer",
+      "line": 201,
+      "file": "src/components/TkxDrawer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Close drawer",
+      "line": 215,
+      "file": "src/components/TkxDrawer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Dropdown menu",
+      "line": 339,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Search items",
+      "line": 362,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "ReactNode;\n  menuRef: React.RefObject",
+      "line": 180,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [submenuFocusedIndex, setSubmenuFocusedIndex] = useState(0);\n  const searchRef = useRef",
+      "line": 205,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const itemRefs = useRef",
+      "line": 207,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n  const submenuItemRefs = useRef",
+      "line": 208,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "No results found",
+      "line": 386,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n            return (",
+      "line": 428,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n  const [menuPosition, setMenuPosition] = useState",
+      "line": 686,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const menuRef = useRef",
+      "line": 689,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : null;\n\n  return (",
+      "line": 780,
+      "file": "src/components/TkxDropdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [isDragOver, setIsDragOver] = useState(false);\n  const [files, setFiles] = useState",
+      "line": 99,
+      "file": "src/components/TkxFileUpload.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  const buttonContent = (",
+      "line": 274,
+      "file": "src/components/TkxFileUpload.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  return (",
+      "line": 300,
+      "file": "src/components/TkxFileUpload.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Form",
+      "line": 457,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "string | null | Promise",
+      "line": 35,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= Record",
+      "line": 41,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void | Promise",
+      "line": 42,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n  onValuesChange?: (changed: Partial",
+      "line": 42,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  initialValues?: Partial",
+      "line": 43,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= Record",
+      "line": 73,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "T[K] | undefined;\n  setFieldValue:",
+      "line": 74,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Partial",
+      "line": 76,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n  setFieldsValue: (values: Partial",
+      "line": 76,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Promise",
+      "line": 78,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Promise",
+      "line": 79,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n  errors: Record",
+      "line": 92,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n  touched: Record",
+      "line": 93,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n  layout: 'vertical' | 'horizontal' | 'inline';\n  disabled: boolean;\n  fieldMeta: React.MutableRefObject",
+      "line": 99,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Promise",
+      "line": 108,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ": returns the form's live instance (reads/writes real field state).\n * - Outside a",
+      "line": 200,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ": returns a standalone instance backed by a ref store.\n *   Pass it to",
+      "line": 201,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Reset",
+      "line": 208,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Log",
+      "line": 219,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= Record",
+      "line": 259,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  // Build the label element\n  const labelElement = safeLabel ? (",
+      "line": 566,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : null;\n\n  // Build the help / error messaging\n  const messageElement = (",
+      "line": 584,
+      "file": "src/components/TkxForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n    case 'circle':\n      return",
+      "line": 555,
+      "file": "src/components/TkxIcon.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n    case 'rect':\n      return",
+      "line": 557,
+      "file": "src/components/TkxIcon.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n    case 'line':\n      return",
+      "line": 559,
+      "file": "src/components/TkxIcon.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n    case 'polyline':\n      return",
+      "line": 561,
+      "file": "src/components/TkxIcon.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n    case 'polygon':\n      return",
+      "line": 563,
+      "file": "src/components/TkxIcon.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n    const descriptors = name ? ICONS[name] : null;\n\n    const strokeProps: React.SVGProps",
+      "line": 604,
+      "file": "src/components/TkxIcon.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Close preview",
+      "line": 255,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : null;\n\n  const errorElement = errored ? (\n    fallback ? (",
+      "line": 148,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Failed to load",
+      "line": 167,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ")\n  ) : null;\n\n  const skeletonElement = showSkeleton ? (",
+      "line": 170,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : null;\n\n  const inner =\n    ratio === 'auto' ? (",
+      "line": 187,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  const content = safeCaption ? (",
+      "line": 205,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : (\n    inner\n  );\n\n  const wrapped = (",
+      "line": 217,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  const lightbox =\n    lightboxOpen && typeof document !== 'undefined'\n      ? createPortal(",
+      "line": 225,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ",\n          document.body,\n        )\n      : null;\n\n  return (",
+      "line": 268,
+      "file": "src/components/TkxImage.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Upload image to edit",
+      "line": 544,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Crop area",
+      "line": 640,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Promise",
+      "line": 101,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const canvasRef = useRef",
+      "line": 141,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const containerRef = useRef",
+      "line": 142,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const imageRef = useRef",
+      "line": 143,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n\n    const [imageSrc, setImageSrc] = useState",
+      "line": 144,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(src ?? null);\n    const [imageNaturalSize, setImageNaturalSize] = useState",
+      "line": 146,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const [aspectRatio, setAspectRatio] = useState",
+      "line": 147,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(initialRatio);\n    const [rotation, setRotation] = useState",
+      "line": 148,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(0);\n    const [brightness, setBrightness] = useState",
+      "line": 149,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(100);\n    const [contrast, setContrast] = useState",
+      "line": 150,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(100);\n    const [crop, setCrop] = useState",
+      "line": 151,
+      "file": "src/components/TkxImageEditor.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Logo / Nav",
+      "line": 637,
+      "file": "src/components/TkxLayout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Menu",
+      "line": 639,
+      "file": "src/components/TkxLayout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Column A",
+      "line": 642,
+      "file": "src/components/TkxLayout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Column B",
+      "line": 643,
+      "file": "src/components/TkxLayout.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Footer",
+      "line": 647,
+      "file": "src/components/TkxLayout.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "List",
+      "line": 102,
+      "file": "src/components/TkxList.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "React.ReactNode;\n  theme: ReturnType",
+      "line": 103,
+      "file": "src/components/TkxLiveFeed.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(new Set());\n  const prevItemsRef = useRef",
+      "line": 208,
+      "file": "src/components/TkxLiveFeed.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  theme: ReturnType",
+      "line": 133,
+      "file": "src/components/TkxLiveLog.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n  theme: ReturnType",
+      "line": 246,
+      "file": "src/components/TkxLiveLog.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [scrollTop, setScrollTop] = useState(0);\n  const [expandedIds, setExpandedIds] = useState",
+      "line": 304,
+      "file": "src/components/TkxLiveLog.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "1;\n      if ((offsets[mid + 1] ?? 0)",
+      "line": 379,
+      "file": "src/components/TkxLiveLog.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const rafRef = useRef",
+      "line": 108,
+      "file": "src/components/TkxLiveMetrics.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  theme: ReturnType",
+      "line": 189,
+      "file": "src/components/TkxLiveMetrics.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "or",
+      "line": 156,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "if (ch === '",
+      "line": 156,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n      case 'bold':\n        return",
+      "line": 438,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n      case 'italic':\n        return",
+      "line": 440,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n      case 'strike':\n        return",
+      "line": 442,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n      case 'code':\n        return (",
+      "line": 444,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n        const isExternal = /^(https?:)?\\/\\//i.test(href) || href.startsWith('mailto:');\n        return (",
+      "line": 464,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n      case 'blockquote':\n        return (",
+      "line": 588,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n      case 'table':\n        return (",
+      "line": 695,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Loading…",
+      "line": 833,
+      "file": "src/components/TkxMarkdown.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Masonry grid",
+      "line": 145,
+      "file": "src/components/TkxMasonry.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Mention suggestions",
+      "line": 161,
+      "file": "src/components/TkxMentions.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const dropdownRef = useRef",
+      "line": 38,
+      "file": "src/components/TkxMentions.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [submenuPos, setSubmenuPos] = useState",
+      "line": 399,
+      "file": "src/components/TkxMenu.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const panelRef = useRef",
+      "line": 400,
+      "file": "src/components/TkxMenu.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [typeahead, setTypeahead] = useState('');\n  const typeaheadTimer = useRef",
+      "line": 401,
+      "file": "src/components/TkxMenu.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const triggerRef = useRef",
+      "line": 934,
+      "file": "src/components/TkxMenu.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Close dialog",
+      "line": 102,
+      "file": "src/components/TkxModal.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const intervalRef = useRef",
+      "line": 116,
+      "file": "src/components/TkxNumberInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "stopHold(), [stopHold]);\n\n  const isInc = direction === 'inc';\n\n  return (",
+      "line": 132,
+      "file": "src/components/TkxNumberInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  theme: ReturnType",
+      "line": 356,
+      "file": "src/components/TkxOrgChart.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const viewportRef = useRef",
+      "line": 417,
+      "file": "src/components/TkxOrgChart.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n\n  // Build initial collapsed set.\n  const [collapsed, setCollapsed] = useState",
+      "line": 418,
+      "file": "src/components/TkxOrgChart.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0;\n          const isActive = n.id === activeId;\n          return (",
+      "line": 622,
+      "file": "src/components/TkxOrgChart.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  label: string;\n  theme: ReturnType",
+      "line": 685,
+      "file": "src/components/TkxOrgChart.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "One-time password",
+      "line": 211,
+      "file": "src/components/TkxOTP.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(e: KeyboardEvent",
+      "line": 136,
+      "file": "src/components/TkxOTP.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(e: React.ChangeEvent",
+      "line": 168,
+      "file": "src/components/TkxOTP.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(e: ClipboardEvent",
+      "line": 187,
+      "file": "src/components/TkxOTP.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "2;\n  const showRightEllipsis = siblingEnd",
+      "line": 46,
+      "file": "src/components/TkxPagination.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "1) pages.push(totalPages);\n\n  // deduplicate preserving order\n  const seen = new Set",
+      "line": 73,
+      "file": "src/components/TkxPagination.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "1) pages.push('...');\n    pages.push(...range(siblingStart, siblingEnd));\n    if (siblingEnd",
+      "line": 104,
+      "file": "src/components/TkxPagination.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "leftBoundary + 2;\n  const showRightEllipsis = siblingEnd",
+      "line": 113,
+      "file": "src/components/TkxPagination.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "1) result.push(totalPages);\n\n  // deduplicate numbers\n  const seen = new Set",
+      "line": 133,
+      "file": "src/components/TkxPagination.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n  return (",
+      "line": 265,
+      "file": "src/components/TkxPagination.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Rows per page",
+      "line": 374,
+      "file": "src/components/TkxPagination.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Select country",
+      "line": 475,
+      "file": "src/components/TkxPhoneInput.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Filter countries",
+      "line": 485,
+      "file": "src/components/TkxPhoneInput.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "placeholder",
+      "value": "Search country or dial code…",
+      "line": 481,
+      "file": "src/components/TkxPhoneInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ". */\n  className?: string;\n  /** Optional inline style on the root",
+      "line": 148,
+      "file": "src/components/TkxPhoneInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= expected[0] && digits.length",
+      "line": 178,
+      "file": "src/components/TkxPhoneInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(initial.country);\n    const [digits, setDigits] = useState",
+      "line": 235,
+      "file": "src/components/TkxPhoneInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n    const searchRef = useRef",
+      "line": 241,
+      "file": "src/components/TkxPhoneInput.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0 && !valid && (",
+      "line": 509,
+      "file": "src/components/TkxPhoneInput.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Copy code",
+      "line": 620,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Reset to default",
+      "line": 623,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "👋 Hello, TkxPlayground!",
+      "line": 106,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Edit the code on the left to see live updates.",
+      "line": 107,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Reset",
+      "line": 159,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [suggestions, setSuggestions] = useState",
+      "line": 423,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n  const [copied, setCopied] = useState(false);\n  const [activeExample, setActiveExample] = useState",
+      "line": 424,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(0);\n  const textareaRef = useRef",
+      "line": 426,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const LINE_HEIGHT = 18;\n\n  // Debounced evaluation\n  const evalTimerRef = useRef",
+      "line": 427,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "⚛ TkxPlayground",
+      "line": 573,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Live JSX Preview",
+      "line": 576,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "editor.tsx",
+      "line": 619,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "↺ Reset",
+      "line": 623,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "⚛ Quantum Suggestions",
+      "line": 686,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Preview",
+      "line": 742,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Runtime Error",
+      "line": 776,
+      "file": "src/components/TkxPlayground.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0,\n    bottom: triggerRect.bottom + popRect.height + GAP + ARROW_SIZE",
+      "line": 64,
+      "file": "src/components/TkxPopover.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0,\n    right: triggerRect.right + popRect.width + GAP + ARROW_SIZE",
+      "line": 66,
+      "file": "src/components/TkxPopover.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const popoverRef = useRef",
+      "line": 170,
+      "file": "src/components/TkxPopover.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const wrapperRef = useRef",
+      "line": 171,
+      "file": "src/components/TkxPopover.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n\n  const [position, setPosition] = useState",
+      "line": 172,
+      "file": "src/components/TkxPopover.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ",\n      document.body,\n    )\n  ) : null;\n\n  return (",
+      "line": 260,
+      "file": "src/components/TkxPopover.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 2 && r",
+      "line": 57,
+      "file": "src/components/TkxQRCode.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 2 && c",
+      "line": 57,
+      "file": "src/components/TkxQRCode.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= gridSize - 8 && c",
+      "line": 79,
+      "file": "src/components/TkxQRCode.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Powered by Quantum AI",
+      "line": 457,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void | Promise",
+      "line": 26,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 60 ? theme.warning :\n    theme.danger;\n  return (",
+      "line": 135,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n  theme: ReturnType",
+      "line": 173,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "inferFieldIntelligence(f.name));\n\n  const [values, setValues] = useState",
+      "line": 330,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "[f.name, ''])),\n  );\n  const [errors, setErrors] = useState",
+      "line": 333,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "): Record",
+      "line": 366,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 60 ? theme.warning :\n    theme.danger;\n\n  const isHorizontal = layout === 'horizontal';\n\n  return (",
+      "line": 436,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "⚛ Quantum AI",
+      "line": 472,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Form Intelligence Confidence",
+      "line": 487,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Processing…",
+      "line": 581,
+      "file": "src/components/TkxQuantumForm.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n  if (type === 'circle') return",
+      "line": 112,
+      "file": "src/components/TkxRating.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n  return",
+      "line": 113,
+      "file": "src/components/TkxRating.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const rootRef = useRef",
+      "line": 157,
+      "file": "src/components/TkxRating.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [containerWidth, setContainerWidth] = useState(600);\n  const [tooltip, setTooltip] = useState",
+      "line": 79,
+      "file": "src/components/TkxRealTimeChart.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Rich text content",
+      "line": 385,
+      "file": "src/components/TkxRichTextDisplay.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  warning: (",
+      "line": 39,
+      "file": "src/components/TkxRichTextDisplay.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  success: (",
+      "line": 44,
+      "file": "src/components/TkxRichTextDisplay.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  danger: (",
+      "line": 49,
+      "file": "src/components/TkxRichTextDisplay.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "sanitizeString(item));\n\n  return (",
+      "line": 189,
+      "file": "src/components/TkxRichTextDisplay.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Segmented control",
+      "line": 113,
+      "file": "src/components/TkxSegmented.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "o.value === value)),\n  );\n  const [indicatorStyle, setIndicatorStyle] = useState",
+      "line": 47,
+      "file": "src/components/TkxSegmented.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [typeahead, setTypeahead] = useState('');\n  const typeaheadTimer = useRef",
+      "line": 174,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n\n  const triggerRef = useRef",
+      "line": 176,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const searchInputRef = useRef",
+      "line": 178,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const dropdownRef = useRef",
+      "line": 179,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const listRef = useRef",
+      "line": 180,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ").current = el;\n              (optionsListRef as React.MutableRefObject",
+      "line": 566,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n                    return (",
+      "line": 632,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : (\n            /* Non-virtual: grouped rendering */",
+      "line": 706,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n                  return (",
+      "line": 785,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0 && !isDisabled && !isLoading;\n\n  return (",
+      "line": 866,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "o.value === selectedValues[0]);\n                  return (",
+      "line": 1001,
+      "file": "src/components/TkxSelect.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Loading...",
+      "line": 64,
+      "file": "src/components/TkxSkeleton.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Loading...",
+      "line": 89,
+      "file": "src/components/TkxSkeleton.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([min, max]);\n  const rangeVal = isRangeControlled ? rangeValue! : internalRange;\n\n  const trackRef = useRef",
+      "line": 223,
+      "file": "src/components/TkxSlider.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Dismiss snackbar",
+      "line": 289,
+      "file": "src/components/TkxSnackbar.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  error: (",
+      "line": 66,
+      "file": "src/components/TkxSnackbar.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  warning: (",
+      "line": 71,
+      "file": "src/components/TkxSnackbar.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  info: (",
+      "line": 76,
+      "file": "src/components/TkxSnackbar.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Speed dial actions",
+      "line": 375,
+      "file": "src/components/TkxSpeedDial.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const actionRefs = useRef",
+      "line": 127,
+      "file": "src/components/TkxSpeedDial.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Steps",
+      "line": 298,
+      "file": "src/components/TkxStepper.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ");\n\n        const labelBlock = (",
+      "line": 336,
+      "file": "src/components/TkxStepper.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(optional)",
+      "line": 357,
+      "file": "src/components/TkxStepper.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void | Promise",
+      "line": 44,
+      "file": "src/components/TkxTable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ") : dir === 'desc' ? (",
+      "line": 68,
+      "file": "src/components/TkxTable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [sortDir, setSortDir] = useState",
+      "line": 105,
+      "file": "src/components/TkxTable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 50;\n\n  const scrollContainerRef = useRef",
+      "line": 137,
+      "file": "src/components/TkxTable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const loadingRef = useRef",
+      "line": 168,
+      "file": "src/components/TkxTable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "new Set(selectedRows ?? []), [selectedRows]);\n\n  return (",
+      "line": 205,
+      "file": "src/components/TkxTable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "))\n            ) : sorted.length === 0 ? (",
+      "line": 299,
+      "file": "src/components/TkxTable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "✓ All rows loaded",
+      "line": 417,
+      "file": "src/components/TkxTable.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const isActive = activeIndex === index;\n\n  return (",
+      "line": 67,
+      "file": "src/components/TkxTabs.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(defaultValue);\n  const [inputVal, setInputVal] = useState('');\n  const [error, setError] = useState",
+      "line": 191,
+      "file": "src/components/TkxTag.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const inputRef = useRef",
+      "line": 193,
+      "file": "src/components/TkxTag.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "placeholder",
+      "value": "Type something...",
+      "line": 574,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Waiting for data...",
+      "line": 72,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "= 7;\n  return (",
+      "line": 164,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(initialMode);\n  const [hue, setHue] = useState(initialHue);\n  const [theme, setTheme] = useState",
+      "line": 184,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n  const [copied, setCopied] = useState(false);\n  const animFrameRef = useRef",
+      "line": 188,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Theme Builder",
+      "line": 342,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Quantum-powered color optimization",
+      "line": 345,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Base Hue",
+      "line": 364,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "⚛ Quantum Annealing",
+      "line": 425,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Energy landscape (lower = better palette)",
+      "line": 432,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Color Tokens",
+      "line": 442,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Live Preview",
+      "line": 474,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Buttons",
+      "line": 478,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Primary",
+      "line": 491,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Secondary",
+      "line": 505,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Outline",
+      "line": 519,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Card",
+      "line": 527,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Card Title",
+      "line": 536,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Sample card with surface background and muted text content.",
+      "line": 537,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Tag",
+      "line": 550,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Accent",
+      "line": 562,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Input",
+      "line": 571,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Progress",
+      "line": 592,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Status Badges",
+      "line": 615,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "WCAG Contrast Check",
+      "line": 643,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "AA requires 4.5:1 (normal text). AAA requires 7:1.",
+      "line": 651,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Color Palette",
+      "line": 658,
+      "file": "src/components/TkxThemeBuilder.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Timeline",
+      "line": 221,
+      "file": "src/components/TkxTimeline.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Timeline",
+      "line": 259,
+      "file": "src/components/TkxTimeline.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Dismiss notification",
+      "line": 218,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Notifications",
+      "line": 275,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "void;\n\nconst MAX_VISIBLE = 5;\nlet queue: ToastItem[] = [];\nlet visible: ToastItem[] = [];\nconst listeners = new Set",
+      "line": 38,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "();\nconst timers = new Map",
+      "line": 43,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0 && visible.length",
+      "line": 62,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  success: (",
+      "line": 106,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  danger: (",
+      "line": 111,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  warning: (",
+      "line": 116,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "),\n  info: (",
+      "line": 121,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": ";\n\n  const ordered = isBottom ? [...toasts].reverse() : toasts;\n\n  return",
+      "line": 269,
+      "file": "src/components/TkxToast.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const tooltipId = useId();\n  const timerRef = useRef",
+      "line": 29,
+      "file": "src/components/TkxTooltip.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Tour progress",
+      "line": 186,
+      "file": "src/components/TkxTour.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Skip tour",
+      "line": 206,
+      "file": "src/components/TkxTour.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Previous step",
+      "line": 217,
+      "file": "src/components/TkxTour.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [pos, setPos] = useState",
+      "line": 73,
+      "file": "src/components/TkxTour.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Skip",
+      "line": 210,
+      "file": "src/components/TkxTour.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Prev",
+      "line": 221,
+      "file": "src/components/TkxTour.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Move selected items to target list",
+      "line": 417,
+      "file": "src/components/TkxTransferList.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Move selected items to source list",
+      "line": 445,
+      "file": "src/components/TkxTransferList.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "placeholder",
+      "value": "Search...",
+      "line": 210,
+      "file": "src/components/TkxTransferList.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "selected.has(i.value));\n\n  const handleKeyDown = (e: KeyboardEvent",
+      "line": 150,
+      "file": "src/components/TkxTransferList.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "No items",
+      "line": 231,
+      "file": "src/components/TkxTransferList.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(new Set());\n  const [targetSelected, setTargetSelected] = useState",
+      "line": 302,
+      "file": "src/components/TkxTransferList.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Tree view",
+      "line": 301,
+      "file": "src/components/TkxTreeView.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "([]);\n  const [internalExpanded, setInternalExpanded] = useState",
+      "line": 167,
+      "file": "src/components/TkxTreeView.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Loading",
+      "line": 607,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Seek",
+      "line": 693,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "aria-label",
+      "value": "Volume",
+      "line": 848,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Skip back 10 seconds",
+      "line": 807,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Skip forward 10 seconds",
+      "line": 815,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Subtitles",
+      "line": 881,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Playback speed",
+      "line": 894,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Picture-in-Picture",
+      "line": 968,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "prop",
+      "prop": "title",
+      "value": "Download",
+      "line": 978,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const containerRef = useRef",
+      "line": 178,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const progressRef = useRef",
+      "line": 179,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const hideTimerRef = useRef",
+      "line": 180,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(-1); // -1 = off\n  const [hoverTime, setHoverTime] = useState",
+      "line": 194,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "(null);\n  const [hoverX, setHoverX] = useState(0);\n  const [centerFlash, setCenterFlash] = useState",
+      "line": 195,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0 ? (buffered / duration) * 100 : 0;\n\n  return (",
+      "line": 499,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Retry",
+      "line": 667,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "0 ? (ch.time / duration) * 100 : 0;\n              return (",
+      "line": 750,
+      "file": "src/components/TkxVideoPlayer.tsx"
+    },
+    {
+      "kind": "jsx-text",
+      "value": "Developer Tools detected — content protected",
+      "line": 278,
+      "file": "src/components/TkxWatermark.tsx"
+    }
+  ]
+}

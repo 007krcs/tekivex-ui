@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { tkx, cx } from '../engine/tkx';
 
@@ -131,7 +132,7 @@ export function TkxSelect({
   options,
   value: valueProp,
   defaultValue,
-  placeholder = 'Select an option…',
+  placeholder,
   size = 'md',
   isDisabled = false,
   isInvalid = false,
@@ -152,6 +153,8 @@ export function TkxSelect({
   style,
 }: TkxSelectProps) {
   const theme = useTheme();
+  const t = useLocale();
+  const resolvedPlaceholder = placeholder ?? t.selectPlaceholder;
   const autoId = useId();
   const id = idProp ?? autoId;
   const listboxId = `${id}-listbox`;
@@ -542,8 +545,8 @@ export function TkxSelect({
                   setActiveIndex(0);
                 }}
                 onKeyDown={handleSearchKeyDown}
-                placeholder="Search…"
-                aria-label="Search options"
+                placeholder={`${t.search}…`}
+                aria-label={`${t.search} options`}
                 style={{
                   border: 'none',
                   outline: 'none',
@@ -1018,7 +1021,7 @@ export function TkxSelect({
                 })()
               : (
                 <span style={{ opacity: 0.6 }}>
-                  {sanitizeString(placeholder)}
+                  {sanitizeString(resolvedPlaceholder)}
                 </span>
               )}
           </span>
@@ -1037,7 +1040,7 @@ export function TkxSelect({
             {hasClearable && !isLoading && (
               <span
                 role="button"
-                aria-label="Clear selection"
+                aria-label={t.clearSelection}
                 tabIndex={-1}
                 onClick={clearAll}
                 style={{

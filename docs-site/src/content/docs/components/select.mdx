@@ -1,0 +1,54 @@
+---
+title: TkxSelect
+description: Select — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxSelect } from 'tekivex-ui';
+```
+
+Select is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `options` | `SelectOption[]` | yes |  |
+| `value` | `string \| string[]` |  |  |
+| `defaultValue` | `string \| string[]` |  |  |
+| `placeholder` | `string` |  |  |
+| `size` | `SelectSize` |  |  |
+| `isDisabled` | `boolean` |  |  |
+| `isInvalid` | `boolean` |  |  |
+| `label` | `string` |  |  |
+| `hint` | `string` |  |  |
+| `errorMessage` | `string` |  |  |
+| `multiple` | `boolean` |  |  |
+| `searchable` | `boolean` |  |  |
+| `clearable` | `boolean` |  |  |
+| `isLoading` | `boolean` |  |  |
+| `onChange` | `(value: string \| string[]) => void` |  |  |
+| `renderOption` | `(option: SelectOption, isSelected: boolean) => ReactNode` |  |  |
+| `maxMenuHeight` | `number` |  |  |
+| `virtualScroll` | `boolean` |  | Enable virtual scrolling for the dropdown. Defaults to auto (enabled when 100+ options). |
+| `optionHeight` | `number` |  | Fixed option height in pixels for virtual scroll calculations. Default: 36 |
+| `id` | `string` |  |  |
+| `className` | `string` |  |  |
+| `style` | `CSSProperties` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxSelect.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxSelect.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/select).

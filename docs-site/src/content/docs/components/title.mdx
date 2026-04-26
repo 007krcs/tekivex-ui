@@ -1,0 +1,37 @@
+---
+title: TkxTitle
+description: Title — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxTitle } from 'tekivex-ui';
+```
+
+Title is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `level` | `1 \| 2 \| 3 \| 4 \| 5` |  |  |
+| `children` | `ReactNode` | yes |  |
+| `copyable` | `boolean` |  |  |
+| `type` | `TypographyType` |  |  |
+| `style` | `CSSProperties` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxTypography.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxTypography.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/title).

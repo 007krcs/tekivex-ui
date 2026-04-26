@@ -1,0 +1,94 @@
+---
+title: TkxInput
+description: Accessible text input with label, hint, error states, addons, and built-in Unicode homograph defence.
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+```tsx
+import { TkxInput } from 'tekivex-ui';
+
+<TkxInput label="Email" type="email" />
+```
+
+## Variants
+
+<Tabs>
+<TabItem label="With label">
+```tsx
+<TkxInput label="Full name" placeholder="Jane Doe" />
+```
+</TabItem>
+<TabItem label="With hint">
+```tsx
+<TkxInput
+  label="Username"
+  hint="3–20 characters, lowercase only"
+  pattern="[a-z0-9]{3,20}"
+/>
+```
+</TabItem>
+<TabItem label="Error state">
+```tsx
+<TkxInput
+  label="Email"
+  defaultValue="not-an-email"
+  isInvalid
+  error="Enter a valid email address"
+/>
+```
+</TabItem>
+<TabItem label="With addons">
+```tsx
+<TkxInput
+  label="Website"
+  leftAddon={<span>https://</span>}
+  rightAddon={<span>.com</span>}
+/>
+```
+</TabItem>
+</Tabs>
+
+## Built-in Unicode safety
+
+By default, every `TkxInput` strips zero-width and bidi-override Unicode
+characters on input — defending against the Trojan Source attack class
+(CVE-2021-42574). This is on by default. Disable only for translation UIs
+that legitimately need them:
+
+```tsx
+<TkxInput label="Translation" unicodeSafe={false} />
+```
+
+<Aside type="caution" title="Server-side validation still required">
+  `unicodeSafe` reduces blast radius on the client. Always re-validate
+  untrusted input at the trust boundary closest to your data store.
+</Aside>
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `label` | `string` | yes | Visible label — required for WCAG compliance. |
+| `id` | `string` | | Auto-generated if omitted. |
+| `error` | `string` | | Error message. Renders below the field with `role="alert"`. |
+| `hint` | `string` | | Helper text. Linked via `aria-describedby`. |
+| `leftAddon` / `rightAddon` | `ReactNode` | | Slot content rendered inside the input frame. |
+| `isInvalid` | `boolean` | | Adds the danger border + `aria-invalid`. |
+| `isRequired` | `boolean` | | Adds the required asterisk + `aria-required`. |
+| `unicodeSafe` | `boolean` | | Strip zero-width / bidi Unicode. Default `true`. |
+
+All other props are forwarded to the underlying `<input>` element.
+
+## Accessibility
+
+- Visible `<label>` linked via `htmlFor`. Never use placeholder-as-label.
+- `aria-describedby` automatically points at hint + error when present.
+- `aria-invalid` set when `isInvalid` is true.
+- `:focus-visible` outline at 2px (configurable via theme).
+- 44×44 minimum touch area on the entire field.
+- Error messages use `role="alert"` so screen readers announce immediately.
+
+## Source
+
+[`src/components/TkxInput.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxInput.tsx)

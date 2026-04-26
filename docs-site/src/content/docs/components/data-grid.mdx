@@ -1,0 +1,60 @@
+---
+title: TkxDataGrid
+description: DataGrid — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxDataGrid } from 'tekivex-ui';
+```
+
+DataGrid is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `columns` | `DataGridColumn<T>[]` | yes |  |
+| `data` | `T[]` | yes |  |
+| `rowKey` | `string \| ((row: T) => string)` | yes |  |
+| `selectable` | `boolean` |  |  |
+| `selectedRows` | `string[]` |  |  |
+| `onSelectionChange` | `(ids: string[]) => void` |  |  |
+| `sortable` | `boolean` |  | Enable column sorting. When true, clicks sort data client-side unless onSort is also provided. |
+| `onSort` | `(key: string, direction: 'asc' \| 'desc') => void` |  | External sort handler. When provided, raw data is NOT sorted internally — you must pass pre-sorted data. |
+| `loading` | `boolean` |  |  |
+| `emptyMessage` | `string` |  |  |
+| `stickyHeader` | `boolean` |  |  |
+| `striped` | `boolean` |  |  |
+| `bordered` | `boolean` |  |  |
+| `compact` | `boolean` |  |  |
+| `maxHeight` | `number \| string` |  |  |
+| `onRowClick` | `(row: T) => void` |  |  |
+| `virtualScroll` | `boolean` |  | Enable virtual scrolling. Defaults to auto (enabled when data ≥ 50 rows and maxHeight is set). |
+| `rowHeight` | `number` |  | Row height in pixels for virtual scrolling calculations. Default: 40 |
+| `showFilters` | `boolean` |  | Show column filter inputs below the header row. |
+| `filterValues` | `Record<string, string>` |  | Controlled filter values keyed by column key. |
+| `onFilterChange` | `(key: string, value: string) => void` |  | Called when a column filter changes. |
+| `pageSize` | `number` |  | Rows per page for built-in pagination. Set to 0 to disable. Default: 0 (disabled). |
+| `showExport` | `boolean` |  | Show a CSV export button in the toolbar. |
+| `exportFileName` | `string` |  | File name for CSV export (without .csv extension). Default: "export". |
+| `onLoadMore` | `() => void \| Promise<void>` |  | Called when the user scrolls near the bottom. Use to fetch more data. |
+| `hasMore` | `boolean` |  | Whether more data is available to load. When false, sentinel is hidden. |
+| `loadingMore` | `boolean` |  | Show a loading skeleton at the bottom while fetching more data. |
+| `loadMoreThreshold` | `number` |  | How many pixels from the bottom to trigger onLoadMore. Default: 200 |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxDataGrid.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxDataGrid.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/data-grid).

@@ -1,0 +1,54 @@
+---
+title: TkxImageEditor
+description: ImageEditor — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxImageEditor } from 'tekivex-ui';
+```
+
+ImageEditor is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `src` | `string` |  | Initial image source (URL, data URL, or omit for empty drop zone). |
+| `aspectRatio` | `AspectRatio` |  | Initial aspect ratio. Defaults to "free". |
+| `ratios` | `AspectRatio[]` |  | Allowed aspect ratios in the toolbar. |
+| `mimeType` | `'image/png' \| 'image/jpeg' \| 'image/webp'` |  | Output MIME type. Defaults to "image/png". JPEG strips alpha. |
+| `quality` | `number` |  | JPEG / WebP quality (0..1). Defaults to 0.92. |
+| `maxOutputSize` | `number` |  | Maximum output dimension in px. Image is downscaled to fit. Defaults to 2048. |
+| `outputFilename` | `string` |  | Filename used for the File output. |
+| `onChange` | `(state: { rotation: number; brightness: number; contrast: number }) => void` |  | Called every time the user changes crop / rotation / filters. |
+| `onResult` | `(result: ImageEditResult) => void` |  | Called when the user clicks "Apply" / explicitly via getResult(). |
+| `onCancel` | `() => void` |  | Called when the user clicks "Cancel". |
+| `className` | `string` |  | Optional className on the root container. |
+| `style` | `CSSProperties` |  | Optional inline style on the root container. |
+| `labels` | `Partial<{` |  | Localised labels for buttons / status text. |
+| `drop` | `string` | yes |  |
+| `browse` | `string` | yes |  |
+| `rotate` | `string` | yes |  |
+| `apply` | `string` | yes |  |
+| `cancel` | `string` | yes |  |
+| `brightness` | `string` | yes |  |
+| `contrast` | `string` | yes |  |
+| `aspect` | `string` | yes |  |
+| `free` | `string` | yes |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxImageEditor.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxImageEditor.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/image-editor).

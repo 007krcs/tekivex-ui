@@ -1,0 +1,45 @@
+---
+title: TkxRating
+description: Rating — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxRating } from 'tekivex-ui';
+```
+
+Rating is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `value` | `number` |  |  |
+| `defaultValue` | `number` |  |  |
+| `onChange` | `(value: number) => void` |  |  |
+| `max` | `number` |  |  |
+| `precision` | `0.5 \| 1` |  |  |
+| `size` | `RatingSize` |  |  |
+| `isReadOnly` | `boolean` |  |  |
+| `isDisabled` | `boolean` |  |  |
+| `label` | `string` |  |  |
+| `showValue` | `boolean` |  |  |
+| `colorScheme` | `'warning' \| 'primary' \| 'danger'` |  |  |
+| `emptyIcon` | `'star' \| 'heart' \| 'circle'` |  |  |
+| `filledIcon` | `'star' \| 'heart' \| 'circle'` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxRating.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxRating.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/rating).

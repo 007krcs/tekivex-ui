@@ -1,0 +1,113 @@
+---
+title: TkxCard
+description: Container component for grouping related content — header, body, footer slots, multiple visual variants.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+```tsx
+import { TkxCard, TkxCardHeader, TkxCardBody, TkxCardFooter } from 'tekivex-ui';
+
+<TkxCard>
+  <TkxCardHeader title="Account settings" subtitle="Update your details" />
+  <TkxCardBody>
+    {/* … */}
+  </TkxCardBody>
+  <TkxCardFooter>
+    <TkxButton>Save</TkxButton>
+  </TkxCardFooter>
+</TkxCard>
+```
+
+## Variants
+
+<Tabs>
+<TabItem label="Default">
+```tsx
+<TkxCard>
+  <TkxCardBody>Default surface — clean and minimal.</TkxCardBody>
+</TkxCard>
+```
+</TabItem>
+<TabItem label="Outlined">
+```tsx
+<TkxCard variant="outlined">
+  <TkxCardBody>Border-only — for dense layouts.</TkxCardBody>
+</TkxCard>
+```
+</TabItem>
+<TabItem label="Glass">
+```tsx
+<TkxCard variant="glass">
+  <TkxCardBody>Backdrop-blur over patterned backgrounds.</TkxCardBody>
+</TkxCard>
+```
+</TabItem>
+<TabItem label="Elevated">
+```tsx
+<TkxCard variant="elevated">
+  <TkxCardBody>Drop-shadow lifts the card above the canvas.</TkxCardBody>
+</TkxCard>
+```
+</TabItem>
+</Tabs>
+
+## Padding scale
+
+```tsx
+<TkxCard padding="sm">Compact</TkxCard>
+<TkxCard padding="md">Default</TkxCard>
+<TkxCard padding="lg">Roomy</TkxCard>
+```
+
+## RSC compatible
+
+`TkxCard` and its sub-components use no hooks or browser APIs. They render
+in Next.js Server Components without `'use client'`:
+
+```tsx
+// app/dashboard/page.tsx — Server Component
+import { TkxCard, TkxCardBody } from 'tekivex-ui';
+
+export default async function Page() {
+  const data = await fetch('https://api/...').then(r => r.json());
+  return (
+    <TkxCard>
+      <TkxCardBody>{data.message}</TkxCardBody>
+    </TkxCard>
+  );
+}
+```
+
+## Props
+
+### TkxCard
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `variant` | `'default' \| 'outlined' \| 'glass' \| 'elevated'` | | Visual style. Defaults to `default`. |
+| `padding` | `'sm' \| 'md' \| 'lg'` | | Inner spacing. Defaults to `md`. |
+| `as` | `React.ElementType` | | Override the rendered element (default `<article>`). |
+
+### TkxCardHeader
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `title` | `ReactNode` | | Title row — text or composed element. |
+| `subtitle` | `ReactNode` | | Subtitle below the title. |
+| `action` | `ReactNode` | | Trailing action slot (e.g. menu button). |
+
+### TkxCardBody / TkxCardFooter
+
+Both accept any `ReactNode` children and forward `style` / `className`.
+
+## Accessibility
+
+- Renders as `<article>` by default — semantic landmark.
+- No interactive role unless you nest a button or link inside.
+- Avoid wrapping the entire card in `onClick`; nest a `<TkxButton as="a">`
+  or `<a>` instead, so screen-reader users get the right cue.
+
+## Source
+
+[`src/components/TkxCard.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxCard.tsx)

@@ -1,0 +1,47 @@
+---
+title: TkxOrgChart
+description: OrgChart — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxOrgChart } from 'tekivex-ui';
+```
+
+OrgChart is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `data` | `OrgNode` | yes | Root node of the tree. |
+| `direction` | `'vertical' \| 'horizontal'` |  | Layout direction. Default: 'vertical'. |
+| `interactive` | `boolean` |  | Enable pan/zoom. Default: true. |
+| `initialZoom` | `number` |  | Initial zoom level (0.25 – 4). Default: 1. |
+| `nodeWidth` | `number` |  | Width of each node card (px). Default: 200. |
+| `nodeHeight` | `number` |  | Height of each node card (px). Default: 84. |
+| `siblingGap` | `number` |  | Sibling gap (px). Default: 28. |
+| `levelGap` | `number` |  | Level gap (px). Default: 64. |
+| `onNodeClick` | `(node: OrgNode) => void` |  | Called when a node is clicked. |
+| `renderNode` | `(node: OrgNode, isActive: boolean) => ReactNode` |  | Custom node renderer. Must return a React element of the declared size. |
+| `collapsedByDefault` | `boolean` |  | Start with all subtrees collapsed except the root. Default: false. |
+| `height` | `number \| string` |  | Container height. Default: 560. |
+| `ariaLabel` | `string` |  | aria-label for the chart wrapper. |
+| `className` | `string` |  |  |
+| `style` | `CSSProperties` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxOrgChart.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxOrgChart.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/org-chart).

@@ -1,0 +1,46 @@
+---
+title: TkxPhoneInput
+description: PhoneInput — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxPhoneInput } from 'tekivex-ui';
+```
+
+PhoneInput is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `defaultCountry` | `string` |  | Initial country (ISO 3166-1 alpha-2, lowercase). Defaults to "in". |
+| `value` | `string` |  | Controlled value (E.164, e.g. "+919876543210"). |
+| `defaultValue` | `string` |  | Initial digits (without country code). For uncontrolled use. |
+| `onChange` | `(payload: PhoneChangePayload) => void` |  | Fires on every keystroke and country change. |
+| `onValid` | `(payload: PhoneChangePayload) => void` |  | Fires when the input loses focus, only if `valid`. |
+| `label` | `string` |  | Visible label above the input (required for WCAG compliance). |
+| `placeholder` | `string` |  | Placeholder shown inside the input. Defaults to a country-specific example. |
+| `disabled` | `boolean` |  | Disable input + picker. |
+| `required` | `boolean` |  | Mark required for screen readers. |
+| `id` | `string` |  | Optional id; auto-generated if omitted. |
+| `name` | `string` |  | Optional name (form submission). |
+| `extraCountries` | `PhoneCountry[]` |  | Optional list of additional countries to merge with the built-in set. |
+| `className` | `string` |  | Optional className on the root <div>. |
+| `style` | `CSSProperties` |  | Optional inline style on the root <div>. |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxPhoneInput.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxPhoneInput.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/phone-input).

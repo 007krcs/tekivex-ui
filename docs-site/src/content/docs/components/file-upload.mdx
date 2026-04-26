@@ -1,0 +1,44 @@
+---
+title: TkxFileUpload
+description: FileUpload — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxFileUpload } from 'tekivex-ui';
+```
+
+FileUpload is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `accept` | `string` |  |  |
+| `multiple` | `boolean` |  |  |
+| `maxSize` | `number` |  |  |
+| `maxFiles` | `number` |  |  |
+| `onChange` | `(files: File[]) => void` |  |  |
+| `onError` | `(error: string) => void` |  |  |
+| `label` | `string` |  |  |
+| `hint` | `string` |  |  |
+| `isDisabled` | `boolean` |  |  |
+| `preview` | `boolean` |  |  |
+| `dragDrop` | `boolean` |  |  |
+| `variant` | `'dropzone' \| 'button'` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxFileUpload.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxFileUpload.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/file-upload).

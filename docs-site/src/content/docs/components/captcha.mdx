@@ -1,0 +1,44 @@
+---
+title: TkxCaptcha
+description: Captcha — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxCaptcha } from 'tekivex-ui';
+```
+
+Captcha is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `provider` | `CaptchaProvider` |  | Which CAPTCHA provider to load. Defaults to "turnstile". |
+| `sitekey` | `string` | yes | Public site key issued by the provider. Required. |
+| `theme` | `CaptchaTheme` |  | Visual theme. "auto" follows the user's OS preference (Turnstile only). |
+| `size` | `CaptchaSize` |  | Widget size. Provider support varies; "invisible" is reCAPTCHA-only. |
+| `language` | `string` |  | Optional language/locale (ISO 639-1). Defaults to browser locale. |
+| `execution` | `'render' \| 'execute' \| 'managed'` |  | Optional execution mode for Turnstile: "render" | "execute" | "managed". |
+| `onVerify` | `(token: string) => void` | yes | Called once the user has successfully solved the challenge. |
+| `onExpire` | `() => void` |  | Called when an issued token expires (typically after 2-5 minutes). |
+| `onError` | `(errorCode: string) => void` |  | Called on widget error. The provider's raw error code is forwarded. |
+| `className` | `string` |  | Optional className applied to the host <div>. |
+| `style` | `React.CSSProperties` |  | Optional inline style applied to the host <div>. |
+| `testMode` | `boolean` |  | Test mode: render a stub that auto-verifies after 200ms. SSR-safe. |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxCaptcha.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxCaptcha.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/captcha).

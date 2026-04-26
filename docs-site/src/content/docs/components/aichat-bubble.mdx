@@ -1,0 +1,42 @@
+---
+title: TkxAIChatBubble
+description: AIChatBubble — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxAIChatBubble } from 'tekivex-ui';
+```
+
+AIChatBubble is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `role` | `AIRole` | yes | Who sent this message |
+| `content` | `string \| ReactNode` | yes | Message text (will be sanitized) or arbitrary ReactNode |
+| `avatar` | `string` |  | Optional avatar URL or initials |
+| `name` | `string` |  | Optional display name |
+| `timestamp` | `string` |  | ISO timestamp string |
+| `streaming` | `boolean` |  | Animate text in character-by-character (streaming effect) |
+| `confidence` | `number` |  | AI confidence 0–100 — renders a mini confidence bar when provided |
+| `copyable` | `boolean` |  | Show copy-to-clipboard button |
+| `className` | `string` |  |  |
+| `style` | `CSSProperties` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxAIChatBubble.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAIChatBubble.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/aichat-bubble).

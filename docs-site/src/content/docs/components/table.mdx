@@ -1,0 +1,99 @@
+---
+title: TkxTable
+description: Accessible data table with sorting, selection, sticky header, and responsive horizontal scroll.
+---
+
+```tsx
+import { TkxTable } from 'tekivex-ui';
+
+const columns = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'role', label: 'Role' },
+  { key: 'lastSeen', label: 'Last seen', sortable: true,
+    render: (row) => new Date(row.lastSeen).toLocaleDateString() },
+];
+
+const data = [
+  { id: 1, name: 'Aisha Khan', role: 'Engineer', lastSeen: '2026-04-26' },
+  { id: 2, name: 'Marcus Lee', role: 'Designer', lastSeen: '2026-04-25' },
+];
+
+<TkxTable columns={columns} data={data} rowKey="id" />
+```
+
+## Sorting
+
+Mark columns as `sortable: true`. Clicking the header toggles asc → desc → none.
+
+```tsx
+<TkxTable
+  columns={[
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'salary', label: 'Salary', sortable: true, align: 'right' },
+  ]}
+  data={data}
+  rowKey="id"
+/>
+```
+
+For server-side sorting, pass `sortBy` + `sortDir` props and listen to `onSortChange`.
+
+## Selection
+
+```tsx
+<TkxTable
+  columns={columns}
+  data={data}
+  rowKey="id"
+  selectable
+  selectedRowKeys={selected}
+  onSelectionChange={setSelected}
+/>
+```
+
+Multi-select with checkboxes. Press `Space` on a row to toggle.
+
+## Sticky header
+
+```tsx
+<div style={{ maxHeight: 400, overflowY: 'auto' }}>
+  <TkxTable columns={columns} data={data} stickyHeader />
+</div>
+```
+
+The wrapper sets the scroll context; `stickyHeader` keeps the header row
+pinned to the top during scroll.
+
+## Custom cell rendering
+
+```tsx
+const columns = [
+  {
+    key: 'status',
+    label: 'Status',
+    render: (row) => (
+      <TkxBadge variant={row.active ? 'success' : 'secondary'}>
+        {row.active ? 'Active' : 'Paused'}
+      </TkxBadge>
+    ),
+  },
+];
+```
+
+## Responsive behaviour
+
+On viewports below 640px the table becomes horizontally scrollable inside
+its container. Cells never wrap by default — use `whiteSpace: 'normal'` in
+a custom render if needed.
+
+## Accessibility
+
+- Renders as `<table>` with `<thead>` / `<tbody>` / proper `<th scope>`.
+- Sort state announced via `aria-sort` on column headers.
+- Row selection uses real `<input type="checkbox">` with proper labels.
+- Sortable headers are real `<button>` elements — keyboard reachable.
+- Empty state announces via `role="status"`.
+
+## Source
+
+[`src/components/TkxTable.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxTable.tsx)

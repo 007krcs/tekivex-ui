@@ -1,0 +1,36 @@
+---
+title: TkxFontProvider
+description: FontProvider — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxFontProvider } from 'tekivex-ui';
+```
+
+FontProvider is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `scripts` | `FontScript[]` |  | Explicit list of scripts to load. Takes precedence over `language`. @example scripts={["latin", "devanagari", "tamil"]} |
+| `language` | `string` |  | BCP 47 language code (e.g. "en", "hi", "ta", "zh-CN"). Resolved to its required scripts via the built-in language map. If both `scripts` and `language` are passed, `scripts` wins. |
+| `preconnect` | `boolean` |  | If true, also injects a preconnect to fonts.googleapis.com and fonts.gstatic.com to start the TLS handshake earlier. Default: true. |
+| `children` | `ReactNode` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxFontProvider.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxFontProvider.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/font-provider).

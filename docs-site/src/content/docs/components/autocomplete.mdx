@@ -1,0 +1,44 @@
+---
+title: TkxAutocomplete
+description: Autocomplete — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+---
+
+```tsx
+import { TkxAutocomplete } from 'tekivex-ui';
+```
+
+Autocomplete is part of the 78-component tekivex-ui library. Every component is
+WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `options` | `AutocompleteOption[]` | yes |  |
+| `value` | `string` |  |  |
+| `onChange` | `(value: string) => void` |  |  |
+| `onInputChange` | `(input: string) => void` |  |  |
+| `placeholder` | `string` |  |  |
+| `label` | `string` | yes |  |
+| `isLoading` | `boolean` |  |  |
+| `emptyMessage` | `string` |  |  |
+| `filterFn` | `(option: AutocompleteOption, input: string) => boolean` |  |  |
+| `freeSolo` | `boolean` |  |  |
+| `className` | `string` |  |  |
+| `style` | `CSSProperties` |  |  |
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+The implementation lives at [`src/components/TkxAutocomplete.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxAutocomplete.tsx).
+
+> This page is a generated scaffold. It will be replaced with hand-authored
+> examples and a live preview in a follow-up release. For interactive demos,
+> see the [legacy demo site](https://ui.tekivex.com/#/components/autocomplete).
