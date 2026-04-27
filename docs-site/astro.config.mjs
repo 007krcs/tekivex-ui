@@ -89,21 +89,14 @@ export default defineConfig({
             { label: 'License', link: '/license/' },
           ],
         },
-        {
-          label: 'Try it live',
-          items: [
-            {
-              label: '🎮 Interactive playground',
-              link: '/playground/',
-              attrs: { 'data-external': 'true' },
-            },
-            {
-              label: '📖 Component catalog (book)',
-              link: '/book/',
-              attrs: { 'data-external': 'true' },
-            },
-          ],
-        },
+        // Cross-links to /playground/ and /book/ are intentionally NOT
+        // declared as Starlight sidebar items because those paths are
+        // served by separate Vite apps (the demo SPA and tkx-book
+        // catalog), not Astro content entries. Starlight's sidebar
+        // validator rejects link entries that don't resolve to
+        // collection slugs. Discoverability is preserved by:
+        //   - The "Try it without installing" CardGrid on the homepage
+        //   - The Ecosystem page links
       ],
       customCss: ['./src/styles/global.css'],
       lastUpdated: true,
