@@ -63,11 +63,13 @@ console.log('══════════════════════�
 run('npm run build', ROOT);
 
 // ── 2. Build the Astro docs site (canonical /)
+//    Uses build:astro-only — NOT `build` — because docs-site's `build`
+//    script invokes this very file, and we'd loop forever otherwise.
 console.log('\n══════════════════════════════════════════════════════');
 console.log('Step 2/4 — build docs-site (Astro Starlight) → /');
 console.log('══════════════════════════════════════════════════════');
 run('npm install --no-audit --no-fund', resolve(ROOT, 'docs-site'));
-run('npm run build', resolve(ROOT, 'docs-site'));
+run('npm run build:astro-only', resolve(ROOT, 'docs-site'));
 
 const DIST = resolve(ROOT, 'docs-site/dist');
 if (!existsSync(DIST)) {
