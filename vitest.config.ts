@@ -41,11 +41,12 @@ export default defineConfig({
         // is large-surface components where jsdom genuinely limits what unit
         // tests can cover (canvas, timer-driven real-time, complex DnD).
         //
-        // Snapshot taken 2026-04-27 against 794 passing tests.
-        lines: 55,
-        functions: 40,
-        branches: 45,
-        statements: 50,
+        // Snapshot taken 2026-04-27 against 1034 passing tests (v3.0.0).
+        // Up from 55/40/45/50 in v2.9 — each release ratchets up.
+        lines: 64,
+        functions: 50,
+        branches: 56,
+        statements: 60,
       },
     },
   },

@@ -2,17 +2,19 @@
 
 This document is the public, audit-grade record of `tekivex-ui` test coverage. It exists so adopters can see exactly what's tested, what isn't, and the trajectory.
 
-## Current numbers (snapshot 2026-04-27)
+## Current numbers (snapshot 2026-04-27, v3.0.0)
 
 | Metric | Coverage |
 |---|---|
-| **Lines** | 56% (5,486 / 9,784) |
-| **Functions** | 43% (1,041 / 2,444) |
-| **Branches** | 49% (4,837 / 9,902) |
-| **Statements** | 53% (5,232 / 9,847) |
-| **Tests passing** | 794 across 76 files |
-| **Components with explicit unit tests** | 64 of 99 |
+| **Lines** | 64.84% (6,344 / 9,784) |
+| **Functions** | 51.10% (1,249 / 2,444) |
+| **Branches** | 56.77% (5,622 / 9,902) |
+| **Statements** | 61.41% (7,042 / 11,466) |
+| **Tests passing** | 1,034 across 82 files |
+| **Components with explicit unit tests** | 80+ of 99 |
 | **Components with smoke tests (renders + key props)** | 99 of 99 |
+
+**Delta from v2.9 → v3.0:** +9 points lines, +8 functions, +8 branches, +8 statements (240 new tests across 7 batches).
 
 CI gate is set at the current numbers, not aspirational. Builds fail if any metric drops. They never go down; each release ratchets up.
 
@@ -67,14 +69,14 @@ Most components fall here. They have good test coverage of the public API but do
 
 ## Roadmap to 90%
 
-| Release | Target | Effort |
-|---|---|---|
-| **v2.9.0** (now) | Lines 55%, Functions 40%, Branches 45% | Baseline established |
-| v2.10 | Lines 65%, Functions 50%, Branches 55% | ~12 hours: Vitest fake timers for real-time, focused tests for ColorPicker/Cascader/TransferList |
-| v2.11 | Lines 75%, Functions 60%, Branches 65% | ~10 hours: TkxDatePicker split into per-feature test files, DnD pointer-event mocks |
-| v3.0 | Lines 90%, Functions 90%, Branches 85% | ~16 hours: canvas component coverage via Playwright integration, full real-time test suite |
+| Release | Target | Effort | Status |
+|---|---|---|---|
+| v2.9.0 | Lines 55%, Functions 40%, Branches 45% | Baseline | ✅ shipped |
+| **v3.0.0** (now) | Lines 64%, Functions 50%, Branches 56% | 240 tests across 7 batches: hooks, form inputs, real-time (vitest fake timers), data-pickers, layout/command/popover, captcha test mode, i18n provider | ✅ shipped |
+| v3.1 | Lines 78%, Functions 65%, Branches 70% | ~12 hours: TkxSelect / TkxMenu / TkxDataGrid depth tests, Mentions/TreeView interaction paths, OrgChart layout |
+| v3.2 | Lines 90%, Functions 90%, Branches 85% | ~14 hours: canvas-heavy components via Playwright integration, full TkxImageEditor + TkxSignaturePad coverage, TkxCarousel/TkxSlider pointer-event mocks |
 
-This is ~38 hours of test-writing across 3 minor releases. We're not promising to do it overnight; we're committing to the ratchet.
+This is ~26 hours of test-writing remaining across 2 minor releases. We're not promising to do it overnight; we're committing to the ratchet.
 
 ## What's NOT in the unit-test number
 
@@ -95,6 +97,6 @@ Adding these as a "real" coverage number is hard (different tools, different sco
 
 ## How to read this honestly
 
-If an audit asks "is tekivex-ui at 100% test coverage" the answer is **no, it's at 56% lines**. If they ask "is the security surface at 100%" the answer is **the security primitives — Aadhaar Verhoeff, KYC validators, sanitiseHref, sanitizeUnicode, scrubPII — are 90%+**. If they ask "is there a ratchet" the answer is **yes, in `vitest.config.ts`, enforced in CI**. If they ask "what's the path to 90%" the answer is **3 milestones, ~38 hours of work, planned for v2.10 / v2.11 / v3.0**.
+If an audit asks "is tekivex-ui at 100% test coverage" the answer is **no, it's at 64.84% lines as of v3.0.0**. If they ask "is the security surface at 100%" the answer is **the security primitives — Aadhaar Verhoeff, KYC validators, sanitiseHref, sanitizeUnicode, scrubPII — are 90%+**. If they ask "is there a ratchet" the answer is **yes, in `vitest.config.ts`, enforced in CI**. If they ask "what's the path to 90%" the answer is **2 more milestones (v3.1, v3.2), ~26 hours of work**.
 
 That's the honest audit story. Numbers we can defend, gaps we acknowledge, plan we commit to.
