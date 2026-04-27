@@ -1,9 +1,9 @@
-# @tekivex/audit
+# tekivex-audit
 
 > CLI that scans React projects for security + accessibility regressions.
 
 ```bash
-npx @tekivex/audit .
+npx tekivex-audit .
 # or, if installed globally
 tekivex audit . --format md --out audit.md
 ```
@@ -25,7 +25,7 @@ tekivex audit . --format md --out audit.md
 
 ```yaml
 # .github/workflows/audit.yml
-- run: npx @tekivex/audit . --fail-on warn --format md --out audit.md
+- run: npx tekivex-audit . --fail-on warn --format md --out audit.md
 - uses: actions/upload-artifact@v4
   with: { name: audit-report, path: audit.md }
 ```

@@ -1,15 +1,15 @@
-# @tekivex/security-core
+# tekivex-security-core
 
 > **The security kernel extracted from [tekivex-ui](https://ui.tekivex.com).** Framework-agnostic. Zero runtime dependencies. Pure TypeScript.
 
-[![npm](https://img.shields.io/npm/v/@tekivex/security-core.svg)](https://npmjs.com/package/@tekivex/security-core)
+[![npm](https://img.shields.io/npm/v/tekivex-security-core.svg)](https://npmjs.com/package/tekivex-security-core)
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![types](https://img.shields.io/npm/types/@tekivex/security-core.svg)](https://npmjs.com/package/@tekivex/security-core)
+[![types](https://img.shields.io/npm/types/tekivex-security-core.svg)](https://npmjs.com/package/tekivex-security-core)
 
-If you ship web code, you defend against XSS, CSP gaps, DOM clobbering, Unicode Trojan Source, clickjacking, prototype pollution, MIME confusion, PII leakage, and rate-limit abuse. **`@tekivex/security-core` gives you one small, audited module to do all of that.**
+If you ship web code, you defend against XSS, CSP gaps, DOM clobbering, Unicode Trojan Source, clickjacking, prototype pollution, MIME confusion, PII leakage, and rate-limit abuse. **`tekivex-security-core` gives you one small, audited module to do all of that.**
 
 ```bash
-npm i @tekivex/security-core
+npm i tekivex-security-core
 ```
 
 Works with React, Vue, Svelte, Solid, vanilla TS, Node, Deno, Bun, Cloudflare Workers.
@@ -29,7 +29,7 @@ import {
   isFramed,
   installFrameBuster,
   deepFreeze,
-} from '@tekivex/security-core';
+} from 'tekivex-security-core';
 
 // Block dangerous URL schemes
 sanitizeHref('javascript:alert(1)');   // → null
@@ -82,7 +82,7 @@ Each export maps to a specific attack class. Full threat model is published at
 
 ## Zero dependencies
 
-`@tekivex/security-core` does not import anything. Not even a polyfill. This is deliberate:
+`tekivex-security-core` does not import anything. Not even a polyfill. This is deliberate:
 
 - Every `npm install` of your app installs exactly one new file
 - No transitive-dependency supply-chain risk (xz backdoor, colors.js, etc.)

@@ -1,6 +1,6 @@
 {
   "name": "tekivex-audit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Static-analysis CLI that scans a React project for security + accessibility regressions. Ships with tekivex-ui but works against any React codebase.",
   "type": "module",
   "bin": {

@@ -1,6 +1,6 @@
 {
   "name": "tekivex-security-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Security kernel for web apps — XSS, Unicode Trojan Source, CSP, PII, clickjacking, rate-limit, MIME-sniff defenses. Framework-agnostic. Pure TypeScript, zero runtime deps.",
   "type": "module",
   "main": "./dist/index.js",
