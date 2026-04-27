@@ -12,6 +12,9 @@ import { signaturePad } from './signaturePad';
 import { confetti } from './confetti';
 import { addressInput } from './addressInput';
 import { currencyInput } from './currencyInput';
+import { aadhaarInput } from './aadhaar';
+import { kyc } from './kyc';
+import { subscription } from './subscription';
 
 export const stories: Record<string, Story> = {
   button,
@@ -25,4 +28,7 @@ export const stories: Record<string, Story> = {
   'confetti': confetti,
   'address-input': addressInput,
   'currency-input': currencyInput,
+  'aadhaar-input': aadhaarInput,
+  'kyc-inputs': kyc,
+  'subscription': subscription,
 };

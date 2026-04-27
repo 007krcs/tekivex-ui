@@ -1,0 +1,180 @@
+---
+title: PDF primitives — full reference
+description: All 15 primitives in @tekivex/pdf — Document, Page, View, Row, Column, Text, Image, Heading, List, Table, Header, Footer, Link, Divider, Watermark.
+---
+
+`@tekivex/pdf` ships **15 primitives**. Together they cover every structured-document shape we've found in real consumer apps without dropping back to the raw `@react-pdf/renderer` API.
+
+## Layout
+
+```tsx
+import {
+  TkxPDFDocument, TkxPDFPage, TkxPDFView,
+  TkxPDFRow, TkxPDFColumn,
+} from '@tekivex/pdf';
+```
+
+| | Purpose |
+|---|---|
+| `TkxPDFDocument` | Top-level wrapper. Single per render. |
+| `TkxPDFPage` | One page; supports `size="A4" \| [width, height]` and `margin`. |
+| `TkxPDFView` | Generic flex container — equivalent to `<div>` in PDF land. |
+| `TkxPDFRow` | `flexDirection: row` with `gap`, `align`, `justify` props. |
+| `TkxPDFColumn` | `flexDirection: column` with `flex` for proportional width. |
+
+## Text
+
+```tsx
+import { TkxPDFText, TkxPDFHeading, TkxPDFLink } from '@tekivex/pdf';
+
+<TkxPDFHeading level={1}>Resume</TkxPDFHeading>
+<TkxPDFHeading level={2}>Summary</TkxPDFHeading>
+<TkxPDFText size={11} color={theme.text}>
+  Senior software engineer specialised in…
+</TkxPDFText>
+<TkxPDFLink href="mailto:hello@example.com">hello@example.com</TkxPDFLink>
+```
+
+`TkxPDFHeading` is a styled wrapper with sensible per-level sizes (h1=24, h2=18, h3=14, …, h6=10pt). All headings are bold by default; override per call if needed.
+
+## Lists
+
+```tsx
+import { TkxPDFList } from '@tekivex/pdf';
+
+<TkxPDFList items={[
+  'Reduced cold-start by 40%',
+  'Migrated 3 services to Kubernetes',
+  'Mentored 4 junior engineers',
+]} />
+
+<TkxPDFList ordered items={['First', 'Second', 'Third']} />
+
+<TkxPDFList bullet="✓" items={['Done item 1', 'Done item 2']} />
+```
+
+Bullets get fixed left-margin so wrapped lines align to the text, not under the bullet.
+
+## Tables
+
+```tsx
+import { TkxPDFTable } from '@tekivex/pdf';
+
+<TkxPDFTable
+  columns={[
+    { header: 'Description', flex: 3 },
+    { header: 'Qty', flex: 1, align: 'right' },
+    { header: 'Unit', flex: 1, align: 'right' },
+    { header: 'Total', flex: 1, align: 'right' },
+  ]}
+  rows={[
+    ['Web development', '40', '$120.00', '$4,800.00'],
+    ['Design review', '8', '$140.00', '$1,120.00'],
+    ['Project management', '12', '$110.00', '$1,320.00'],
+  ]}
+  striped
+/>
+```
+
+Stripes alternate row backgrounds using the active theme's `surface` token, so light/dark themes look right automatically.
+
+## Header / footer
+
+```tsx
+import { TkxPDFHeader, TkxPDFFooter } from '@tekivex/pdf';
+
+<TkxPDFPage>
+  <TkxPDFHeader>
+    <TkxPDFText size={9}>Acme Corp · Confidential</TkxPDFText>
+  </TkxPDFHeader>
+
+  {/* page body */}
+
+  <TkxPDFFooter showPageNumber>
+    Generated {new Date().toISOString().slice(0, 10)}
+  </TkxPDFFooter>
+</TkxPDFPage>
+```
+
+Both are `fixed` to repeat on every page in multi-page documents. `showPageNumber={true}` renders "Page X of Y" right-aligned alongside the children.
+
+## Watermark
+
+```tsx
+import { TkxPDFWatermark } from '@tekivex/pdf';
+
+<TkxPDFPage>
+  <TkxPDFWatermark
+    text={['CONFIDENTIAL', `session ${sessionId}`]}
+    pattern="tiled"
+    opacity={0.07}
+  />
+  {/* content */}
+</TkxPDFPage>
+```
+
+Pair with the in-browser `TkxWatermark v2` from `tekivex-ui` so the same fingerprint string appears in both the live preview and the downloaded PDF — leaks are traceable to the session that generated them.
+
+## Divider
+
+```tsx
+import { TkxPDFDivider } from '@tekivex/pdf';
+
+<TkxPDFDivider thickness={2} marginVertical={12} />
+```
+
+## Image
+
+```tsx
+import { TkxPDFImage } from '@tekivex/pdf';
+
+<TkxPDFImage src={photoUrl} width={120} height={150} rounded={4} />
+```
+
+Sources: data URLs, public HTTP URLs, or local file paths in Node. JPEG/PNG/WebP all supported.
+
+## Putting it together — minimal invoice
+
+```tsx
+import {
+  TkxPDFDocument, TkxPDFPage, TkxPDFView,
+  TkxPDFHeading, TkxPDFText, TkxPDFRow, TkxPDFColumn,
+  TkxPDFTable, TkxPDFFooter, TkxPDFDivider,
+  renderToPDF,
+} from '@tekivex/pdf';
+
+const buffer = await renderToPDF(
+  <TkxPDFDocument>
+    <TkxPDFPage size="A4" margin={36}>
+      <TkxPDFRow justify="space-between">
+        <TkxPDFColumn>
+          <TkxPDFHeading level={1}>INVOICE</TkxPDFHeading>
+          <TkxPDFText size={10}>#INV-1234</TkxPDFText>
+        </TkxPDFColumn>
+        <TkxPDFColumn>
+          <TkxPDFText size={10}>Issued 2026-04-27</TkxPDFText>
+          <TkxPDFText size={10}>Due 2026-05-27</TkxPDFText>
+        </TkxPDFColumn>
+      </TkxPDFRow>
+
+      <TkxPDFDivider marginVertical={16} />
+
+      <TkxPDFTable
+        columns={[
+          { header: 'Item', flex: 3 },
+          { header: 'Qty', flex: 1, align: 'right' },
+          { header: 'Total', flex: 1, align: 'right' },
+        ]}
+        rows={[
+          ['Implementation', '1', '$5,000.00'],
+          ['Training', '2 days', '$1,500.00'],
+        ]}
+      />
+
+      <TkxPDFFooter showPageNumber>Acme Inc · accounts@acme.com</TkxPDFFooter>
+    </TkxPDFPage>
+  </TkxPDFDocument>
+);
+```
+
+For pre-built templates (Biodata, Invoice, Certificate, Resume, Ticket, Boarding Pass, Receipt) see [`@tekivex/templates`](/ecosystem/#tekivextemplates).

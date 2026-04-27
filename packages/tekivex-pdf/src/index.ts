@@ -34,6 +34,27 @@ export type {
 export { TkxPDFWatermark } from './watermark';
 export type { TkxPDFWatermarkProps } from './watermark';
 
+// Extras (v0.4) — heading, list, table, header/footer, link, divider
+export {
+  TkxPDFHeading,
+  TkxPDFDivider,
+  TkxPDFLink,
+  TkxPDFList,
+  TkxPDFTable,
+  TkxPDFHeader,
+  TkxPDFFooter,
+} from './extras';
+export type {
+  TkxPDFHeadingProps,
+  TkxPDFDividerProps,
+  TkxPDFLinkProps,
+  TkxPDFListProps,
+  TkxPDFTableProps,
+  TkxPDFTableColumn,
+  TkxPDFHeaderProps,
+  TkxPDFFooterProps,
+} from './extras';
+
 // Renderers
 export { renderToPDF, renderToPDFStream, renderToPNG, pdfToBlob } from './render';
 export type { RenderToPDFOptions } from './render';

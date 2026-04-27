@@ -1,0 +1,45 @@
+{
+  "name": "@tekivex/finance",
+  "version": "0.1.0-preview",
+  "description": "Finance-vertical component pack — KYC inputs, currency formatting, OTP flows, subscription/billing UI, statement viewer primitives.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "tekivex-ui": ">=2.9.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "react": "^19.2.5",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "tekivex",
+    "finance",
+    "kyc",
+    "billing",
+    "subscription",
+    "currency"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/007krcs/tekivex-ui.git",
+    "directory": "packages/tekivex-finance"
+  }
+}

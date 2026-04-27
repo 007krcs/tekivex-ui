@@ -183,6 +183,11 @@ export * from './src/components/TkxSEO';
 export * from './src/components/TkxCalendarLunar';
 export * from './src/components/TkxCheckout';
 
+// Components (v2.9) — Indian KYC pack + subscription helpers
+export * from './src/components/TkxAadhaarInput';
+export * from './src/components/TkxKycInputs';
+export * from './src/components/TkxSubscription';
+
 export { TkxOrgChart } from './src/components/TkxOrgChart';
 export type { TkxOrgChartProps, OrgNode } from './src/components/TkxOrgChart';
 

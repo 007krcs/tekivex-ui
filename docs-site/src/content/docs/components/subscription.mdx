@@ -1,0 +1,179 @@
+---
+title: TkxPlanSelector, TkxBillingCycleToggle, TkxProrationPreview
+description: Three composable subscription / recurring-billing components. Pure UI — pair with TkxPaymentButton for the full flow.
+---
+
+Three components for SaaS-style pricing pages and plan-change flows.
+None of them call payment providers directly — they're UI for the
+*decision*; you wire `TkxPaymentButton` for the actual charge.
+
+## TkxPlanSelector
+
+Pricing-card grid with optional "Most popular" highlight, feature list,
+and click-to-select.
+
+```tsx
+import { TkxPlanSelector, type SubscriptionPlan } from 'tekivex-ui';
+
+const PLANS: SubscriptionPlan[] = [
+  {
+    id: 'free',
+    name: 'Free',
+    tagline: 'For individuals',
+    prices: { monthly: 0, annual: 0 },
+    currency: 'USD',
+    features: ['1 user', '100 MB', 'Community support'],
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    tagline: 'For small teams',
+    prices: { monthly: 29, annual: 290 },
+    currency: 'USD',
+    features: ['10 users', '10 GB', 'Priority support', 'API access'],
+    highlighted: true,
+  },
+  {
+    id: 'biz',
+    name: 'Business',
+    prices: { monthly: 99, annual: 990 },
+    currency: 'USD',
+    features: ['Unlimited users', '1 TB', 'SAML SSO', 'Audit log', 'SLA'],
+  },
+];
+
+const [selected, setSelected] = useState<string>('pro');
+
+<TkxPlanSelector
+  plans={PLANS}
+  cycle="annual"
+  selectedId={selected}
+  onSelect={(plan) => setSelected(plan.id)}
+/>
+```
+
+Renders as `<button role="radio">` per card with proper `aria-checked` —
+keyboard-accessible and screen-reader-friendly.
+
+## TkxBillingCycleToggle
+
+Monthly ↔ Annual switch with optional savings indicator.
+
+```tsx
+import { TkxBillingCycleToggle, type BillingCycle } from 'tekivex-ui';
+
+const [cycle, setCycle] = useState<BillingCycle>('annual');
+
+<TkxBillingCycleToggle
+  value={cycle}
+  onChange={setCycle}
+  annualSavingsLabel="Save 17%"
+/>
+```
+
+## TkxProrationPreview
+
+Mid-cycle plan-change calculator. Shows credit from the current plan +
+prorated charge for the new one + amount due today.
+
+```tsx
+import { TkxProrationPreview, TkxButton } from 'tekivex-ui';
+
+<TkxProrationPreview
+  currentPlan={PLANS.find(p => p.id === 'free')!}
+  newPlan={PLANS.find(p => p.id === 'pro')!}
+  cycle="annual"
+  daysRemaining={142}
+  cycleDays={365}
+>
+  <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+    <TkxButton variant="ghost" onClick={cancel}>Cancel</TkxButton>
+    <TkxButton variant="primary" onClick={confirm}>Confirm change</TkxButton>
+  </div>
+</TkxProrationPreview>
+```
+
+Math is straightforward proration: `(newPrice - currentPrice) × daysRemaining / cycleDays`. If the result is negative (downgrade), it shows a credit applied at next billing instead.
+
+## Composing them
+
+The natural three-step pricing page:
+
+```tsx
+function PricingPage() {
+  const [cycle, setCycle] = useState<BillingCycle>('annual');
+  const [plan, setPlan] = useState<SubscriptionPlan | null>(null);
+
+  return (
+    <div>
+      <header style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+        <h1>Choose a plan</h1>
+        <TkxBillingCycleToggle
+          value={cycle}
+          onChange={setCycle}
+          annualSavingsLabel="Save 17%"
+        />
+      </header>
+
+      <TkxPlanSelector
+        plans={PLANS}
+        cycle={cycle}
+        selectedId={plan?.id}
+        onSelect={setPlan}
+      />
+
+      {plan && plan.id !== 'free' && (
+        <TkxPaymentButton
+          config={{
+            provider: 'stripe',
+            publicKey: env.STRIPE_PK,
+            sessionId: serverSessionId,
+          }}
+          onSuccess={(r) => router.push(`/welcome?id=${r.paymentId}`)}
+        />
+      )}
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- `TkxPlanSelector` uses `role="radiogroup"` + `role="radio"` so screen
+  readers announce "1 of 3 selected, Pro plan, $29/month, most popular"
+- `TkxBillingCycleToggle` uses the same pattern
+- `TkxProrationPreview` is a static breakdown with semantic structure —
+  no special interaction needed
+
+## Props
+
+### TkxPlanSelector
+
+| Prop | Type | Description |
+|---|---|---|
+| `plans` | `SubscriptionPlan[]` | Plans to display. |
+| `cycle` | `BillingCycle` | Which price column (`monthly` or `annual`). |
+| `selectedId` | `string` | Currently selected plan id. |
+| `onSelect` | `(plan: SubscriptionPlan) => void` | |
+
+### TkxBillingCycleToggle
+
+| Prop | Type | Description |
+|---|---|---|
+| `value` | `'monthly' \| 'annual'` | |
+| `onChange` | `(next) => void` | |
+| `annualSavingsLabel` | `string` | Badge on annual button. |
+
+### TkxProrationPreview
+
+| Prop | Type | Description |
+|---|---|---|
+| `newPlan` | `SubscriptionPlan` | Target plan. |
+| `currentPlan` | `SubscriptionPlan` | Current plan. |
+| `cycle` | `BillingCycle` | |
+| `daysRemaining` | `number` | Days left in current cycle. |
+| `cycleDays` | `number` | Cycle length (typically 30 or 365). |
+
+## Source
+
+[`src/components/TkxSubscription.tsx`](https://github.com/007krcs/tekivex-ui/blob/master/src/components/TkxSubscription.tsx)

@@ -59,15 +59,23 @@ if (!distExists) {
     'react/jsx-runtime', 'react/jsx-dev-runtime', 'react-dom/server',
   ]);
   // Anything that's a peer dep is fine. Anything else is a flag.
-  const requireRe = /require\((['"])([^'"]+)\1\)/g;
-  const importRe = /from\s*(['"])([^'"]+)\1/g;
+  // Valid bare-package-name pattern: optional @scope/, then [a-z0-9._-]+,
+  // then optional /subpath. This rejects minified-code false positives
+  // like `from",n.name]})…"` where the captured content has commas / brackets.
+  const PKG_NAME = /^(@[a-z0-9][\w.-]*\/)?[a-z0-9][\w.-]*(\/[\w./-]*)?$/i;
+  const requireRe = /require\((['"])([^'")(]+)\1\)/g;
+  const importRe = /\bfrom\s*(['"])([^'")(\n,]{1,80})\1/g;
   const externals = new Set();
   for await (const file of walk(dist)) {
     if (!/\.(js|cjs|mjs)$/.test(file)) continue;
     const content = await readFile(file, 'utf8');
     let m;
-    while ((m = requireRe.exec(content)) !== null) externals.add(m[2]);
-    while ((m = importRe.exec(content)) !== null) externals.add(m[2]);
+    while ((m = requireRe.exec(content)) !== null) {
+      if (PKG_NAME.test(m[2])) externals.add(m[2]);
+    }
+    while ((m = importRe.exec(content)) !== null) {
+      if (PKG_NAME.test(m[2])) externals.add(m[2]);
+    }
   }
   const offenders = [...externals].filter(
     (name) =>
