@@ -980,7 +980,7 @@ export function BlogPage({ theme }: Props) {
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <a
-            href="https://github.com/007krcs/tekivex-ui"
+            href="https://ui.tekivex.com"
             target="_blank"
             rel="noopener noreferrer"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: theme.primary, color: '#0a0a0f', border: 'none', borderRadius: '8px', padding: '11px 22px', fontWeight: 700, fontSize: '14px', textDecoration: 'none', cursor: 'pointer' }}

@@ -208,7 +208,7 @@ export function PrivacyPolicyPage({ theme }: Props) {
         </p>
         <div style={{ padding: '20px', background: theme.surface, borderRadius: '8px', border: `1px solid ${theme.border}` }}>
           <p style={{ ...prose, marginBottom: '6px' }}><strong>TekiVex UI</strong></p>
-          <p style={{ ...prose, marginBottom: '6px' }}>GitHub: <a href="https://github.com/007krcs/tekivex-ui" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>github.com/007krcs/tekivex-ui</a></p>
+          <p style={{ ...prose, marginBottom: '6px' }}>GitHub: <a href="https://ui.tekivex.com" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>github.com/007krcs/tekivex-ui</a></p>
           <p style={{ ...prose, marginBottom: '6px' }}>npm: <a href="https://www.npmjs.com/package/tekivex-ui" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>npmjs.com/package/tekivex-ui</a></p>
           <p style={{ ...prose, marginBottom: 0 }}>Website: <a href="https://ui.tekivex.com" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>ui.tekivex.com</a></p>
         </div>

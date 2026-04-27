@@ -1,6 +1,6 @@
 {
   "name": "tekivex-form",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Form components extracted from tekivex-ui — Input, Select, Autocomplete, Checkbox, Radio, Toggle, DatePicker, FileUpload, NumberInput, ColorPicker, OTP, Slider, PhoneInput, AadhaarInput, KYC validators, CurrencyInput, AddressInput, Form + FormField. Tree-shakeable single-purpose package.",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,10 @@
     }
   },
   "sideEffects": false,
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit"
@@ -29,17 +32,36 @@
     "typescript": "^5.9.3"
   },
   "keywords": [
-    "tekivex", "react", "form", "input", "select", "autocomplete",
-    "checkbox", "radio", "toggle", "date-picker", "file-upload",
-    "phone-input", "aadhaar", "pan", "kyc", "currency-input",
-    "address-input", "wcag", "accessibility"
+    "tekivex",
+    "react",
+    "form",
+    "input",
+    "select",
+    "autocomplete",
+    "checkbox",
+    "radio",
+    "toggle",
+    "date-picker",
+    "file-upload",
+    "phone-input",
+    "aadhaar",
+    "pan",
+    "kyc",
+    "currency-input",
+    "address-input",
+    "wcag",
+    "accessibility"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/007krcs/tekivex-ui.git",
-    "directory": "packages/tekivex-form"
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
   },
-  "homepage": "https://ui.tekivex.com/forms/",
-  "engines": { "node": ">=20.0.0" }
+  "homepage": "https://ui.tekivex.com/",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
+  }
 }

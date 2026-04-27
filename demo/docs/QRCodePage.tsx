@@ -38,7 +38,7 @@ export function QRCodePage({ theme }: { theme: ThemeTokens }) {
           </div>
           <div>
             <p style={{ margin: '0 0 8px', fontSize: 14, color: theme.text, fontWeight: 600 }}>GitHub Repo</p>
-            <TkxQRCode value="https://github.com/007krcs/tekivex-ui" size={100} />
+            <TkxQRCode value="https://ui.tekivex.com" size={100} />
           </div>
         </div>
       </DemoSection>

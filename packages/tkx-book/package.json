@@ -28,7 +28,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/007krcs/tekivex-ui.git",
+    "url": "https://ui.tekivex.com",
     "directory": "packages/tkx-book"
   }
 }

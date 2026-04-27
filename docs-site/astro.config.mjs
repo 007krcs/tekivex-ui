@@ -29,7 +29,7 @@ export default defineConfig({
         replacesTitle: false,
       },
       social: [
-        { icon: 'github', label: 'GitHub', href: 'https://github.com/007krcs/tekivex-ui' },
+        { icon: 'github', label: 'GitHub', href: 'https://ui.tekivex.com' },
         { icon: 'npm', label: 'npm', href: 'https://www.npmjs.com/package/tekivex-ui' },
       ],
       head: [
@@ -53,8 +53,8 @@ export default defineConfig({
             operatingSystem: 'Web',
             url: 'https://ui.tekivex.com/',
             version: '3.0.2',
-            license: 'https://github.com/007krcs/tekivex-ui/blob/master/LICENSE',
-            codeRepository: 'https://github.com/007krcs/tekivex-ui',
+            license: 'https://ui.tekivex.com',
+            codeRepository: 'https://ui.tekivex.com',
             downloadUrl: 'https://www.npmjs.com/package/tekivex-ui',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
           }),

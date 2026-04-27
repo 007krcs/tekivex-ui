@@ -204,7 +204,7 @@ ${propsTable}
 
 ## Source
 
-The implementation lives at [\`${sourcePath}\`](https://github.com/007krcs/tekivex-ui/blob/master/${sourcePath}).
+The implementation lives at [\`${sourcePath}\`](https://ui.tekivex.com).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,

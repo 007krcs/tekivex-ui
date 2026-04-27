@@ -1,6 +1,6 @@
 {
   "name": "tekivex-templates",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Pre-built PDF templates — Biodata, Invoice, Certificate, Resume, Ticket, Boarding Pass, Receipt — built on tekivex-pdf. Drop in, render, ship.",
   "type": "module",
   "main": "./dist/index.js",
@@ -76,11 +76,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/007krcs/tekivex-ui.git",
-    "directory": "packages/tekivex-templates"
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
   },
-  "homepage": "https://ui.tekivex.com/pdf/templates/",
+  "homepage": "https://ui.tekivex.com/",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
   }
 }

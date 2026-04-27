@@ -23,7 +23,7 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan 
 npm install tekivex-ui
 ```
 
-[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://github.com/007krcs/tekivex-ui) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/novaai0401-ui/tekivex-issue-report/issues) · [⭐ Star](https://github.com/novaai0401-ui/tekivex-issue-report/stargazers)
+[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://ui.tekivex.com) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/novaai0401-ui/tekivex-issue-report/issues) · [⭐ Star](https://github.com/novaai0401-ui/tekivex-issue-report/stargazers)
 
 </div>
 
@@ -495,7 +495,7 @@ Seven full-page templates included in the demo:
 ## Development
 
 ```bash
-git clone https://github.com/007krcs/tekivex-ui.git
+git clone https://ui.tekivex.com
 cd tekivex-ui
 npm install
 
@@ -572,13 +572,13 @@ When reporting, please include:
 
 Contributions are welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before submitting a PR.
 
-**Maintainers:** [007krcs](https://github.com/007krcs) · [seemaalmas](https://github.com/seemaalmas) · [novaai0401-ui](https://github.com/novaai0401-ui)
+**Maintainers:** [007krcs](https://ui.tekivex.com) · [seemaalmas](https://ui.tekivex.com) · [novaai0401-ui](https://ui.tekivex.com)
 
 ---
 
 ## License
 
-[MIT](./LICENSE) © 2026 [007krcs](https://github.com/007krcs)
+[MIT](./LICENSE) © 2026 [007krcs](https://ui.tekivex.com)
 
 ---
 
@@ -586,6 +586,6 @@ Contributions are welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) befo
 
 Made with ⚡ by the TekiVex team
 
-**[npm](https://www.npmjs.com/package/tekivex-ui) · [GitHub](https://github.com/007krcs/tekivex-ui) · [Docs](https://ui.tekivex.com)**
+**[npm](https://www.npmjs.com/package/tekivex-ui) · [GitHub](https://ui.tekivex.com) · [Docs](https://ui.tekivex.com)**
 
 </div>

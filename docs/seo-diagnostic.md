@@ -71,7 +71,7 @@ When Google sees a new term, it checks its knowledge graph. No entity match → 
 **Action required (you):** **don't try to create a Wikipedia page** — they get deleted for non-notable software. Instead:
 
 - Get one good profile on **Crunchbase** (free, indexable)
-- Build a strong **GitHub Org page** (`github.com/007krcs` is fine; an org page would be better for branding)
+- Build a strong **GitHub Org page** (`ui.tekivex.com` is fine; an org page would be better for branding)
 - Make sure the **npm package readme** mentions "TekiVex UI" and "tekivex-ui" in the first paragraph (already does)
 
 Over 6–12 months Google builds a knowledge-graph entity from these signals.

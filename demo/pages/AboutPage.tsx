@@ -305,7 +305,7 @@ export function AboutPage({ theme }: Props) {
               <div style={{ fontSize: 16, fontWeight: 700 }}>{member.name}</div>
               <div style={{ fontSize: 13, color: theme.textMuted, marginTop: 2 }}>{member.role}</div>
               <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
-                <TkxButton variant="outline" size="sm" onClick={() => window.open('https://github.com/007krcs', '_blank')}>
+                <TkxButton variant="outline" size="sm" onClick={() => window.open('https://ui.tekivex.com', '_blank')}>
                   GitHub
                 </TkxButton>
                 <TkxButton variant="outline" size="sm" onClick={() => window.open('https://www.npmjs.com/package/tekivex-ui', '_blank')}>

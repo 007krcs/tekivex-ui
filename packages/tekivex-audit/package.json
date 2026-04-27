@@ -1,6 +1,6 @@
 {
   "name": "tekivex-audit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Static-analysis CLI that scans a React project for security + accessibility regressions. Ships with tekivex-ui but works against any React codebase.",
   "type": "module",
   "bin": {
@@ -28,5 +28,13 @@
   "license": "MIT",
   "engines": {
     "node": ">=18"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
+  },
+  "homepage": "https://ui.tekivex.com/"
 }

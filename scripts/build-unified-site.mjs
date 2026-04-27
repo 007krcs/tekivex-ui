@@ -263,12 +263,11 @@ if (!astroSucceeded) {
         <p>Smoke tests pass locally (5/5). Public CI badge + per-template visual regression coming once early adopters report real-world docs that need pixel verification.</p>
       </div>
     </div>
-    <p class="footnote">Both will publish to npm once there's real downstream demand. <a href="https://github.com/007krcs/tekivex-ui/issues/new" style="color: #00f5d4;">Open an issue</a> to request.</p>
+    <p class="footnote">Both will publish to npm once there's real downstream demand. <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new" style="color: #00f5d4;">Open an issue</a> to request.</p>
 
     <div class="links">
-      <a href="https://github.com/007krcs/tekivex-ui">GitHub</a>
       <a href="https://www.npmjs.com/package/tekivex-ui">npm</a>
-      <a href="https://github.com/007krcs/tekivex-ui/issues">Issues</a>
+      <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues">Report an issue</a>
       <a href="/playground/">Playground</a>
       <a href="/book/">Catalog</a>
     </div>

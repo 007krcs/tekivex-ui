@@ -1,12 +1,16 @@
 {
   "name": "tekivex-add",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "shadcn-style component scaffolder — copy the source of any tekivex-ui component into your project so you can edit it freely.",
   "type": "module",
   "bin": {
     "tekivex-add": "./bin/tekivex-add.mjs"
   },
-  "files": ["bin", "registry.json", "README.md"],
+  "files": [
+    "bin",
+    "registry.json",
+    "README.md"
+  ],
   "scripts": {
     "build:registry": "node scripts/build-registry.mjs"
   },
@@ -20,10 +24,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/007krcs/tekivex-ui.git",
-    "directory": "packages/tekivex-add"
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
+  },
+  "homepage": "https://ui.tekivex.com/"
 }

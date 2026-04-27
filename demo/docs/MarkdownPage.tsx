@@ -59,7 +59,7 @@ export default function Doc() {
 
 ## Links & images
 
-Visit the [docs](https://ui.tekivex.com/) or the autolink <https://github.com/007krcs/tekivex-ui>.
+Visit the [docs](https://ui.tekivex.com/) or the autolink <https://ui.tekivex.com>.
 
 ![Placeholder](https://via.placeholder.com/600x120/00f5d4/0a0a0f?text=TkxMarkdown)
 `;

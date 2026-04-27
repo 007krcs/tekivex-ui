@@ -537,7 +537,7 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
             Privacy
           </a>
           <a
-            href="https://github.com/007krcs/tekivex-ui"
+            href="https://ui.tekivex.com"
             target="_blank"
             rel="noopener noreferrer"
             style={{ fontSize: '11px', color: theme.textMuted, textDecoration: 'none' }}

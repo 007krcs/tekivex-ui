@@ -139,7 +139,7 @@ packages/figma-kit/dist/variants.json
   },
 ];
 
-const REPO_URL = 'https://github.com/007krcs/tekivex-ui';
+const REPO_URL = 'https://ui.tekivex.com';
 
 export function EcosystemPage({ theme }: Props) {
   const page: CSSProperties = {

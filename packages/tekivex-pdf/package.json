@@ -1,6 +1,6 @@
 {
   "name": "tekivex-pdf",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TekiVex PDF — render React components to pixel-stable PDFs and PNGs without a headless browser. Wraps @react-pdf/renderer with the tekivex-ui design system.",
   "type": "module",
   "main": "./dist/index.js",
@@ -63,13 +63,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/007krcs/tekivex-ui.git",
-    "directory": "packages/tekivex-pdf"
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
   },
   "bugs": {
-    "url": "https://github.com/007krcs/tekivex-ui/issues"
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
   },
-  "homepage": "https://ui.tekivex.com/pdf/",
+  "homepage": "https://ui.tekivex.com/",
   "engines": {
     "node": ">=18.0.0"
   }

@@ -1,6 +1,6 @@
 {
   "name": "tekivex-india",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "India-specific component pack for tekivex-ui — Aadhaar/PAN/Voter ID/DL inputs, PIN-code address lookup, Indian rupee with lakh/crore grouping, Tithi/Nakshatra calendar.",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,7 +13,10 @@
     }
   },
   "sideEffects": false,
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json && node fix-esm-imports.mjs",
     "typecheck": "tsc --noEmit"
@@ -42,10 +45,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/007krcs/tekivex-ui.git",
-    "directory": "packages/tekivex-india"
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
+  },
+  "homepage": "https://ui.tekivex.com/"
 }

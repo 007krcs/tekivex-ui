@@ -1,6 +1,6 @@
 {
   "name": "tekivex-ui",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Production-grade React component library — 99 components, WCAG 2.1 AAA, WAI-ARIA 1.2, built-in security kernel, built-in charts, headless primitives, zero-runtime CSS engine, 35-locale i18n, Indian KYC pack, TypeScript-first. v3.0.0 ships with 1034 passing tests.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -148,21 +148,16 @@
     "atomic-css"
   ],
   "author": {
-    "name": "007krcs",
-    "url": "https://github.com/007krcs"
+    "name": "007krcs"
   },
   "license": "MIT",
   "homepage": "https://ui.tekivex.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/007krcs/tekivex-ui.git"
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
   },
   "bugs": {
-    "url": "https://github.com/007krcs/tekivex-ui/issues"
-  },
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/007krcs"
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
   },
   "engines": {
     "node": ">=20.0.0 <23.0.0"
