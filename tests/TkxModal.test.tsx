@@ -57,7 +57,8 @@ describe('TkxModal', () => {
       </TkxModal>,
       { wrapper: Wrapper },
     );
-    fireEvent.click(screen.getByLabelText('Close dialog'));
+    // Close button's aria-label is now localised via t.close ("Close" in en-US default).
+    fireEvent.click(screen.getByLabelText('Close'));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 

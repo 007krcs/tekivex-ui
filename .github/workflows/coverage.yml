@@ -1,0 +1,47 @@
+name: Test coverage gate
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  coverage:
+    name: Run unit tests + enforce coverage thresholds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run coverage
+        run: npm run test:coverage
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage/
+          retention-days: 30
+      - name: Coverage summary in PR
+        if: github.event_name == 'pull_request' && always()
+        run: |
+          echo "## Coverage report" >> $GITHUB_STEP_SUMMARY
+          node scripts/coverage-report.mjs >> $GITHUB_STEP_SUMMARY || true
+
+  # Separate job so the coverage failure doesn't mask the unit-test failure.
+  zero-deps:
+    name: Verify zero production dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify:zero-deps
