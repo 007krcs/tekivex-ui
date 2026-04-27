@@ -165,6 +165,6 @@
     "url": "https://github.com/sponsors/007krcs"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0 <23.0.0"
   }
 }
