@@ -1,8 +1,8 @@
 {
   "name": "@tekivex/book",
-  "version": "0.1.0-preview",
+  "version": "0.2.0-preview",
   "private": false,
-  "description": "Component playground for tekivex-ui. Pure Vite + React. Zero playground-specific deps.",
+  "description": "Component playground for tekivex-ui. Pure Vite + React. Tabbed addons: Controls, Docs (MDX), A11y (axe-core), Viewport (device frames), Snapshot (visual diff), Interactions (record/replay). CSF-compatible.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,6 +11,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@mdx-js/react": "^3.1.0",
+    "@mdx-js/rollup": "^3.1.0",
+    "axe-core": "^4.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tekivex-ui": "file:../.."
