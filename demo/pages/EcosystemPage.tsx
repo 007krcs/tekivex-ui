@@ -4,7 +4,7 @@ import { TkxCard, TkxCardHeader, TkxCardBody, TkxBadge, TkxButton, TkxDivider } 
 
 // ─────────────────────────────────────────────────────────────────────────────
 // EcosystemPage — advertises the four companion packages that ship with the
-// v2.7 platform refresh. They are built + tested in this repo but not yet
+// v3.0 platform. They are built + tested in this repo but not yet
 // published to npm; we publish on demand.
 //
 //   @tekivex/security-core      — standalone security kernel
@@ -190,14 +190,14 @@ export function EcosystemPage({ theme }: Props) {
     <div style={page}>
       <h1 style={h1}>Ecosystem</h1>
       <p style={lead}>
-        Four companion packages that ship alongside <strong>tekivex-ui</strong>. Each one is built, tested, and source-available in this repository today. We publish to npm on demand — open an issue or drop us a line and we'll tag a release.
+        Four companion packages that ship alongside <strong>tekivex-ui</strong>. Each one is built, tested, and source-available in this repository today. <strong>None of these companion packages are published to npm yet</strong> — the install commands shown below will return <code>404 Not Found</code> until we tag a release. Open a GitHub issue to request a publish and we'll tag within 48 hours.
       </p>
 
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 32 }}>
-        <TkxBadge variant="primary" outlined>v2.7 platform</TkxBadge>
+        <TkxBadge variant="primary" outlined>v3.0 platform</TkxBadge>
         <TkxBadge variant="success">open source</TkxBadge>
         <TkxBadge variant="info">MIT licensed</TkxBadge>
-        <TkxBadge variant="warning">preview — publish on demand</TkxBadge>
+        <TkxBadge variant="danger">not on npm — source-only</TkxBadge>
       </div>
 
       {PACKAGES.map((pkg, i) => (

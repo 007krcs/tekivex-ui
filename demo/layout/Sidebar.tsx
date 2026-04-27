@@ -409,7 +409,7 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
         <IconLogo />
         <div style={brandTextStyle}>
           <span style={brandNameStyle}>TekiVex UI</span>
-          <span style={versionBadgeStyle}>v2.6.0</span>
+          <span style={versionBadgeStyle}>v3.0.0</span>
         </div>
       </div>
 
