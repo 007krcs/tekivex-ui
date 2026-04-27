@@ -65,6 +65,7 @@
     "security:audit": "node scripts/security-audit.mjs",
     "css:build": "node scripts/css-build.mjs",
     "build:demo": "vite build --config ./demo/vite.config.ts",
+    "build:unified": "node scripts/build-unified-site.mjs",
     "prepublishOnly": "npm run build",
     "pack:check": "npm pack --dry-run",
     "metrics:collect": "node scripts/collect-metrics.mjs",

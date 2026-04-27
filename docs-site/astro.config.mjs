@@ -89,6 +89,21 @@ export default defineConfig({
             { label: 'License', link: '/license/' },
           ],
         },
+        {
+          label: 'Try it live',
+          items: [
+            {
+              label: '🎮 Interactive playground',
+              link: '/playground/',
+              attrs: { 'data-external': 'true' },
+            },
+            {
+              label: '📖 Component catalog (book)',
+              link: '/book/',
+              attrs: { 'data-external': 'true' },
+            },
+          ],
+        },
       ],
       customCss: ['./src/styles/global.css'],
       lastUpdated: true,

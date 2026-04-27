@@ -2,9 +2,14 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
+// VITE_BASE lets us deploy this SPA under a sub-path on the canonical
+// docs domain (e.g. /playground/) without rewiring the SPA's hash router.
+// Default is '/' for local `npm run dev:demo`.
+const base = process.env.VITE_BASE || '/';
+
 export default defineConfig({
   root: resolve(__dirname),
-  base: '/',
+  base,
   plugins: [react()],
   resolve: {
     alias: {
