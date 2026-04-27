@@ -73,7 +73,8 @@
     "bundle:report": "node scripts/bundle-report.mjs",
     "i18n:audit": "node scripts/i18n-audit.mjs",
     "dev:demo": "vite --config ./demo/vite.config.ts",
-    "test:visual": "playwright test"
+    "test:visual": "playwright test",
+    "test:bundlers": "node scripts/test-bundlers.mjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

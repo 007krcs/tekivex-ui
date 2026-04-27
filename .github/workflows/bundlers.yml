@@ -1,0 +1,29 @@
+name: Bundler smoke tests
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  bundlers:
+    name: ${{ matrix.bundler }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        bundler: [vite, webpack, esbuild, rollup, parcel, next]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Build the library so file:.. references resolve
+        run: npm ci && npm run build
+      - name: Install + build ${{ matrix.bundler }} test app
+        working-directory: examples/bundler-tests/${{ matrix.bundler }}
+        run: |
+          npm install --no-audit --no-fund
+          npm run build

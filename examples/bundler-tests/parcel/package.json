@@ -1,0 +1,19 @@
+{
+  "name": "tekivex-bundler-test-parcel",
+  "private": true,
+  "source": "index.html",
+  "scripts": {
+    "build": "parcel build index.html --no-cache --no-source-maps",
+    "dev": "parcel index.html"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tekivex-ui": "file:../../.."
+  },
+  "devDependencies": {
+    "parcel": "^2.13.0",
+    "process": "^0.11.10",
+    "typescript": "^5.9.0"
+  }
+}

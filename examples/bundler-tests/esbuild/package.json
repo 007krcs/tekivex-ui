@@ -1,0 +1,17 @@
+{
+  "name": "tekivex-bundler-test-esbuild",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tekivex-ui": "file:../../.."
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.9.0"
+  }
+}

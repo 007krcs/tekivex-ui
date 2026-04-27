@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "noEmit": true,
+    "lib": ["ES2022", "DOM"],
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["app", "next.config.js", "../_shared"]
+}
