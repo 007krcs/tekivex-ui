@@ -121,7 +121,7 @@ export function OrgChartPage({ theme }: { theme: ThemeTokens }) {
 
   return (
     <div style={pageStyle}>
-      <div style={pillStyle}>✨ NEW IN v2.6.0</div>
+      <div style={pillStyle}>SHIPPED IN v2.6 · STABLE IN v3.0</div>
       <h1 style={headingStyle}>TkxOrgChart</h1>
       <p style={leadStyle}>
         A production-grade organizational chart component using the Reingold–Tilford tree-layout

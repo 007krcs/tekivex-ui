@@ -570,7 +570,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           animation: 'tkxSlideUp 0.6s ease both',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: theme.primary, display: 'inline-block', animation: 'tkxPulseRing 1.5s ease-out infinite' }} />
-          v2.6.0 · SecurityCore Edition
+          v3.0.3 · 99 components · 1034 tests
         </div>
 
         {/* Main headline */}
@@ -750,12 +750,12 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
         </div>
       </section>
 
-      {/* ── What's New in v2.6.0: SecurityCore + TkxOrgChart ──────────── */}
+      {/* ── Production stable in v3.0: SecurityCore + TkxOrgChart ─────── */}
       <section style={{ position: 'relative', zIndex: 1, padding: isMobile ? '0 16px 60px' : '0 32px 100px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <div style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 999, background: `${theme.success}18`, border: `1px solid ${theme.success}44`, color: theme.success, fontSize: 12, fontWeight: 700, marginBottom: 16, letterSpacing: '0.05em' }}>
-              ✨ NEW IN v2.6.0
+              ✓ PRODUCTION STABLE · v3.0
             </div>
             <h2 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', fontWeight: 800, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
               <HoloText theme={theme}>SecurityCore</HoloText> + <HoloText theme={theme}>TkxOrgChart</HoloText>
@@ -1090,7 +1090,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <footer style={{ position: 'relative', zIndex: 1, padding: isMobile ? '32px 16px' : '40px 32px', borderTop: `1px solid ${theme.border}`, textAlign: 'center', color: theme.textMuted, fontSize: 13 }}>
         <p style={{ margin: '0 0 8px' }}>
-          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v2.6.0 · SecurityCore Edition · MIT License
+          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v3.0.3 · 99 components · 1034 tests · MIT License
         </p>
         <p style={{ margin: 0 }}>
           © 2026 <a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a> ·

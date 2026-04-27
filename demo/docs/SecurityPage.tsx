@@ -474,7 +474,7 @@ const log = Shield.getAuditLog(); // → SecurityEvent[]`}
       <div style={{ marginTop: 48 }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: 999, background: `${theme.success}18`, border: `1px solid ${theme.success}33`, color: theme.success, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 12 }}>
-            NEW IN v2.6.0
+            STABLE SINCE v2.6 · CURRENT v3.0
           </div>
           <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 1.8rem)', fontWeight: 800, margin: 0, color: theme.text }}>
             SecurityCore — the full kernel

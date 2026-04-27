@@ -1,7 +1,7 @@
 # TekiVex UI — Security Threat Model
 
-**Version:** v2.6.0
-**Last updated:** 2026-04-22
+**Version:** v3.0.3
+**Last updated:** 2026-04-27
 **Audience:** Security engineers, enterprise architects, procurement teams, auditors.
 
 ---
