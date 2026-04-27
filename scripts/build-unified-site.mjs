@@ -66,12 +66,17 @@ function verifyBase(htmlPath, expectedBase) {
     return;
   }
   const html = readFileSync(htmlPath, 'utf8');
-  const m = html.match(/<script[^>]*src=["']([^"']+)["']/);
-  if (!m) {
-    console.warn(`  ⚠ verifyBase: no <script src> found in ${htmlPath}`);
+  // Find ALL <script src=...> and check the first one that's NOT external
+  // (skip GA, Tag Manager, anything starting with http(s) or //).
+  const matches = [...html.matchAll(/<script[^>]*src=["']([^"']+)["']/g)];
+  const localScripts = matches
+    .map((m) => m[1])
+    .filter((src) => !/^(https?:)?\/\//.test(src));
+  if (localScripts.length === 0) {
+    console.warn(`  ⚠ verifyBase: no local <script src> in ${htmlPath}`);
     return;
   }
-  const src = m[1];
+  const src = localScripts[0];
   if (src.startsWith(expectedBase)) {
     console.log(`  ✓ base verified: ${src}`);
   } else {

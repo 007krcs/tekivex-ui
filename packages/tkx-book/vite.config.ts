@@ -35,12 +35,22 @@ export default defineConfig({
   // dedupe is belt-and-suspenders for any transitive-dep edge cases.
   resolve: {
     dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
-    alias: {
-      'tekivex-ui': resolve(__dirname, '../../index.ts'),
-      '@engine': resolve(__dirname, '../../src/engine'),
-      '@themes': resolve(__dirname, '../../src/themes'),
-      '@hooks': resolve(__dirname, '../../src/hooks'),
-      '@a11y': resolve(__dirname, '../../src/a11y'),
-    },
+    alias: [
+      // Subpath aliases MUST come before the bare 'tekivex-ui' alias —
+      // Vite's array form preserves order; the first match wins.
+      // Without this, `import "tekivex-ui/styles"` would be rewritten
+      // to `<root>/index.ts/styles` (file-as-directory) and crash the
+      // build. The CSS lives in dist/ and gets rebuilt by Step 1 of
+      // the merge script before this step runs.
+      { find: 'tekivex-ui/styles', replacement: resolve(__dirname, '../../dist/tekivex-ui.css') },
+      // Bare 'tekivex-ui' import → repo-root barrel. MUST come last
+      // because Vite's array-alias form does prefix-matching.
+      { find: 'tekivex-ui', replacement: resolve(__dirname, '../../index.ts') },
+      // Internal short paths used by tekivex-ui's source files.
+      { find: '@engine', replacement: resolve(__dirname, '../../src/engine') },
+      { find: '@themes', replacement: resolve(__dirname, '../../src/themes') },
+      { find: '@hooks',  replacement: resolve(__dirname, '../../src/hooks') },
+      { find: '@a11y',   replacement: resolve(__dirname, '../../src/a11y') },
+    ],
   },
 });
