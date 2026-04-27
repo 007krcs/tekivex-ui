@@ -502,8 +502,11 @@ npm install
 # Build the library
 npm run build
 
-# Run all 436 tests
+# Run all 1034 tests
 npm test
+
+# Run tests with coverage report
+npm run test:coverage
 
 # Type check
 npm run typecheck
@@ -511,8 +514,11 @@ npm run typecheck
 # Lint
 npm run lint
 
-# Run the interactive demo (localhost:5174)
+# Run the library Vite playground (localhost:5173)
 npm run dev
+
+# Run the interactive demo (localhost:5174)
+npm run dev:demo
 
 # Accessibility audit
 npm run a11y:audit
@@ -526,10 +532,13 @@ npm run security:audit
 ## Testing
 
 ```
-48 test files · 436 tests · 0 failures
+82 test files · 1034 tests · 0 failures · 1 todo
+Coverage: 64.84% lines · 51.10% functions · 56.77% branches · 61.41% statements
 ```
 
-Coverage includes unit tests for all 80+ components, 7 chart types, 10 headless hooks, the TKX CSS engine, the WCAG engine, and the security (Shield) engine.
+Coverage includes unit tests for all 99 components, 7 chart types, headless hooks (incl. useWebSocket / useSSE / useMediaQuery), the TKX CSS engine, the WCAG engine, the security (Shield) engine, the i18n provider, and Indian KYC validators (Aadhaar Verhoeff, PAN, Voter ID, DL).
+
+Coverage thresholds are enforced as a CI ratchet in `vitest.config.ts` — the floor never drops between releases. Path to 90/90/85 is documented in [`docs/test-coverage-roadmap.md`](./docs/test-coverage-roadmap.md).
 
 ---
 
