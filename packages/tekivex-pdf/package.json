@@ -1,6 +1,6 @@
 {
   "name": "tekivex-pdf",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TekiVex PDF — render React components to pixel-stable PDFs and PNGs without a headless browser. Wraps @react-pdf/renderer with the tekivex-ui design system.",
   "type": "module",
   "main": "./dist/index.js",
@@ -26,8 +26,9 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc --noEmit"
+    "build": "tsc -p tsconfig.json && node fix-esm-imports.mjs",
+    "typecheck": "tsc --noEmit",
+    "smoke": "node smoke-test.mjs"
   },
   "peerDependencies": {
     "@react-pdf/renderer": ">=4.0.0",

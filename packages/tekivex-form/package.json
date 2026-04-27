@@ -1,0 +1,45 @@
+{
+  "name": "tekivex-form",
+  "version": "0.1.0",
+  "description": "Form components extracted from tekivex-ui — Input, Select, Autocomplete, Checkbox, Radio, Toggle, DatePicker, FileUpload, NumberInput, ColorPicker, OTP, Slider, PhoneInput, AadhaarInput, KYC validators, CurrencyInput, AddressInput, Form + FormField. Tree-shakeable single-purpose package.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "tekivex-ui": ">=3.0.0",
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "tekivex-ui": "^3.0.3",
+    "@types/react": "^19.2.14",
+    "react": "^19.2.5",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "tekivex", "react", "form", "input", "select", "autocomplete",
+    "checkbox", "radio", "toggle", "date-picker", "file-upload",
+    "phone-input", "aadhaar", "pan", "kyc", "currency-input",
+    "address-input", "wcag", "accessibility"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/007krcs/tekivex-ui.git",
+    "directory": "packages/tekivex-form"
+  },
+  "homepage": "https://ui.tekivex.com/forms/",
+  "engines": { "node": ">=20.0.0" }
+}

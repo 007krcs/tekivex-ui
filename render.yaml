@@ -3,32 +3,28 @@
 # ONE service, ONE domain (ui.tekivex.com). Three deliverables are built
 # and merged into a single static directory:
 #
-#   /                  → Astro Starlight docs    (canonical)
-#   /playground/       → demo/ React SPA          (interactive sandbox)
-#   /book/             → packages/tkx-book/       (component catalog)
+#   /                  → Astro Starlight docs OR stub homepage (fallback)
+#   /playground/       → demo/ React SPA       (interactive sandbox)
+#   /book/             → packages/tkx-book/    (component catalog)
 #
 # How the merge works:
 #   scripts/build-unified-site.mjs runs three Vite builds with different
 #   base paths, then copies the demo + book outputs into subfolders of
-#   docs-site/dist. Render serves the merged dist as a single static site.
+#   docs-site/dist. If Astro fails to build, a hand-coded stub homepage
+#   takes its place at /. Render serves the merged dist as a single
+#   static site.
 #
 # Why this layout instead of three subdomains:
 #   - One SSL cert, one DNS record, one CDN cache
 #   - Cross-links use relative URLs (/playground/...) — no CORS, no leaks
 #   - Google sees one site for SEO; no canonical-URL fragmentation
-#   - Render Hobby-tier custom-domain quota is preserved for future apps
+#   - Single domain to submit for corporate-proxy URL categorisation
+#     (Zscaler / Cisco Umbrella / Cloudflare Gateway / Bluecoat / etc.)
 #
-# ─── ONE-TIME SETUP IN THE RENDER DASHBOARD ─────────────────────────────
-#
-#   1. Repo is already linked. Render auto-detects this YAML.
-#   2. The previously-separate `tekivex-ui-playground` and
-#      `tekivex-ui-book` services should be SUSPENDED (or deleted) in the
-#      dashboard — they're no longer in this blueprint, so Render won't
-#      manage them. Their custom domains (if any) should be removed
-#      before suspending so the records can be reused.
-#   3. The remaining `tekivex-ui` service keeps the ui.tekivex.com domain.
-#
-# ────────────────────────────────────────────────────────────────────────
+# History:
+#   Earlier blueprints had `tekivex-ui-playground` and `tekivex-ui-book`
+#   as separate services. Both have been deleted in the Render dashboard
+#   and merged into this single service.
 
 services:
   - type: web

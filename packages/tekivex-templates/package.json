@@ -1,6 +1,6 @@
 {
   "name": "tekivex-templates",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pre-built PDF templates — Biodata, Invoice, Certificate, Resume, Ticket, Boarding Pass, Receipt — built on tekivex-pdf. Drop in, render, ship.",
   "type": "module",
   "main": "./dist/index.js",
@@ -46,7 +46,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node fix-esm-imports.mjs",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {

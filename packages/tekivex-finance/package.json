@@ -1,6 +1,6 @@
 {
   "name": "tekivex-finance",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Finance-vertical component pack — KYC inputs, currency formatting, OTP flows, subscription/billing UI, statement viewer primitives.",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,7 +15,7 @@
   "sideEffects": false,
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node fix-esm-imports.mjs",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {

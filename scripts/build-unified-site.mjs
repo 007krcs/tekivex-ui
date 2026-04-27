@@ -131,56 +131,146 @@ if (!astroSucceeded) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TekiVex UI — v3.0</title>
-  <meta name="description" content="Production-ready React component library — 99 components, WCAG 2.1 AAA, built-in security kernel, 1034 passing tests.">
+  <title>TekiVex UI — v3.0 · 11 packages on npm</title>
+  <meta name="description" content="Production-ready React component library — 99 components, WCAG 2.1 AAA, built-in security kernel, 1034 passing tests, Puppeteer-free PDF rendering.">
+  <link rel="canonical" href="https://ui.tekivex.com/">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-           background: #0a0a0f; color: #e8e8f4; line-height: 1.6; min-height: 100vh; display: flex;
-           align-items: center; justify-content: center; padding: 32px; }
-    .wrap { max-width: 640px; width: 100%; text-align: center; }
-    h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 0 0 16px; letter-spacing: -0.03em;
+           background: #0a0a0f; color: #e8e8f4; line-height: 1.65; padding: 48px 24px; }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 48px; }
+    h1 { font-size: clamp(2rem, 6vw, 3.6rem); margin: 0 0 12px; letter-spacing: -0.03em;
          background: linear-gradient(135deg, #00f5d4, #3a86ff); -webkit-background-clip: text;
          -webkit-text-fill-color: transparent; }
     .badge { display: inline-block; padding: 4px 14px; border-radius: 999px;
              background: rgba(0,245,212,0.12); border: 1px solid rgba(0,245,212,0.3);
-             color: #00f5d4; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 24px; }
-    p { color: #aaa; margin: 0 0 32px; font-size: 17px; }
-    .grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin: 0 0 32px; }
-    @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
-    a.card { display: block; padding: 24px; border-radius: 12px; border: 1px solid #2a2a3e;
-             background: #12121a; color: #e8e8f4; text-decoration: none; transition: all 0.2s; }
-    a.card:hover { border-color: #00f5d4; transform: translateY(-2px);
-                   box-shadow: 0 8px 24px rgba(0,245,212,0.1); }
-    .card h2 { margin: 0 0 8px; font-size: 18px; color: #00f5d4; }
-    .card p { margin: 0; font-size: 14px; color: #888; }
-    .links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+             color: #00f5d4; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 18px; }
+    .lead { color: #aaa; font-size: 17px; max-width: 640px; margin: 0 auto; }
+    h2 { font-size: 22px; margin: 48px 0 16px; letter-spacing: -0.02em; }
+    h2 .label { color: #888; font-size: 13px; font-weight: 500; letter-spacing: 0; margin-left: 8px; }
+    .grid { display: grid; gap: 12px; grid-template-columns: 1fr; margin-bottom: 16px; }
+    @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 900px) { .grid.try { grid-template-columns: 1fr 1fr; } }
+    a.card, .card-static { display: block; padding: 18px 20px; border-radius: 10px; border: 1px solid #2a2a3e;
+             background: #12121a; color: #e8e8f4; text-decoration: none; transition: all 0.15s; }
+    a.card:hover { border-color: #00f5d4; transform: translateY(-1px);
+                   box-shadow: 0 6px 20px rgba(0,245,212,0.08); }
+    .card h3 { margin: 0 0 4px; font-size: 15px; color: #00f5d4; font-family: ui-monospace, monospace; }
+    .card-static h3 { margin: 0 0 4px; font-size: 15px; color: #ffbe0b; font-family: ui-monospace, monospace; }
+    .card p { margin: 0; font-size: 13px; color: #aaa; line-height: 1.5; }
+    .card-static p { margin: 0; font-size: 13px; color: #888; line-height: 1.5; }
+    .card-static { opacity: 0.85; cursor: default; }
+    .install { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px;
+               background: #0d0d14; padding: 6px 10px; border-radius: 6px;
+               color: #00f5d4; margin-top: 8px; display: inline-block; border: 1px solid #1f1f2e; }
+    .links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 56px;
+             padding-top: 32px; border-top: 1px solid #2a2a3e; }
     .links a { color: #00f5d4; text-decoration: none; font-size: 14px; font-weight: 600; }
     .links a:hover { text-decoration: underline; }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #1a1a2e;
-           padding: 2px 6px; border-radius: 4px; color: #00f5d4; font-size: 0.9em; }
+    .try a { background: linear-gradient(135deg, #12121a, #1a1a2e); padding: 24px; }
+    .try .card h3 { font-size: 18px; font-family: inherit; }
+    .footnote { color: #666; font-size: 12.5px; text-align: center; margin-top: 48px; }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <span class="badge">v3.0 · 99 components · 1034 tests</span>
-    <h1>TekiVex UI</h1>
-    <p>Production-ready React component library. WCAG 2.1 AAA · Built-in security kernel · MIT.</p>
-    <p><code>npm install tekivex-ui</code></p>
-    <div class="grid">
+    <header>
+      <span class="badge">v3.0.3 · 99 components · 1034 tests · MIT</span>
+      <h1>TekiVex UI</h1>
+      <p class="lead">Production-ready React component library. WCAG 2.1 AAA accessibility, built-in security kernel, Puppeteer-free PDF rendering, zero runtime dependencies.</p>
+    </header>
+
+    <h2>Try it without installing</h2>
+    <div class="grid try">
       <a class="card" href="/playground/">
-        <h2>🎮 Interactive playground →</h2>
-        <p>Click around every component live — variants, sizes, theme switcher.</p>
+        <h3>🎮 Interactive playground →</h3>
+        <p>Click around every component live — variants, sizes, theme switcher, hash-routed deep links.</p>
       </a>
       <a class="card" href="/book/">
-        <h2>📖 Component catalog →</h2>
+        <h3>📖 Component catalog →</h3>
         <p>Storybook-style: controls panel, a11y panel, viewport toggles.</p>
       </a>
     </div>
+
+    <h2>Live on npm <span class="label">11 packages, all unscoped</span></h2>
+    <div class="grid">
+      <a class="card" href="https://www.npmjs.com/package/tekivex-ui" target="_blank" rel="noopener">
+        <h3>tekivex-ui</h3>
+        <p>The main library. 99 components, WCAG 2.1 AAA, built-in security kernel.</p>
+        <span class="install">npm install tekivex-ui</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-pdf" target="_blank" rel="noopener">
+        <h3>tekivex-pdf</h3>
+        <p>Puppeteer alternative. React → PDF / PNG without a headless browser. 5/5 smoke tests pass.</p>
+        <span class="install">npm install tekivex-pdf</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-templates" target="_blank" rel="noopener">
+        <h3>tekivex-templates</h3>
+        <p>7 pre-built PDF templates: Biodata, Invoice, Certificate, Resume, Ticket, BoardingPass, Receipt.</p>
+        <span class="install">npm install tekivex-templates</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-form" target="_blank" rel="noopener">
+        <h3>tekivex-form</h3>
+        <p>Slimmer install for form-only apps. Re-exports every form input from tekivex-ui.</p>
+        <span class="install">npm install tekivex-form</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-security-core" target="_blank" rel="noopener">
+        <h3>tekivex-security-core</h3>
+        <p>Framework-agnostic security kernel. XSS, CSP, Trojan Source, clickjacking, PII, rate-limit.</p>
+        <span class="install">npm install tekivex-security-core</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-audit" target="_blank" rel="noopener">
+        <h3>tekivex-audit</h3>
+        <p>Static-analysis CLI. 15 security + a11y checks with OWASP / CWE / WCAG mappings.</p>
+        <span class="install">npx tekivex-audit .</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/create-tekivex-app" target="_blank" rel="noopener">
+        <h3>create-tekivex-app</h3>
+        <p>Project scaffolder. Two templates (basic + secure) with CSP + Trusted Types preset.</p>
+        <span class="install">npm create tekivex-app@latest my-app</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-add" target="_blank" rel="noopener">
+        <h3>tekivex-add</h3>
+        <p>shadcn-style component copier. Copy a Tkx* component's source into your project to edit freely.</p>
+        <span class="install">npx tekivex-add button</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-india" target="_blank" rel="noopener">
+        <h3>tekivex-india</h3>
+        <p>Vertical pack: Aadhaar, PAN, Voter ID, DL, INR currency, India Post PIN lookup, Tithi/Nakshatra calendar.</p>
+        <span class="install">npm install tekivex-india</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-finance" target="_blank" rel="noopener">
+        <h3>tekivex-finance</h3>
+        <p>Vertical pack: KYC inputs, OTP flows, payment buttons, subscription helpers, statement viewers.</p>
+        <span class="install">npm install tekivex-finance</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-content" target="_blank" rel="noopener">
+        <h3>tekivex-content</h3>
+        <p>Vertical pack: SignaturePad, Markdown, RichTextDisplay, Watermark, SEO helpers.</p>
+        <span class="install">npm install tekivex-content</span>
+      </a>
+    </div>
+
+    <h2>Coming on demand <span class="label">source-only — open an issue to request publish</span></h2>
+    <div class="grid">
+      <div class="card-static">
+        <h3>tekivex-figma-kit</h3>
+        <p>Machine-readable design tokens + 13,103-variant catalog. Imports into Figma via Tokens Studio. Source-only — publish on demand because Figma teams using it tend to fork.</p>
+      </div>
+      <div class="card-static">
+        <h3>tekivex-pdf — public test results</h3>
+        <p>Smoke tests pass locally (5/5). Public CI badge + per-template visual regression coming once early adopters report real-world docs that need pixel verification.</p>
+      </div>
+    </div>
+    <p class="footnote">Both will publish to npm once there's real downstream demand. <a href="https://github.com/007krcs/tekivex-ui/issues/new" style="color: #00f5d4;">Open an issue</a> to request.</p>
+
     <div class="links">
-      <a href="https://www.npmjs.com/package/tekivex-ui">npm</a>
       <a href="https://github.com/007krcs/tekivex-ui">GitHub</a>
+      <a href="https://www.npmjs.com/package/tekivex-ui">npm</a>
       <a href="https://github.com/007krcs/tekivex-ui/issues">Issues</a>
+      <a href="/playground/">Playground</a>
+      <a href="/book/">Catalog</a>
     </div>
   </main>
 </body>

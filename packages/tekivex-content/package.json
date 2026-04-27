@@ -1,6 +1,6 @@
 {
   "name": "tekivex-content",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Content + document-creation pack for tekivex-ui — Markdown, RichText, Signature, ImageEditor, Watermark, Carousel.",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,7 +15,7 @@
   "sideEffects": false,
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node fix-esm-imports.mjs",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
