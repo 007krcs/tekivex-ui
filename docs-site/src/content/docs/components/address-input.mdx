@@ -1,0 +1,54 @@
+---
+title: TkxAddressInput
+description: Indian address input with PIN-code lookup via India Post — auto-fills city / state / district.
+---
+
+```tsx
+import { TkxAddressInput } from 'tekivex-ui';
+
+<TkxAddressInput
+  value={address}
+  onChange={setAddress}
+  country="IN"
+/>
+```
+
+A multi-line address field optimised for Indian addresses. When the user
+types a 6-digit PIN code, it queries India Post's open API and auto-fills
+the city, state, and district fields.
+
+## Props
+
+| Prop | Type | Default |
+|---|---|---|
+| `value` | `Address \| null` | `null` |
+| `onChange` | `(addr: Address \| null) => void` | — |
+| `country` | `'IN' \| 'US' \| 'UK'` | `'IN'` |
+| `label` | `string` | `'Address'` |
+| `disabled` | `boolean` | `false` |
+| `required` | `boolean` | `false` |
+
+## Address shape
+
+```ts
+interface Address {
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  district?: string;   // IN-only
+  pincode: string;
+  country: string;
+}
+```
+
+## Accessibility
+
+- All sub-fields are real `<input>` elements with `<label>` association
+- PIN-lookup status announced via `aria-live="polite"` region
+- Loading state is non-blocking — user can keep typing
+
+## Testing
+
+PIN lookup uses `https://api.postalpincode.in`. In tests, mock `fetch` to
+return a stub. See `tests/TkxAddressInput.test.tsx`.

@@ -1,0 +1,45 @@
+---
+title: TkxCalendarLunar
+description: Hindu (Tithi/Nakshatra), Hijri, Hebrew, and Buddhist calendar overlays on a standard Gregorian date picker.
+---
+
+```tsx
+import { TkxCalendarLunar } from 'tekivex-ui';
+
+<TkxCalendarLunar
+  value={date}
+  onChange={setDate}
+  calendar="hindu"
+  showSecondary="gregorian"
+/>
+```
+
+Renders a date picker with **two calendars side by side** — your primary
+calendar (Gregorian by default) with the secondary calendar's day/month
+shown beneath each date cell.
+
+## Supported calendars
+
+| Calendar | Method | Coverage |
+|---|---|---|
+| `gregorian` | `Intl.DateTimeFormat` | always |
+| `hindu` | Tithi + Nakshatra via mean-longitude approximation | ±1 day from drik panchang |
+| `hijri` | `Intl.DateTimeFormat` (Umm-al-Qura where supported) | full |
+| `hebrew` | `Intl.DateTimeFormat` | full |
+| `buddhist` | `Intl.DateTimeFormat` (Thai Buddhist Era) | full |
+
+## Props
+
+| Prop | Type | Default |
+|---|---|---|
+| `value` | `Date \| null` | `null` |
+| `onChange` | `(d: Date \| null) => void` | — |
+| `calendar` | `'gregorian' \| 'hindu' \| 'hijri' \| 'hebrew' \| 'buddhist'` | `'gregorian'` |
+| `showSecondary` | same union or `false` | `false` |
+| `locale` | string | `navigator.language` |
+
+## Accessibility
+
+- Both calendars announced together: "March 14, 2026 / Phalguna Krishna 11"
+- Keyboard nav (←↑→↓) operates on the primary calendar's grid
+- Screen-reader text uses the primary calendar's date for navigation

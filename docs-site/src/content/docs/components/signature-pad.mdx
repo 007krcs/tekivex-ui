@@ -1,0 +1,56 @@
+---
+title: TkxSignaturePad
+description: Touch + mouse signature capture — exports as PNG / SVG / data URL. Uses canvas; no external dep.
+---
+
+```tsx
+import { TkxSignaturePad } from 'tekivex-ui';
+
+const ref = useRef<TkxSignaturePadHandle>(null);
+
+<TkxSignaturePad ref={ref} width={400} height={200} />
+
+<button onClick={() => console.log(ref.current?.toDataURL())}>
+  Save
+</button>
+<button onClick={() => ref.current?.clear()}>Clear</button>
+```
+
+A signature capture pad. Works with mouse, touch, and stylus. Exports
+the drawn signature as a PNG data URL, SVG string, or raw stroke array.
+
+## Imperative API (via ref)
+
+| Method | Returns |
+|---|---|
+| `toDataURL(format?)` | PNG/JPEG/WebP data URL |
+| `toSVG()` | SVG string |
+| `toBlob(format?)` | `Promise<Blob \| null>` |
+| `clear()` | — |
+| `isEmpty()` | `boolean` |
+| `getStrokes()` | `Stroke[]` (raw point arrays) |
+
+## Props
+
+| Prop | Type | Default |
+|---|---|---|
+| `width` | `number` | `400` |
+| `height` | `number` | `200` |
+| `penColor` | `string` | theme primary |
+| `penWidth` | `number` | `2` |
+| `backgroundColor` | `string` | `'transparent'` |
+| `onChange` | `(strokes: Stroke[]) => void` | — |
+
+## Accessibility
+
+- The pad is `role="img" aria-label="Signature pad"` — screen readers
+  understand it's a drawing surface
+- A "Clear" button is the recommended companion (not built-in — render
+  your own near it)
+- Touch interaction does not scroll the page (`touch-action: none`)
+
+## Testing
+
+See `tests/TkxSignaturePad.test.tsx` — 7 tests covering the imperative
+ref API. Pixel rendering is verified in Playwright visual regression at
+`tests/visual/`.

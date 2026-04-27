@@ -1,0 +1,34 @@
+---
+title: TkxConfetti
+description: One-shot celebration confetti — RAF-driven, no canvas library, respects prefers-reduced-motion.
+---
+
+```tsx
+import { TkxConfetti } from 'tekivex-ui';
+
+const [show, setShow] = useState(false);
+
+<button onClick={() => setShow(true)}>Pay</button>
+{show && <TkxConfetti onComplete={() => setShow(false)} />}
+```
+
+A self-contained confetti burst. Mount the component to fire it; it
+animates for ~2 seconds via `requestAnimationFrame` and unmounts itself
+after `onComplete`.
+
+## Props
+
+| Prop | Type | Default |
+|---|---|---|
+| `count` | `number` | `120` |
+| `colors` | `string[]` | theme primary + 4 fallbacks |
+| `origin` | `{ x: number; y: number }` | center of viewport |
+| `duration` | `number` (ms) | `2000` |
+| `onComplete` | `() => void` | — |
+| `shapes` | `('square' \| 'circle' \| 'star')[]` | `['square', 'circle']` |
+
+## Accessibility
+
+- `aria-hidden="true"` — decorative; never announced
+- Respects `prefers-reduced-motion: reduce` — renders nothing in that case
+- No focus is moved; current focus is preserved

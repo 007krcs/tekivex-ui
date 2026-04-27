@@ -23,8 +23,8 @@ WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
 | `onVerify` | `(token: string) => void` | yes | Called once the user has successfully solved the challenge. |
 | `onExpire` | `() => void` |  | Called when an issued token expires (typically after 2-5 minutes). |
 | `onError` | `(errorCode: string) => void` |  | Called on widget error. The provider's raw error code is forwarded. |
-| `className` | `string` |  | Optional className applied to the host <div>. |
-| `style` | `React.CSSProperties` |  | Optional inline style applied to the host <div>. |
+| `className` | `string` |  | Optional className applied to the host `<div>`. |
+| `style` | `React.CSSProperties` |  | Optional inline style applied to the host `<div>`. |
 | `testMode` | `boolean` |  | Test mode: render a stub that auto-verifies after 200ms. SSR-safe. |
 
 ## Accessibility

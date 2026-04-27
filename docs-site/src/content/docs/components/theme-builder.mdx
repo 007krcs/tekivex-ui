@@ -1,0 +1,53 @@
+---
+title: TkxThemeBuilder
+description: Visual theme editor — pick colors, see live preview across 80+ components, export as JSON or .ts file.
+---
+
+```tsx
+import { TkxThemeBuilder } from 'tekivex-ui';
+
+<TkxThemeBuilder
+  initialTheme={quantumDark}
+  onChange={setTheme}
+  onExport={(json) => downloadJSON(json)}
+/>
+```
+
+A live theme editor. Pick colors with a HSV picker, see all 99 components
+re-render against your custom palette in real time, then export as
+JSON or as a `.ts` file ready to drop into your project.
+
+## What you can edit
+
+| Token | Affects |
+|---|---|
+| `bg`, `surface`, `surfaceAlt` | Page + card backgrounds |
+| `border` | Outlines |
+| `text`, `textMuted` | All copy |
+| `primary` | Primary actions, focus rings |
+| `secondary` | Secondary actions |
+| `success`, `warning`, `danger`, `info` | Status colors |
+
+## Export formats
+
+```ts
+// JSON
+{ "bg": "#0a0a0f", "surface": "#12121a", ... }
+
+// TypeScript
+import type { ThemeTokens } from 'tekivex-ui';
+export const myTheme: ThemeTokens = { bg: '#0a0a0f', ... };
+```
+
+## Accessibility
+
+- Each color picker is keyboard-navigable (HSV with arrow keys)
+- Contrast ratios are computed and shown for every text/background pair
+  — failing pairs are flagged with an icon + screen-reader announcement
+- The live preview is `aria-live="polite"` (verbose) or `"off"` (quiet) —
+  toggleable
+
+## Where it's used
+
+The theme builder is mounted at https://ui.tekivex.com/theme-builder/.
+The same component is reusable inside your own admin UI.

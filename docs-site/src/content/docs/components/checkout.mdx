@@ -1,0 +1,47 @@
+---
+title: TkxCheckout
+description: Multi-step checkout flow — address → payment → review. Composes inputs, summary, and step navigation.
+---
+
+```tsx
+import { TkxCheckout } from 'tekivex-ui';
+
+<TkxCheckout
+  cart={items}
+  onComplete={(order) => console.log('paid', order)}
+  paymentProviders={['stripe', 'razorpay']}
+/>
+```
+
+A pre-assembled three-step checkout. Step 1 collects shipping address,
+step 2 takes payment details (delegated to your provider's SDK), step 3
+shows a review-and-confirm screen with line totals + tax.
+
+## Props
+
+| Prop | Type | Notes |
+|---|---|---|
+| `cart` | `CartItem[]` | line-item array |
+| `onComplete` | `(order) => void` | fires after successful payment |
+| `paymentProviders` | `('stripe' \| 'razorpay' \| 'paypal')[]` | order = display order |
+| `currency` | `string` | ISO-4217, default `'USD'` |
+| `taxRate` | `number` | 0–1, default `0` |
+| `country` | `string` | ISO-3166, default `'IN'` |
+
+## What it composes
+
+- `TkxAddressInput` for step 1
+- `TkxPaymentButton` for step 2
+- `TkxStepper` for step navigation
+- `TkxResult` for the success screen
+
+## Accessibility
+
+- Steps are a `<nav aria-label="Checkout progress">` landmark
+- Going back is allowed; previously-entered values are preserved in form state
+- The "Pay now" button is `disabled` until validation passes — never visually-only
+
+## Testing
+
+See `tests/TkxCheckout.test.tsx` — 7 tests covering step transitions and
+provider switching.

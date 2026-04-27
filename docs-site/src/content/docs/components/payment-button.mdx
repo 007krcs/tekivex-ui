@@ -1,0 +1,53 @@
+---
+title: TkxPaymentButton
+description: Drop-in payment trigger — Stripe, Razorpay, PayPal. Loads the SDK on click, never on mount.
+---
+
+```tsx
+import { TkxPaymentButton } from 'tekivex-ui';
+
+<TkxPaymentButton
+  provider="razorpay"
+  amount={49900}
+  currency="INR"
+  publicKey="rzp_test_..."
+  onSuccess={(payment) => console.log(payment.id)}
+  onError={(err) => console.error(err)}
+>
+  Pay ₹499
+</TkxPaymentButton>
+```
+
+A button that **loads the payment provider's SDK lazily** on first click.
+No SDK is downloaded on page load — keeps your bundle clean and your CSP
+strict. Falls back to a clear error message if the SDK fails to load
+(blocked by ad-blocker, network error, etc.).
+
+## Props
+
+| Prop | Type | Notes |
+|---|---|---|
+| `provider` | `'stripe' \| 'razorpay' \| 'paypal'` | required |
+| `amount` | `number` | smallest unit (paise / cents) |
+| `currency` | ISO-4217 | required |
+| `publicKey` | `string` | provider's publishable / public key |
+| `onSuccess` | `(payment) => void` | required |
+| `onError` | `(err) => void` | required |
+| `disabled` | `boolean` | also disables during SDK load |
+
+## Loading state
+
+The button shows a spinner and is `aria-busy` while:
+1. SDK script is downloading (first click only)
+2. The provider's modal is open
+
+## Accessibility
+
+- Real `<button>` element with `aria-busy` and `aria-live="polite"` status
+- Error messages render in an `<Alert role="alert">` below the button
+- Keyboard-triggerable; payment modal handles focus trap
+
+## Testing
+
+See `tests/TkxPaymentButton.test.tsx` — 6 tests covering provider switching
++ SDK-load failure paths.

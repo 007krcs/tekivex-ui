@@ -1,0 +1,47 @@
+---
+title: TkxPlayground
+description: Live React + tekivex-ui playground — edit JSX in the browser, see the output instantly. Used by the demo site.
+---
+
+```tsx
+import { TkxPlayground } from 'tekivex-ui';
+
+<TkxPlayground
+  code={`<TkxButton variant="primary">Hello</TkxButton>`}
+  scope={{ TkxButton }}
+/>
+```
+
+A self-contained sandbox that compiles user-edited JSX in the browser
+using a tiny custom evaluator (no Babel runtime, no Sucrase, no eval).
+Used by the docs site to power live "Edit and Run" examples without
+shipping a megabyte of compiler.
+
+## Props
+
+| Prop | Type | Notes |
+|---|---|---|
+| `code` | `string` | initial JSX |
+| `scope` | `Record<string, unknown>` | identifiers available inside |
+| `editable` | `boolean` | default `true` |
+| `showOutput` | `boolean` | default `true` |
+| `language` | `'tsx' \| 'jsx'` | default `'tsx'` |
+
+## Limits
+
+- Only JSX expressions and component composition — no top-level statements
+- The scope must include every identifier the user references; missing
+  ones produce a clear error (not a runtime crash)
+- No async / no imports inside the code block (use the parent scope instead)
+
+## Accessibility
+
+- The code editor is a real `<textarea>` with `aria-label` — works with
+  screen readers and keyboard-only navigation
+- Errors render in a `<pre role="status" aria-live="polite">` region
+
+## Where it's used
+
+This component powers every "Edit & Run" widget in the docs site, the
+live MDX islands, and the [TKX engine playground](/themes/) on the
+themes page.

@@ -65,9 +65,14 @@ function handleSubmit() {
 
 ## Standalone package
 
-The same kernel ships as `@tekivex/security-core` — framework-agnostic,
-usable in Node services, Deno edge functions, anywhere JS runs. See the
-[Ecosystem page](/ecosystem/) for details.
+The same kernel ships as `tekivex-security-core` — framework-agnostic,
+usable in Node services, Deno edge functions, anywhere JS runs.
+
+```bash
+npm install tekivex-security-core
+```
+
+See the [Ecosystem page](/ecosystem/) for the full feature list.
 
 <Aside type="caution" title="Server-side validation is still required">
   SecurityCore reduces the blast radius of UI-layer mistakes; it does not
@@ -77,12 +82,12 @@ usable in Node services, Deno edge functions, anywhere JS runs. See the
 
 ## Audit your own code
 
-`@tekivex/audit` is a static-analysis CLI that catches the patterns
+`tekivex-audit` is a static-analysis CLI that catches the patterns
 SecurityCore can't see at runtime — `dangerouslySetInnerHTML` without
 DOMPurify, missing `rel="noopener"`, hardcoded API keys. Run it once:
 
 ```bash
-npx @tekivex/audit .
+npx tekivex-audit .
 ```
 
 It found 9 errors and 67 warnings on the **demo site itself** the first

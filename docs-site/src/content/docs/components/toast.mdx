@@ -1,0 +1,62 @@
+---
+title: TkxToast
+description: Imperative toast notifications — call toast.success(), toast.error(). Stacks, auto-dismisses, respects reduced motion.
+---
+
+```tsx
+import { ToastProvider, toast } from 'tekivex-ui';
+
+// Once at app root:
+<ToastProvider position="top-right">
+  <App />
+</ToastProvider>
+
+// Anywhere:
+toast.success('Saved');
+toast.error('Network error', { duration: 5000 });
+toast('Plain notification');
+```
+
+Imperative toast API. Mount `<ToastProvider>` once near your app root,
+then call `toast()` from anywhere — no need to thread state down.
+
+See [ToastProvider](/components/toast-provider/) for the provider's
+configuration props.
+
+## Methods
+
+| Call | Variant |
+|---|---|
+| `toast(msg)` | default |
+| `toast.success(msg)` | success (green) |
+| `toast.error(msg)` | danger (red) |
+| `toast.warning(msg)` | warning (amber) |
+| `toast.info(msg)` | info (blue) |
+| `toast.loading(msg)` | spinner, no auto-dismiss |
+| `toast.dismiss(id?)` | close one or all |
+
+Each method returns a string id you can pass to `toast.dismiss(id)`.
+
+## Options (per call)
+
+```ts
+toast.success('Saved', {
+  duration: 4000,                 // ms; default 4000, Infinity for sticky
+  icon: <CheckIcon />,            // override default icon
+  action: { label: 'Undo', onClick: () => undo() },
+});
+```
+
+## Accessibility
+
+- Uses `role="status"` for non-critical, `role="alert"` for `error` /
+  `warning`
+- `aria-live="polite"` (default) or `"assertive"` (errors)
+- Auto-dismiss is paused on hover and on focus — keyboard users can read
+  the message before it disappears
+- Respects `prefers-reduced-motion` — slides become fades
+
+## Testing
+
+Existing toast tests cover queue, dismiss, variant mapping, and the
+hover-pause behaviour.

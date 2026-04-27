@@ -1,0 +1,59 @@
+---
+title: TkxSEO
+description: Imperative SEO helpers — JSON-LD structured data, OpenGraph, Twitter Cards. Mounts and cleans up on unmount.
+---
+
+```tsx
+import { TkxSEO, articleSchema } from 'tekivex-ui';
+
+<TkxSEO
+  title="My article"
+  description="Why React 19 is great"
+  ogImage="/cover.png"
+  schema={articleSchema({
+    headline: 'Why React 19 is great',
+    author: { name: 'Aisha' },
+    datePublished: '2026-04-27',
+  })}
+/>
+```
+
+Imperative SEO. Mount the component anywhere in your tree; it injects
+the right `<title>`, `<meta>`, and JSON-LD `<script>` tags into `<head>`,
+and cleans them up on unmount. SSR-safe.
+
+## Schema factories
+
+| Factory | Schema.org type |
+|---|---|
+| `articleSchema` | `Article` |
+| `productSchema` | `Product` |
+| `organizationSchema` | `Organization` |
+| `websiteSchema` | `WebSite` |
+| `breadcrumbSchema` | `BreadcrumbList` |
+| `faqSchema` | `FAQPage` |
+| `personSchema` | `Person` |
+| `eventSchema` | `Event` |
+| `recipeSchema` | `Recipe` |
+| `videoSchema` | `VideoObject` |
+
+Each factory takes a typed object and returns a JSON-LD-ready record.
+Pass it to the `schema` prop.
+
+## Props
+
+| Prop | Type |
+|---|---|
+| `title` | `string` |
+| `description` | `string` |
+| `canonical` | `string` |
+| `ogImage` | `string` |
+| `ogType` | `'website' \| 'article' \| 'profile' \| 'product' \| ...` |
+| `twitterCard` | `'summary' \| 'summary_large_image' \| 'app' \| 'player'` |
+| `schema` | `Record<string, unknown>` (from a factory) |
+| `noindex` | `boolean` |
+
+## Testing
+
+See `tests/TkxSEO.test.tsx` — 13 tests covering each factory and the
+mount/unmount lifecycle.

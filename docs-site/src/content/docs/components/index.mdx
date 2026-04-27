@@ -1,46 +1,80 @@
 ---
 title: All components
-description: 78 production-ready React components — primitives, complex widgets, AI-native, real-time.
+description: 99 production-ready React components — primitives, complex widgets, AI-native, real-time, fintech, KYC.
 ---
 
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 
-`tekivex-ui` ships **78 components** across primitives, complex widgets,
-AI-native, and real-time families. Every one is WCAG 2.1 AAA, fully typed,
-and tree-shakeable.
+`tekivex-ui` ships **99 components** across nine families. Every one is
+WCAG 2.1 AAA, fully typed, tree-shakeable, and covered by the 1034-test
+suite. The sidebar lists every page alphabetically — this index groups
+them by intent so you can find the right primitive when you don't yet
+know its name.
 
-This index is a placeholder — individual component pages are being migrated
-from the legacy demo site to MDX over the v2.7 cycle. Until then, the
-existing docs at the [interactive demo](https://ui.tekivex.com/#/components/button)
-remain the canonical reference for component-level details.
+## By family
 
-## Primary categories
+### Primitives (single-purpose UI)
+Alert, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Chip (Tag),
+Divider, Empty, Icon, Image, Logo, Pagination, Progress, Radio, Result,
+Segmented, Skeleton, Spin, Title, Toggle, Tooltip.
 
-### Primitives
-Button, Card, Input, Badge, Progress, Toggle, Alert, Modal, Tabs, Tooltip,
-Skeleton, Avatar, Table, Divider, Select, Checkbox, Radio, Toast, Accordion,
-Drawer, DatePicker, Slider, Pagination, Image, FileUpload, Rating, Chat,
-Tag, Timeline, Menu, Clock, VideoPlayer, Stepper, ColorPicker, NumberInput,
-OTP, Command, Carousel, Icon, Breadcrumb, Popover, Autocomplete, TreeView,
-Toolbar, TransferList, SpeedDial, AppBar, BottomNav, Snackbar.
+### Form inputs
+Autocomplete, ColorPicker, CurrencyInput, DatePicker, FileUpload, Form,
+FormField, Input, NumberInput, OTP, PhoneInput, Rating, Select, Slider,
+Toggle.
 
-### Data + layout
-DataGrid, Masonry, RichText, Markdown, Form, Layout, Typography, Spin,
-Empty, Statistic, ConfigProvider, Affix, Anchor, Cascader, Mentions, QRCode,
-Result, Segmented, Tour, Watermark.
+### KYC + identity (Indian + international)
+AadhaarInput (Verhoeff-validated), AddressInput (PIN lookup), KycInputs
+(PAN, Voter ID, Driving Licence), PhoneInput (E.164, 50 countries).
+
+### Layout + navigation
+Affix, Anchor, AppBar, BottomNav, ConfigProvider, Drawer, Layout
+(Header / Sider / Content / Footer / Row / Col), Masonry, Menu, SpeedDial,
+Tabs, Toolbar, Tour, Typography.
+
+### Display + content
+Accordion, Carousel, Clock, Markdown, OrgChart, RichTextDisplay, Statistic,
+Stepper, Table, Tag, Timeline, Watermark.
+
+### Overlays + feedback
+Modal, Popover, Snackbar, Toast (ToastProvider), Tour.
+
+### Data-heavy widgets
+Cascader, DataGrid, List, Mentions, Sortable, TransferList, TreeView.
+
+### Real-time (timer-driven)
+LiveFeed, LiveLog, LiveMetrics, RealTimeChart.
 
 ### AI-native
-TkxAIConfidenceBar (colour-coded meter for model confidence),
-TkxAIChatBubble (streaming chat with typewriter + sanitisation),
-TkxAIThinking (dots / pulse / wave / orbit indicators).
+AIChatBubble (streaming chat with sanitisation), AIConfidenceBar
+(colour-coded model confidence), AIThinking (dot / pulse / wave / orbit
+indicators), Chat.
 
-### Real-time
-LiveFeed, LiveMetrics, RealTimeChart, LiveLog, DataGridInfinite.
+### Charts (free, no Pro tier)
+AreaChart, BarChart, LineChart, PieChart.
 
-### v2.7 quick wins
-[TkxImageEditor](/components/button/), TkxPhoneInput, TkxCaptcha,
-TkxFontProvider, TkxWatermark v2.
+### Media + creative
+Confetti, ImageEditor (crop / rotate / filters), QRCode, SignaturePad,
+VideoPlayer.
+
+### Commerce + fintech
+Checkout (multi-step), CurrencyInput (lakh/crore + 20 currencies),
+PaymentButton (Stripe / Razorpay / PayPal), Subscription helpers.
+
+### Utility / infra
+Captcha (Turnstile / hCaptcha / reCAPTCHA), Command (Cmd-K palette),
+FontProvider (35-locale lazy fonts), Playground, SEO (JSON-LD / OpenGraph),
+ThemeBuilder.
+
+## Browse alphabetically
+
+The full alphabetical list is in the sidebar under **Components**. Every
+component has its own page with props table, accessibility notes, and
+code example.
 
 <CardGrid>
-  <LinkCard title="Button" href="/components/button/" description="Variants, sizes, loading states." />
+  <LinkCard title="Button" href="/components/button/" description="The canonical action element. 5 variants × 4 sizes × 8 color schemes." />
+  <LinkCard title="DataGrid" href="/components/data-grid/" description="Sortable, filterable, virtualised. Free — no Pro tier." />
+  <LinkCard title="DatePicker" href="/components/date-picker/" description="35-locale calendar with Tithi, Hijri, Hebrew, Buddhist support." />
+  <LinkCard title="AadhaarInput" href="/components/aadhaar-input/" description="Verhoeff checksum-validated 12-digit Aadhaar field." />
 </CardGrid>

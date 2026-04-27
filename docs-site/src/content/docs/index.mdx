@@ -1,9 +1,9 @@
 ---
 title: TekiVex UI — Accessible React Component Library
-description: 78 components, WCAG 2.1 AAA, zero-trust security, RSC-ready. npm install tekivex-ui.
+description: 99 components, WCAG 2.1 AAA, built-in security kernel, 1034 passing tests, RSC-ready. npm install tekivex-ui.
 template: splash
 hero:
-  tagline: 78 components. WCAG 2.1 AAA. Zero-trust security baked into every prop. MIT licensed.
+  tagline: 99 components. WCAG 2.1 AAA. Zero-trust security baked into every prop. 1034 passing tests. MIT licensed.
   actions:
     - text: Get started
       link: /getting-started/
@@ -16,12 +16,13 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## What ships in v2.7
+## What ships in v3.0
 
 <CardGrid>
-  <Card title="78 production components" icon="puzzle">
+  <Card title="99 production components" icon="puzzle">
     From primitives (Button, Input, Badge) to complex widgets (DataGrid,
-    DatePicker, RichText, Carousel) to AI-native (ConfidenceBar, ChatBubble).
+    DatePicker, RichText, Carousel) to AI-native (ConfidenceBar, ChatBubble)
+    to fintech (Subscription, PaymentButton, CurrencyInput).
   </Card>
   <Card title="WCAG 2.1 AAA" icon="approve-check-circle">
     7:1 contrast ratios, 44×44 touch targets, full keyboard nav, screen-reader
@@ -35,13 +36,13 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
     Vite, Webpack 5, Next.js (App + Pages), Remix, Parcel, Rollup, Astro.
     13 components are RSC-compatible out of the box.
   </Card>
-  <Card title="v2.7 — image editor, phone input, captcha, fonts" icon="rocket">
-    Crop/rotate/adjust, intl phone with E.164, Turnstile/hCaptcha, lazy Indic
-    + RTL fonts, anti-screenshot watermarks, auto dark/light.
+  <Card title="1034 passing tests" icon="approve-check-circle">
+    82 test files. Coverage: 64.84% lines / 51.10% functions / 56.77% branches.
+    Ratchet enforced in CI — never drops between releases.
   </Card>
-  <Card title="Companion packages" icon="seti:plan">
-    `@tekivex/security-core`, `@tekivex/audit`, `@tekivex/figma-kit`,
-    `create-tekivex-app` — source-available; published on demand.
+  <Card title="Live on npm" icon="seti:plan">
+    `tekivex-ui`, `tekivex-security-core`, `tekivex-audit`, `create-tekivex-app`
+    — all four installable today. `@tekivex/figma-kit` is source-only.
   </Card>
 </CardGrid>
 

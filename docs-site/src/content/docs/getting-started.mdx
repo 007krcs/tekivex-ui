@@ -30,11 +30,17 @@ import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
   </TabItem>
 </Tabs>
 
-<Aside type="note" title="Package name">
-  The canonical name is **`tekivex-ui`** — unscoped. If you see `@tekivex/ui`
-  anywhere, that's a stale reference. The companion packages
-  (`@tekivex/security-core`, `@tekivex/audit`, etc.) are scoped, but the main
-  library is not.
+<Aside type="note" title="Package names — all unscoped">
+  All four published packages are **unscoped**:
+  - `tekivex-ui` — the main library
+  - `tekivex-security-core` — framework-agnostic security kernel
+  - `tekivex-audit` — static-analysis CLI
+  - `create-tekivex-app` — project scaffolder
+  
+  If you see `@tekivex/*` references in older docs, blog posts, or AI
+  assistants' suggestions, those are stale — the `@tekivex` npm scope was
+  never registered, so the unscoped names above are the only ones that exist
+  on the registry.
 </Aside>
 
 ## Three steps to a working app

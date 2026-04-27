@@ -22,7 +22,7 @@ export default defineConfig({
     starlight({
       title: 'TekiVex UI',
       description:
-        'Production-ready React component library — 78 WCAG 2.1 AAA components, zero-trust security, RSC-ready. npm install tekivex-ui',
+        'Production-ready React component library — 99 WCAG 2.1 AAA components, built-in security kernel, 1034 tests, RSC-ready. npm install tekivex-ui',
       logo: {
         // Lightning bolt (matches favicon)
         src: './src/assets/logo.svg',
@@ -52,7 +52,7 @@ export default defineConfig({
             applicationCategory: 'DeveloperApplication',
             operatingSystem: 'Web',
             url: 'https://ui.tekivex.com/',
-            version: '2.7.0',
+            version: '3.0.2',
             license: 'https://github.com/007krcs/tekivex-ui/blob/master/LICENSE',
             codeRepository: 'https://github.com/007krcs/tekivex-ui',
             downloadUrl: 'https://www.npmjs.com/package/tekivex-ui',
