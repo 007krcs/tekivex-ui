@@ -1,0 +1,54 @@
+name: Deploy docs-site to Cloudflare Pages
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - 'docs-site/**'
+      - '.github/workflows/deploy-cloudflare.yml'
+  workflow_dispatch:
+
+# Cancel an in-flight deploy if a newer push lands.
+concurrency:
+  group: cloudflare-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build + push to Cloudflare Pages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build the docs site
+        working-directory: docs-site
+        run: |
+          npm install
+          npm run build
+
+      # ─────────────────────────────────────────────────────────────────
+      # Required repo secrets:
+      #
+      #   CLOUDFLARE_API_TOKEN    — generate at dash.cloudflare.com →
+      #                              My Profile → API Tokens →
+      #                              "Edit Cloudflare Workers" template,
+      #                              scoped to the tekivex-ui project
+      #   CLOUDFLARE_ACCOUNT_ID   — found at the bottom of the Pages
+      #                              dashboard sidebar
+      #
+      # The very first deploy must be done via the Cloudflare dashboard
+      # (so it can create the project). Subsequent deploys come through
+      # this workflow.
+      # ─────────────────────────────────────────────────────────────────
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy docs-site/dist --project-name=tekivex-ui --branch=main

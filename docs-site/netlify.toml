@@ -1,0 +1,32 @@
+# Netlify configuration for the docs site.
+# Identical functional setup to the Cloudflare Pages config — pick one.
+#
+# Connect repo at netlify.com → set base directory to `docs-site`.
+
+[build]
+  base    = "docs-site"
+  command = "npm install && npm run build"
+  publish = "docs-site/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options          = "DENY"
+    X-Content-Type-Options   = "nosniff"
+    Referrer-Policy          = "strict-origin-when-cross-origin"
+    Permissions-Policy       = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+# Cache static assets aggressively, HTML softly so deploys propagate fast.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

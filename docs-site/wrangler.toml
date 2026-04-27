@@ -1,0 +1,24 @@
+# Cloudflare Pages configuration for ui.tekivex.com.
+#
+# This file is read by `wrangler pages deploy` and by the Cloudflare
+# Pages dashboard when you connect a GitHub repo.
+#
+# Manual setup (one-time):
+#   1. Visit pages.cloudflare.com
+#   2. Create project → Connect to GitHub → 007krcs/tekivex-ui
+#   3. Build configuration:
+#        Framework preset:  Astro
+#        Build command:     cd docs-site && npm install && npm run build
+#        Build output:      docs-site/dist
+#        Root directory:    /
+#   4. Add custom domain: ui.tekivex.com → CNAME to <project>.pages.dev
+#
+# Or via wrangler CLI (after `npm install -g wrangler`):
+#   wrangler pages deploy docs-site/dist --project-name=tekivex-ui
+
+name = "tekivex-ui"
+compatibility_date = "2026-04-01"
+pages_build_output_dir = "dist"
+
+[build]
+command = "npm install && npm run build"
