@@ -4,7 +4,7 @@
 
 **The first React UI library with a security kernel built in.**
 
-WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME) · 80+ Components · Zero Dependencies
+WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME) · 99 Components · Zero Dependencies
 
 📄 **[Security Threat Model](./docs/SECURITY-THREAT-MODEL.md)** — the only mainstream React UI library that publishes one.
 
@@ -14,8 +14,8 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18+-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
 [![WCAG 2.1 AAA](https://img.shields.io/badge/WCAG-2.1%20AAA-00c853.svg)](https://www.w3.org/TR/WCAG21/)
-[![Tests](https://img.shields.io/badge/Tests-594%20passing-00c853.svg)](#testing)
-[![SecurityCore](https://img.shields.io/badge/SecurityCore-v2.6-f72585.svg)](./docs/SECURITY-THREAT-MODEL.md)
+[![Tests](https://img.shields.io/badge/Tests-1034%20passing-00c853.svg)](#testing)
+[![SecurityCore](https://img.shields.io/badge/SecurityCore-v3.0-f72585.svg)](./docs/SECURITY-THREAT-MODEL.md)
 
 <br/>
 
@@ -163,7 +163,7 @@ import { useDisclosure, useFormState, useListSelection } from 'tekivex-ui/headle
 | `TkxRichTextDisplay` | Render structured rich-text blocks |
 | `TkxWatermark` | Canvas-based watermark overlay |
 | `TkxEmpty` | Empty state with custom illustration |
-| `TkxOrgChart` | Reingold–Tilford org-chart with pan/zoom, collapsible subtrees, custom renderer ✨ v2.6 |
+| `TkxOrgChart` | Reingold–Tilford org-chart with pan/zoom, collapsible subtrees, custom renderer |
 
 </details>
 
