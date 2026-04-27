@@ -18,14 +18,31 @@ npm run build    # outputs dist/
 
 ## Deploy to Render
 
-In the Render service settings:
+The repo's [`render.yaml`](../render.yaml) blueprint defines two services:
 
-- **Root directory**: `docs-site`
-- **Build command**: `npm install && npm run build`
-- **Publish directory**: `docs-site/dist`
+| Service | Subdomain | Builds from |
+|---|---|---|
+| `tekivex-ui` | `ui.tekivex.com` | `docs-site/` (this folder) |
+| `tekivex-ui-playground` | `playground.tekivex.com` | `demo/` (legacy SPA) |
 
-The legacy `demo/` site can stay running on a different path/subdomain
-(e.g. `playground.tekivex.com`) for the interactive component sandbox.
+After pushing this folder to master, sync the blueprint in Render's
+dashboard. Both services auto-deploy on every subsequent push.
+
+Full step-by-step playbook (with the dashboard clicks, DNS records, and
+Google Search Console submission): [`../docs/render-deploy.md`](../docs/render-deploy.md)
+
+### Other host options (if you ever migrate off Render)
+
+This same `docs-site/` folder builds unchanged on:
+
+- **Cloudflare Pages** — see `wrangler.toml`
+- **Netlify** — see `netlify.toml`
+- **Vercel** — see `vercel.json`
+- **GitHub Pages** — see `.github/workflows/deploy-pages.yml`
+
+Pick any of them, connect to the GitHub repo, change DNS CNAME — live in
+10 minutes. The architectural insurance that no single host can break the
+deploy.
 
 ## What's migrated so far
 

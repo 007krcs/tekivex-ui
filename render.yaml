@@ -1,10 +1,97 @@
+# Render blueprint — config-as-code for the tekivex-ui deploys.
+#
+# Render reads this file as a "Blueprint". Once the repo is linked, every
+# git push to `master` auto-deploys both services in parallel. Render
+# handles SSL (auto-renewed Let's Encrypt) and serves from a global CDN
+# edge — corp-network reachability is equivalent to Cloudflare/Netlify
+# for static sites.
+#
+# WHY TWO SERVICES:
+#   1. tekivex-ui          → ui.tekivex.com           (canonical, SSG)
+#                              docs-site/ Astro Starlight build with real
+#                              flat URLs Google can crawl.
+#   2. tekivex-ui-playground → playground.tekivex.com  (legacy SPA)
+#                              The existing demo/ stays live as the
+#                              interactive component sandbox so existing
+#                              users with bookmarked /#/components/X
+#                              links don't see broken pages.
+#
+# ─── ONE-TIME SETUP IN THE RENDER DASHBOARD ─────────────────────────────
+#
+#   This repo is already linked to a Render service named "tekivex-ui"
+#   that currently builds `demo/`. After committing this updated YAML and
+#   pushing, do the following ONCE in the Render dashboard:
+#
+#   A. tekivex-ui (existing service)
+#      Settings → Build & Deploy → Sync the new YAML. Render will detect
+#      the new buildCommand and rootDir. The next deploy will build
+#      docs-site/ instead of demo/.
+#      Custom domain ui.tekivex.com stays attached.
+#
+#   B. tekivex-ui-playground (new service)
+#      Render auto-creates this from the YAML on first sync. After it's
+#      up, go to Settings → Custom Domains → add `playground.tekivex.com`.
+#      Render gives you a CNAME target — add it at your DNS provider.
+#
+# ────────────────────────────────────────────────────────────────────────
+
 services:
+  # ── 1. Canonical docs site at ui.tekivex.com ─────────────────────────
   - type: web
     name: tekivex-ui
     runtime: static
-    buildCommand: npm install && npm run build:demo
+    rootDir: docs-site
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: true
+    branch: master
+
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - path: /_astro/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /*.html
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+
+    # 301 redirects from the legacy hash URLs land in
+    # docs-site/public/_redirects which Render honours automatically.
+
+  # ── 2. Legacy interactive playground at playground.tekivex.com ──────
+  - type: web
+    name: tekivex-ui-playground
+    runtime: static
+    rootDir: .
+    buildCommand: npm ci && npm run build:demo
     staticPublishPath: demo/dist
     pullRequestPreviewsEnabled: false
+    branch: master
+
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+
+    # SPA fallback — the demo is a hash-routed React app; every path
+    # serves index.html so the client-side router takes over.
     routes:
       - type: rewrite
         source: /*
