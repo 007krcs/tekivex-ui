@@ -80,7 +80,9 @@ if (!existsSync(DIST)) {
 console.log('\n══════════════════════════════════════════════════════');
 console.log('Step 3/4 — build demo/ SPA → /playground/');
 console.log('══════════════════════════════════════════════════════');
-run('npm run build:demo', ROOT, { VITE_BASE: '/playground/' });
+// Use the :standalone alias — `build:demo` is now an alias for THIS
+// script, so calling it would loop forever.
+run('npm run build:demo:standalone', ROOT, { VITE_BASE: '/playground/' });
 copyTree(resolve(ROOT, 'demo/dist'), resolve(DIST, 'playground'));
 
 // ── 4. Build tkx-book with /book/ base, copy into dist/book/
@@ -93,10 +95,29 @@ run('npm run build', resolve(ROOT, 'packages/tkx-book'), {
 });
 copyTree(resolve(ROOT, 'packages/tkx-book/dist'), resolve(DIST, 'book'));
 
+// ── 5. Mirror to demo/dist so it works regardless of which path Render
+//    is configured to publish. The original demo/dist (containing only
+//    the SPA) is replaced with the merged tree. The SPA is preserved
+//    inside the new demo/dist/playground/ subfolder.
+//
+//    Why mirror: Render's `staticPublishPath` was historically demo/dist
+//    (when tekivex-ui-playground was the canonical service). After the
+//    blueprint flip to docs-site/dist, some services may still cache the
+//    old setting until manually re-synced. Mirroring guarantees the
+//    deploy works whether Render reads docs-site/dist OR demo/dist.
+console.log('\n══════════════════════════════════════════════════════');
+console.log('Step 5/5 — mirror merged tree to demo/dist (compat shim)');
+console.log('══════════════════════════════════════════════════════');
+const DEMO_DIST = resolve(ROOT, 'demo/dist');
+copyTree(DIST, DEMO_DIST);
+
 // ── Done
 console.log('\n══════════════════════════════════════════════════════');
-console.log('✓ Unified site built at docs-site/dist/');
-console.log('  /                 → Astro docs (canonical)');
-console.log('  /playground/      → demo SPA');
-console.log('  /book/            → component catalog');
+console.log('✓ Unified site built at TWO publish targets:');
+console.log('    docs-site/dist/    (canonical, render.yaml v3)');
+console.log('    demo/dist/         (compat — old render.yaml setting)');
+console.log('  Each contains:');
+console.log('    /                  → Astro docs (canonical)');
+console.log('    /playground/       → demo SPA');
+console.log('    /book/             → component catalog');
 console.log('══════════════════════════════════════════════════════\n');
