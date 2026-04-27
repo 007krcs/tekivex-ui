@@ -1,5 +1,9 @@
-import { TkxCarousel, TkxCarouselSlide } from 'tekivex-ui';
+import { TkxCarousel } from 'tekivex-ui';
 import { Preview } from '../Preview';
+
+// v3 API: TkxCarousel takes a `slides` array of { id, content }, not
+// nested <TkxCarouselSlide> children. Re-shaped to match the published
+// 3.0.x API.
 
 const SLIDES = [
   { hue: 200, title: 'Mountain at dawn' },
@@ -29,17 +33,16 @@ function SlidePlaceholder({ hue, title }: { hue: number; title: string }) {
   );
 }
 
+const slideObjects = SLIDES.map((s, i) => ({
+  id: `slide-${i}`,
+  content: <SlidePlaceholder hue={s.hue} title={s.title} />,
+}));
+
 export function CarouselBasic() {
   return (
     <Preview label="Single slide with dots" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
       <div style={{ minWidth: 360, maxWidth: 480 }}>
-        <TkxCarousel>
-          {SLIDES.map((s, i) => (
-            <TkxCarouselSlide key={i}>
-              <SlidePlaceholder hue={s.hue} title={s.title} />
-            </TkxCarouselSlide>
-          ))}
-        </TkxCarousel>
+        <TkxCarousel slides={slideObjects} />
       </div>
     </Preview>
   );
@@ -49,13 +52,14 @@ export function CarouselAutoplay() {
   return (
     <Preview label="Autoplay (pauses on hover/focus)" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
       <div style={{ minWidth: 360, maxWidth: 480 }}>
-        <TkxCarousel autoplay autoplayInterval={3000} loop indicators="bars">
-          {SLIDES.map((s, i) => (
-            <TkxCarouselSlide key={i}>
-              <SlidePlaceholder hue={s.hue} title={s.title} />
-            </TkxCarouselSlide>
-          ))}
-        </TkxCarousel>
+        <TkxCarousel
+          slides={slideObjects}
+          autoPlay
+          autoPlayInterval={3000}
+          loop
+          showDots
+          pauseOnHover
+        />
       </div>
     </Preview>
   );
