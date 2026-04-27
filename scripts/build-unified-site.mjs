@@ -30,7 +30,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { execSync } from 'node:child_process';
-import { cpSync, existsSync, rmSync, mkdirSync } from 'node:fs';
+import { cpSync, existsSync, rmSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -54,6 +54,31 @@ function copyTree(from, to) {
   mkdirSync(dirname(to), { recursive: true });
   cpSync(from, to, { recursive: true });
   console.log(`  ✓ copied ${from}\n        → ${to}`);
+}
+
+// Reads the built index.html and confirms its first <script type="module">
+// src begins with `expectedBase`. Logs a clear warning (non-fatal) if the
+// base is wrong, so we can spot it in build logs rather than discovering
+// it via a blank page in prod.
+function verifyBase(htmlPath, expectedBase) {
+  if (!existsSync(htmlPath)) {
+    console.warn(`  ⚠ verifyBase: ${htmlPath} missing`);
+    return;
+  }
+  const html = readFileSync(htmlPath, 'utf8');
+  const m = html.match(/<script[^>]*src=["']([^"']+)["']/);
+  if (!m) {
+    console.warn(`  ⚠ verifyBase: no <script src> found in ${htmlPath}`);
+    return;
+  }
+  const src = m[1];
+  if (src.startsWith(expectedBase)) {
+    console.log(`  ✓ base verified: ${src}`);
+  } else {
+    console.warn(
+      `  ⚠ base mismatch in ${htmlPath}: got "${src}", expected to start with "${expectedBase}"`,
+    );
+  }
 }
 
 // ── 1. Build the main library so demo + book have something to link against
@@ -155,29 +180,33 @@ if (!astroSucceeded) {
   </main>
 </body>
 </html>`;
-  const fs = await import('node:fs');
-  fs.writeFileSync(resolve(DIST, 'index.html'), stub);
+  writeFileSync(resolve(DIST, 'index.html'), stub);
   console.log('  ✓ Stub homepage written');
 }
 
 // ── 3. Build the demo SPA with /playground/ base, copy into dist/playground/
+//    Pass --base on the CLI directly — npm sometimes strips env vars
+//    from child processes, causing assets to reference / instead of
+//    /playground/ and the SPA to render blank in production.
 console.log('\n══════════════════════════════════════════════════════');
 console.log('Step 3/4 — build demo/ SPA → /playground/');
 console.log('══════════════════════════════════════════════════════');
-// Use the :standalone alias — `build:demo` is now an alias for THIS
-// script, so calling it would loop forever.
-run('npm run build:demo:standalone', ROOT, { VITE_BASE: '/playground/' });
+run(
+  'npx vite build --config ./demo/vite.config.ts --base=/playground/',
+  ROOT,
+);
 copyTree(resolve(ROOT, 'demo/dist'), resolve(DIST, 'playground'));
+verifyBase(resolve(DIST, 'playground/index.html'), '/playground/');
 
 // ── 4. Build tkx-book with /book/ base, copy into dist/book/
+//    Same pattern: --base on CLI, not via env var.
 console.log('\n══════════════════════════════════════════════════════');
 console.log('Step 4/4 — build packages/tkx-book/ → /book/');
 console.log('══════════════════════════════════════════════════════');
 run('npm install --no-audit --no-fund', resolve(ROOT, 'packages/tkx-book'));
-run('npm run build', resolve(ROOT, 'packages/tkx-book'), {
-  VITE_BASE: '/book/',
-});
+run('npx vite build --base=/book/', resolve(ROOT, 'packages/tkx-book'));
 copyTree(resolve(ROOT, 'packages/tkx-book/dist'), resolve(DIST, 'book'));
+verifyBase(resolve(DIST, 'book/index.html'), '/book/');
 
 // ── 5. Mirror to demo/dist so it works regardless of which path Render
 //    is configured to publish. The original demo/dist (containing only
