@@ -1,11 +1,11 @@
-# @tekivex/content
+# tekivex-content
 
 > Content + document-creation pack — Markdown rendering, schema-typed Rich Text, Signature capture, Image Editor, anti-leak Watermark, Carousel.
 
 ## Install
 
 ```bash
-npm install @tekivex/content tekivex-ui
+npm install tekivex-content tekivex-ui
 ```
 
 ## What's in it
@@ -25,7 +25,7 @@ npm install @tekivex/content tekivex-ui
 ## Quick example — paid-content protection
 
 ```tsx
-import { TkxWatermark, useDevtoolsOpen } from '@tekivex/content';
+import { TkxWatermark, useDevtoolsOpen } from 'tekivex-content';
 
 function PaidPreview({ user, content }) {
   return (

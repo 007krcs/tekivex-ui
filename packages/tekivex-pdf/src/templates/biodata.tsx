@@ -158,7 +158,7 @@ export function BiodataTemplate({
           }}
         >
           <TkxPDFText size={8} color={theme.textMuted} align="center">
-            Generated with @tekivex/pdf · {new Date().toISOString().slice(0, 10)}
+            Generated with tekivex-pdf · {new Date().toISOString().slice(0, 10)}
           </TkxPDFText>
         </TkxPDFView>
       </TkxPDFPage>

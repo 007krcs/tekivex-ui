@@ -3,10 +3,10 @@
 // tekivex-add — copy the source of a tekivex-ui component into your project.
 //
 // Usage:
-//   npx @tekivex/add button
-//   npx @tekivex/add card modal toast
-//   npx @tekivex/add --list
-//   npx @tekivex/add --dir src/ui button
+//   npx tekivex-add button
+//   npx tekivex-add card modal toast
+//   npx tekivex-add --list
+//   npx tekivex-add --dir src/ui button
 //
 // What it does:
 //   1. Resolves the component name(s) against a registry that maps names
@@ -21,7 +21,7 @@
 //   - Compatible with shadcn-style mental model: components are code you
 //     own, not deps you import.
 //   - Inverts the trade-off: tekivex-ui (the package) optimises for
-//     tree-shaken updates; @tekivex/add optimises for full ownership.
+//     tree-shaken updates; tekivex-add optimises for full ownership.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { writeFile, mkdir, access, readFile } from 'node:fs/promises';
@@ -76,14 +76,14 @@ function help() {
   console.log(`tekivex-add — copy tekivex-ui components into your project
 
 Usage:
-  npx @tekivex/add <component>...
-  npx @tekivex/add --list
-  npx @tekivex/add --dir src/ui <component>
+  npx tekivex-add <component>...
+  npx tekivex-add --list
+  npx tekivex-add --dir src/ui <component>
 
 Examples:
-  npx @tekivex/add button
-  npx @tekivex/add button card modal toast
-  npx @tekivex/add --dir src/components button
+  npx tekivex-add button
+  npx tekivex-add button card modal toast
+  npx tekivex-add --dir src/components button
 
 Flags:
   --list             Show all available components
@@ -154,7 +154,7 @@ async function main() {
   for (const name of positional) {
     const comp = registry.components.find((c) => c.name === name || c.name === `Tkx${name[0].toUpperCase()}${name.slice(1)}`);
     if (!comp) {
-      console.error(`  ✗ Unknown: ${name}. Try: npx @tekivex/add --list`);
+      console.error(`  ✗ Unknown: ${name}. Try: npx tekivex-add --list`);
       continue;
     }
     const written = await fetchAndWrite(comp, registry, force);

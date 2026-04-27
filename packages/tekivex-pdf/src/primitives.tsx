@@ -22,8 +22,9 @@ import {
   type ViewProps,
   type TextProps,
   type ImageProps,
-  type Style,
 } from '@react-pdf/renderer';
+// `Style` moved from @react-pdf/renderer to @react-pdf/stylesheet in v4.
+import type { Style } from '@react-pdf/stylesheet';
 import { createContext, useContext, type ReactNode } from 'react';
 import type { PDFThemeTokens } from './theme';
 import { printLight } from './theme';
@@ -220,18 +221,25 @@ export function TkxPDFText({
 
 // ── TkxPDFImage ──────────────────────────────────────────────────────────────
 
-export interface TkxPDFImageProps extends Omit<ImageProps, 'style'> {
+// @react-pdf/renderer's ImageProps is a discriminated union (src vs source).
+// Omit<>-on-union strips the discriminant, so we type src/source manually.
+export type TkxPDFImageProps = {
+  src?: ImageProps extends { src?: infer S } ? S : string;
+  source?: unknown;
   width?: number;
   height?: number;
   rounded?: number;
   style?: Style;
-}
+  cache?: boolean;
+  debug?: boolean;
+  fixed?: boolean;
+};
 
 export function TkxPDFImage({ width, height, rounded, style, ...rest }: TkxPDFImageProps) {
   return (
     <Image
       style={{ width, height, borderRadius: rounded, ...style }}
-      {...rest}
+      {...(rest as ImageProps)}
     />
   );
 }

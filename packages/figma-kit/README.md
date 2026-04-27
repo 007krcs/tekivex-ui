@@ -1,4 +1,4 @@
-# @tekivex/figma-kit
+# tekivex-figma-kit
 
 Machine-readable design-system exports for the tekivex-ui Figma library. Generated from the real source — `src/themes/index.ts` and `src/components/`. No hand-maintained duplication.
 

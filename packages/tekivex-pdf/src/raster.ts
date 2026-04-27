@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// @tekivex/pdf/raster — PNG/JPEG output via Sharp.
+// tekivex-pdf/raster — PNG/JPEG output via Sharp.
 //
 // Why a separate sub-export: Sharp ships ~20-30MB of native binaries per
 // platform. Most consumers only want PDF output, so we keep it out of the
@@ -7,7 +7,7 @@
 //
 // Usage:
 //   npm install sharp
-//   import { renderToImage } from '@tekivex/pdf/raster';
+//   import { renderToImage } from 'tekivex-pdf/raster';
 //
 //   const png = await renderToImage(<MyDoc />, { format: 'png', dpi: 144 });
 //
@@ -16,6 +16,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { ReactElement } from 'react';
+import type { DocumentProps } from '@react-pdf/renderer';
+type DocEl = ReactElement<DocumentProps>;
 import { renderToBuffer } from '@react-pdf/renderer';
 
 export type ImageFormat = 'png' | 'jpeg' | 'webp';
@@ -38,14 +40,17 @@ export interface RenderToImageOptions {
   background?: string;
 }
 
-async function loadSharp(): Promise<typeof import('sharp')> {
+// `sharp` is an optional peer dep; skip the typed import so consumers
+// without sharp installed don't fail TS compilation of this package.
+async function loadSharp(): Promise<any> {
   try {
     // dynamic import keeps Sharp out of the main bundle path
-    const m: any = await import(/* @vite-ignore */ 'sharp');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const m: any = await import(/* @vite-ignore */ ('sharp' as string));
     return m.default ?? m;
   } catch {
     throw new Error(
-      "@tekivex/pdf/raster requires the 'sharp' package. Install it with " +
+      "tekivex-pdf/raster requires the 'sharp' package. Install it with " +
         "`npm install sharp`. See https://ui.tekivex.com/pdf/render-to-png/.",
     );
   }
@@ -56,7 +61,7 @@ async function loadSharp(): Promise<typeof import('sharp')> {
  * Uses Sharp under the hood — Sharp must be installed by the consumer.
  *
  * @example
- * import { renderToImage } from '@tekivex/pdf/raster';
+ * import { renderToImage } from 'tekivex-pdf/raster';
  * const png = await renderToImage(
  *   <BiodataTemplate data={…} />,
  *   { format: 'png', dpi: 200, maxWidth: 1600 }
@@ -64,7 +69,7 @@ async function loadSharp(): Promise<typeof import('sharp')> {
  * await fs.writeFile('biodata.png', png);
  */
 export async function renderToImage(
-  element: ReactElement,
+  element: DocEl,
   options: RenderToImageOptions = {},
 ): Promise<Buffer> {
   const {
@@ -100,7 +105,7 @@ export async function renderToImage(
  * Returns one Buffer per page, in document order.
  */
 export async function renderToImages(
-  element: ReactElement,
+  element: DocEl,
   options: Omit<RenderToImageOptions, 'page'> = {},
 ): Promise<Buffer[]> {
   const {

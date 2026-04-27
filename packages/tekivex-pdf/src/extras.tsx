@@ -10,8 +10,8 @@
 import {
   Link as PdfLink,
   Text as PdfText,
-  type Style,
 } from '@react-pdf/renderer';
+import type { Style } from '@react-pdf/stylesheet';
 import type { ReactNode } from 'react';
 import {
   TkxPDFText,

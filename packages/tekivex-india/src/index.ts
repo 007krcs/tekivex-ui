@@ -1,9 +1,9 @@
-// @tekivex/india — India-specific component re-exports.
+// tekivex-india — India-specific component re-exports.
 //
 // All components live in `tekivex-ui` (so they tree-shake the same way as
 // every other Tkx component). This package is a curated *namespace* over
 // the India subset, per the audit's §5 v3.2 recommendation. Consumers who
-// want only Indian-locale work can pin to `@tekivex/india` and get a
+// want only Indian-locale work can pin to `tekivex-india` and get a
 // focused dependency surface.
 
 export { TkxAadhaarInput, isValidAadhaar } from 'tekivex-ui';

@@ -1,4 +1,4 @@
-// @tekivex/finance — financial-services component re-exports.
+// tekivex-finance — financial-services component re-exports.
 //
 // Curated namespace per the audit's §5 v3.2 recommendation. Same components
 // also available directly from `tekivex-ui`.

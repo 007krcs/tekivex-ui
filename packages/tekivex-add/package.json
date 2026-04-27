@@ -1,6 +1,6 @@
 {
-  "name": "@tekivex/add",
-  "version": "0.1.0-preview",
+  "name": "tekivex-add",
+  "version": "0.1.0",
   "description": "shadcn-style component scaffolder — copy the source of any tekivex-ui component into your project so you can edit it freely.",
   "type": "module",
   "bin": {

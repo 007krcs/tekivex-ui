@@ -4,7 +4,8 @@
 // page and the downloaded PDF carry the same identifier.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { Text, View, type Style } from '@react-pdf/renderer';
+import { Text, View } from '@react-pdf/renderer';
+import type { Style } from '@react-pdf/stylesheet';
 import { usePDFTheme } from './primitives';
 
 export interface TkxPDFWatermarkProps {
@@ -48,7 +49,8 @@ export function TkxPDFWatermark({
     left: 0,
     right: 0,
     bottom: 0,
-    pointerEvents: 'none' as any,
+    // pointerEvents not supported in @react-pdf/renderer v4 styles —
+    // PDFs aren't interactive in that sense, so this is a no-op anyway.
   };
 
   if (pattern === 'single') {

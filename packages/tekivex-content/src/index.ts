@@ -1,4 +1,4 @@
-// @tekivex/content — content / document-creation namespace.
+// tekivex-content — content / document-creation namespace.
 
 export { TkxMarkdown, TkxRichTextDisplay } from 'tekivex-ui';
 export { TkxImageEditor } from 'tekivex-ui';

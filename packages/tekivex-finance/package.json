@@ -1,15 +1,14 @@
 {
-  "name": "@tekivex/finance",
-  "version": "0.1.0-preview",
+  "name": "tekivex-finance",
+  "version": "0.1.0",
   "description": "Finance-vertical component pack — KYC inputs, currency formatting, OTP flows, subscription/billing UI, statement viewer primitives.",
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     }
   },

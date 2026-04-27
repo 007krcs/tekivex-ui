@@ -1,11 +1,11 @@
-# @tekivex/india
+# tekivex-india
 
 > India-specific component pack for `tekivex-ui`. Aadhaar / PAN / Voter ID / Driving Licence inputs with format validation, PIN-code → city/state lookup, ₹ with lakh/crore grouping, Tithi/Nakshatra calendar.
 
 ## Install
 
 ```bash
-npm install @tekivex/india tekivex-ui
+npm install tekivex-india tekivex-ui
 ```
 
 `tekivex-ui` is a peer dependency — install both as a pair.
@@ -14,7 +14,7 @@ npm install @tekivex/india tekivex-ui
 
 These components live inside `tekivex-ui` and tree-shake correctly when imported from there. This package is a **curated namespace** so:
 
-- Indian-locale apps can pin to `@tekivex/india` and get focused docs / focused TypeScript surface
+- Indian-locale apps can pin to `tekivex-india` and get focused docs / focused TypeScript surface
 - The semver of India-specific components can move independently of the main library
 - Consumers who don't need Indian features don't see them in autocomplete
 
@@ -38,7 +38,7 @@ If you're already importing from `tekivex-ui`, you don't need this package — b
 You can also use the validation logic without the component:
 
 ```tsx
-import { isValidAadhaar, isValidPan, isValidVoterId, isValidDrivingLicence } from '@tekivex/india';
+import { isValidAadhaar, isValidPan, isValidVoterId, isValidDrivingLicence } from 'tekivex-india';
 
 isValidAadhaar('234123412346');   // → true (real Verhoeff check)
 isValidPan('ABCPK1234F');         // → true (P = individual)

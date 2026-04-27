@@ -1,4 +1,4 @@
-# @tekivex/pdf
+# tekivex-pdf
 
 > **Preview release.** Source-available; published to npm on demand.
 
@@ -30,7 +30,7 @@ handles flexbox, fonts, images, multi-page, and watermarks. That's
 ## Install
 
 ```bash
-npm install @tekivex/pdf @react-pdf/renderer
+npm install tekivex-pdf @react-pdf/renderer
 ```
 
 > `@react-pdf/renderer` is a peer dep — install it explicitly so version
@@ -46,7 +46,7 @@ import {
   TkxPDFRow,
   TkxPDFColumn,
   renderToPDF,
-} from '@tekivex/pdf';
+} from 'tekivex-pdf';
 
 const buffer = await renderToPDF(
   <TkxPDFDocument>
@@ -77,7 +77,7 @@ const url = URL.createObjectURL(blob);
 ## Built-in templates
 
 ```tsx
-import { BiodataTemplate, InvoiceTemplate } from '@tekivex/pdf';
+import { BiodataTemplate, InvoiceTemplate } from 'tekivex-pdf';
 
 const buffer = await renderToPDF(
   <BiodataTemplate
@@ -123,7 +123,7 @@ fingerprint is identical between live preview and downloaded PDF.
 
 ```ts
 // Express / Vercel / Cloudflare
-import { renderToPDF, BiodataTemplate } from '@tekivex/pdf';
+import { renderToPDF, BiodataTemplate } from 'tekivex-pdf';
 
 export default async function handler(req, res) {
   const buffer = await renderToPDF(<BiodataTemplate data={…} />);
@@ -136,7 +136,7 @@ export default async function handler(req, res) {
 For streaming large documents:
 
 ```ts
-import { renderToPDFStream } from '@tekivex/pdf';
+import { renderToPDFStream } from 'tekivex-pdf';
 renderToPDFStream(<MyDoc />).pipe(res);
 ```
 
@@ -150,7 +150,7 @@ renderToPDFStream(<MyDoc />).pipe(res);
 - Complex SVGs render fine when authored as React components; raw SVG
   files need to be inlined.
 - For pixel-perfect web-page screenshots (e.g. capturing a live dashboard),
-  Puppeteer is still the right tool. `@tekivex/pdf` targets generated
+  Puppeteer is still the right tool. `tekivex-pdf` targets generated
   documents, not screenshots.
 
 ## Status

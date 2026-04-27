@@ -1,16 +1,16 @@
-# @tekivex/templates
+# tekivex-templates
 
-> Pre-built PDF templates for `@tekivex/pdf`. Drop in, render, ship.
+> Pre-built PDF templates for `tekivex-pdf`. Drop in, render, ship.
 
 Seven structured-document templates, all built on the public PDF primitive API. Each is a single React component you compose with your data and render via `renderToPDF()`.
 
 ## Install
 
 ```bash
-npm install @tekivex/templates @tekivex/pdf @react-pdf/renderer
+npm install tekivex-templates tekivex-pdf @react-pdf/renderer
 ```
 
-`@tekivex/pdf` is a peer dependency — install both as a pair.
+`tekivex-pdf` is a peer dependency — install both as a pair.
 
 ## What's in the box
 
@@ -27,8 +27,8 @@ npm install @tekivex/templates @tekivex/pdf @react-pdf/renderer
 ## Quick example
 
 ```tsx
-import { renderToPDF } from '@tekivex/pdf';
-import { BiodataTemplate } from '@tekivex/templates';
+import { renderToPDF } from 'tekivex-pdf';
+import { BiodataTemplate } from 'tekivex-templates';
 
 const buffer = await renderToPDF(
   <BiodataTemplate
@@ -64,18 +64,18 @@ return new Response(buffer, {
 Each template lives at its own subpath, so consumers using only one template don't pay for the others:
 
 ```tsx
-import { BiodataTemplate } from '@tekivex/templates/biodata';
-import { InvoiceTemplate } from '@tekivex/templates/invoice';
+import { BiodataTemplate } from 'tekivex-templates/biodata';
+import { InvoiceTemplate } from 'tekivex-templates/invoice';
 ```
 
-The root `@tekivex/templates` re-exports all of them for convenience.
+The root `tekivex-templates` re-exports all of them for convenience.
 
-## Why a separate package vs everything in `@tekivex/pdf`
+## Why a separate package vs everything in `tekivex-pdf`
 
 The audit recommended this split for three reasons:
 
-1. **Independent versioning** — template-data shape changes shouldn't force a `@tekivex/pdf` major bump
-2. **Smaller core** — `@tekivex/pdf` stays a clean primitive layer; people using only PDF primitives don't pay for templates they're not using
+1. **Independent versioning** — template-data shape changes shouldn't force a `tekivex-pdf` major bump
+2. **Smaller core** — `tekivex-pdf` stays a clean primitive layer; people using only PDF primitives don't pay for templates they're not using
 3. **Forkability** — templates are *opinionated* (font choices, layouts, decorative elements). Splitting them out makes it cleaner to fork and customise without forking the core
 
 ## Customising a template
@@ -83,10 +83,10 @@ The audit recommended this split for three reasons:
 Every template accepts a `theme` prop (PDFThemeTokens) plus its data shape. For deeper customisation:
 
 1. Copy the template's source from this package into your repo
-2. Edit freely — it's all built on the public `@tekivex/pdf` primitive API
+2. Edit freely — it's all built on the public `tekivex-pdf` primitive API
 3. Render with `renderToPDF(<YourCustomBiodata data={…} />)`
 
-Or use `npx @tekivex/add` (shadcn-style scaffolder) to copy a template's source into your project automatically.
+Or use `npx tekivex-add` (shadcn-style scaffolder) to copy a template's source into your project automatically.
 
 ## Status
 

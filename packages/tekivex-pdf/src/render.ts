@@ -11,6 +11,8 @@
 
 import { renderToBuffer, renderToStream, pdf } from '@react-pdf/renderer';
 import type { ReactElement } from 'react';
+import type { DocumentProps } from '@react-pdf/renderer';
+type DocEl = ReactElement<DocumentProps>;
 
 export interface RenderToPDFOptions {
   /** Optional override of the document filename for HTTP responses. */
@@ -28,7 +30,7 @@ export interface RenderToPDFOptions {
  * await fs.writeFile('biodata.pdf', buffer);
  */
 export async function renderToPDF(
-  element: ReactElement,
+  element: DocEl,
   _options: RenderToPDFOptions = {},
 ): Promise<Buffer> {
   return renderToBuffer(element);
@@ -39,25 +41,25 @@ export async function renderToPDF(
  * large documents where you want to start sending bytes before the whole
  * document is ready.
  */
-export function renderToPDFStream(element: ReactElement): NodeJS.ReadableStream {
+export function renderToPDFStream(element: DocEl): NodeJS.ReadableStream {
   return renderToStream(element) as unknown as NodeJS.ReadableStream;
 }
 
 /**
  * Render the first page of a PDF document tree to a PNG Buffer.
  *
- * **Now implemented in v0.2** via the optional `@tekivex/pdf/raster`
+ * **Now implemented in v0.2** via the optional `tekivex-pdf/raster`
  * sub-export. This wrapper keeps the import path simple but requires
  * `sharp` to be installed by the consumer.
  *
  * For full control (multi-page, JPEG/WebP, custom DPI/resize), import
- * directly from `@tekivex/pdf/raster`:
+ * directly from `tekivex-pdf/raster`:
  *
  * @example
- * import { renderToImage } from '@tekivex/pdf/raster';
+ * import { renderToImage } from 'tekivex-pdf/raster';
  * const png = await renderToImage(<Doc/>, { format: 'png', dpi: 200 });
  */
-export async function renderToPNG(element: ReactElement): Promise<Buffer> {
+export async function renderToPNG(element: DocEl): Promise<Buffer> {
   // Lazy-load to keep Sharp out of the main bundle path.
   const mod: any = await import('./raster.js').catch(() => import('./raster'));
   return mod.renderToImage(element, { format: 'png' });
@@ -72,7 +74,7 @@ export async function renderToPNG(element: ReactElement): Promise<Buffer> {
  * const url = URL.createObjectURL(blob);
  * window.location.href = url;
  */
-export async function pdfToBlob(element: ReactElement): Promise<Blob> {
+export async function pdfToBlob(element: DocEl): Promise<Blob> {
   const instance = pdf(element);
   return await instance.toBlob();
 }

@@ -1,44 +1,47 @@
 {
-  "name": "@tekivex/pdf",
-  "version": "0.3.0-preview",
+  "name": "tekivex-pdf",
+  "version": "0.1.0",
   "description": "TekiVex PDF — render React components to pixel-stable PDFs and PNGs without a headless browser. Wraps @react-pdf/renderer with the tekivex-ui design system.",
   "type": "module",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
     "./raster": {
       "import": "./dist/raster.js",
-      "require": "./dist/raster.cjs",
       "types": "./dist/raster.d.ts"
     },
     "./fonts": {
       "import": "./dist/fonts.js",
-      "require": "./dist/fonts.cjs",
       "types": "./dist/fonts.d.ts"
     }
   },
   "sideEffects": false,
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "react": ">=18.0.0",
     "@react-pdf/renderer": ">=4.0.0",
+    "react": ">=18.0.0",
     "sharp": ">=0.33.0"
   },
   "peerDependenciesMeta": {
-    "sharp": { "optional": true }
+    "sharp": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@react-pdf/renderer": "^4.3.0",
+    "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "react": "^19.2.5",
     "typescript": "^5.9.3"

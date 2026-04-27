@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// @tekivex/pdf/fonts — Noto font registration kit.
+// tekivex-pdf/fonts — Noto font registration kit.
 //
 // @react-pdf/renderer ships only Helvetica/Times/Courier built-in. Anything
 // else needs explicit Font.register(). This module wraps the boilerplate for
@@ -7,14 +7,14 @@
 //
 // Usage:
 //
-//   import { registerNoto } from '@tekivex/pdf/fonts';
+//   import { registerNoto } from 'tekivex-pdf/fonts';
 //   registerNoto(['latin', 'devanagari', 'tamil']);
 //
 //   <TkxPDFText font="Noto Sans Devanagari">मेरा नाम राम है</TkxPDFText>
 //
 // Or for a single language → all required scripts:
 //
-//   import { registerNotoForLanguage } from '@tekivex/pdf/fonts';
+//   import { registerNotoForLanguage } from 'tekivex-pdf/fonts';
 //   registerNotoForLanguage('hi');
 //
 // All weights (400, 500, 600, 700) are registered per family. Calls are

@@ -1,16 +1,16 @@
-# @tekivex/finance
+# tekivex-finance
 
 > Financial-services vertical pack for `tekivex-ui`. KYC inputs, currency formatting, OTP, captcha, payments, subscription billing — everything a fintech or banking-adjacent app needs from a UI library.
 
 ## Install
 
 ```bash
-npm install @tekivex/finance tekivex-ui
+npm install tekivex-finance tekivex-ui
 ```
 
 ## Why a separate package
 
-Same reason as `@tekivex/india`: this is a curated namespace over the financial-services subset of `tekivex-ui`. Components live in the main library and tree-shake the same way; this package gives finance-vertical apps a focused TypeScript surface.
+Same reason as `tekivex-india`: this is a curated namespace over the financial-services subset of `tekivex-ui`. Components live in the main library and tree-shake the same way; this package gives finance-vertical apps a focused TypeScript surface.
 
 ## What's in it
 
@@ -44,7 +44,7 @@ import {
   TkxPlanSelector,
   TkxBillingCycleToggle,
   TkxPaymentButton,
-} from '@tekivex/finance';
+} from 'tekivex-finance';
 
 const PLANS = [
   { id: 'free',   name: 'Free',   prices: { monthly: 0,   annual: 0 },    currency: 'USD', features: ['1 user', '100 MB'] },

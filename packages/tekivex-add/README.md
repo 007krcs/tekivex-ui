@@ -1,4 +1,4 @@
-# @tekivex/add
+# tekivex-add
 
 > shadcn-style component scaffolder for `tekivex-ui`. Copies the source of any component into your project so you own and edit it freely.
 
@@ -6,29 +6,29 @@
 
 `tekivex-ui` is a normal npm package — install it, import components, get tree-shaking. That's the right answer for most teams.
 
-But some teams want to **own the source**. shadcn/ui popularised that pattern: components are *code you can read and edit*, not deps you import. `@tekivex/add` brings that pattern to `tekivex-ui`.
+But some teams want to **own the source**. shadcn/ui popularised that pattern: components are *code you can read and edit*, not deps you import. `tekivex-add` brings that pattern to `tekivex-ui`.
 
 The two modes coexist:
 
 | Mode | Tool | Use when |
 |---|---|---|
 | Library | `npm install tekivex-ui` | You want updates, tree-shaking, and zero source-management overhead |
-| Copy-source | `npx @tekivex/add button` | You want to fork a component, change its behaviour, or vendor the source |
+| Copy-source | `npx tekivex-add button` | You want to fork a component, change its behaviour, or vendor the source |
 
 ## Usage
 
 ```bash
 # Add a single component
-npx @tekivex/add button
+npx tekivex-add button
 
 # Add several at once (deps auto-resolved)
-npx @tekivex/add button card modal form
+npx tekivex-add button card modal form
 
 # List everything available
-npx @tekivex/add --list
+npx tekivex-add --list
 
 # Custom output directory
-npx @tekivex/add --dir src/ui button
+npx tekivex-add --dir src/ui button
 ```
 
 By default, files land in `src/components/ui/Tkx<Name>.tsx`. Pass `--force` to overwrite an existing file.
@@ -49,13 +49,13 @@ The source uses standard React + TypeScript with no special build step. You'll n
 
 ```bash
 # 1. Add the component you want to fork
-npx @tekivex/add button
+npx tekivex-add button
 
 # 2. Edit it freely — it's now yours
 $EDITOR src/components/ui/TkxButton.tsx
 
 # 3. (Optional) Re-add later to see what changed upstream
-npx @tekivex/add button --force
+npx tekivex-add button --force
 git diff
 ```
 
