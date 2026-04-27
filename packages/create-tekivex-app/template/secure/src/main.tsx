@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider } from 'tekivex-ui';
-import { installTrustedTypes, installFrameBuster, isFramed } from '@tekivex/security-core';
+import { installTrustedTypes, installFrameBuster, isFramed } from 'tekivex-security-core';
 import { App } from './App';
 import 'tekivex-ui/styles';
 

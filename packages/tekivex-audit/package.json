@@ -1,5 +1,5 @@
 {
-  "name": "@tekivex/audit",
+  "name": "tekivex-audit",
   "version": "0.1.0",
   "description": "Static-analysis CLI that scans a React project for security + accessibility regressions. Ships with tekivex-ui but works against any React codebase.",
   "type": "module",

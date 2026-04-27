@@ -28,12 +28,12 @@ interface Pkg {
 
 const PACKAGES: Pkg[] = [
   {
-    name: '@tekivex/security-core',
+    name: 'tekivex-security-core',
     tagline: 'The security kernel — framework-agnostic, zero runtime deps',
     description:
       'Every attack-class defense that ships with tekivex-ui, extracted as its own package. Use it in a React app, a Node service, a Deno edge function — anywhere JavaScript runs.',
-    status: 'preview',
-    install: 'npm install @tekivex/security-core',
+    status: 'stable',
+    install: 'npm install tekivex-security-core',
     repoPath: 'packages/security-core',
     features: [
       'sanitizeHref() — URL scheme allow-list (blocks javascript:, data:)',
@@ -46,7 +46,7 @@ const PACKAGES: Pkg[] = [
     ],
     example: {
       title: 'Sanitize a URL in any framework',
-      code: `import { sanitizeHref } from '@tekivex/security-core';
+      code: `import { sanitizeHref } from 'tekivex-security-core';
 
 const safe = sanitizeHref(userSuppliedUrl);
 // safe is guaranteed http(s)/mailto/tel, or empty string
@@ -55,12 +55,12 @@ const safe = sanitizeHref(userSuppliedUrl);
     },
   },
   {
-    name: '@tekivex/audit',
+    name: 'tekivex-audit',
     tagline: 'Static-analysis CLI — 15 security + a11y checks, OWASP/CWE refs',
     description:
       'Scans any React codebase for the attack classes and accessibility regressions that ESLint plugins miss. Shippable as CI gate. Dogfooded on our own demo — first run surfaced 9 errors and 67 warnings in our own code.',
-    status: 'preview',
-    install: 'npx @tekivex/audit .',
+    status: 'stable',
+    install: 'npx tekivex-audit .',
     repoPath: 'packages/tekivex-audit',
     features: [
       'SEC-001 dangerouslySetInnerHTML without DOMPurify',
@@ -80,7 +80,7 @@ const safe = sanitizeHref(userSuppliedUrl);
     example: {
       title: 'Run in CI',
       code: `# .github/workflows/audit.yml
-- run: npx @tekivex/audit . --fail-on warn --format md --out audit.md
+- run: npx tekivex-audit . --fail-on warn --format md --out audit.md
 - uses: actions/upload-artifact@v4
   with: { name: audit-report, path: audit.md }`,
     },
@@ -90,7 +90,7 @@ const safe = sanitizeHref(userSuppliedUrl);
     tagline: 'Scaffolder — React + Vite + tekivex-ui, pre-wired',
     description:
       'One command, two templates: "basic" for fast start, "secure" with CSP meta tag, Trusted Types installer, and live SecurityCore demos already assembled. Both include TypeScript strict mode, git init, and dependency install.',
-    status: 'preview',
+    status: 'stable',
     install: 'npm create tekivex-app@latest my-app',
     repoPath: 'packages/create-tekivex-app',
     features: [
@@ -190,14 +190,14 @@ export function EcosystemPage({ theme }: Props) {
     <div style={page}>
       <h1 style={h1}>Ecosystem</h1>
       <p style={lead}>
-        Four companion packages that ship alongside <strong>tekivex-ui</strong>. Each one is built, tested, and source-available in this repository today. <strong>None of these companion packages are published to npm yet</strong> — the install commands shown below will return <code>404 Not Found</code> until we tag a release. Open a GitHub issue to request a publish and we'll tag within 48 hours.
+        Four companion packages that ship alongside <strong>tekivex-ui</strong>. Three are <strong>live on npm</strong> — install with the commands shown below and they just work. The fourth (<code>@tekivex/figma-kit</code>) is still source-only and ships on demand; the others are stable and version-pinned.
       </p>
 
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 32 }}>
         <TkxBadge variant="primary" outlined>v3.0 platform</TkxBadge>
         <TkxBadge variant="success">open source</TkxBadge>
         <TkxBadge variant="info">MIT licensed</TkxBadge>
-        <TkxBadge variant="danger">not on npm — source-only</TkxBadge>
+        <TkxBadge variant="success">3 of 4 live on npm</TkxBadge>
       </div>
 
       {PACKAGES.map((pkg, i) => (
@@ -220,7 +220,7 @@ export function EcosystemPage({ theme }: Props) {
               </p>
 
               <div style={{ fontSize: 12, color: theme.textMuted, marginTop: 16, marginBottom: 4 }}>
-                Install (once published):
+                {pkg.status === 'stable' ? 'Install:' : 'Install (once published):'}
               </div>
               <pre style={installBox}>$ {pkg.install}</pre>
 

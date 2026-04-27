@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TkxButton, TkxCard, TkxInput } from 'tekivex-ui';
-import { sanitizeHref, sanitizeUnicode, scrubPII, createRateLimiter } from '@tekivex/security-core';
+import { sanitizeHref, sanitizeUnicode, scrubPII, createRateLimiter } from 'tekivex-security-core';
 
 const limiter = createRateLimiter(3, 2000);
 

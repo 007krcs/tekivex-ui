@@ -1,6 +1,6 @@
 {
   "name": "create-tekivex-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scaffold a secure React + Vite app with tekivex-ui pre-wired \u2014 CSP headers, SecurityCore, dark/light theme, TypeScript, ESLint.",
   "type": "module",
   "bin": {
