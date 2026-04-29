@@ -13,8 +13,16 @@ export default defineConfig({
   // peer-dep three but no React; landing uses React directly). Without
   // dedupe + alias we'd get the "two React copies" useState-null crash.
   resolve: {
-    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime', 'three'],
     alias: [
+      // Pin three explicitly: the tekivex-3d source files live OUTSIDE
+      // landing/ and import 'three' bare. Without this alias, Vite's
+      // node-style resolver walks UP from packages/tekivex-3d/src/ and
+      // never reaches landing/node_modules/three. Pinning here forces
+      // every 'three' import (from the landing OR from tekivex-3d's
+      // source) to the same absolute path.
+      { find: 'three', replacement: resolve(__dirname, 'node_modules/three') },
+
       { find: 'tekivex-ui/styles', replacement: resolve(__dirname, '../dist/tekivex-ui.css') },
       { find: 'tekivex-ui',        replacement: resolve(__dirname, '../index.ts') },
       { find: 'tekivex-3d',        replacement: resolve(__dirname, '../packages/tekivex-3d/src/index.ts') },
