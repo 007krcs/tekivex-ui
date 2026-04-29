@@ -25,6 +25,7 @@ export function Nav() {
 
       <div style={{ display: 'flex', gap: 20, alignItems: 'center', fontSize: 14 }}>
         <a href="#features" style={navLinkStyle}>Features</a>
+        <a href="#components" style={navLinkStyle}>Components</a>
         <a href="#playground" style={navLinkStyle}>Playground</a>
         <a href="#tour" style={navLinkStyle}>360°</a>
         <a href="#packages" style={navLinkStyle}>Packages</a>
