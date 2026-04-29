@@ -1,0 +1,57 @@
+{
+  "name": "tekivex-3d",
+  "version": "0.1.0",
+  "description": "True WebGL 3D components for tekivex-ui — TkxScene, TkxCard3D, TkxLogo3D, TkxModel, TkxOrbitView. Vanilla three.js peer dep, no React reconciler. Theme-aware lighting + tone mapping.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node fix-esm-imports.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "three": ">=0.160.0",
+    "tekivex-ui": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/three": "^0.169.0",
+    "react": "^19.2.5",
+    "three": "^0.169.0",
+    "tekivex-ui": "^3.1.0",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "tekivex", "react", "3d", "webgl", "three", "threejs",
+    "card-3d", "model-viewer", "particle-field", "logo-3d",
+    "holographic", "tilt", "interactive"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "tekivex-ui contributors"
+  },
+  "homepage": "https://ui.tekivex.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
+  },
+  "bugs": {
+    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
