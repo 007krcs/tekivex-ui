@@ -1,16 +1,57 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { execSync } from 'node:child_process';
 
-// VITE_BASE lets us deploy this SPA under a sub-path on the canonical
-// docs domain (e.g. /playground/) without rewiring the SPA's hash router.
-// Default is '/' for local `npm run dev:demo`.
-const base = process.env.VITE_BASE || '/';
+// In build mode, default base to '/playground/' because the demo SPA
+// gets moved into that subfolder by the post-build merge step. In dev
+// mode (`npm run dev:demo`), keep base='/' so http://localhost:5174/
+// works as the SPA's root.
+//
+// VITE_BASE env var still wins for explicit overrides.
+const isBuild = process.argv.includes('build');
+const base = process.env.VITE_BASE || (isBuild ? '/playground/' : '/');
 
 export default defineConfig({
   root: resolve(__dirname),
   base,
-  plugins: [react()],
+  plugins: [
+    react(),
+    // ── Post-build merge plugin ──────────────────────────────────────────
+    // After Vite finishes writing demo/dist, run the unified merge so the
+    // final tree at demo/dist looks like:
+    //   /                  React landing (new ui.tekivex.com homepage)
+    //   /playground/       The demo SPA (what Vite just produced)
+    //   /book/             tkx-book catalog
+    //
+    // This runs ONLY in build mode and ONLY when SKIP_POST_MERGE isn't
+    // set — local `npm run dev:demo` is unaffected.
+    {
+      name: 'tkx-post-build-merge',
+      apply: 'build',
+      closeBundle: {
+        sequential: true,
+        order: 'post',
+        handler() {
+          if (process.env.SKIP_POST_MERGE) {
+            console.log('\n[tkx-merge] SKIP_POST_MERGE set — skipping');
+            return;
+          }
+          console.log('\n[tkx-merge] running post-demo-merge.mjs…');
+          try {
+            execSync('node ' + resolve(__dirname, '../scripts/post-demo-merge.mjs'), {
+              stdio: 'inherit',
+              cwd: resolve(__dirname, '..'),
+            });
+          } catch (err) {
+            console.error('[tkx-merge] FAILED — site will fall back to demo-only at /');
+            console.error('         ', err instanceof Error ? err.message : err);
+            // Don't throw — Render's deploy continues with whatever's in demo/dist
+          }
+        },
+      },
+    },
+  ],
   resolve: {
     alias: {
       'tekivex-ui': resolve(__dirname, '../index.ts'),
@@ -26,11 +67,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // React core — single shared vendor chunk, cached aggressively
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
             return 'vendor-react';
           }
-          // Recharts + d3 — only pulled in when chart pages load
           if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
             return 'vendor-charts';
           }
