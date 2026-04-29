@@ -92,34 +92,37 @@ console.log('Step 1/4 — build tekivex-ui library (dist/)');
 console.log('══════════════════════════════════════════════════════');
 run('npm run build', ROOT);
 
-// ── 2. Build the Astro docs site (canonical /)
-//    Uses build:astro-only — NOT `build` — because docs-site's `build`
-//    script invokes this very file, and we'd loop forever otherwise.
+// ── 2. Build the new React landing page (canonical /)
+//    landing/ is a small Vite project that imports tekivex-ui (3.1+
+//    holographic family) and tekivex-3d (WebGL + 360° + AR/VR) to make
+//    the homepage actually showcase what the library can do.
 //
-//    NON-FATAL: After 7 deploy attempts with Astro 5 + Starlight 0.36 +
-//    Zod 4 hitting the same `inst._zod.parse undefined` crash during
-//    static-route generation, we've stopped letting Astro's failure
-//    block the deploy. If this step fails:
-//      - We write a minimal stub at docs-site/dist/index.html that
-//        links to /playground/ and /book/
-//      - Steps 3-5 still run, so the SPAs work
-//      - The user gets a working site TODAY; Astro can be debugged
-//        separately without holding up the demo
+//    Astro is no longer attempted at build time — after 8 failed deploys
+//    on the Starlight 0.36 + Zod 4 incompatibility, we replaced it with
+//    this React landing page that doesn't have those issues.
 console.log('\n══════════════════════════════════════════════════════');
-console.log('Step 2/4 — build docs-site (Astro Starlight) → /');
+console.log('Step 2/4 — build landing/ (React + tekivex-3d) → /');
 console.log('══════════════════════════════════════════════════════');
 const DIST = resolve(ROOT, 'docs-site/dist');
-let astroSucceeded = false;
+let landingSucceeded = false;
 try {
-  run('npm install --no-audit --no-fund', resolve(ROOT, 'docs-site'));
-  run('npm run build:astro-only', resolve(ROOT, 'docs-site'));
-  if (existsSync(DIST)) {
-    astroSucceeded = true;
-    console.log('  ✓ Astro build succeeded');
+  run('npm install --no-audit --no-fund', resolve(ROOT, 'landing'));
+  run('npx vite build', resolve(ROOT, 'landing'));
+  const landingDist = resolve(ROOT, 'landing/dist');
+  if (existsSync(landingDist)) {
+    if (existsSync(DIST)) rmSync(DIST, { recursive: true, force: true });
+    mkdirSync(DIST, { recursive: true });
+    cpSync(landingDist, DIST, { recursive: true });
+    landingSucceeded = true;
+    console.log('  ✓ Landing built and copied to docs-site/dist/');
   }
 } catch (err) {
-  console.error(`\n  ✗ Astro build failed (continuing anyway): ${err.message}`);
+  console.error(`\n  ✗ Landing build failed (falling back to stub): ${err instanceof Error ? err.message : err}`);
 }
+
+// Keep the old astroSucceeded variable name so the fallback block
+// below doesn't need restructuring — false means stub takes over.
+const astroSucceeded = landingSucceeded;
 
 if (!astroSucceeded) {
   console.log('\n  Writing stub homepage at docs-site/dist/index.html');
