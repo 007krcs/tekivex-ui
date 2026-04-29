@@ -259,6 +259,22 @@ export type { TkxAIChatBubbleProps, AIRole } from './src/components/TkxAIChatBub
 export { TkxAIThinking } from './src/components/TkxAIThinking';
 export type { TkxAIThinkingProps } from './src/components/TkxAIThinking';
 
+// ── Holographic / 3D-tilt family ──────────────────────────────────────────────
+export {
+  TkxHolographicSurface,
+  TkxHolographicCard,
+  TkxHolographicAvatar,
+  TkxHolographicBadge,
+  TkxHolographicButton,
+} from './src/components/TkxHolographic';
+export type {
+  TkxHolographicSurfaceProps,
+  TkxHolographicCardProps,
+  TkxHolographicAvatarProps,
+  TkxHolographicBadgeProps,
+  TkxHolographicButtonProps,
+} from './src/components/TkxHolographic';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → 'tekivex-ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
