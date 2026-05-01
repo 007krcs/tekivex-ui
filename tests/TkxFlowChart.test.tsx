@@ -587,6 +587,69 @@ describe('TkxFlowChart edge creation by port drag', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it('completes an edge via WINDOW-level pointer events (real-browser path)', () => {
+    // Real browsers route pointermove + pointerup through window once the
+    // user drags away from the port. This test simulates that path to
+    // prove the window-level listeners actually pick up the events.
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState({
+        nodes: [
+          { id: 'a', label: 'A', x: 40,  y: 40 },
+          { id: 'b', label: 'B', x: 240, y: 40 },
+        ],
+        edges: [],
+      } as FlowChartData);
+      return (
+        <TkxFlowChart
+          data={data}
+          onChange={(next) => { onChange(next); setData(next); }}
+        />
+      );
+    }
+    render(<H />);
+    const portA = screen.getByTestId('flow-port-a');
+    const nodeB = screen.getByTestId('flow-node-b');
+
+    // pointerDown on the port attaches window-level pointermove + pointerup
+    fireEvent.pointerDown(portA, { pointerId: 1, clientX: 0, clientY: 0 });
+
+    // Helper: dispatch a window-level pointer event with the right pointerId
+    // and client coordinates. jsdom supports PointerEvent (extends MouseEvent),
+    // but we have to set clientX/clientY + pointerId via the init dict.
+    const dispatch = (type: string, x: number, y: number) => {
+      const ev = new (window as unknown as { PointerEvent: typeof MouseEvent }).PointerEvent(
+        type,
+        { bubbles: true, clientX: x, clientY: y, pointerId: 1 } as unknown as MouseEventInit,
+      );
+      // jsdom's PointerEvent doesn't always propagate pointerId — force-set it.
+      Object.defineProperty(ev, 'pointerId', { value: 1, writable: false });
+      act(() => {
+        window.dispatchEvent(ev);
+      });
+    };
+
+    // Window-level pointermove
+    dispatch('pointermove', 200, 50);
+
+    // The draft path should be visible mid-drag
+    expect(screen.getByTestId('flow-edge-draft')).toBeInTheDocument();
+
+    // Release over node B
+    const orig = document.elementFromPoint;
+    document.elementFromPoint = () => nodeB;
+    try {
+      dispatch('pointerup', 250, 60);
+    } finally {
+      document.elementFromPoint = orig;
+    }
+
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    expect(last?.edges).toHaveLength(1);
+    expect(last?.edges[0]).toMatchObject({ from: 'a', to: 'b' });
+    expect(screen.queryByTestId('flow-edge-draft')).not.toBeInTheDocument();
+  });
+
   it('cancels the draft when released over empty canvas', () => {
     const onChange = vi.fn();
     function H() {

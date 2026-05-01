@@ -256,18 +256,78 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
       [viewport.x, viewport.y, viewport.scale],
     );
 
-    // ── Edge-creation handlers (one port per node) ──────────────────────
+    // ── Edge-creation handlers ──────────────────────────────────────────
+    //
+    // Earlier this used onPointerMove / onPointerUp on the port button +
+    // setPointerCapture. Problem in real browsers: combinations of React's
+    // synthetic event delegation, e.preventDefault, and pointer-capture
+    // sometimes drop the pointermove events once the cursor leaves the
+    // button, so the draft line never tracks the cursor and the up-handler
+    // never fires.
+    //
+    // Robust fix: when the user presses on the port, attach a window-level
+    // pointermove + pointerup pair that owns the drag. They dispatch
+    // unconditionally regardless of which element is under the cursor,
+    // so the draft line tracks correctly and the drop can land anywhere.
+    // Cleanup happens inside pointerup.
+
     const onPortPointerDown = (e: PointerEvent<HTMLButtonElement>, fromNodeId: string) => {
       e.stopPropagation();
       e.preventDefault();
-      try {
-        (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
-      } catch { /* jsdom */ }
+
+      const startedPointerId = e.pointerId;
       const [gx, gy] = screenToGraph(e.clientX, e.clientY);
-      dragRef.current = { kind: 'edge', pointerId: e.pointerId, fromNodeId };
+      dragRef.current = { kind: 'edge', pointerId: startedPointerId, fromNodeId };
       setEdgeDraft({ fromNodeId, gx, gy });
+
+      const onWindowMove = (ev: globalThis.PointerEvent) => {
+        const drag = dragRef.current;
+        if (!drag || drag.kind !== 'edge' || drag.pointerId !== ev.pointerId) return;
+        const [mx, my] = screenToGraph(ev.clientX, ev.clientY);
+        setEdgeDraft({ fromNodeId: drag.fromNodeId, gx: mx, gy: my });
+      };
+
+      const onWindowUp = (ev: globalThis.PointerEvent) => {
+        const drag = dragRef.current;
+        if (!drag || drag.kind !== 'edge' || drag.pointerId !== ev.pointerId) return;
+
+        // Find the node under the pointer (excluding the source).
+        let toNodeId: string | undefined;
+        try {
+          const target = document.elementFromPoint?.(ev.clientX, ev.clientY);
+          const nodeEl = (target as Element | null)?.closest('[data-tkx-node-id]') as HTMLElement | null;
+          toNodeId = nodeEl?.dataset.tkxNodeId;
+        } catch { /* */ }
+
+        if (toNodeId && toNodeId !== drag.fromNodeId) {
+          const exists = data.edges.some(
+            (ed) => ed.from === drag.fromNodeId && ed.to === toNodeId,
+          );
+          if (!exists) {
+            const newEdge: FlowEdge = {
+              id: `e-${drag.fromNodeId}-${toNodeId}-${Date.now().toString(36)}`,
+              from: drag.fromNodeId,
+              to: toNodeId,
+            };
+            onChange({ ...data, edges: [...data.edges, newEdge] });
+          }
+        }
+
+        dragRef.current = null;
+        setEdgeDraft(null);
+        window.removeEventListener('pointermove', onWindowMove);
+        window.removeEventListener('pointerup',   onWindowUp);
+        window.removeEventListener('pointercancel', onWindowUp);
+      };
+
+      window.addEventListener('pointermove', onWindowMove);
+      window.addEventListener('pointerup',   onWindowUp);
+      window.addEventListener('pointercancel', onWindowUp);
     };
 
+    // The following two stay registered on the React port-button for jsdom
+    // tests that fire synthetic pointer events directly — real browsers go
+    // through the window listeners above.
     const onPortPointerMove = (e: PointerEvent<HTMLButtonElement>) => {
       const drag = dragRef.current;
       if (!drag || drag.kind !== 'edge' || drag.pointerId !== e.pointerId) return;
@@ -279,17 +339,13 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
       const drag = dragRef.current;
       if (!drag || drag.kind !== 'edge' || drag.pointerId !== e.pointerId) return;
       e.stopPropagation();
-      // Find the node under the pointer (excluding the source). jsdom is
-      // permissive about elementFromPoint — wrap defensively so a missing
-      // implementation doesn't crash the cleanup path.
       let toNodeId: string | undefined;
       try {
         const target = document.elementFromPoint?.(e.clientX, e.clientY);
         const nodeEl = (target as Element | null)?.closest('[data-tkx-node-id]') as HTMLElement | null;
         toNodeId = nodeEl?.dataset.tkxNodeId;
-      } catch { /* hit-test unavailable; treat as miss */ }
+      } catch { /* */ }
       if (toNodeId && toNodeId !== drag.fromNodeId) {
-        // Don't create duplicate edges in the same direction
         const exists = data.edges.some(
           (ed) => ed.from === drag.fromNodeId && ed.to === toNodeId,
         );
