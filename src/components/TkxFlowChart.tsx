@@ -688,31 +688,55 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                     pointerEvents: 'none',
                   }}
                 />
-                {/* Output port (right) — drag from here to create an edge */}
+                {/* Output port (right) — drag from here to create an edge.
+                    Discoverable affordances: 22 × 22 hit target (vs 10px for
+                    the static input port), glowing pulse on hover, "+" glyph
+                    inside, and a `title` tooltip + aria-label for AT users. */}
                 <button
                   type="button"
-                  aria-label={`Drag to connect ${n.label}`}
+                  aria-label={`Connect from ${n.label} — drag to another node`}
+                  title="Drag to connect to another node"
                   data-testid={`flow-port-${n.id}`}
                   onPointerDown={(e) => onPortPointerDown(e, n.id)}
                   onPointerMove={onPortPointerMove}
                   onPointerUp={onPortPointerUp}
                   onPointerCancel={onPortPointerUp}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-50%) scale(1.25)';
+                    e.currentTarget.style.boxShadow = `0 0 18px ${accent}, 0 0 6px ${accent}`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+                    e.currentTarget.style.boxShadow = `0 0 12px ${accent}aa`;
+                  }}
                   style={{
                     position: 'absolute',
-                    right: -8,
+                    right: -11,
                     top: '50%',
-                    width: 16,
-                    height: 16,
+                    width: 22,
+                    height: 22,
                     transform: 'translateY(-50%)',
                     borderRadius: '50%',
                     background: accent,
-                    boxShadow: `0 0 10px ${accent}88`,
+                    boxShadow: `0 0 12px ${accent}aa`,
                     border: '2px solid rgba(8,10,25,0.95)',
                     cursor: 'crosshair',
                     padding: 0,
                     touchAction: 'none',
+                    color: '#0a0a0f',
+                    fontSize: 12,
+                    fontWeight: 900,
+                    fontFamily: 'inherit',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    lineHeight: 1,
+                    transition: 'transform 0.15s, box-shadow 0.15s',
+                    zIndex: 2,
                   }}
-                />
+                >
+                  <span aria-hidden="true">+</span>
+                </button>
               </div>
             );
           })}
