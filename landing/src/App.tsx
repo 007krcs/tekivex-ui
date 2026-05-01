@@ -16,6 +16,7 @@ import { SacredGeometry } from './SacredGeometry';
 import { HolographicUniverse } from './sections/HolographicUniverse';
 import { GalaxyMap360 } from './sections/GalaxyMap360';
 import { FlowChartDemo } from './sections/FlowChartDemo';
+import { TemplatesDemo } from './sections/TemplatesDemo';
 
 interface ImmersiveCtx {
   open: () => void;
@@ -50,6 +51,7 @@ export function App() {
         <Playground />
         <DataDemo />
         <FlowChartDemo />
+        <TemplatesDemo />
         <HolographicUniverse />
         <GalaxyMap360 />
         <Tour360 />

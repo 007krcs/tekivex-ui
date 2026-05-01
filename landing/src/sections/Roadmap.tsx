@@ -88,6 +88,8 @@ const ITEMS: RoadmapItem[] = [
 
   { name: 'TkxFlowChart',              pkg: 'tekivex-ui', release: 'v3.15', status: 'shipped',
     desc: 'Node-edge graph editor. Drag/pinch/wheel, keyboard nav, custom renderers, ≥85% tests.' },
+  { name: 'TkxTemplateGenerator',      pkg: 'tekivex-ui', release: 'v3.16', status: 'shipped',
+    desc: '24 templates (12 resume + 12 biodata, religion-agnostic). Smart form, live preview, paywall gate, browser-print PDF.' },
 
   // ── what's actually next ────────────────────────────────────────────
   { name: 'TkxFormulaBar',             pkg: 'tekivex-ui', release: 'v3.14', status: 'planned',
@@ -116,7 +118,7 @@ const STATUS_STYLE: Record<RoadmapItem['status'], { bg: string; color: string; l
 // Custom release ordering: shipped releases ascending, then future releases
 const RELEASE_ORDER = [
   'v3.2', 'v3.3', 'v3.4', 'v3.5', 'v3.6', 'v3.7', 'v3.8', 'v3.9', 'v3.10',
-  'v3.11', 'v3.12', 'v3.13', 'v3.15',
+  'v3.11', 'v3.12', 'v3.13', 'v3.15', 'v3.16',
   'v0.2', 'v0.3', 'v0.4', 'v0.5',
   'v0.7',
   'v3.14',
