@@ -15,3 +15,4 @@ export * as Captcha from './captcha';
 export * as CanvasEngine from './canvas';
 export * as Payment from './payment';
 export * as Pdf from './pdf';
+export * as Shaper from './shaper';
