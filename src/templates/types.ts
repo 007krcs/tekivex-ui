@@ -117,6 +117,15 @@ export interface BiodataData {
 
   // ── Religious / cultural (all optional) ──
   religion?: string;
+  /**
+   * Override for the auto-derived religious symbol shown atop biodatas.
+   * 'auto'  — derive from `religion` (default)
+   * 'none'  — hide the symbol entirely
+   * 'om' | 'cross' | 'crescent' | 'khanda' | 'dharma' | 'lotus' — explicit pick
+   */
+  religiousMark?: 'auto' | 'none' | 'om' | 'cross' | 'crescent' | 'khanda' | 'dharma' | 'lotus';
+  /** Short blessing line shown below the symbol (e.g. "Shubh Vivah", "Bismillah"). */
+  blessing?: string;
   caste?: string;
   subCaste?: string;
   /** Hindu / Jain matrimonial astrology fields. */

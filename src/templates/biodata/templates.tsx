@@ -9,7 +9,13 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { BiodataData } from '../types';
-import { Page, SectionHeading, FieldRow, CornerOrnament } from '../layouts/primitives';
+import {
+  Page,
+  SectionHeading,
+  FieldRow,
+  CornerOrnament,
+  ReligiousHeader,
+} from '../layouts/primitives';
 
 // ── Reusable sub-blocks ────────────────────────────────────────────────────
 
@@ -106,6 +112,7 @@ export function BiodataTraditionalRoyal({ data }: { data: BiodataData }) {
       <CornerOrnament color={accent} position="bottom-left" />
       <CornerOrnament color={accent} position="bottom-right" />
       <div style={{ textAlign: 'center', borderBottom: `0.5mm double ${accent}`, paddingBottom: '4mm' }}>
+        <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} size={28} />
         <div style={{ fontSize: '12pt', color: accent, letterSpacing: '0.16em', fontWeight: 700, textTransform: 'uppercase' }}>॥ Biodata ॥</div>
         <h1 style={{ margin: '2mm 0 0', fontSize: '24pt', fontWeight: 800, color: '#1f1f1f', letterSpacing: '0.02em' }}>{data.fullName}</h1>
       </div>
@@ -129,6 +136,7 @@ export function BiodataModernUniversal({ data }: { data: BiodataData }) {
   const accent = '#3b7d50';
   return (
     <Page>
+      <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} />
       <div style={{ display: 'flex', gap: '6mm', alignItems: 'center', borderBottom: `0.3mm solid ${accent}55`, paddingBottom: '4mm' }}>
         <PhotoBlock d={data} accent={accent} size={36} />
         <div>
@@ -156,6 +164,7 @@ export function BiodataSapphire({ data }: { data: BiodataData }) {
   const accent = '#1e3a8a';
   return (
     <Page>
+      <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} />
       <div style={{ background: accent, color: '#fff', padding: '6mm', borderRadius: '2mm' }}>
         <h1 style={{ margin: 0, fontSize: '20pt', fontWeight: 800 }}>{data.fullName}</h1>
         <div style={{ fontSize: '10pt', opacity: 0.9, marginTop: '1mm' }}>
@@ -182,6 +191,7 @@ export function BiodataFloralPastel({ data }: { data: BiodataData }) {
   const accent = '#a855f7';
   return (
     <Page background="#fdfbff">
+      <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} />
       <div style={{ position: 'relative', borderBottom: `0.3mm solid ${accent}55`, paddingBottom: '4mm' }}>
         <div style={{ display: 'flex', gap: '5mm', alignItems: 'center' }}>
           <PhotoBlock d={data} accent={accent} size={38} />
@@ -208,6 +218,7 @@ export function BiodataCharcoal({ data }: { data: BiodataData }) {
   const accent = '#fbbf24';
   return (
     <Page background="#181820" color="#e8e8f4">
+      <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} />
       <div style={{ display: 'flex', gap: '6mm', alignItems: 'flex-end', borderBottom: `0.3mm solid ${accent}55`, paddingBottom: '4mm' }}>
         <PhotoBlock d={data} accent={accent} size={40} />
         <div style={{ flex: 1 }}>
@@ -230,6 +241,7 @@ export function BiodataCompact({ data }: { data: BiodataData }) {
   const accent = '#0f766e';
   return (
     <Page padding={10}>
+      <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} size={20} />
       <div style={{ textAlign: 'center', borderBottom: `0.3mm solid ${accent}`, paddingBottom: '3mm' }}>
         <h1 style={{ margin: 0, fontSize: '20pt', fontWeight: 800 }}>{data.fullName}</h1>
         <div style={{ fontSize: '10pt', color: '#666' }}>{data.occupation}{data.company ? ` · ${data.company}` : ''}</div>
@@ -256,6 +268,7 @@ export function BiodataBorderedFrame({ data }: { data: BiodataData }) {
   return (
     <Page background="#fffbf2">
       <div style={{ border: `0.5mm double ${accent}`, padding: '6mm' }}>
+        <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} size={26} />
         <div style={{ textAlign: 'center', marginBottom: '4mm' }}>
           <h1 style={{ margin: 0, fontSize: '22pt', fontWeight: 800, color: accent }}>{data.fullName}</h1>
           <div style={{ fontSize: '10pt', color: '#555', fontStyle: 'italic' }}>Biodata</div>
@@ -281,6 +294,7 @@ export function BiodataMinimalist({ data }: { data: BiodataData }) {
   const accent = '#000';
   return (
     <Page fontFamily="'Helvetica Neue', Helvetica, Arial, sans-serif">
+      <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 50mm', gap: '6mm' }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '32pt', fontWeight: 700, letterSpacing: '-0.04em', lineHeight: 1 }}>{data.fullName}</h1>
@@ -318,6 +332,7 @@ export function BiodataDualPane({ data }: { data: BiodataData }) {
           </div>
         </aside>
         <main style={{ flex: 1, padding: '12mm 8mm' }}>
+          <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} size={22} />
           <SectionHeading accent={accent} size="sm">Personal</SectionHeading><PersonalSection d={data} accent={accent} />
           <SectionHeading accent={accent} size="sm">Cultural</SectionHeading><CulturalSection d={data} accent={accent} />
           <SectionHeading accent={accent} size="sm">Career</SectionHeading><CareerSection d={data} accent={accent} />
@@ -334,6 +349,7 @@ export function BiodataSaffron({ data }: { data: BiodataData }) {
   const accent = '#d97706';
   return (
     <Page background="#fff7ed">
+      <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} size={26} />
       <div style={{ background: `linear-gradient(135deg, #f59e0b, ${accent})`, color: '#fff', padding: '8mm', borderRadius: '2mm' }}>
         <h1 style={{ margin: 0, fontSize: '24pt', fontWeight: 800 }}>{data.fullName}</h1>
         <div style={{ fontSize: '11pt', marginTop: '1mm', opacity: 0.95 }}>{data.occupation}</div>
@@ -365,6 +381,7 @@ export function BiodataEmeraldCards({ data }: { data: BiodataData }) {
   };
   return (
     <Page>
+      <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} />
       <div style={{ display: 'flex', gap: '5mm', alignItems: 'center' }}>
         <PhotoBlock d={data} accent={accent} size={40} />
         <div>
@@ -400,6 +417,7 @@ export function BiodataGeometric({ data }: { data: BiodataData }) {
       <CornerOrnament color={accent} position="top-right" size={40} />
       <CornerOrnament color={accent} position="bottom-left" size={40} />
       <div style={{ textAlign: 'center', position: 'relative', zIndex: 1, paddingBottom: '4mm' }}>
+        <ReligiousHeader religion={data.religion} override={data.religiousMark} blessing={data.blessing} color={accent} size={26} />
         <PhotoBlock d={data} accent={accent} size={42} />
         <h1 style={{ margin: '4mm 0 0', fontSize: '22pt', fontWeight: 800, color: accent }}>{data.fullName}</h1>
         <div style={{ fontSize: '10.5pt', color: '#555' }}>{data.occupation}</div>

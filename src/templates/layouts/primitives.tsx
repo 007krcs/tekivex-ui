@@ -283,6 +283,113 @@ export function dateRange(start?: string, end?: string): string {
   return `${s} – ${e}`;
 }
 
+// ── Religious / cultural marker ─────────────────────────────────────────────
+//
+// Matrimonial biodatas across cultures traditionally lead with a religious
+// or cultural marker (Om, Cross, Khanda, etc.). These are cultural
+// artifacts on a personal document — not religious endorsements — and
+// most users expect them on a biodata for their faith.
+//
+// Mapping is conservative:
+//   - Recognised religion strings get a Unicode glyph
+//   - Unknown / blank → no mark renders
+//   - Consumers can override via `mark` prop ('none' to suppress)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type ReligiousMarkOverride =
+  | 'auto'
+  | 'none'
+  | 'om'        // Hindu: ॐ
+  | 'cross'     // Christian: ✝
+  | 'crescent'  // Muslim: ☪
+  | 'khanda'    // Sikh: ☬
+  | 'dharma'    // Buddhist: ☸
+  | 'lotus';    // Jain / generic spiritual: 🪷
+
+/** Map a free-form religion string + optional override to a glyph + name. */
+export function symbolForReligion(
+  religion?: string,
+  override?: ReligiousMarkOverride,
+): { glyph: string; label: string } | null {
+  if (override === 'none') return null;
+
+  const explicit: Record<string, { glyph: string; label: string }> = {
+    om:       { glyph: 'ॐ', label: 'Om' },
+    cross:    { glyph: '✝', label: 'Christian cross' },
+    crescent: { glyph: '☪', label: 'Crescent and star' },
+    khanda:   { glyph: '☬', label: 'Khanda' },
+    dharma:   { glyph: '☸', label: 'Dharmachakra' },
+    lotus:    { glyph: '🪷', label: 'Lotus' },
+  };
+  if (override && override in explicit) return explicit[override];
+
+  if (!religion) return null;
+  const r = religion.toLowerCase().trim();
+
+  // Auto-derive from religion name
+  if (/hindu|sanatan/.test(r))                        return explicit.om;
+  if (/christian|catholic|protestant|orthodox/.test(r)) return explicit.cross;
+  if (/muslim|islam/.test(r))                          return explicit.crescent;
+  if (/sikh/.test(r))                                  return explicit.khanda;
+  if (/buddhist|buddh/.test(r))                        return explicit.dharma;
+  if (/jain/.test(r))                                  return explicit.lotus;
+
+  return null;
+}
+
+/**
+ * Religious header strip — renders a centered glyph + an optional
+ * blessing line above the biodata title. Returns null when no symbol
+ * applies, so templates can drop it in without conditional checks.
+ */
+export function ReligiousHeader({
+  religion,
+  override,
+  blessing,
+  color,
+  size = 24,
+}: {
+  religion?: string;
+  override?: ReligiousMarkOverride;
+  /** Optional short blessing line beneath the glyph. */
+  blessing?: string;
+  color: string;
+  size?: number;
+}) {
+  const sym = symbolForReligion(religion, override);
+  if (!sym) return null;
+  return (
+    <div style={{ textAlign: 'center', marginBottom: '3mm' }}>
+      <div
+        role="img"
+        aria-label={sym.label}
+        style={{
+          fontSize: `${size}pt`,
+          color,
+          lineHeight: 1,
+          fontFamily: '"Noto Sans", "Noto Sans Devanagari", "Noto Color Emoji", sans-serif',
+        }}
+      >
+        {sym.glyph}
+      </div>
+      {blessing && (
+        <div
+          style={{
+            fontSize: '9pt',
+            color,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            marginTop: '1.5mm',
+            opacity: 0.85,
+          }}
+        >
+          {blessing}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /**
  * Skills tag list — each skill rendered as a small pill.
  */
