@@ -52,3 +52,6 @@ export type { TkxPlanetProps } from './Planet';
 
 export { TkxOrbitPath } from './OrbitPath';
 export type { TkxOrbitPathProps } from './OrbitPath';
+
+export { TkxPortal3D } from './Portal3D';
+export type { TkxPortal3DProps } from './Portal3D';

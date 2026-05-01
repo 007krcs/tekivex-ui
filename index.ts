@@ -322,6 +322,14 @@ export type { TkxAccessibilityCheckerProps } from './src/components/TkxAccessibi
 export { TkxMindMap } from './src/components/TkxMindMap';
 export type { TkxMindMapProps, MindMapNode } from './src/components/TkxMindMap';
 
+// ── Command palette ──────────────────────────────────────────────────────────
+export { TkxCommandPalette, fuzzyScore } from './src/components/TkxCommandPalette';
+export type {
+  TkxCommandPaletteProps,
+  CommandPaletteCommand,
+  CommandHotkey,
+} from './src/components/TkxCommandPalette';
+
 // ── Gantt chart ───────────────────────────────────────────────────────────────
 export { TkxGantt, parseDay, formatDay, dayDiff } from './src/components/TkxGantt';
 export type { TkxGanttProps, GanttTask } from './src/components/TkxGantt';
@@ -334,6 +342,10 @@ export type {
   PivotAggregator,
   PivotRecord,
 } from './src/components/TkxPivotTable';
+
+// ── Formula bar (companion to TkxSpreadsheet) ───────────────────────────────
+export { TkxFormulaBar } from './src/components/TkxFormulaBar';
+export type { TkxFormulaBarProps } from './src/components/TkxFormulaBar';
 
 // ── Spreadsheet ───────────────────────────────────────────────────────────────
 export {

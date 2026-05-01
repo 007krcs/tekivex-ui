@@ -1,7 +1,7 @@
 const STATS = [
-  { value: '99', label: 'Components' },
-  { value: '12', label: 'npm packages' },
-  { value: '1,034', label: 'Tests passing' },
+  { value: '113', label: 'Components' },
+  { value: '13', label: 'npm packages' },
+  { value: '1,150+', label: 'Tests passing' },
   { value: 'AAA', label: 'WCAG 2.1' },
   { value: '0', label: 'Runtime deps' },
   { value: 'MIT', label: 'License' },

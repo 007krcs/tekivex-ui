@@ -1,13 +1,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Roadmap — what's next, with target releases and honest status flags.
+// Roadmap — what's just shipped, what's in flight, what's next.
 //
-// Three statuses:
-//   "preview"   — code in repo, may have rough edges, ship-on-demand
+// Four statuses:
+//   "shipped"     — published to npm, available now
+//   "preview"     — code in repo, may have rough edges, ship-on-demand
 //   "in progress" — actively being built right now
-//   "planned"   — committed scope, not started
+//   "planned"     — committed scope, not started
 //
-// Each item lists which package it'll ship in. Goal: zero "TBD" — every
-// row is concrete enough that a contributor could pick it up and run with it.
+// Goal: zero "TBD" — every row is concrete enough that a contributor could
+// pick it up and run with it.
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface RoadmapItem {
@@ -15,178 +16,137 @@ interface RoadmapItem {
   pkg: string;
   desc: string;
   release: string;
-  status: 'preview' | 'in progress' | 'planned';
+  status: 'shipped' | 'preview' | 'in progress' | 'planned';
 }
 
 const ITEMS: RoadmapItem[] = [
-  // ── tekivex-3d v0.2 — finishing the WebGL family ──────────────────────
-  {
-    name: 'TkxModel3D',
-    pkg: 'tekivex-3d',
-    desc: 'glTF/GLB model loader with Draco compression support and PBR auto-tone-mapping.',
-    release: 'v0.2',
-    status: 'in progress',
-  },
-  {
-    name: 'TkxLogo3D',
-    pkg: 'tekivex-3d',
-    desc: 'Extruded-text 3D logo with theme-token gradient material. Drop-in replacement for hero text.',
-    release: 'v0.2',
-    status: 'in progress',
-  },
-  {
-    name: 'TkxOrbitControls',
-    pkg: 'tekivex-3d',
-    desc: 'Wraps three/examples OrbitControls with sensible defaults + theme-aware focus ring.',
-    release: 'v0.2',
-    status: 'planned',
-  },
-  {
-    name: 'TkxParticleField',
-    pkg: 'tekivex-3d',
-    desc: 'Animated particle background — 10k particles, GPU instancing, 60 FPS on M1+ phones.',
-    release: 'v0.2',
-    status: 'planned',
-  },
-  {
-    name: 'TkxAvatar3D',
-    pkg: 'tekivex-3d',
-    desc: 'Animated 3D avatar — idle blink, talk, cheer states. ~80 KB FBX.',
-    release: 'v0.3',
-    status: 'planned',
-  },
+  // ── v3.6 → v3.13 — already shipped this quarter ──────────────────────
+  { name: 'TkxKanban',                 pkg: 'tekivex-ui', release: 'v3.2',  status: 'shipped',
+    desc: 'Drag-drop board with WAI-ARIA grid pattern. Keyboard reachable.' },
+  { name: 'TkxRichEditor',             pkg: 'tekivex-ui', release: 'v3.3',  status: 'shipped',
+    desc: 'contenteditable + custom HTML sanitiser. No Slate / TipTap dep.' },
+  { name: 'TkxThemeStudio',            pkg: 'tekivex-ui', release: 'v3.4',  status: 'shipped',
+    desc: 'Visual theme editor with WCAG-compliance badges per token pair.' },
+  { name: 'TkxCalendarHeatmap',        pkg: 'tekivex-ui', release: 'v3.4',  status: 'shipped',
+    desc: 'GitHub-style heatmap with programmable colour scale + tooltips.' },
+  { name: 'TkxAccessibilityChecker',   pkg: 'tekivex-ui', release: 'v3.5',  status: 'shipped',
+    desc: 'Floating axe-core widget. Live a11y violations on the current page.' },
+  { name: 'TkxFormBuilder',            pkg: 'tekivex-ui', release: 'v3.6',  status: 'shipped',
+    desc: 'Three-pane visual form designer. Live preview tab. JSON schema export.' },
+  { name: 'TkxMindMap',                pkg: 'tekivex-ui', release: 'v3.7',  status: 'shipped',
+    desc: 'Tidy-tree mind map. SVG cubic-Bezier links. Full keyboard nav.' },
+  { name: 'TkxGantt',                  pkg: 'tekivex-ui', release: 'v3.8',  status: 'shipped',
+    desc: 'Timeline with SVG dependency arrows. UTC-safe date math. Reschedule via keyboard.' },
+  { name: 'TkxSpreadsheet',            pkg: 'tekivex-ui', release: 'v3.9',  status: 'shipped',
+    desc: 'Real formula evaluator: SUM/AVG/MIN/MAX/COUNT/IF/ROUND, ranges, cycle detection.' },
+  { name: 'TkxPivotTable',             pkg: 'tekivex-ui', release: 'v3.10', status: 'shipped',
+    desc: 'Group + aggregate flat records. Multi-level row/col groups. Grand totals.' },
+  { name: 'TkxDataExplorer',           pkg: 'tekivex-ui', release: 'v3.11', status: 'shipped',
+    desc: 'Drop a CSV/JSON, preview, pick a chart, render. Bridges to TkxSpreadsheet.' },
+  { name: 'Holographic extras (Panel/Gauge/Progress/Terminal)',
+    pkg: 'tekivex-ui', release: 'v3.12', status: 'shipped',
+    desc: 'Multi-section panels, ARIA meters, shimmer progress bars, scrolling terminals.' },
+  { name: 'TkxCommandPalette',         pkg: 'tekivex-ui', release: 'v3.13', status: 'shipped',
+    desc: 'Cmd-K palette. Built-in fuzzy matcher (no Fuse.js dep). Recents, sections, hotkeys.' },
 
-  // ── tekivex-ui v3.2 — high-impact new components ──────────────────────
-  {
-    name: 'TkxKanban',
-    pkg: 'tekivex-ui',
-    desc: 'Drag-drop board with column virtualization. Keyboard-accessible (WAI-ARIA grid pattern).',
-    release: 'v3.2',
-    status: 'planned',
-  },
-  {
-    name: 'TkxRichEditor',
-    pkg: 'tekivex-ui',
-    desc: 'Slate-based rich-text editor — bold, italic, link, image, code blocks, mentions, sanitised on output.',
-    release: 'v3.2',
-    status: 'planned',
-  },
-  {
-    name: 'TkxFormBuilder',
-    pkg: 'tekivex-ui',
-    desc: 'Visual form designer. Drag inputs onto a canvas → produces JSON schema → renders with TkxForm.',
-    release: 'v3.2',
-    status: 'planned',
-  },
-  {
-    name: 'TkxCalendarHeatmap',
-    pkg: 'tekivex-ui',
-    desc: 'GitHub-style contribution heatmap. 365-day view, 12-month view, programmable colour scale.',
-    release: 'v3.2',
-    status: 'planned',
-  },
-  {
-    name: 'TkxMindMap',
-    pkg: 'tekivex-ui',
-    desc: 'Interactive radial mind map. Pan, zoom, collapse subtrees, keyboard navigate.',
-    release: 'v3.3',
-    status: 'planned',
-  },
-  {
-    name: 'TkxGantt',
-    pkg: 'tekivex-ui',
-    desc: 'Gantt timeline. Resizable bars, dependencies, critical-path highlight, CSV export.',
-    release: 'v3.3',
-    status: 'planned',
-  },
-  {
-    name: 'TkxSpreadsheet',
-    pkg: 'tekivex-ui',
-    desc: 'Excel-like grid. Formula evaluation (SUM/AVG/IF), virtualized 100k+ rows, paste-from-clipboard.',
-    release: 'v3.4',
-    status: 'planned',
-  },
+  // ── tekivex-3d v0.2 → v0.5 — already shipped ───────────────────────
+  { name: 'TkxModel3D',                pkg: 'tekivex-3d', release: 'v0.2', status: 'shipped',
+    desc: 'glTF/GLB loader with auto-fit + cursor-tracked tilt + animation playback.' },
+  { name: 'TkxLogo3D',                 pkg: 'tekivex-3d', release: 'v0.3', status: 'shipped',
+    desc: 'Extruded-text 3D logo with iridescent material. Drop-in for hero text.' },
+  { name: 'TkxParticleField',          pkg: 'tekivex-3d', release: 'v0.3', status: 'shipped',
+    desc: 'GPU-instanced particle background — 5k particles at 60 FPS on M1+ phones.' },
+  { name: 'TkxOrbitControls',          pkg: 'tekivex-3d', release: 'v0.4', status: 'shipped',
+    desc: 'Three preset modes: free, showcase (auto-rotate), top-down (map-style).' },
+  { name: 'TkxStarfield / TkxPlanet / TkxOrbitPath',
+    pkg: 'tekivex-3d', release: 'v0.5', status: 'shipped',
+    desc: 'Procedural galaxy primitives — no equirectangular photo required.' },
 
-  // ── tekivex-pdf — finishing the templates ──────────────────────────────
-  {
-    name: 'TkxPDFViewer',
-    pkg: 'tekivex-content',
-    desc: 'Embedded PDF reader. Pinch-zoom, text search, thumbnail strip, accessibility overlay.',
-    release: 'v0.2',
-    status: 'planned',
-  },
-  {
-    name: 'BoardingPassTemplate',
-    pkg: 'tekivex-templates',
-    desc: 'Polished boarding-pass PDF — barcode, gate, seat, perforation hint, GDS-importable layout.',
-    release: 'v0.2',
-    status: 'preview',
-  },
-  {
-    name: 'PrescriptionTemplate',
-    pkg: 'tekivex-templates',
-    desc: 'Doctor-prescription PDF — patient/doctor blocks, medications table, signature, MCI standard.',
-    release: 'v0.2',
-    status: 'planned',
-  },
-
-  // ── Cross-cutting / dev experience ────────────────────────────────────
-  {
-    name: 'TkxThemeStudio',
-    pkg: 'tekivex-ui',
-    desc: 'Visual theme editor — pick palette, see live preview across 102 components, export tokens.',
-    release: 'v3.2',
-    status: 'in progress',
-  },
-  {
-    name: 'TkxAccessibilityChecker',
-    pkg: 'tekivex-ui',
-    desc: 'Runtime axe-core badge. Floating widget shows live a11y violations on the current page.',
-    release: 'v3.2',
-    status: 'planned',
-  },
-  {
-    name: 'tekivex-server',
-    pkg: 'tekivex-server',
-    desc: 'Optional Express/Hono middleware. Pre-renders TkxPDF templates to PDFs via HTTP, signed URLs.',
-    release: 'v0.1',
-    status: 'planned',
-  },
+  // ── what's actually next ────────────────────────────────────────────
+  { name: 'TkxFlowChart',              pkg: 'tekivex-ui', release: 'v3.14', status: 'in progress',
+    desc: 'Node-edge graph editor. Drag nodes, connect via ports, pan/zoom, export JSON.' },
+  { name: 'TkxFormulaBar',             pkg: 'tekivex-ui', release: 'v3.14', status: 'planned',
+    desc: 'Companion to TkxSpreadsheet. Shows raw cell content for the active cell, with name-box.' },
+  { name: 'TkxPortal3D',               pkg: 'tekivex-3d', release: 'v0.6',  status: 'planned',
+    desc: 'Clickable 3D portal that fades to a different scene. Pairs with the Galaxy Map.' },
+  { name: 'TkxAvatar3D',               pkg: 'tekivex-3d', release: 'v0.6',  status: 'planned',
+    desc: 'Animated 3D avatar — idle blink, talk, cheer states. ~80 KB FBX.' },
+  { name: 'TkxPDFViewer',              pkg: 'tekivex-content', release: 'v0.2', status: 'planned',
+    desc: 'Embedded PDF reader. Pinch-zoom, text search, thumbnail strip, accessibility overlay.' },
+  { name: 'BoardingPassTemplate',      pkg: 'tekivex-templates', release: 'v0.2', status: 'preview',
+    desc: 'Polished boarding-pass PDF — barcode, gate, seat, perforation hint, GDS-importable layout.' },
+  { name: 'PrescriptionTemplate',      pkg: 'tekivex-templates', release: 'v0.2', status: 'planned',
+    desc: 'Doctor-prescription PDF — patient/doctor blocks, medications table, signature, MCI standard.' },
+  { name: 'tekivex-server',            pkg: 'tekivex-server', release: 'v0.1', status: 'planned',
+    desc: 'Optional Express/Hono middleware. Pre-renders TkxPDF templates to PDFs via HTTP.' },
 ];
 
 const STATUS_STYLE: Record<RoadmapItem['status'], { bg: string; color: string; label: string }> = {
-  preview: { bg: 'rgba(255, 190, 11, 0.15)', color: '#ffbe0b', label: 'preview' },
-  'in progress': { bg: 'rgba(0, 245, 212, 0.15)', color: '#00f5d4', label: 'in progress' },
-  planned: { bg: 'rgba(123, 47, 247, 0.15)', color: '#7b2ff7', label: 'planned' },
+  shipped:       { bg: 'rgba(0, 245, 212, 0.14)',   color: '#00f5d4', label: 'shipped' },
+  preview:       { bg: 'rgba(255, 190, 11, 0.14)',  color: '#ffbe0b', label: 'preview' },
+  'in progress': { bg: 'rgba(123, 142, 255, 0.18)', color: '#7b8eff', label: 'in progress' },
+  planned:       { bg: 'rgba(196, 168, 255, 0.14)', color: '#c4a8ff', label: 'planned' },
 };
+
+// Custom release ordering: shipped releases ascending, then future releases
+const RELEASE_ORDER = [
+  'v3.2', 'v3.3', 'v3.4', 'v3.5', 'v3.6', 'v3.7', 'v3.8', 'v3.9', 'v3.10',
+  'v3.11', 'v3.12', 'v3.13',
+  'v0.2', 'v0.3', 'v0.4', 'v0.5',
+  'v3.14',
+  'v0.6',
+  'v0.1',
+];
 
 export function Roadmap() {
   const groupedByRelease = ITEMS.reduce<Record<string, RoadmapItem[]>>((acc, item) => {
     (acc[item.release] = acc[item.release] || []).push(item);
     return acc;
   }, {});
-  const releases = Object.keys(groupedByRelease).sort();
+  const releases = RELEASE_ORDER.filter((r) => r in groupedByRelease);
+
+  const shippedCount = ITEMS.filter((i) => i.status === 'shipped').length;
+  const upcomingCount = ITEMS.filter((i) => i.status !== 'shipped').length;
 
   return (
     <section
       id="roadmap"
-      style={{ padding: '88px 24px 48px', maxWidth: 1280, margin: '0 auto' }}
+      style={{ padding: 'clamp(64px, 9vw, 120px) 24px 48px', maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}
     >
       <header style={{ textAlign: 'center', marginBottom: 48 }}>
-        <h2
+        <div
           style={{
-            fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-            fontWeight: 800,
-            letterSpacing: '-0.03em',
-            margin: '0 0 12px',
+            display: 'inline-block',
+            padding: '4px 14px',
+            borderRadius: 999,
+            background: 'rgba(0,245,212,0.1)',
+            border: '1px solid rgba(0,245,212,0.3)',
+            color: '#00f5d4',
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            marginBottom: 18,
           }}
         >
-          What's <span className="tk-gradient-text">next</span>
+          Roadmap
+        </div>
+        <h2
+          style={{
+            fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+            margin: '0 0 14px',
+            lineHeight: 1.05,
+          }}
+        >
+          {shippedCount} shipped this quarter,{' '}
+          <span className="tk-gradient-text">{upcomingCount} more on the way</span>
         </h2>
-        <p style={{ color: '#888', maxWidth: 660, margin: '0 auto', fontSize: 16 }}>
-          Concrete roadmap. Every line is scoped enough that a contributor could pick it up and
-          ship it. Three honest statuses — <em>preview</em>, <em>in progress</em>,{' '}
-          <em>planned</em> — no "TBD" or "future work".
+        <p style={{ color: '#b8b8d4', maxWidth: 660, margin: '0 auto', fontSize: 16, lineHeight: 1.65 }}>
+          Concrete items only. Every line is scoped enough that a contributor could
+          pick it up and ship it. Four honest statuses — <em>shipped</em>,{' '}
+          <em>in progress</em>, <em>preview</em>, <em>planned</em> — no "TBD" or "future work".
         </p>
       </header>
 
@@ -200,7 +160,7 @@ export function Roadmap() {
                 gap: 12,
                 marginBottom: 16,
                 paddingBottom: 12,
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                borderBottom: '1px solid rgba(255,255,255,0.08)',
               }}
             >
               <h3
@@ -210,12 +170,12 @@ export function Roadmap() {
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: '#aaa',
+                  color: '#c4a8ff',
                 }}
               >
                 {rel}
               </h3>
-              <span style={{ color: '#666', fontSize: 12 }}>
+              <span style={{ color: '#888', fontSize: 12 }}>
                 {groupedByRelease[rel].length} item{groupedByRelease[rel].length === 1 ? '' : 's'}
               </span>
             </div>
@@ -235,9 +195,9 @@ export function Roadmap() {
                     style={{
                       padding: 18,
                       borderRadius: 12,
-                      border: '1px solid rgba(255,255,255,0.06)',
-                      background: 'rgba(18,18,26,0.55)',
-                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      background: 'rgba(18, 20, 38, 0.55)',
+                      backdropFilter: 'blur(12px)',
                     }}
                   >
                     <header
@@ -254,7 +214,7 @@ export function Roadmap() {
                           fontSize: 14,
                           fontWeight: 700,
                           color: '#fff',
-                          fontFamily: 'monospace',
+                          fontFamily: 'ui-monospace, SFMono-Regular, monospace',
                         }}
                       >
                         {item.name}
@@ -277,10 +237,10 @@ export function Roadmap() {
                     </header>
                     <p
                       style={{
-                        color: '#bbb',
+                        color: '#b8b8d4',
                         fontSize: 13,
                         margin: '0 0 10px',
-                        lineHeight: 1.5,
+                        lineHeight: 1.55,
                       }}
                     >
                       {item.desc}
@@ -288,8 +248,8 @@ export function Roadmap() {
                     <div
                       style={{
                         fontSize: 11,
-                        color: '#666',
-                        fontFamily: 'monospace',
+                        color: '#888',
+                        fontFamily: 'ui-monospace, monospace',
                       }}
                     >
                       ships in <span style={{ color: '#00f5d4' }}>{item.pkg}</span>
@@ -305,7 +265,7 @@ export function Roadmap() {
       <p
         style={{
           textAlign: 'center',
-          color: '#666',
+          color: '#888',
           fontSize: 13,
           marginTop: 36,
           fontStyle: 'italic',
