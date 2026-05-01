@@ -303,6 +303,10 @@ export type {
 export { TkxAccessibilityChecker } from './src/components/TkxAccessibilityChecker';
 export type { TkxAccessibilityCheckerProps } from './src/components/TkxAccessibilityChecker';
 
+// ── Mind map ──────────────────────────────────────────────────────────────────
+export { TkxMindMap } from './src/components/TkxMindMap';
+export type { TkxMindMapProps, MindMapNode } from './src/components/TkxMindMap';
+
 // ── Form builder ──────────────────────────────────────────────────────────────
 export { TkxFormBuilder, validateField } from './src/components/TkxFormBuilder';
 export type {
