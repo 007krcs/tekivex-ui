@@ -10,3 +10,4 @@ export { WCAGEngine } from './wcag';
 export { TKX } from './css';
 export * from './quantum-ai';
 export { QuantumAI } from './quantum-ai';
+export * as Protect from './protect';
