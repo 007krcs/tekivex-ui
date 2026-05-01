@@ -269,6 +269,18 @@ export type { TkxImageExportProps } from './src/components/TkxImageExport';
 export { TkxIndicShaper } from './src/components/TkxIndicShaper';
 export type { TkxIndicShaperProps } from './src/components/TkxIndicShaper';
 
+// Biodata form-helper components (Phase 0b)
+export { TkxFieldArray } from './src/components/TkxFieldArray';
+export type { TkxFieldArrayProps, TkxFieldArrayHelpers } from './src/components/TkxFieldArray';
+export { TkxImageCrop } from './src/components/TkxImageCrop';
+export type { TkxImageCropProps, TkxImageCropHandle } from './src/components/TkxImageCrop';
+export { TkxSignaturePad } from './src/components/TkxSignaturePad';
+export type { TkxSignaturePadProps, TkxSignaturePadHandle } from './src/components/TkxSignaturePad';
+export { TkxPhoneInput, DEFAULT_COUNTRIES } from './src/components/TkxPhoneInput';
+export type { TkxPhoneInputProps, CountryDialCode } from './src/components/TkxPhoneInput';
+export { TkxMaskedInput } from './src/components/TkxMaskedInput';
+export type { TkxMaskedInputProps } from './src/components/TkxMaskedInput';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → '@tekivex/ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
