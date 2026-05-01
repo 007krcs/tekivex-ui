@@ -32,6 +32,14 @@ import {
   TkxHolographicAvatar,
   TkxHolographicBadge,
   TkxHolographicButton,
+  TkxButton,
+  TkxBadge,
+  TkxAlert,
+  TkxCard,
+  TkxAvatar,
+  TkxInput,
+  TkxToggle,
+  TkxProgress,
 } from 'tekivex-ui';
 import { TkxDataExplorer } from 'tekivex-ui/charts';
 import {
@@ -511,6 +519,135 @@ function Avatar3DPreview() {
   );
 }
 
+// ── Common primitives ──────────────────────────────────────────────────────
+
+function ButtonPreview() {
+  return (
+    <PreviewFrame height={160}>
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <TkxButton variant="primary">Save</TkxButton>
+        <TkxButton variant="secondary">Cancel</TkxButton>
+        <TkxButton variant="ghost">Skip</TkxButton>
+        <TkxButton variant="danger">Delete</TkxButton>
+      </div>
+    </PreviewFrame>
+  );
+}
+
+function BadgePreview() {
+  return (
+    <PreviewFrame height={140}>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <TkxBadge variant="solid">12</TkxBadge>
+        <TkxBadge variant="outline">draft</TkxBadge>
+        <TkxBadge variant="solid">v3.15</TkxBadge>
+        <TkxBadge variant="outline">beta</TkxBadge>
+      </div>
+    </PreviewFrame>
+  );
+}
+
+function AlertPreview() {
+  return (
+    <PreviewFrame height={280}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <TkxAlert variant="info"    title="New version available">A minor update is ready to install.</TkxAlert>
+        <TkxAlert variant="success" title="Saved">Your changes have been committed.</TkxAlert>
+        <TkxAlert variant="warning" title="Approaching quota">85% of your monthly API budget is used.</TkxAlert>
+        <TkxAlert variant="error"   title="Upload failed">The file exceeded the 10 MB limit.</TkxAlert>
+      </div>
+    </PreviewFrame>
+  );
+}
+
+function CardPreview() {
+  return (
+    <PreviewFrame height={220}>
+      <TkxCard variant="elevated" style={{ maxWidth: 360, margin: '0 auto' }}>
+        <div style={{ padding: 16 }}>
+          <h4 style={{ margin: '0 0 6px', color: '#fff' }}>Q4 retrospective</h4>
+          <p style={{ margin: '0 0 12px', color: '#b8b8d4', fontSize: 13 }}>
+            Three releases shipped, eight components added, zero security incidents.
+          </p>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <TkxButton variant="primary">Read</TkxButton>
+            <TkxButton variant="ghost">Skip</TkxButton>
+          </div>
+        </div>
+      </TkxCard>
+    </PreviewFrame>
+  );
+}
+
+function AvatarPreview() {
+  return (
+    <PreviewFrame height={180}>
+      <div style={{ display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <TkxAvatar src="https://i.pravatar.cc/200?img=47" alt="Aria"  size="lg" status="online" />
+        <TkxAvatar src="https://i.pravatar.cc/200?img=33" alt="Kenji" size="lg" status="busy" />
+        <TkxAvatar src="https://i.pravatar.cc/200?img=15" alt="Idris" size="lg" status="offline" />
+        <TkxAvatar name="Pat O'Reilly" size="lg" />
+      </div>
+    </PreviewFrame>
+  );
+}
+
+function InputPreview() {
+  const [a, setA] = useState('Aria Solis');
+  const [b, setB] = useState('');
+  return (
+    <PreviewFrame height={220}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 360, margin: '0 auto' }}>
+        <TkxInput label="Full name" value={a} onChange={(e) => setA(e.target.value)} />
+        <TkxInput label="Email" type="email" value={b} onChange={(e) => setB(e.target.value)} placeholder="you@example.com" />
+        <TkxInput label="API key" disabled value="****-****-****-****" />
+      </div>
+    </PreviewFrame>
+  );
+}
+
+function TogglePreview() {
+  const [a, setA] = useState(true);
+  const [b, setB] = useState(false);
+  const [c, setC] = useState(true);
+  return (
+    <PreviewFrame height={180}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 320, margin: '0 auto' }}>
+        <Row label="Email notifications">
+          <TkxToggle checked={a} onChange={setA} />
+        </Row>
+        <Row label="Beta features">
+          <TkxToggle checked={b} onChange={setB} />
+        </Row>
+        <Row label="Two-factor auth">
+          <TkxToggle checked={c} onChange={setC} />
+        </Row>
+      </div>
+    </PreviewFrame>
+  );
+}
+
+function Row({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: '#dcdce8' }}>
+      <span>{label}</span>
+      {children}
+    </div>
+  );
+}
+
+function ProgressPreview() {
+  return (
+    <PreviewFrame height={200}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <TkxProgress value={32} label="Build artifacts" />
+        <TkxProgress value={78} label="Test coverage"  variant="success" />
+        <TkxProgress value={12} label="Storage used"   variant="warning" />
+      </div>
+    </PreviewFrame>
+  );
+}
+
 function HotspotPreview() {
   return (
     <Scene3D height={280}>
@@ -564,6 +701,16 @@ export const PREVIEWS: Record<string, () => JSX.Element> = {
   'portal-3d':            Portal3DPreview,
   'avatar-3d':            Avatar3DPreview,
   'hotspot':              HotspotPreview,
+
+  // Common primitives
+  'button':               ButtonPreview,
+  'badge':                BadgePreview,
+  'alert':                AlertPreview,
+  'card':                 CardPreview,
+  'avatar':               AvatarPreview,
+  'input':                InputPreview,
+  'toggle':               TogglePreview,
+  'progress':             ProgressPreview,
 };
 
 export function hasPreview(slug: string): boolean {

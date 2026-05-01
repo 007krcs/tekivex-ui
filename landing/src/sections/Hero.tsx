@@ -92,7 +92,7 @@ export function Hero() {
           inset: 0,
           pointerEvents: 'none',
           background:
-            'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,15,0.7) 75%, rgba(10,10,15,0.95) 100%)',
+            'radial-gradient(ellipse at center, transparent 30%, rgba(12,13,26,0.65) 70%, rgba(10,11,21,0.92) 100%)',
         }}
       />
 
@@ -121,9 +121,9 @@ export function Hero() {
             pointerEvents: 'auto',
           }}
         >
-          <TkxHolographicBadge size="sm">v3.5.0</TkxHolographicBadge>
-          <TkxHolographicBadge size="sm">13 packages</TkxHolographicBadge>
-          <TkxHolographicBadge size="sm">First 360° docs</TkxHolographicBadge>
+          <TkxHolographicBadge size="sm" tone="success">v3.15 source · 113 components</TkxHolographicBadge>
+          <TkxHolographicBadge size="sm" tone="info">13 packages</TkxHolographicBadge>
+          <TkxHolographicBadge size="sm" tone="neutral">first 360° docs</TkxHolographicBadge>
         </div>
 
         <h1

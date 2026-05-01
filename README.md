@@ -2,9 +2,9 @@
 
 # ⚡ TekiVex UI
 
-**The first React UI library with a security kernel built in.**
+**The first React UI library with a security kernel built in. And a 3D toolkit. And a holographic UI family. And a spreadsheet. And…**
 
-WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME) · 99 Components · Zero Dependencies
+WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME) · **113 Components** · Zero Dependencies
 
 📄 **[Security Threat Model](./docs/SECURITY-THREAT-MODEL.md)** — the only mainstream React UI library that publishes one.
 
@@ -14,7 +14,7 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18+-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
 [![WCAG 2.1 AAA](https://img.shields.io/badge/WCAG-2.1%20AAA-00c853.svg)](https://www.w3.org/TR/WCAG21/)
-[![Tests](https://img.shields.io/badge/Tests-1034%20passing-00c853.svg)](#testing)
+[![Tests](https://img.shields.io/badge/Tests-1300%2B%20passing-00c853.svg)](#testing)
 [![SecurityCore](https://img.shields.io/badge/SecurityCore-v3.0-f72585.svg)](./docs/SECURITY-THREAT-MODEL.md)
 
 <br/>
@@ -26,6 +26,34 @@ npm install tekivex-ui
 [📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://ui.tekivex.com) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/novaai0401-ui/tekivex-issue-report/issues) · [⭐ Star](https://github.com/novaai0401-ui/tekivex-issue-report/stargazers)
 
 </div>
+
+---
+
+## What's new in v3.6 → v3.15
+
+Source HEAD as of this commit. **npm version is held at the last
+demand-driven release** — file an issue with your use case and we
+publish to npm within 24 hours.
+
+| Component                | Lands in | Tests | Coverage              |
+| ------------------------ | -------- | ----- | --------------------- |
+| `TkxFormBuilder`         | v3.6     | 17    | (full unit)           |
+| `TkxMindMap`             | v3.7     | 12    | (full unit)           |
+| `TkxGantt`               | v3.8     | 14    | (full unit)           |
+| `TkxSpreadsheet`         | v3.9     | 29    | (full unit)           |
+| `TkxPivotTable`          | v3.10    | 12    | (full unit)           |
+| `TkxDataExplorer`        | v3.11    | 21    | (full unit)           |
+| `TkxHolographicAdvanced` | v3.12    | 28    | 93 / 94 / 91 / 89     |
+| `TkxCommandPalette`      | v3.13    | 16    | (full unit)           |
+| `TkxFormulaBar`          | v3.14    | 18    | **100 / 100 / 100 / 90** |
+| `TkxFlowChart`           | v3.15    | 40    | **97 / 96 / 95 / 86** |
+
+Coverage notation: lines / statements / functions / branches.
+
+Pair `tekivex-ui` with [`tekivex-3d`](./packages/tekivex-3d/) for the
+spatial UI toolkit (Scene, Panorama360, Hotspot, XRSession, Model3D,
+Logo3D, ParticleField, OrbitControls, Starfield, Planet, OrbitPath,
+Portal3D, Avatar3D — 14 primitives at source v0.7).
 
 ---
 

@@ -6,7 +6,11 @@
 npm install tekivex-3d three
 ```
 
-## What's in here (5 components, all production-ready)
+## What's in here
+
+**Source HEAD: v0.7.0 · 14 primitives.**
+npm version is held at the last demand-driven release — file an issue
+with your use case and we publish to npm within 24 hours.
 
 | Component | What it does |
 |---|---|
@@ -15,6 +19,17 @@ npm install tekivex-3d three
 | `TkxPanorama360` | Equirectangular 360° photo / video viewer with drag-pan, scroll zoom, optional gyroscope. |
 | `TkxHotspot` | Billboarded clickable annotation with HTML label that always projects to screen-space. |
 | `TkxXRSession` | Auto-detects WebXR support and renders the appropriate Enter VR / Enter AR button. |
+| `TkxModel3D` *(v0.2)* | glTF / GLB loader with auto-fit + cursor tilt + animation playback. |
+| `TkxLogo3D` *(v0.3)* | Extruded-text 3D logo with iridescent gradient material. |
+| `TkxParticleField` *(v0.3)* | GPU-instanced particle background (5k particles at 60 FPS on M1+ phones). |
+| `TkxOrbitControls` *(v0.4)* | Camera controls with three presets — `free`, `showcase`, `top-down`. |
+| `TkxStarfield` *(v0.5)* | Procedural sphere of stars around the camera, no equirectangular photo needed. |
+| `TkxPlanet` *(v0.5)* | Textured sphere with optional Saturn-style ring and atmospheric glow. |
+| `TkxOrbitPath` *(v0.5)* | Orbital ring with optional travelling body (configurable inclination + speed). |
+| `TkxPortal3D` *(v0.6)* | Clickable luminous portal with shimmer + fade-on-click transition. |
+| `TkxAvatar3D` *(v0.7)* | Procedural humanoid with idle / talk / cheer animation states. Zero asset bytes. |
+
+For a quick reference + drop-in examples, see [`PRIMITIVES.md`](./PRIMITIVES.md).
 
 ## 30-second quickstart
 

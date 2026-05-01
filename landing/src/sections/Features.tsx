@@ -12,19 +12,19 @@ const FEATURES: Feature[] = [
     emoji: '✨',
     title: 'Holographic UI',
     desc: 'Pointer-tracked 3D tilt, iridescent foil, scan-lines, glass blur. Pure CSS, zero deps. Pokemon-card vibes for premium tiers.',
-    badge: 'NEW v3.1',
+    badge: 'v3.12',
   },
   {
     emoji: '🌐',
     title: 'Real WebGL 3D',
-    desc: 'Vanilla three.js. Real geometry, real shadows, real PBR materials. Drop a TkxCard3D into any scene with one prop.',
-    badge: 'NEW',
+    desc: 'Vanilla three.js — real geometry, real shadows, real PBR. 14 spatial primitives covering Scene, Panorama360, Hotspot, Model3D, Logo3D, Starfield, Planet, OrbitPath, Portal3D, Avatar3D and friends.',
+    badge: 'v0.7',
   },
   {
     emoji: '🌍',
     title: '360° + AR/VR',
     desc: 'Equirectangular panorama viewer with hotspots. Auto-detected WebXR for Quest, Vision Pro, and ARCore phones.',
-    badge: 'NEW',
+    badge: 'WebXR',
   },
   {
     emoji: '♿',
@@ -64,17 +64,43 @@ export function Features() {
       }}
     >
       <header style={{ textAlign: 'center', marginBottom: 56 }}>
+        <div
+          style={{
+            display: 'inline-block',
+            padding: '4px 14px',
+            borderRadius: 999,
+            background: 'rgba(196,168,255,0.1)',
+            border: '1px solid rgba(196,168,255,0.3)',
+            color: '#c4a8ff',
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            marginBottom: 18,
+          }}
+        >
+          Why TekiVex
+        </div>
         <h2
           style={{
-            fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
+            fontSize: 'clamp(2rem, 4.5vw, 3.4rem)',
             fontWeight: 800,
             letterSpacing: '-0.03em',
-            margin: '0 0 12px',
+            lineHeight: 1.05,
+            margin: '0 0 14px',
           }}
         >
           Eight reasons it's <span className="tk-gradient-text">different</span>
         </h2>
-        <p style={{ color: '#888', maxWidth: 600, margin: '0 auto', fontSize: 16 }}>
+        <p
+          style={{
+            color: '#b8b8d4',
+            maxWidth: 660,
+            margin: '0 auto',
+            fontSize: 'clamp(15px, 1.3vw, 17px)',
+            lineHeight: 1.65,
+          }}
+        >
           Hover any card to see it in action — that's the holographic effect itself.
         </p>
       </header>
@@ -101,7 +127,7 @@ export function Features() {
             maxTilt={10}
             foilIntensity="soft"
           >
-            <p style={{ color: '#aaa', fontSize: 14, margin: 0, lineHeight: 1.6 }}>{f.desc}</p>
+            <p style={{ color: '#b8b8d4', fontSize: 14, margin: 0, lineHeight: 1.6 }}>{f.desc}</p>
           </TkxHolographicCard>
         ))}
       </div>

@@ -6,7 +6,9 @@ export function Footer() {
         marginTop: 48,
         borderTop: '1px solid rgba(255,255,255,0.06)',
         background:
-          'linear-gradient(to bottom, transparent, rgba(0, 245, 212, 0.03))',
+          'linear-gradient(to bottom, transparent, rgba(196, 168, 255, 0.04))',
+        position: 'relative',
+        zIndex: 1,
       }}
     >
       <div
@@ -32,8 +34,8 @@ export function Footer() {
             <span style={{ fontSize: 22 }} aria-hidden="true">⚡</span>
             <span className="tk-gradient-text">TekiVex UI</span>
           </div>
-          <p style={{ color: '#888', fontSize: 13, margin: 0, maxWidth: 280, lineHeight: 1.6 }}>
-            Production-grade React. WCAG 2.1 AAA. Real WebGL 3D. Now in 12 packages. MIT.
+          <p style={{ color: '#b8b8d4', fontSize: 13, margin: 0, maxWidth: 280, lineHeight: 1.65 }}>
+            Production-grade React. WCAG 2.1 AAA. Real WebGL 3D. 113 components across 13 packages. MIT.
           </p>
         </div>
 
@@ -53,7 +55,7 @@ export function Footer() {
             { label: 'tekivex-ui', href: 'https://www.npmjs.com/package/tekivex-ui' },
             { label: 'tekivex-3d', href: 'https://www.npmjs.com/package/tekivex-3d' },
             { label: 'tekivex-pdf', href: 'https://www.npmjs.com/package/tekivex-pdf' },
-            { label: 'All 12 packages', href: '#packages' },
+            { label: 'All 13 packages', href: '#packages' },
           ]}
         />
 
@@ -112,12 +114,12 @@ function FooterCol({
               href={l.href}
               {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               style={{
-                color: '#bbb',
+                color: '#dcdce8',
                 fontSize: 13,
                 transition: 'color 0.15s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#00f5d4')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#bbb')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#dcdce8')}
             >
               {l.label}
             </a>
