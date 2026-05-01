@@ -17,6 +17,7 @@
 
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { PREVIEWS } from './component-previews';
 
 const ISSUE_BASE = 'https://github.com/novaai0401-ui/tekivex-issue-report/issues/new';
 
@@ -97,7 +98,9 @@ export function RequestAccessDialog({ target, onClose }: RequestAccessDialogProp
         onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%',
-          maxWidth: 520,
+          maxWidth: PREVIEWS[target.slug] ? 880 : 520,
+          maxHeight: '92vh',
+          overflowY: 'auto',
           background:
             'linear-gradient(180deg, rgba(22, 24, 44, 0.96), rgba(14, 16, 30, 0.96))',
           backdropFilter: 'blur(24px) saturate(140%)',
@@ -178,6 +181,29 @@ export function RequestAccessDialog({ target, onClose }: RequestAccessDialogProp
           send setup instructions, and stay on call for any wiring questions.
         </p>
 
+        {PREVIEWS[target.slug] && (
+          <div style={{ marginBottom: 22 }}>
+            <div
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: '#c4a8ff',
+                marginBottom: 8,
+              }}
+            >
+              Live preview · interact with realistic dummy data
+            </div>
+            <PreviewBoundary>
+              {(() => {
+                const Comp = PREVIEWS[target.slug];
+                return <Comp />;
+              })()}
+            </PreviewBoundary>
+          </div>
+        )}
+
         <ul
           style={{
             listStyle: 'none',
@@ -243,6 +269,44 @@ export function RequestAccessDialog({ target, onClose }: RequestAccessDialogProp
     </div>,
     document.body,
   );
+}
+
+// Defensive wrapper so a bug in any single preview doesn't break the
+// whole dialog. We can't catch render errors with hooks, so use a tiny
+// class-based ErrorBoundary.
+import { Component, type ReactNode as ReactNodeT } from 'react';
+
+class PreviewBoundary extends Component<{ children: ReactNodeT }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(err: unknown) {
+    // Surface in dev console without breaking prod.
+    // eslint-disable-next-line no-console
+    console.warn('Preview crashed:', err);
+  }
+  render() {
+    if (this.state.failed) {
+      return (
+        <div
+          style={{
+            padding: 16,
+            borderRadius: 10,
+            border: '1px dashed rgba(255,0,110,0.4)',
+            background: 'rgba(255,0,110,0.06)',
+            color: '#ff7eaf',
+            fontSize: 13,
+          }}
+        >
+          Preview failed to render. The component itself works — this is a
+          sandbox issue with the dummy-data demo. Click "Send my requirement →"
+          to request access and we'll send a stable example with your setup.
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 function Bullet({ children }: { children: React.ReactNode }) {
