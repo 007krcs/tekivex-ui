@@ -249,6 +249,26 @@ export type { TkxDevToolsGuardProps } from './src/components/TkxDevToolsGuard';
 export { TkxDynamicWatermark } from './src/components/TkxDynamicWatermark';
 export type { TkxDynamicWatermarkProps } from './src/components/TkxDynamicWatermark';
 
+// Biodata rendering components (Phase 0b)
+export { TkxCanvasRenderer } from './src/components/TkxCanvasRenderer';
+export type { TkxCanvasRendererProps } from './src/components/TkxCanvasRenderer';
+export {
+  TkxTemplateRenderer,
+  createTemplateRegistry,
+  useTemplateScene,
+} from './src/components/TkxTemplateRenderer';
+export type {
+  TkxTemplateRendererProps,
+  TkxBiodataTemplate,
+  TkxTemplateRegistry,
+} from './src/components/TkxTemplateRenderer';
+export { TkxPdfExport } from './src/components/TkxPdfExport';
+export type { TkxPdfExportProps } from './src/components/TkxPdfExport';
+export { TkxImageExport } from './src/components/TkxImageExport';
+export type { TkxImageExportProps } from './src/components/TkxImageExport';
+export { TkxIndicShaper } from './src/components/TkxIndicShaper';
+export type { TkxIndicShaperProps } from './src/components/TkxIndicShaper';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → '@tekivex/ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
