@@ -338,9 +338,16 @@ export function symbolForReligion(
 }
 
 /**
- * Religious header strip — renders a centered glyph + an optional
- * blessing line above the biodata title. Returns null when no symbol
- * applies, so templates can drop it in without conditional checks.
+ * Religious header strip — renders a centered glyph (or custom logo)
+ * + an optional blessing line above the biodata title.
+ *
+ * Resolution order:
+ *   1. `customLogo` prop      → renders the user's uploaded image
+ *      (takes precedence so users can ship a sect-specific or family
+ *      monogram that the auto-glyph wouldn't capture)
+ *   2. `override` prop        → forces a specific Unicode glyph
+ *   3. `religion` field       → auto-derives a glyph
+ *   4. nothing → null returned, header doesn't render at all
  */
 export function ReligiousHeader({
   religion,
@@ -348,6 +355,8 @@ export function ReligiousHeader({
   blessing,
   color,
   size = 24,
+  customLogo,
+  customLogoLabel,
 }: {
   religion?: string;
   override?: ReligiousMarkOverride;
@@ -355,7 +364,43 @@ export function ReligiousHeader({
   blessing?: string;
   color: string;
   size?: number;
+  /** URL / data-URI of a custom logo to render instead of the Unicode glyph. */
+  customLogo?: string;
+  /** Accessible label for the custom logo. Default "Custom religious symbol". */
+  customLogoLabel?: string;
 }) {
+  // Custom logo wins outright
+  if (customLogo) {
+    return (
+      <div style={{ textAlign: 'center', marginBottom: '3mm' }}>
+        <img
+          src={customLogo}
+          alt={customLogoLabel ?? 'Custom religious symbol'}
+          style={{
+            height: `${size * 1.4}pt`,
+            maxWidth: `${size * 2.2}pt`,
+            objectFit: 'contain',
+            display: 'inline-block',
+          }}
+        />
+        {blessing && (
+          <div
+            style={{
+              fontSize: '9pt',
+              color,
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              marginTop: '1.5mm',
+              opacity: 0.85,
+            }}
+          >
+            {blessing}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   const sym = symbolForReligion(religion, override);
   if (!sym) return null;
   return (

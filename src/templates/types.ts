@@ -124,6 +124,13 @@ export interface BiodataData {
    * 'om' | 'cross' | 'crescent' | 'khanda' | 'dharma' | 'lotus' — explicit pick
    */
   religiousMark?: 'auto' | 'none' | 'om' | 'cross' | 'crescent' | 'khanda' | 'dharma' | 'lotus';
+  /**
+   * Optional URL / data-URI of a custom religious logo. Takes precedence
+   * over the auto-derived glyph + the `religiousMark` override — useful
+   * for sect-specific symbols, family monograms, or scanned blessings
+   * that the built-in Unicode set doesn't capture.
+   */
+  customReligiousLogo?: string;
   /** Short blessing line shown below the symbol (e.g. "Shubh Vivah", "Bismillah"). */
   blessing?: string;
   caste?: string;
