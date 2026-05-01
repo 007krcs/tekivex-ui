@@ -307,6 +307,10 @@ export type { TkxAccessibilityCheckerProps } from './src/components/TkxAccessibi
 export { TkxMindMap } from './src/components/TkxMindMap';
 export type { TkxMindMapProps, MindMapNode } from './src/components/TkxMindMap';
 
+// ── Gantt chart ───────────────────────────────────────────────────────────────
+export { TkxGantt, parseDay, formatDay, dayDiff } from './src/components/TkxGantt';
+export type { TkxGanttProps, GanttTask } from './src/components/TkxGantt';
+
 // ── Form builder ──────────────────────────────────────────────────────────────
 export { TkxFormBuilder, validateField } from './src/components/TkxFormBuilder';
 export type {
