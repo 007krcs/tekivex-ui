@@ -380,6 +380,24 @@ export type {
   FormFieldOption,
 } from './src/components/TkxFormBuilder';
 
+// ── Resume + Biodata templates ────────────────────────────────────────────────
+export { TkxTemplateGenerator } from './src/templates';
+export type { TkxTemplateGeneratorProps } from './src/templates';
+export {
+  RESUME_TEMPLATES,
+  BIODATA_TEMPLATES,
+  ALL_TEMPLATES,
+  findTemplate as findResumeBiodataTemplate,
+  SAMPLE_RESUME,
+  SAMPLE_BIODATA,
+} from './src/templates';
+export type {
+  ResumeData,
+  BiodataData,
+  TemplateInfo,
+  TemplateKind,
+} from './src/templates';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → 'tekivex-ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
