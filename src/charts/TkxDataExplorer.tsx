@@ -595,20 +595,57 @@ export function TkxDataExplorer({
             </div>
           </div>
 
-          {/* Preview table */}
+          {/* Preview table — scrolls vertically when there are more rows than
+              fit in the visible area. The `previewRows` prop now sizes the
+              VISIBLE area (each row ~26px) rather than capping the row count;
+              all rows are rendered into a sticky-header scrollable container
+              so visitors can scroll through every row of the loaded data. */}
           <div style={sectionStyle}>
             <div
-              style={{ fontSize: 11, fontWeight: 700, color: '#888', marginBottom: 8, textTransform: 'uppercase' }}
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                color: '#888',
+                marginBottom: 8,
+                textTransform: 'uppercase',
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: 8,
+                flexWrap: 'wrap',
+              }}
             >
-              Preview · {data.length} row{data.length === 1 ? '' : 's'}
+              <span>Data · {data.length} row{data.length === 1 ? '' : 's'}</span>
+              {data.length > previewRows && (
+                <span
+                  style={{
+                    fontSize: 10,
+                    color: '#c4a8ff',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
+                  }}
+                >
+                  scroll for more ↓
+                </span>
+              )}
             </div>
-            <div style={{ overflowX: 'auto' }}>
+            <div
+              data-testid="preview-table-scroll"
+              style={{
+                overflowX: 'auto',
+                overflowY: 'auto',
+                // ~26px per row + ~36px header
+                maxHeight: previewRows * 26 + 36,
+                border: '1px solid var(--tkx-border, #2a2a3e)',
+                borderRadius: 6,
+              }}
+            >
               <table
                 role="table"
                 style={{
                   borderCollapse: 'collapse',
                   fontSize: 12,
                   fontFamily: 'ui-monospace, monospace',
+                  width: '100%',
                 }}
               >
                 <thead>
@@ -623,6 +660,10 @@ export function TkxDataExplorer({
                           borderBottom: '1px solid var(--tkx-border, #2a2a3e)',
                           color: types[f] === 'number' ? 'var(--tkx-accent, #00f5d4)' : '#ccc',
                           fontWeight: 700,
+                          position: 'sticky',
+                          top: 0,
+                          background: 'var(--tkx-bg-subtle, #0d0d14)',
+                          zIndex: 1,
                         }}
                       >
                         <div>{f}</div>
@@ -634,7 +675,7 @@ export function TkxDataExplorer({
                   </tr>
                 </thead>
                 <tbody>
-                  {data.slice(0, previewRows).map((row, i) => (
+                  {data.map((row, i) => (
                     <tr key={i} data-testid={`preview-row-${i}`}>
                       {fields.map((f) => (
                         <td

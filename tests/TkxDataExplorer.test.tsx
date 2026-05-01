@@ -182,6 +182,29 @@ describe('TkxDataExplorer UI', () => {
     expect(screen.getByTestId('upload-zone')).toBeInTheDocument();
   });
 
+  it('renders ALL data rows in the preview (scrollable, no slice)', () => {
+    // Generate 50 records — verifies the preview no longer caps at 5
+    const big = Array.from({ length: 50 }).map((_, i) => ({ idx: i, label: `row-${i}` }));
+    render(<TkxDataExplorer initialData={big} previewRows={6} />, { wrapper: W });
+    expect(screen.getByTestId('preview-row-0')).toBeInTheDocument();
+    expect(screen.getByTestId('preview-row-25')).toBeInTheDocument();
+    expect(screen.getByTestId('preview-row-49')).toBeInTheDocument();
+    // The wrapper has a maxHeight to make it scrollable
+    expect(screen.getByTestId('preview-table-scroll')).toBeInTheDocument();
+  });
+
+  it('shows a "scroll for more" hint when there are more rows than fit', () => {
+    const big = Array.from({ length: 30 }).map((_, i) => ({ x: i }));
+    render(<TkxDataExplorer initialData={big} previewRows={5} />, { wrapper: W });
+    expect(screen.getByText(/scroll for more/i)).toBeInTheDocument();
+  });
+
+  it('omits the scroll hint when all rows fit', () => {
+    const small = [{ x: 1 }, { x: 2 }];
+    render(<TkxDataExplorer initialData={small} previewRows={6} />, { wrapper: W });
+    expect(screen.queryByText(/scroll for more/i)).not.toBeInTheDocument();
+  });
+
   it('respects allowedCharts to restrict the picker', () => {
     render(
       <TkxDataExplorer

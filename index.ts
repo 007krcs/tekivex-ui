@@ -366,6 +366,7 @@ export {
   addr as cellAddr,
   parseAddr as parseCellAddr,
   spreadsheetToRecords,
+  recordsToSpreadsheet,
 } from './src/components/TkxSpreadsheet';
 export type { TkxSpreadsheetProps, SpreadsheetData } from './src/components/TkxSpreadsheet';
 
