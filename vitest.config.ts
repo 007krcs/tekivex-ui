@@ -51,11 +51,21 @@ export default defineConfig({
     },
   },
   resolve: {
+    // Force every import of react / react-dom to root node_modules so
+    // tests that reach into packages/tekivex-3d/src don't end up with
+    // two React copies (the "useRef of null" crash). Same trick the
+    // landing app uses in landing/vite.config.ts.
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
     alias: {
       '@engine': resolve(__dirname, 'src/engine'),
       '@themes': resolve(__dirname, 'src/themes'),
       '@hooks': resolve(__dirname, 'src/hooks'),
       '@a11y': resolve(__dirname, 'src/a11y'),
+      // Pin React to the root copies for tekivex-3d source files.
+      react: resolve(__dirname, 'node_modules/react'),
+      'react-dom': resolve(__dirname, 'node_modules/react-dom'),
+      // tekivex-3d ships three as a peer-dep; tests resolve to its bundled copy.
+      three: resolve(__dirname, 'packages/tekivex-3d/node_modules/three'),
     },
   },
 });
