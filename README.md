@@ -29,6 +29,19 @@ npm install tekivex-ui
 
 ---
 
+## Standalone template repos
+
+The resume + biodata templates have moved into their own repos so apps that only need the templates don't have to pull the entire `tekivex-ui` install:
+
+| Use case                 | Install                                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Resume builder           | [`tekivex-resume-templates`](https://github.com/007krcs/tekivex-resume-templates) — 12 templates + smart generator + paywall + browser-only PDF |
+| Marriage biodata builder | [`tekivex-biodata-templates`](https://github.com/007krcs/tekivex-biodata-templates) — 12 templates with auto religious symbols + custom logo upload + 11 vendored biodata-app helpers |
+
+Both repos ship the same generator pattern (form → A4 preview → 1-page print), the same locked-by-default policy, and the same image-upload UX as the original `TkxTemplateGenerator` in this repo (which is staying for backward compatibility).
+
+---
+
 ## What's new in v3.6 → v3.15
 
 Source HEAD as of this commit. **npm version is held at the last
