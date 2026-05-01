@@ -288,6 +288,17 @@ export type {
 export { TkxRichEditor } from './src/components/TkxRichEditor';
 export type { TkxRichEditorProps, TkxRichEditorHandle } from './src/components/TkxRichEditor';
 
+// ── Theme studio ──────────────────────────────────────────────────────────────
+export { TkxThemeStudio } from './src/components/TkxThemeStudio';
+export type { TkxThemeStudioProps } from './src/components/TkxThemeStudio';
+
+// ── Calendar heatmap ──────────────────────────────────────────────────────────
+export { TkxCalendarHeatmap } from './src/components/TkxCalendarHeatmap';
+export type {
+  TkxCalendarHeatmapProps,
+  HeatmapDataPoint,
+} from './src/components/TkxCalendarHeatmap';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → 'tekivex-ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
