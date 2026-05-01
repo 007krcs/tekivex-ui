@@ -275,6 +275,15 @@ export type {
   TkxHolographicButtonProps,
 } from './src/components/TkxHolographic';
 
+// ── Project management ────────────────────────────────────────────────────────
+export { TkxKanban } from './src/components/TkxKanban';
+export type {
+  TkxKanbanProps,
+  TkxKanbanCard,
+  TkxKanbanColumn,
+  TkxKanbanReorderEvent,
+} from './src/components/TkxKanban';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → 'tekivex-ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
