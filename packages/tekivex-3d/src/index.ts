@@ -40,3 +40,6 @@ export type { TkxLogo3DProps } from './Logo3D';
 
 export { TkxParticleField } from './ParticleField';
 export type { TkxParticleFieldProps } from './ParticleField';
+
+export { TkxOrbitControls } from './OrbitControls';
+export type { TkxOrbitControlsProps, OrbitControlsPreset } from './OrbitControls';

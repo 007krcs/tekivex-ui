@@ -1,7 +1,7 @@
 {
   "name": "tekivex-3d",
-  "version": "0.3.0",
-  "description": "True WebGL 3D components for tekivex-ui — TkxScene, TkxCard3D, TkxLogo3D, TkxModel, TkxOrbitView. Vanilla three.js peer dep, no React reconciler. Theme-aware lighting + tone mapping.",
+  "version": "0.4.0",
+  "description": "True WebGL 3D + 360° + AR/VR for tekivex-ui — TkxScene, TkxCard3D, TkxPanorama360, TkxHotspot, TkxXRSession, TkxModel3D, TkxLogo3D, TkxParticleField, TkxOrbitControls. Vanilla three.js peer dep, no React reconciler. Theme-aware lighting + tone mapping.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
