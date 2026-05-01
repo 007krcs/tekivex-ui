@@ -39,6 +39,10 @@ import { useReducedMotion } from '../headless';
 let stylesInjected = false;
 const STYLE_ID = 'tkx-holographic-styles';
 
+export function injectHolographicStyles(): void {
+  injectStyles();
+}
+
 function injectStyles() {
   if (stylesInjected || typeof document === 'undefined') return;
   if (document.getElementById(STYLE_ID)) {
@@ -414,13 +418,24 @@ export interface TkxHolographicBadgeProps
   children: ReactNode;
   /** Badge size. Default 'md'. */
   size?: 'sm' | 'md' | 'lg';
+  /** Semantic tone — controls accent + border color. Default 'neutral'. */
+  tone?: 'neutral' | 'success' | 'info' | 'warning' | 'danger';
 }
 
 const BADGE_PADDING = { sm: '4px 10px', md: '6px 14px', lg: '8px 18px' };
 const BADGE_FONT = { sm: 11, md: 13, lg: 15 };
 
+const TONE_COLORS: Record<NonNullable<TkxHolographicBadgeProps['tone']>, { fg: string; bg: string; bd: string }> = {
+  neutral: { fg: '#c4a8ff', bg: 'rgba(196,168,255,0.10)', bd: 'rgba(196,168,255,0.30)' },
+  success: { fg: '#00f5d4', bg: 'rgba(0,245,212,0.10)',   bd: 'rgba(0,245,212,0.40)' },
+  info:    { fg: '#7b8eff', bg: 'rgba(123,142,255,0.10)', bd: 'rgba(123,142,255,0.40)' },
+  warning: { fg: '#ffbe0b', bg: 'rgba(255,190,11,0.10)',  bd: 'rgba(255,190,11,0.40)' },
+  danger:  { fg: '#ff7eaf', bg: 'rgba(255,0,110,0.10)',   bd: 'rgba(255,0,110,0.40)' },
+};
+
 export const TkxHolographicBadge = forwardRef<HTMLDivElement, TkxHolographicBadgeProps>(
-  function TkxHolographicBadge({ children, size = 'md', scanLines = false, ...rest }, ref) {
+  function TkxHolographicBadge({ children, size = 'md', tone = 'neutral', scanLines = false, ...rest }, ref) {
+    const t = TONE_COLORS[tone];
     return (
       <TkxHolographicSurface
         ref={ref}
@@ -435,6 +450,9 @@ export const TkxHolographicBadge = forwardRef<HTMLDivElement, TkxHolographicBadg
           fontWeight: 700,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
+          color: t.fg,
+          background: t.bg,
+          border: `1px solid ${t.bd}`,
           ...rest.style,
         }}
       >

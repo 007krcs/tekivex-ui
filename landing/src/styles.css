@@ -1,14 +1,42 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Tekivex landing — global styles
+
+   Visual direction:
+     - Foreground reads like a serious product page (clean type, restrained
+       accent, generous whitespace).
+     - Background carries the "vastness" — a luminous deep-violet base, soft
+       aurora gradients, and a slowly-rotating sacred-geometry mandala. The
+       geometry is purely mathematical (concentric circles, twelve-fold
+       petals, golden-ratio spirals); it has no religious affiliation,
+       intentionally borrowing the universal language of symmetry.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Cool, slightly-violet midnight — softer than pure black */
+  --tk-bg: #0c0d1a;
+  --tk-bg-deep: #0a0b15;
+  --tk-fg: #e8e8f4;
+  --tk-fg-muted: #b8b8d4;
+  --tk-accent: #00f5d4;
+  --tk-accent-2: #7b8eff;   /* lavender — warmer pair than pure blue */
+  --tk-accent-3: #c4a8ff;   /* soft amethyst, professional-feeling */
+  --tk-border: rgba(255, 255, 255, 0.08);
+  --tk-border-strong: rgba(255, 255, 255, 0.14);
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, #root {
   margin: 0;
   padding: 0;
-  background: #0a0a0f;
-  color: #e8e8f4;
+  background: var(--tk-bg);
+  color: var(--tk-fg);
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   line-height: 1.6;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -19,43 +47,88 @@ button { font-family: inherit; }
   color: #ffffff;
 }
 
-/* Aurora gradient background — fixed, behind everything */
+/* ── Aurora — soft luminous field, lifted out of pure black ──────────── */
 .tk-aurora {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 20% 0%,   rgba(0, 245, 212, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 30%,  rgba(123, 47, 247, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 100%, rgba(58, 134, 255, 0.12) 0%, transparent 60%);
+    radial-gradient(ellipse at 18% 8%,   rgba(123,142,255,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 22%,  rgba(196,168,255,0.16) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 95%,  rgba(0,245,212,0.10)  0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%,  rgba(20,22,45,0.0)    0%, var(--tk-bg-deep) 80%);
 }
 
+/* ── Subtle orthogonal grid, masked to a centered ellipse ─────────────── */
 .tk-grid-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
 }
 
+/* ── Sacred-geometry mandala ──────────────────────────────────────────── */
+/*  - 12 evenly spaced petal lines (twelve-fold dihedral symmetry)
+    - 9 concentric circles (Fibonacci-spaced)
+    - Golden-ratio spiral overlay
+    - All purely mathematical; no glyphs, no script, no scripture.
+    - Renders via SVG-in-CSS (background-image: url("data:image/svg+xml…")),
+      so it's a single asset with no extra DOM. Slowly rotates.            */
+.tk-yantra {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.13;
+  mix-blend-mode: screen;
+}
+.tk-yantra__rotor {
+  width: min(100vmin, 1100px);
+  aspect-ratio: 1 / 1;
+  animation: tk-yantra-spin 240s linear infinite;
+}
+.tk-yantra__rotor svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 24px rgba(123,142,255,0.4));
+}
+@keyframes tk-yantra-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Vignette so foreground panels read crisply over the geometry ─── */
+.tk-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(10,11,21,0.55) 75%, rgba(10,11,21,0.85) 100%);
+}
+
 .tk-gradient-text {
-  background: linear-gradient(135deg, #00f5d4 0%, #3a86ff 50%, #7b2ff7 100%);
+  background: linear-gradient(135deg, #00f5d4 0%, #7b8eff 50%, #c4a8ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .tk-glass {
-  background: rgba(18, 18, 26, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(42, 42, 62, 0.8);
+  background: rgba(18, 20, 38, 0.55);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--tk-border-strong);
 }
 
 @keyframes tk-float {

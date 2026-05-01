@@ -274,6 +274,21 @@ export type {
   TkxHolographicBadgeProps,
   TkxHolographicButtonProps,
 } from './src/components/TkxHolographic';
+export { injectHolographicStyles } from './src/components/TkxHolographic';
+
+// ── Holographic / extended family (Panel, Gauge, Progress, Terminal) ─────────
+export {
+  TkxHolographicPanel,
+  TkxHolographicGauge,
+  TkxHolographicProgress,
+  TkxHolographicTerminal,
+} from './src/components/TkxHolographicAdvanced';
+export type {
+  TkxHolographicPanelProps,
+  TkxHolographicGaugeProps,
+  TkxHolographicProgressProps,
+  TkxHolographicTerminalProps,
+} from './src/components/TkxHolographicAdvanced';
 
 // ── Project management ────────────────────────────────────────────────────────
 export { TkxKanban } from './src/components/TkxKanban';

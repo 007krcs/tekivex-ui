@@ -43,3 +43,12 @@ export type { TkxParticleFieldProps } from './ParticleField';
 
 export { TkxOrbitControls } from './OrbitControls';
 export type { TkxOrbitControlsProps, OrbitControlsPreset } from './OrbitControls';
+
+export { TkxStarfield } from './Starfield';
+export type { TkxStarfieldProps } from './Starfield';
+
+export { TkxPlanet } from './Planet';
+export type { TkxPlanetProps } from './Planet';
+
+export { TkxOrbitPath } from './OrbitPath';
+export type { TkxOrbitPathProps } from './OrbitPath';

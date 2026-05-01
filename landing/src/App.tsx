@@ -12,6 +12,9 @@ import { CodeShowcase } from './sections/CodeShowcase';
 import { Footer } from './sections/Footer';
 import { Nav } from './sections/Nav';
 import { Immersive } from './Immersive';
+import { SacredGeometry } from './SacredGeometry';
+import { HolographicUniverse } from './sections/HolographicUniverse';
+import { GalaxyMap360 } from './sections/GalaxyMap360';
 
 interface ImmersiveCtx {
   open: () => void;
@@ -33,7 +36,9 @@ export function App() {
   return (
     <ImmersiveContext.Provider value={{ open }}>
       <div className="tk-aurora" aria-hidden="true" />
+      <SacredGeometry />
       <div className="tk-grid-bg" aria-hidden="true" />
+      <div className="tk-vignette" aria-hidden="true" />
 
       <Nav />
 
@@ -43,6 +48,8 @@ export function App() {
         <Features />
         <Playground />
         <DataDemo />
+        <HolographicUniverse />
+        <GalaxyMap360 />
         <Tour360 />
         <AllComponents />
         <Roadmap />
