@@ -237,6 +237,18 @@ export type { TkxAIChatBubbleProps, AIRole } from './src/components/TkxAIChatBub
 export { TkxAIThinking } from './src/components/TkxAIThinking';
 export type { TkxAIThinkingProps } from './src/components/TkxAIThinking';
 
+// Biodata content-protection components (Phase 0b)
+export { TkxScreenshotGuard } from './src/components/TkxScreenshotGuard';
+export type { TkxScreenshotGuardProps } from './src/components/TkxScreenshotGuard';
+export { TkxPrintGuard } from './src/components/TkxPrintGuard';
+export type { TkxPrintGuardProps } from './src/components/TkxPrintGuard';
+export { TkxClipboardGuard } from './src/components/TkxClipboardGuard';
+export type { TkxClipboardGuardProps } from './src/components/TkxClipboardGuard';
+export { TkxDevToolsGuard } from './src/components/TkxDevToolsGuard';
+export type { TkxDevToolsGuardProps } from './src/components/TkxDevToolsGuard';
+export { TkxDynamicWatermark } from './src/components/TkxDynamicWatermark';
+export type { TkxDynamicWatermarkProps } from './src/components/TkxDynamicWatermark';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → '@tekivex/ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
