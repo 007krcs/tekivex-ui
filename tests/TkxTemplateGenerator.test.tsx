@@ -223,6 +223,113 @@ describe('TkxTemplateGenerator form paths', () => {
   });
 });
 
+// ── Custom religious logo + photo upload ──────────────────────────────────
+
+describe('TkxTemplateGenerator — custom religious logo upload', () => {
+  it('biodata form exposes a religious-logo upload field', () => {
+    render(<TkxTemplateGenerator kind="biodata" />);
+    expect(screen.getByTestId('biodata-religious-logo-upload')).toBeInTheDocument();
+  });
+
+  it('biodata form exposes a photo upload field', () => {
+    render(<TkxTemplateGenerator kind="biodata" />);
+    expect(screen.getByTestId('biodata-photo-upload')).toBeInTheDocument();
+  });
+
+  it('resume form exposes a photo upload field', () => {
+    render(<TkxTemplateGenerator kind="resume" />);
+    expect(screen.getByTestId('resume-photo-upload')).toBeInTheDocument();
+  });
+
+  it('uploading a religious logo (simulated FileReader) flows into the preview', async () => {
+    // Stub FileReader so we can resolve a deterministic data URI without
+    // jsdom actually decoding the file.
+    class StubReader {
+      result: string | null = null;
+      onload: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      readAsDataURL(_: Blob) {
+        this.result = 'data:image/png;base64,STUB';
+        // Fire onload synchronously after assignment so React can pick it up
+        Promise.resolve().then(() => this.onload?.());
+      }
+    }
+    const orig = globalThis.FileReader;
+    (globalThis as { FileReader: unknown }).FileReader = StubReader;
+
+    try {
+      render(<TkxTemplateGenerator kind="biodata" />);
+      const fileInput = screen.getByTestId('biodata-religious-logo-upload') as HTMLInputElement;
+      const file = new File(['fake-bytes'], 'logo.png', { type: 'image/png' });
+      // Use Object.defineProperty since `files` is read-only
+      Object.defineProperty(fileInput, 'files', { value: [file] });
+      fireEvent.change(fileInput);
+
+      // Wait for the async onload microtask to flush
+      await new Promise((r) => setTimeout(r, 0));
+
+      // Switch to preview — the rendered template should now contain the
+      // uploaded data URI in an <img src=...>
+      fireEvent.click(screen.getByTestId('tab-preview'));
+      const preview = screen.getByTestId('template-preview');
+      const imgs = preview.querySelectorAll('img');
+      const found = Array.from(imgs).some((img) => img.src.startsWith('data:image/png;base64,STUB'));
+      expect(found).toBe(true);
+    } finally {
+      (globalThis as { FileReader: unknown }).FileReader = orig;
+    }
+  });
+
+  it('rejects non-image files with a visible error', () => {
+    render(<TkxTemplateGenerator kind="biodata" />);
+    const fileInput = screen.getByTestId('biodata-religious-logo-upload') as HTMLInputElement;
+    const txt = new File(['not an image'], 'note.txt', { type: 'text/plain' });
+    Object.defineProperty(fileInput, 'files', { value: [txt] });
+    fireEvent.change(fileInput);
+    expect(screen.getByRole('alert').textContent?.toLowerCase()).toContain('image');
+  });
+
+  it('rejects oversized files (> 4 MB) with a visible error', () => {
+    render(<TkxTemplateGenerator kind="biodata" />);
+    const fileInput = screen.getByTestId('biodata-religious-logo-upload') as HTMLInputElement;
+    const oversized = new File(['x'], 'big.png', { type: 'image/png' });
+    Object.defineProperty(oversized, 'size', { value: 5 * 1024 * 1024 });
+    Object.defineProperty(fileInput, 'files', { value: [oversized] });
+    fireEvent.change(fileInput);
+    expect(screen.getByRole('alert').textContent?.toLowerCase()).toContain('mb');
+  });
+
+  it('Remove button clears the uploaded image', async () => {
+    class StubReader {
+      result: string | null = null;
+      onload: (() => void) | null = null;
+      readAsDataURL(_: Blob) {
+        this.result = 'data:image/png;base64,REMOVE';
+        Promise.resolve().then(() => this.onload?.());
+      }
+    }
+    const orig = globalThis.FileReader;
+    (globalThis as { FileReader: unknown }).FileReader = StubReader;
+
+    try {
+      render(<TkxTemplateGenerator kind="biodata" />);
+      const fileInput = screen.getByTestId('biodata-religious-logo-upload') as HTMLInputElement;
+      const file = new File(['x'], 'logo.png', { type: 'image/png' });
+      Object.defineProperty(fileInput, 'files', { value: [file] });
+      fireEvent.change(fileInput);
+      await new Promise((r) => setTimeout(r, 0));
+
+      // Now click the remove button
+      const remove = screen.getByTestId('biodata-religious-logo-upload-clear');
+      fireEvent.click(remove);
+      // The remove button should disappear (no value to clear)
+      expect(screen.queryByTestId('biodata-religious-logo-upload-clear')).not.toBeInTheDocument();
+    } finally {
+      (globalThis as { FileReader: unknown }).FileReader = orig;
+    }
+  });
+});
+
 // ── Comprehensive form-field coverage ─────────────────────────────────────
 // Fires a change on every text input + textarea on each form so all the
 // per-field onChange closures execute. This is what pushes line + function

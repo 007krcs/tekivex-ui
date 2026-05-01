@@ -367,6 +367,116 @@ const inputStyle: CSSProperties = {
   fontSize: 13, fontFamily: 'inherit',
 };
 
+/**
+ * Image upload control. Reads the picked file via FileReader and emits a
+ * data: URI so the template can embed it without a server. Caps file size
+ * at 4 MB so we don't blow up the print payload, and rejects non-image
+ * MIME types defensively even though `accept="image/*"` already filters
+ * the picker.
+ */
+function ImageUploadField({
+  label,
+  value,
+  onChange,
+  testId,
+}: {
+  label: string;
+  value: string | undefined;
+  onChange: (next: string | undefined) => void;
+  testId: string;
+}) {
+  const [error, setError] = useState<string | null>(null);
+  const handleFile = (file: File) => {
+    setError(null);
+    if (!file.type.startsWith('image/')) {
+      setError('Pick an image file.');
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      setError('File is over 4 MB — please pick a smaller image.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === 'string') onChange(result);
+    };
+    reader.onerror = () => setError('Could not read the file.');
+    reader.readAsDataURL(file);
+  };
+  return (
+    <Field label={label}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        {value ? (
+          <img
+            src={value}
+            alt=""
+            style={{
+              width: 56, height: 56, objectFit: 'cover',
+              borderRadius: 6, border: '1px solid var(--tkx-border, #2a2a3e)',
+            }}
+          />
+        ) : (
+          <div
+            aria-hidden="true"
+            style={{
+              width: 56, height: 56, display: 'flex',
+              alignItems: 'center', justifyContent: 'center',
+              borderRadius: 6, border: '1px dashed var(--tkx-border, #2a2a3e)',
+              background: 'var(--tkx-bg-subtle, #0d0d14)',
+              fontSize: 18, color: '#666',
+            }}
+          >
+            🖼️
+          </div>
+        )}
+        <label
+          style={{
+            padding: '8px 14px', minHeight: 36, borderRadius: 6,
+            border: '1px solid var(--tkx-border, #2a2a3e)',
+            background: 'var(--tkx-bg-subtle, #0d0d14)',
+            cursor: 'pointer', fontSize: 13, fontFamily: 'inherit',
+            display: 'inline-flex', alignItems: 'center',
+          }}
+        >
+          {value ? 'Replace' : 'Upload image'}
+          <input
+            type="file"
+            accept="image/*"
+            data-testid={testId}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleFile(f);
+              e.currentTarget.value = ''; // allow re-picking the same file
+            }}
+            style={{ display: 'none' }}
+          />
+        </label>
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange(undefined)}
+            data-testid={`${testId}-clear`}
+            style={{
+              padding: '6px 10px', minHeight: 32, borderRadius: 6,
+              border: '1px solid rgba(255,0,110,0.4)',
+              background: 'transparent', color: '#ff7eaf',
+              cursor: 'pointer', fontSize: 12, fontFamily: 'inherit',
+            }}
+          >
+            Remove
+          </button>
+        )}
+      </div>
+      {error && (
+        <div role="alert" style={{ marginTop: 6, color: '#ff7eaf', fontSize: 12 }}>
+          {error}
+        </div>
+      )}
+    </Field>
+  );
+}
+
 function ResumeForm({ value, onChange }: { value: ResumeData; onChange: (v: ResumeData) => void }) {
   const set = (patch: Partial<ResumeData>) => onChange({ ...value, ...patch });
   return (
@@ -376,7 +486,12 @@ function ResumeForm({ value, onChange }: { value: ResumeData; onChange: (v: Resu
       <Field label="Email"><input style={inputStyle} type="email" value={value.email} onChange={(e) => set({ email: e.target.value })} /></Field>
       <Field label="Phone"><input style={inputStyle} value={value.phone} onChange={(e) => set({ phone: e.target.value })} /></Field>
       <Field label="Location"><input style={inputStyle} value={value.location} onChange={(e) => set({ location: e.target.value })} /></Field>
-      <Field label="Photo URL (optional)"><input style={inputStyle} value={value.photo ?? ''} onChange={(e) => set({ photo: e.target.value })} /></Field>
+      <ImageUploadField
+        label="Photo (optional)"
+        value={value.photo}
+        onChange={(next) => set({ photo: next })}
+        testId="resume-photo-upload"
+      />
       <div style={{ gridColumn: '1 / -1' }}>
         <Field label="Summary">
           <textarea style={{ ...inputStyle, minHeight: 80 }} value={value.summary ?? ''} onChange={(e) => set({ summary: e.target.value })} />
@@ -432,7 +547,26 @@ function BiodataForm({ value, onChange }: { value: BiodataData; onChange: (v: Bi
       <Field label="Mother name"><input style={inputStyle} value={value.motherName} onChange={(e) => set({ motherName: e.target.value })} /></Field>
       <Field label="Phone"><input style={inputStyle} value={value.contactPhone} onChange={(e) => set({ contactPhone: e.target.value })} /></Field>
       <Field label="Email"><input style={inputStyle} value={value.contactEmail ?? ''} onChange={(e) => set({ contactEmail: e.target.value })} /></Field>
-      <Field label="Photo URL (optional)"><input style={inputStyle} value={value.photo ?? ''} onChange={(e) => set({ photo: e.target.value })} /></Field>
+      <ImageUploadField
+        label="Photo (optional)"
+        value={value.photo}
+        onChange={(next) => set({ photo: next })}
+        testId="biodata-photo-upload"
+      />
+      <ImageUploadField
+        label="Religious logo (optional, overrides auto-glyph)"
+        value={value.customReligiousLogo}
+        onChange={(next) => set({ customReligiousLogo: next })}
+        testId="biodata-religious-logo-upload"
+      />
+      <Field label="Blessing line (optional)">
+        <input
+          style={inputStyle}
+          value={value.blessing ?? ''}
+          placeholder="e.g. Shubh Vivah · Bismillah · By His grace"
+          onChange={(e) => set({ blessing: e.target.value })}
+        />
+      </Field>
       <div style={{ gridColumn: '1 / -1' }}>
         <Field label="Address">
           <textarea style={{ ...inputStyle, minHeight: 60 }} value={value.address} onChange={(e) => set({ address: e.target.value })} />
