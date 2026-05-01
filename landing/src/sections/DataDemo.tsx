@@ -1,25 +1,27 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// DataDemo — live "spreadsheet → chart" pipeline
+// DataDemo — bidirectional "spreadsheet ↔ chart" pipeline
 //
 // Two-pane demo:
-//   - Left:  TkxSpreadsheet pre-filled with sample data
-//   - Right: TkxDataExplorer showing the same rows, with a chart picker
+//   - Left:  TkxSpreadsheet (editable, scrolls when rows exceed visible)
+//   - Right: TkxDataExplorer (upload CSV/JSON, pick a chart)
 //
-// Edit any cell on the left → the right side re-renders with the new
-// numbers. Drop a CSV onto the right side instead and the spreadsheet
-// updates from that. It's the same data, two views.
+// Flow is bidirectional:
+//   1. Edit a cell on the left → records re-derive → chart re-renders.
+//   2. Drop a CSV on the right → onDataLoad fires → recordsToSpreadsheet
+//      regenerates the left sheet so both panes stay in sync.
+//
+// The spreadsheet sizes itself to fit (cols + rows grow with the data),
+// so a 50-row CSV upload populates a 50-row spreadsheet, not just 8.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useMemo, useState } from 'react';
 import {
   TkxSpreadsheet,
   spreadsheetToRecords,
+  recordsToSpreadsheet,
   type SpreadsheetData,
 } from 'tekivex-ui';
-import { TkxDataExplorer } from 'tekivex-ui/charts';
-
-const COLS = 4;
-const ROWS = 8;
+import { TkxDataExplorer, type DataRecord } from 'tekivex-ui/charts';
 
 // Sample dataset shipped with the demo so visitors see something useful
 // immediately. Header in row 1, body rows 2-7, with a SUM formula in row 8
@@ -28,22 +30,58 @@ const SAMPLE: SpreadsheetData = {
   cells: {
     A1: 'month', B1: 'revenue', C1: 'cost', D1: 'profit',
 
-    A2: 'Jan', B2: '120', C2: '80', D2: '=B2-C2',
-    A3: 'Feb', B3: '135', C3: '85', D3: '=B3-C3',
-    A4: 'Mar', B4: '160', C4: '90', D4: '=B4-C4',
-    A5: 'Apr', B5: '180', C5: '95', D5: '=B5-C5',
+    A2: 'Jan', B2: '120', C2: '80',  D2: '=B2-C2',
+    A3: 'Feb', B3: '135', C3: '85',  D3: '=B3-C3',
+    A4: 'Mar', B4: '160', C4: '90',  D4: '=B4-C4',
+    A5: 'Apr', B5: '180', C5: '95',  D5: '=B5-C5',
     A6: 'May', B6: '210', C6: '110', D6: '=B6-C6',
     A7: 'Jun', B7: '245', C7: '120', D7: '=B7-C7',
   },
 };
 
+const MIN_COLS = 4;
+const MIN_ROWS = 8;
+
 export function DataDemo() {
   const [sheet, setSheet] = useState<SpreadsheetData>(SAMPLE);
+  // version bumps whenever an external upload replaces the sheet, so the
+  // DataExplorer remounts with fresh initialData. Cell edits don't bump
+  // (they'd reset chart-picker UI state).
+  const [explorerKey, setExplorerKey] = useState(0);
+
+  // ── Compute dynamic sheet bounds based on the data ──
+  const { cols, rows } = useMemo(() => {
+    let maxCol = 0;
+    let maxRow = 0;
+    for (const a of Object.keys(sheet.cells)) {
+      const m = /^([A-Z]+)([0-9]+)$/.exec(a);
+      if (!m) continue;
+      const col =
+        m[1].length === 1
+          ? m[1].charCodeAt(0) - 65
+          : (m[1].charCodeAt(0) - 64) * 26 + (m[1].charCodeAt(1) - 65);
+      const row = +m[2] - 1;
+      if (col > maxCol) maxCol = col;
+      if (row > maxRow) maxRow = row;
+    }
+    return {
+      cols: Math.max(MIN_COLS, maxCol + 1),
+      rows: Math.max(MIN_ROWS, maxRow + 2), // +1 for last row + 1 trailing blank
+    };
+  }, [sheet]);
 
   const records = useMemo(
-    () => spreadsheetToRecords(sheet, { cols: COLS, rows: ROWS }),
-    [sheet],
+    () => spreadsheetToRecords(sheet, { cols, rows }),
+    [sheet, cols, rows],
   );
+
+  const handleExplorerLoad = (parsed: DataRecord[]) => {
+    // Mirror the uploaded data into the left spreadsheet
+    setSheet(recordsToSpreadsheet(parsed));
+    // Bump the key only when a true external upload happens (records identity
+    // changes via parse, not via cell edit)
+    setExplorerKey((k) => k + 1);
+  };
 
   return (
     <section
@@ -72,33 +110,38 @@ export function DataDemo() {
             marginBottom: 16,
           }}
         >
-          Live demo
+          Live demo · bidirectional
         </div>
         <h2
           style={{
             margin: '0 0 12px',
             fontSize: 'clamp(1.8rem, 4vw, 3rem)',
             letterSpacing: '-0.03em',
-            background: 'linear-gradient(135deg, #00f5d4, #3a86ff)',
+            background: 'linear-gradient(135deg, #00f5d4, #7b8eff, #c4a8ff)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
           }}
         >
-          Spreadsheet → chart, live
+          Spreadsheet ↔ chart, two-way
         </h2>
         <p
           style={{
             margin: '0 auto',
-            maxWidth: 640,
-            color: '#aaa',
+            maxWidth: 660,
+            color: '#b8b8d4',
             fontSize: 'clamp(14px, 1.3vw, 17px)',
-            lineHeight: 1.6,
+            lineHeight: 1.65,
           }}
         >
           Edit any cell on the left — the chart on the right updates instantly.
-          Formulas evaluate before the data flows through, so <code style={code}>=B2-C2</code> in
-          the <em>profit</em> column shows up as a real number on the chart.
-          Drop a CSV onto the right pane to swap in your own data.
+          Drop a CSV/JSON on the right — the left spreadsheet repopulates with
+          the parsed rows. Formulas evaluate before flowing into the chart, so{' '}
+          <code style={code}>=B2-C2</code> in the <em>profit</em> column shows
+          up as a real number.
+        </p>
+        <p style={{ margin: '12px auto 0', color: '#888', fontSize: 12 }}>
+          Currently rendering <strong style={{ color: '#c4a8ff' }}>{records.length}</strong> row
+          {records.length === 1 ? '' : 's'} across <strong style={{ color: '#c4a8ff' }}>{cols}</strong> column{cols === 1 ? '' : 's'}.
         </p>
       </div>
 
@@ -112,10 +155,17 @@ export function DataDemo() {
       >
         {/* ── Left: the editable spreadsheet ── */}
         <Pane label="① Edit the data">
-          <div style={{ overflowX: 'auto' }}>
+          <div
+            style={{
+              maxHeight: 480,
+              overflow: 'auto',
+              borderRadius: 8,
+              background: 'rgba(8,10,25,0.4)',
+            }}
+          >
             <TkxSpreadsheet
-              cols={COLS}
-              rows={ROWS}
+              cols={cols}
+              rows={rows}
               data={sheet}
               onChange={setSheet}
               colWidth={88}
@@ -126,14 +176,16 @@ export function DataDemo() {
 
         {/* ── Right: data explorer wired to spreadsheet rows ── */}
         <Pane label="② Pick a chart">
-          {/* key forces a remount when records identity changes so the
-              auto-pick of X / Y fields runs again on first import. */}
+          {/* key remounts ONLY on external uploads, so manual cell edits
+              don't reset the chart-picker UI. records prop still flows
+              through on every render so the chart stays current. */}
           <TkxDataExplorer
-            key={records.length === 0 ? 'empty' : 'loaded'}
+            key={explorerKey}
             initialData={records}
             allowedCharts={['bar', 'line', 'area', 'pie']}
             chartHeight={280}
-            previewRows={4}
+            previewRows={6}
+            onDataLoad={handleExplorerLoad}
           />
         </Pane>
       </div>
@@ -142,12 +194,12 @@ export function DataDemo() {
         style={{
           marginTop: 24,
           textAlign: 'center',
-          color: '#666',
+          color: '#888',
           fontSize: 12,
+          fontStyle: 'italic',
         }}
       >
-        TkxSpreadsheet → spreadsheetToRecords() → TkxDataExplorer ·
-        every package on npm, zero glue code
+        spreadsheetToRecords() ↔ recordsToSpreadsheet() · zero glue code
       </p>
 
       <style>{`

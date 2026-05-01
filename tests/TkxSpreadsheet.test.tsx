@@ -10,6 +10,7 @@ import {
   addr,
   parseAddr,
   spreadsheetToRecords,
+  recordsToSpreadsheet,
   type SpreadsheetData,
 } from '../src/components/TkxSpreadsheet';
 
@@ -172,6 +173,91 @@ describe('spreadsheetToRecords', () => {
     expect(spreadsheetToRecords(data, { cols: 2, rows: 2 })).toEqual([
       { name: 'Ada', B1: 99 },
     ]);
+  });
+});
+
+describe('recordsToSpreadsheet', () => {
+  it('writes headers in row 1 and body in subsequent rows', () => {
+    const sheet = recordsToSpreadsheet([
+      { name: 'Ada',   score: 99 },
+      { name: 'Grace', score: 95 },
+    ]);
+    expect(sheet.cells).toEqual({
+      A1: 'name', B1: 'score',
+      A2: 'Ada',  B2: '99',
+      A3: 'Grace', B3: '95',
+    });
+  });
+
+  it('preserves the order of keys as first seen across records', () => {
+    const sheet = recordsToSpreadsheet([
+      { c: 1, a: 2 },
+      { a: 3, b: 4 },
+    ]);
+    // First record introduces c, a (in that order); second adds b.
+    expect(sheet.cells.A1).toBe('c');
+    expect(sheet.cells.B1).toBe('a');
+    expect(sheet.cells.C1).toBe('b');
+    // Body
+    expect(sheet.cells.A2).toBe('1');
+    expect(sheet.cells.B2).toBe('2');
+    expect(sheet.cells.C2).toBeUndefined(); // null/missing for first rec
+    expect(sheet.cells.A3).toBeUndefined();
+    expect(sheet.cells.B3).toBe('3');
+    expect(sheet.cells.C3).toBe('4');
+  });
+
+  it('treats null / undefined / empty string as cleared cells', () => {
+    const sheet = recordsToSpreadsheet([
+      { x: null, y: 1 },
+      { x: undefined, y: 2 },
+      { x: '', y: 3 },
+    ]);
+    expect(sheet.cells.A2).toBeUndefined();
+    expect(sheet.cells.B2).toBe('1');
+    expect(sheet.cells.B3).toBe('2');
+    expect(sheet.cells.B4).toBe('3');
+  });
+
+  it('coerces numbers + booleans to strings (the spreadsheet evaluator parses them back)', () => {
+    const sheet = recordsToSpreadsheet([{ qty: 12, active: true }]);
+    expect(sheet.cells.A2).toBe('12');
+    expect(sheet.cells.B2).toBe('true');
+  });
+
+  it('round-trips with spreadsheetToRecords', () => {
+    const records = [
+      { name: 'Ada',   score: 99 },
+      { name: 'Grace', score: 95 },
+    ];
+    const sheet = recordsToSpreadsheet(records);
+    const out = spreadsheetToRecords(sheet, { cols: 2, rows: 3 });
+    expect(out).toEqual(records);
+  });
+
+  it('handles empty input without crashing', () => {
+    expect(recordsToSpreadsheet([])).toEqual({ cells: {} });
+  });
+
+  it('preserveExtraCells keeps unrelated cells from the base sheet', () => {
+    const base: SpreadsheetData = {
+      cells: { Z99: 'note', A1: 'old-header', A2: 'old' },
+    };
+    const sheet = recordsToSpreadsheet(
+      [{ name: 'new', count: 1 }],
+      { base, preserveExtraCells: true },
+    );
+    // Far-away cell preserved
+    expect(sheet.cells.Z99).toBe('note');
+    // Header overwritten
+    expect(sheet.cells.A1).toBe('name');
+    expect(sheet.cells.A2).toBe('new');
+  });
+
+  it('without preserveExtraCells, base sheet is replaced cleanly', () => {
+    const base: SpreadsheetData = { cells: { A1: 'old', B5: 'stale' } };
+    const sheet = recordsToSpreadsheet([{ x: 1 }], { base });
+    expect(sheet.cells).toEqual({ A1: 'x', A2: '1' });
   });
 });
 

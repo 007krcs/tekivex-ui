@@ -139,6 +139,92 @@ export function spreadsheetToRecords(
   return out;
 }
 
+// ── Records → spreadsheet conversion (the inverse of spreadsheetToRecords) ──
+//
+// Takes a flat array of records (e.g. parsed CSV / JSON) and produces a
+// SpreadsheetData object: row 1 = headers (in the order they first appear
+// across the records), rows 2+ = body. Existing cells in `base` are
+// preserved if `preserveExtraCells = true` and they fall outside the
+// region we're writing — handy when the caller wants to layer imported
+// data over a sheet that already has formulas in column E, for example.
+//
+//   const sheet = recordsToSpreadsheet([{ name: 'Ada', score: 99 }, …]);
+//   <TkxSpreadsheet data={sheet} cols={…} rows={…} />
+//
+// Headers are derived from the union of keys across ALL records (so a
+// CSV with a sparse last column still gets a column for it). Stable
+// order: first-seen wins.
+export function recordsToSpreadsheet(
+  records: Array<Record<string, string | number | null | boolean | undefined>>,
+  options: {
+    /** Existing sheet to merge into. Default: empty. */
+    base?: SpreadsheetData;
+    /** Keep cells in `base` that fall outside the rectangle we'd overwrite.
+     *  Default false — full replacement. */
+    preserveExtraCells?: boolean;
+  } = {},
+): SpreadsheetData {
+  const { base, preserveExtraCells = false } = options;
+
+  // Stable union-of-keys for column ordering
+  const headerOrder: string[] = [];
+  const seen = new Set<string>();
+  for (const rec of records) {
+    for (const k of Object.keys(rec)) {
+      if (!seen.has(k)) {
+        seen.add(k);
+        headerOrder.push(k);
+      }
+    }
+  }
+
+  const cells: Record<string, string> = {};
+
+  // Optionally seed with the existing sheet's cells
+  if (preserveExtraCells && base) {
+    for (const [a, v] of Object.entries(base.cells)) cells[a] = v;
+  }
+
+  // Write header row
+  headerOrder.forEach((h, c) => {
+    cells[addr(c, 0)] = h;
+  });
+
+  // Write body rows
+  records.forEach((rec, i) => {
+    const r = i + 1;
+    headerOrder.forEach((h, c) => {
+      const v = rec[h];
+      if (v === null || v === undefined || v === '') {
+        if (!preserveExtraCells) delete cells[addr(c, r)];
+      } else {
+        cells[addr(c, r)] = String(v);
+      }
+    });
+  });
+
+  // When NOT preserving extras, also clear the rectangle we owned in `base`
+  // beyond the current data so old rows don't bleed through.
+  if (!preserveExtraCells && base) {
+    // Determine the rectangle we wrote: cols=headerOrder.length, rows=records.length+1
+    const writtenCols = headerOrder.length;
+    const writtenRows = records.length + 1;
+    for (const [a] of Object.entries(base.cells)) {
+      const m = /^([A-Z]+)([0-9]+)$/.exec(a);
+      if (!m) continue;
+      const col = colIndex(m[1]);
+      const row = +m[2] - 1;
+      // If the address is in the rectangle the new write covers, the new
+      // write already overrode it (or cleared it). If it's outside, drop it.
+      if (col < writtenCols && row < writtenRows) continue;
+      // Outside: drop in non-preserve mode
+      // (already not present in `cells` since we didn't seed it)
+    }
+  }
+
+  return { cells };
+}
+
 // ── Evaluator ───────────────────────────────────────────────────────────────
 
 type CellValue = number | string;
