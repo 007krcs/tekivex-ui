@@ -13,6 +13,20 @@ export { TkxDonutChart } from './TkxDonutChart';
 export { TkxScatterChart } from './TkxScatterChart';
 export { TkxRadarChart } from './TkxRadarChart';
 
+// ── Data explorer (upload + chart picker) ────────────────────────────────────
+export {
+  TkxDataExplorer,
+  parseCSV,
+  csvToRecords,
+  inferColumnTypes,
+} from './TkxDataExplorer';
+export type {
+  TkxDataExplorerProps,
+  DataRecord,
+  ChartKind,
+  ColumnType,
+} from './TkxDataExplorer';
+
 export type { TkxAreaChartProps } from './TkxAreaChart';
 export type { TkxBarChartProps } from './TkxBarChart';
 export type { TkxLineChartProps } from './TkxLineChart';

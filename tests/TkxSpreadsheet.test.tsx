@@ -9,6 +9,7 @@ import {
   colIndex,
   addr,
   parseAddr,
+  spreadsheetToRecords,
   type SpreadsheetData,
 } from '../src/components/TkxSpreadsheet';
 
@@ -115,6 +116,62 @@ describe('evaluate()', () => {
 
   it('handles unary minus', () => {
     expect(evaluate('A1', { A1: '=-5 + 2' })).toBe(-3);
+  });
+});
+
+describe('spreadsheetToRecords', () => {
+  it('converts row 1 as header + body rows as records', () => {
+    const data: SpreadsheetData = {
+      cells: {
+        A1: 'name', B1: 'score',
+        A2: 'Ada',  B2: '99',
+        A3: 'Grace', B3: '95',
+      },
+    };
+    expect(spreadsheetToRecords(data, { cols: 2, rows: 3 })).toEqual([
+      { name: 'Ada', score: 99 },
+      { name: 'Grace', score: 95 },
+    ]);
+  });
+
+  it('evaluates formulas before copying', () => {
+    const data: SpreadsheetData = {
+      cells: {
+        A1: 'a', B1: 'b', C1: 'sum',
+        A2: '2', B2: '3', C2: '=A2+B2',
+      },
+    };
+    expect(spreadsheetToRecords(data, { cols: 3, rows: 2 })).toEqual([
+      { a: 2, b: 3, sum: 5 },
+    ]);
+  });
+
+  it('skips fully-blank rows', () => {
+    const data: SpreadsheetData = {
+      cells: { A1: 'x', A2: '1', A4: '2' },
+    };
+    expect(spreadsheetToRecords(data, { cols: 1, rows: 4 })).toEqual([
+      { x: 1 },
+      { x: 2 },
+    ]);
+  });
+
+  it('renders error cells as null so charts skip them', () => {
+    const data: SpreadsheetData = {
+      cells: { A1: 'v', A2: '5', A3: '=1/0' },
+    };
+    expect(spreadsheetToRecords(data, { cols: 1, rows: 3 })).toEqual([
+      { v: 5 },
+    ]);
+  });
+
+  it('falls back to addr-style header when row 1 is blank for that column', () => {
+    const data: SpreadsheetData = {
+      cells: { A1: 'name', A2: 'Ada', B2: '99' },
+    };
+    expect(spreadsheetToRecords(data, { cols: 2, rows: 2 })).toEqual([
+      { name: 'Ada', B1: 99 },
+    ]);
   });
 });
 

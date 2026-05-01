@@ -88,6 +88,57 @@ export function parseAddr(a: string): { col: number; row: number } | null {
   return { col: colIndex(m[1]), row: +m[2] - 1 };
 }
 
+// ── Spreadsheet → records conversion ───────────────────────────────────────
+//
+// Treats row 1 as the header. Every subsequent row becomes a record keyed by
+// the header text. Formula cells are evaluated before being copied.
+//
+//   const records = spreadsheetToRecords(sheet, { cols: 4, rows: 100 });
+//   <TkxDataExplorer initialData={records} />
+//
+// Numeric values stay numeric; error sentinels (#CYCLE!, #ERROR!, …) and
+// empty cells are converted to null so charts don't render them.
+export function spreadsheetToRecords(
+  data: SpreadsheetData,
+  bounds: { cols: number; rows: number },
+): Array<Record<string, string | number | null>> {
+  const memo = new Map<string, ReturnType<typeof evaluate>>();
+  const cells = data.cells;
+
+  // Build header from row 1
+  const headers: string[] = [];
+  for (let c = 0; c < bounds.cols; c++) {
+    const a = addr(c, 0);
+    const raw = cells[a];
+    headers.push(raw && raw.trim() !== '' ? raw.trim() : addr(c, 0));
+  }
+
+  const out: Array<Record<string, string | number | null>> = [];
+  for (let r = 1; r < bounds.rows; r++) {
+    const rec: Record<string, string | number | null> = {};
+    let hasAny = false;
+    for (let c = 0; c < bounds.cols; c++) {
+      const a = addr(c, r);
+      let v: ReturnType<typeof evaluate>;
+      if (memo.has(a)) v = memo.get(a)!;
+      else {
+        v = evaluate(a, cells);
+        memo.set(a, v);
+      }
+      if (v === '' || v === undefined) {
+        rec[headers[c]] = null;
+      } else if (typeof v === 'string' && v.startsWith('#')) {
+        rec[headers[c]] = null;
+      } else {
+        rec[headers[c]] = v;
+        hasAny = true;
+      }
+    }
+    if (hasAny) out.push(rec);
+  }
+  return out;
+}
+
 // ── Evaluator ───────────────────────────────────────────────────────────────
 
 type CellValue = number | string;
