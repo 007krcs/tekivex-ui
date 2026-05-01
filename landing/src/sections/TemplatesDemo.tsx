@@ -3,18 +3,19 @@
 //
 // Two sub-tabs: Resume (12 templates) / Biodata (12 templates). The
 // embedded TkxTemplateGenerator handles everything — form, picker,
-// preview, paywall gate, browser-print download.
+// preview, lock gate, browser-print download.
 //
-// Demonstrates the paywall flow with one paid resume template ("Executive
-// Classic" at ₹199) and one paid biodata template ("Royal" at ₹299) so
-// visitors see the locked state. Click "Send my requirement →" if they
-// want unlocked access.
+// Lock policy: every template is locked by default. Visitors can preview
+// any template fully (live form-driven render at A4 scale) but cannot
+// download until access is requested. Two of the templates also have
+// explicit prices to demonstrate the priced-paywall variant.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useState } from 'react';
 import { TkxTemplateGenerator } from 'tekivex-ui';
 
-// One free + one paid example of each kind so the gate is visible
+// Two priced templates per kind to demonstrate the priced gate. All other
+// templates remain locked-by-default with a "Request access" CTA.
 const PRICING_DEMO = {
   'resume-executive-classic': { priceCents: 19900, priceCurrency: '₹' },
   'resume-tech-stack':        { priceCents: 24900, priceCurrency: '₹' },
@@ -44,9 +45,11 @@ export function TemplatesDemo() {
           <span className="tk-gradient-text">Resume + Biodata</span> generator
         </h2>
         <p style={subtitleStyle}>
-          12 resume layouts, 12 marriage-biodata layouts (religion-agnostic). One smart
-          generator: drop your data into the form, pick a template, preview live, download
-          as PDF. Optional per-template paywall — set a price, the unlock button does the rest.
+          12 resume layouts, 12 marriage-biodata layouts (religion-agnostic). Drop your data
+          in, pick a template, preview live at A4 scale. <strong style={{ color: '#ffbe0b' }}>Every
+          template is locked by default</strong> — visitors browse and preview but only
+          download after the team approves. Set per-template prices to wire the paid path
+          on top.
         </p>
       </header>
 
@@ -109,9 +112,9 @@ export function TemplatesDemo() {
           style={toastStyle}
         >
           <div style={{ marginRight: 'auto' }}>
-            🔒 <strong>{requested}</strong> requires a one-time payment to download.
-            Hook up Stripe / Razorpay <code>onPurchase</code> here, or click below to file a
-            request.
+            🔒 <strong>{requested}</strong> is locked. Wire your real payment / approval
+            flow in the generator's <code>onPurchase</code> callback, or click below to file a
+            request with the team.
           </div>
           <a
             href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new"
