@@ -80,6 +80,43 @@ export function PipelineEditor() {
   return (
     <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'minmax(0, 3fr) minmax(0, 1fr)' }}>
       <div>
+        <div
+          style={{
+            padding: '8px 12px',
+            marginBottom: 10,
+            borderRadius: 8,
+            background: 'rgba(0,245,212,0.08)',
+            border: '1px dashed rgba(0,245,212,0.4)',
+            color: '#00f5d4',
+            fontSize: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            flexWrap: 'wrap',
+          }}
+        >
+          <span aria-hidden="true">💡</span>
+          <span>
+            <strong>Connect nodes:</strong> drag from the glowing{' '}
+            <span
+              style={{
+                display: 'inline-block',
+                width: 14,
+                height: 14,
+                borderRadius: '50%',
+                background: '#00f5d4',
+                boxShadow: '0 0 8px #00f5d4',
+                verticalAlign: 'middle',
+                lineHeight: 1,
+                fontSize: 9,
+                fontWeight: 900,
+                color: '#0a0a0f',
+                textAlign: 'center',
+              }}
+            >+</span>
+            {' '}port on a node's <em>right edge</em> to another node.
+          </span>
+        </div>
         <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
           <button
             type="button"
