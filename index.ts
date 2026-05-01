@@ -293,6 +293,16 @@ export type { TkxSecureDownloadProps } from './src/components/TkxSecureDownload'
 export { TkxHoneypot } from './src/components/TkxHoneypot';
 export type { TkxHoneypotProps } from './src/components/TkxHoneypot';
 
+// Biodata misc components (Phase 0b)
+export { TkxShareSheet } from './src/components/TkxShareSheet';
+export type { TkxShareSheetProps, TkxShareTarget } from './src/components/TkxShareSheet';
+export { TkxFontPicker } from './src/components/TkxFontPicker';
+export type { TkxFontPickerProps, FontFaceOption } from './src/components/TkxFontPicker';
+export { TkxInstallPrompt } from './src/components/TkxInstallPrompt';
+export type { TkxInstallPromptProps } from './src/components/TkxInstallPrompt';
+export { TkxBiodataPreview } from './src/components/TkxBiodataPreview';
+export type { TkxBiodataPreviewProps } from './src/components/TkxBiodataPreview';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → '@tekivex/ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
