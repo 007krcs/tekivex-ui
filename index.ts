@@ -299,6 +299,10 @@ export type {
   HeatmapDataPoint,
 } from './src/components/TkxCalendarHeatmap';
 
+// ── Accessibility checker ─────────────────────────────────────────────────────
+export { TkxAccessibilityChecker } from './src/components/TkxAccessibilityChecker';
+export type { TkxAccessibilityCheckerProps } from './src/components/TkxAccessibilityChecker';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → 'tekivex-ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)

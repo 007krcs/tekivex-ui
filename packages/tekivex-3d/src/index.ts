@@ -34,3 +34,9 @@ export type { TkxXRSessionProps } from './XRSession';
 
 export { TkxModel3D } from './Model3D';
 export type { TkxModel3DProps } from './Model3D';
+
+export { TkxLogo3D } from './Logo3D';
+export type { TkxLogo3DProps } from './Logo3D';
+
+export { TkxParticleField } from './ParticleField';
+export type { TkxParticleFieldProps } from './ParticleField';
