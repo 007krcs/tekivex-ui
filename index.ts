@@ -284,6 +284,10 @@ export type {
   TkxKanbanReorderEvent,
 } from './src/components/TkxKanban';
 
+// ── Rich text editing ─────────────────────────────────────────────────────────
+export { TkxRichEditor } from './src/components/TkxRichEditor';
+export type { TkxRichEditorProps, TkxRichEditorHandle } from './src/components/TkxRichEditor';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → 'tekivex-ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)

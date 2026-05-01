@@ -31,3 +31,6 @@ export type { TkxHotspotProps } from './Hotspot';
 
 export { TkxXRSession } from './XRSession';
 export type { TkxXRSessionProps } from './XRSession';
+
+export { TkxModel3D } from './Model3D';
+export type { TkxModel3DProps } from './Model3D';
