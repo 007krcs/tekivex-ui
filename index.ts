@@ -311,6 +311,15 @@ export type { TkxMindMapProps, MindMapNode } from './src/components/TkxMindMap';
 export { TkxGantt, parseDay, formatDay, dayDiff } from './src/components/TkxGantt';
 export type { TkxGanttProps, GanttTask } from './src/components/TkxGantt';
 
+// ── Pivot table ───────────────────────────────────────────────────────────────
+export { TkxPivotTable } from './src/components/TkxPivotTable';
+export type {
+  TkxPivotTableProps,
+  PivotValue,
+  PivotAggregator,
+  PivotRecord,
+} from './src/components/TkxPivotTable';
+
 // ── Spreadsheet ───────────────────────────────────────────────────────────────
 export {
   TkxSpreadsheet,
