@@ -187,6 +187,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
     const dragRef = useRef<
       | { kind: 'node'; id: string; pointerId: number; startX: number; startY: number; nodeStartX: number; nodeStartY: number }
       | { kind: 'pan'; pointerId: number; startX: number; startY: number; vpStartX: number; vpStartY: number }
+      | { kind: 'edge'; pointerId: number; fromNodeId: string }
       | null
     >(null);
     // Active pointers for pinch-zoom
@@ -194,6 +195,10 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
     const pinchRef = useRef<{ startDist: number; startScale: number; centerX: number; centerY: number } | null>(null);
 
     const ENGAGED_NODE_IDS = useRef<Set<string>>(new Set());
+
+    // Edge-draw cursor in graph space, lives in state so the SVG draft line
+    // re-renders when it moves. null = no draft in progress.
+    const [edgeDraft, setEdgeDraft] = useState<{ fromNodeId: string; gx: number; gy: number } | null>(null);
 
     // ── Node drag handlers (registered per node) ────────────────────────
     const onNodePointerDown = (e: PointerEvent<HTMLDivElement>, node: FlowNode) => {
@@ -236,6 +241,69 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
         ENGAGED_NODE_IDS.current.delete(drag.id);
         dragRef.current = null;
       }
+    };
+
+    // Convert screen-space pointer coordinates to graph-space (accounting for
+    // viewport translate + scale). Used by the edge-draw preview line.
+    const screenToGraph = useCallback(
+      (clientX: number, clientY: number): [number, number] => {
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (!rect) return [0, 0];
+        const x = (clientX - rect.left - viewport.x) / viewport.scale;
+        const y = (clientY - rect.top  - viewport.y) / viewport.scale;
+        return [x, y];
+      },
+      [viewport.x, viewport.y, viewport.scale],
+    );
+
+    // ── Edge-creation handlers (one port per node) ──────────────────────
+    const onPortPointerDown = (e: PointerEvent<HTMLButtonElement>, fromNodeId: string) => {
+      e.stopPropagation();
+      e.preventDefault();
+      try {
+        (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+      } catch { /* jsdom */ }
+      const [gx, gy] = screenToGraph(e.clientX, e.clientY);
+      dragRef.current = { kind: 'edge', pointerId: e.pointerId, fromNodeId };
+      setEdgeDraft({ fromNodeId, gx, gy });
+    };
+
+    const onPortPointerMove = (e: PointerEvent<HTMLButtonElement>) => {
+      const drag = dragRef.current;
+      if (!drag || drag.kind !== 'edge' || drag.pointerId !== e.pointerId) return;
+      const [gx, gy] = screenToGraph(e.clientX, e.clientY);
+      setEdgeDraft({ fromNodeId: drag.fromNodeId, gx, gy });
+    };
+
+    const onPortPointerUp = (e: PointerEvent<HTMLButtonElement>) => {
+      const drag = dragRef.current;
+      if (!drag || drag.kind !== 'edge' || drag.pointerId !== e.pointerId) return;
+      e.stopPropagation();
+      // Find the node under the pointer (excluding the source). jsdom is
+      // permissive about elementFromPoint — wrap defensively so a missing
+      // implementation doesn't crash the cleanup path.
+      let toNodeId: string | undefined;
+      try {
+        const target = document.elementFromPoint?.(e.clientX, e.clientY);
+        const nodeEl = (target as Element | null)?.closest('[data-tkx-node-id]') as HTMLElement | null;
+        toNodeId = nodeEl?.dataset.tkxNodeId;
+      } catch { /* hit-test unavailable; treat as miss */ }
+      if (toNodeId && toNodeId !== drag.fromNodeId) {
+        // Don't create duplicate edges in the same direction
+        const exists = data.edges.some(
+          (ed) => ed.from === drag.fromNodeId && ed.to === toNodeId,
+        );
+        if (!exists) {
+          const newEdge: FlowEdge = {
+            id: `e-${drag.fromNodeId}-${toNodeId}-${Date.now().toString(36)}`,
+            from: drag.fromNodeId,
+            to: toNodeId,
+          };
+          onChange({ ...data, edges: [...data.edges, newEdge] });
+        }
+      }
+      dragRef.current = null;
+      setEdgeDraft(null);
     };
 
     // ── Canvas-level pan / pinch / zoom ─────────────────────────────────
@@ -498,6 +566,27 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 <path d="M0,0 L6,3 L0,6 z" fill="currentColor" />
               </marker>
             </defs>
+            {/* Live "draft" edge while the user is dragging from a port */}
+            {edgeDraft && (() => {
+              const from = nodeMap.get(edgeDraft.fromNodeId);
+              if (!from) return null;
+              const a = nodeAnchors(from).out;
+              const b: [number, number] = [edgeDraft.gx, edgeDraft.gy];
+              const dx = Math.max(40, Math.abs(b[0] - a[0]) / 2);
+              const d = `M ${a[0]} ${a[1]} C ${a[0] + dx} ${a[1]}, ${b[0] - dx} ${b[1]}, ${b[0]} ${b[1]}`;
+              return (
+                <path
+                  data-testid="flow-edge-draft"
+                  d={d}
+                  stroke="var(--tkx-accent, #00f5d4)"
+                  strokeWidth={1.6 / viewport.scale}
+                  strokeDasharray={`${4 / viewport.scale} ${4 / viewport.scale}`}
+                  fill="none"
+                  strokeOpacity={0.85}
+                />
+              );
+            })()}
+
             {data.edges.map((e) => {
               const from = nodeMap.get(e.from);
               const to = nodeMap.get(e.to);
@@ -553,6 +642,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 aria-pressed={isSelected}
                 tabIndex={-1}
                 data-testid={`flow-node-${n.id}`}
+                data-tkx-node-id={n.id}
                 onPointerDown={(e) => onNodePointerDown(e, n)}
                 onPointerMove={onNodePointerMove}
                 onPointerUp={onNodePointerUp}
@@ -582,7 +672,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 }}
               >
                 {renderNode ? renderNode(n, isSelected) : n.label}
-                {/* Port dots */}
+                {/* Input port (left) — visual only; this is the "drop target" */}
                 <span
                   aria-hidden="true"
                   style={{
@@ -595,20 +685,32 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                     borderRadius: '50%',
                     background: accent,
                     boxShadow: `0 0 8px ${accent}88`,
+                    pointerEvents: 'none',
                   }}
                 />
-                <span
-                  aria-hidden="true"
+                {/* Output port (right) — drag from here to create an edge */}
+                <button
+                  type="button"
+                  aria-label={`Drag to connect ${n.label}`}
+                  data-testid={`flow-port-${n.id}`}
+                  onPointerDown={(e) => onPortPointerDown(e, n.id)}
+                  onPointerMove={onPortPointerMove}
+                  onPointerUp={onPortPointerUp}
+                  onPointerCancel={onPortPointerUp}
                   style={{
                     position: 'absolute',
-                    right: -6,
+                    right: -8,
                     top: '50%',
-                    width: 10,
-                    height: 10,
+                    width: 16,
+                    height: 16,
                     transform: 'translateY(-50%)',
                     borderRadius: '50%',
                     background: accent,
-                    boxShadow: `0 0 8px ${accent}88`,
+                    boxShadow: `0 0 10px ${accent}88`,
+                    border: '2px solid rgba(8,10,25,0.95)',
+                    cursor: 'crosshair',
+                    padding: 0,
+                    touchAction: 'none',
                   }}
                 />
               </div>

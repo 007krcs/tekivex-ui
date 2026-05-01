@@ -1,3 +1,27 @@
+import { useState } from 'react';
+import { PREVIEWS } from '../component-previews';
+import { RequestAccessDialog, type RequestTarget } from '../RequestAccessDialog';
+
+// Map a component-display-name → preview slug. Tries common transformations:
+//   TkxFlowChart       → flow-chart
+//   TkxOrbitControls   → orbit-controls
+//   TkxStarfield/TkxPlanet/TkxOrbitPath → starfield (first match wins)
+//   "Holographic extras (Panel/Gauge/...)" → holographic-panel
+function nameToSlug(name: string): string | null {
+  // Strip everything after a slash or paren
+  const head = name.split(/[\/(]/)[0].trim();
+  // Drop the Tkx prefix, kebab-case
+  const slug = head
+    .replace(/^Tkx/, '')
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .toLowerCase();
+  if (slug in PREVIEWS) return slug;
+  // Heuristic for "Holographic extras (Panel/Gauge/Progress/Terminal)" →
+  // try the first child token.
+  if (/holographic.*panel|panel.*holographic/i.test(name)) return 'holographic-panel';
+  return null;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Roadmap — what's just shipped, what's in flight, what's next.
 //
@@ -101,6 +125,8 @@ const RELEASE_ORDER = [
 ];
 
 export function Roadmap() {
+  const [requested, setRequested] = useState<RequestTarget | null>(null);
+
   const groupedByRelease = ITEMS.reduce<Record<string, RoadmapItem[]>>((acc, item) => {
     (acc[item.release] = acc[item.release] || []).push(item);
     return acc;
@@ -191,17 +217,23 @@ export function Roadmap() {
             >
               {groupedByRelease[rel].map((item) => {
                 const s = STATUS_STYLE[item.status];
-                return (
-                  <div
-                    key={item.name}
-                    style={{
-                      padding: 18,
-                      borderRadius: 12,
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      background: 'rgba(18, 20, 38, 0.55)',
-                      backdropFilter: 'blur(12px)',
-                    }}
-                  >
+                const slug = nameToSlug(item.name);
+                const clickable = !!slug;
+                const baseStyle: React.CSSProperties = {
+                  padding: 18,
+                  borderRadius: 12,
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(18, 20, 38, 0.55)',
+                  backdropFilter: 'blur(12px)',
+                  textAlign: 'left',
+                  width: '100%',
+                  fontFamily: 'inherit',
+                  color: 'inherit',
+                  cursor: clickable ? 'pointer' : 'default',
+                  transition: 'border-color 0.15s, transform 0.15s',
+                };
+                const inner = (
+                  <>
                     <header
                       style={{
                         display: 'flex',
@@ -249,13 +281,55 @@ export function Roadmap() {
                     </p>
                     <div
                       style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                         fontSize: 11,
                         color: '#888',
                         fontFamily: 'ui-monospace, monospace',
                       }}
                     >
-                      ships in <span style={{ color: '#00f5d4' }}>{item.pkg}</span>
+                      <span>
+                        ships in <span style={{ color: '#00f5d4' }}>{item.pkg}</span>
+                      </span>
+                      {clickable && (
+                        <span style={{ color: '#c4a8ff', fontWeight: 700 }}>
+                          live preview →
+                        </span>
+                      )}
                     </div>
+                  </>
+                );
+
+                if (clickable && slug) {
+                  return (
+                    <button
+                      key={item.name}
+                      type="button"
+                      onClick={() =>
+                        setRequested({
+                          name: item.name.startsWith('Tkx') ? item.name.split(/[\/(]/)[0].trim() : item.name,
+                          slug,
+                          pkg: item.pkg,
+                        })
+                      }
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(196,168,255,0.45)';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                      style={baseStyle}
+                    >
+                      {inner}
+                    </button>
+                  );
+                }
+                return (
+                  <div key={item.name} style={baseStyle}>
+                    {inner}
                   </div>
                 );
               })}
@@ -283,6 +357,8 @@ export function Roadmap() {
           File a request →
         </a>
       </p>
+
+      <RequestAccessDialog target={requested} onClose={() => setRequested(null)} />
     </section>
   );
 }
