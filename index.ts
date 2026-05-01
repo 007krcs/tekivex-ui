@@ -322,6 +322,16 @@ export type { TkxAccessibilityCheckerProps } from './src/components/TkxAccessibi
 export { TkxMindMap } from './src/components/TkxMindMap';
 export type { TkxMindMapProps, MindMapNode } from './src/components/TkxMindMap';
 
+// ── Flow chart (node-edge graph editor) ──────────────────────────────────────
+export { TkxFlowChart, nodeAnchors, edgePath } from './src/components/TkxFlowChart';
+export type {
+  TkxFlowChartProps,
+  FlowChartData,
+  FlowNode,
+  FlowEdge,
+  Viewport as FlowChartViewport,
+} from './src/components/TkxFlowChart';
+
 // ── Command palette ──────────────────────────────────────────────────────────
 export { TkxCommandPalette, fuzzyScore } from './src/components/TkxCommandPalette';
 export type {

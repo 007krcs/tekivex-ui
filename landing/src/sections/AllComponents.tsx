@@ -94,6 +94,7 @@ const GROUPS: ComponentGroup[] = [
       { name: 'PivotTable',      slug: 'pivot-table',     isNew: true },
       { name: 'DataExplorer',    slug: 'data-explorer',   isNew: true },
       { name: 'CommandPalette',  slug: 'command-palette', isNew: true },
+      { name: 'FlowChart',       slug: 'flow-chart',      isNew: true },
       { name: 'ThemeStudio',     slug: 'theme-studio',    isNew: true },
       { name: 'AccessibilityChecker', slug: 'accessibility-checker', isNew: true },
     ],

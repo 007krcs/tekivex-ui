@@ -62,9 +62,10 @@ const ITEMS: RoadmapItem[] = [
     pkg: 'tekivex-3d', release: 'v0.5', status: 'shipped',
     desc: 'Procedural galaxy primitives — no equirectangular photo required.' },
 
+  { name: 'TkxFlowChart',              pkg: 'tekivex-ui', release: 'v3.15', status: 'shipped',
+    desc: 'Node-edge graph editor. Drag/pinch/wheel, keyboard nav, custom renderers, ≥85% tests.' },
+
   // ── what's actually next ────────────────────────────────────────────
-  { name: 'TkxFlowChart',              pkg: 'tekivex-ui', release: 'v3.14', status: 'in progress',
-    desc: 'Node-edge graph editor. Drag nodes, connect via ports, pan/zoom, export JSON.' },
   { name: 'TkxFormulaBar',             pkg: 'tekivex-ui', release: 'v3.14', status: 'planned',
     desc: 'Companion to TkxSpreadsheet. Shows raw cell content for the active cell, with name-box.' },
   { name: 'TkxPortal3D',               pkg: 'tekivex-3d', release: 'v0.6',  status: 'planned',
@@ -91,7 +92,7 @@ const STATUS_STYLE: Record<RoadmapItem['status'], { bg: string; color: string; l
 // Custom release ordering: shipped releases ascending, then future releases
 const RELEASE_ORDER = [
   'v3.2', 'v3.3', 'v3.4', 'v3.5', 'v3.6', 'v3.7', 'v3.8', 'v3.9', 'v3.10',
-  'v3.11', 'v3.12', 'v3.13',
+  'v3.11', 'v3.12', 'v3.13', 'v3.15',
   'v0.2', 'v0.3', 'v0.4', 'v0.5',
   'v3.14',
   'v0.6',
