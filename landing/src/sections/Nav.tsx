@@ -1,4 +1,7 @@
+import { useImmersive } from '../App';
+
 export function Nav() {
+  const { open: openImmersive } = useImmersive();
   return (
     <nav
       style={{
@@ -31,17 +34,31 @@ export function Nav() {
         <a href="#packages" style={navLinkStyle}>Packages</a>
         <a href="/playground/" style={navLinkStyle}>Demo</a>
         <a href="/book/" style={navLinkStyle}>Book</a>
+        <button
+          type="button"
+          onClick={openImmersive}
+          style={{
+            ...navLinkStyle,
+            padding: '6px 14px',
+            background:
+              'linear-gradient(135deg, rgba(0,245,212,0.15), rgba(123,47,247,0.15))',
+            border: '1px solid rgba(0, 245, 212, 0.4)',
+            borderRadius: 8,
+            color: '#00f5d4',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+          }}
+        >
+          🌐 360° mode
+        </button>
         <a
           href="https://www.npmjs.com/package/tekivex-ui"
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            ...navLinkStyle,
-            padding: '6px 14px',
-            border: '1px solid rgba(0, 245, 212, 0.4)',
-            borderRadius: 8,
-            color: '#00f5d4',
-          }}
+          style={navLinkStyle}
         >
           npm →
         </a>

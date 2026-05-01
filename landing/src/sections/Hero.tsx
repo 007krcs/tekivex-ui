@@ -1,7 +1,9 @@
 import { TkxScene, TkxCard3D } from 'tekivex-3d';
 import { TkxHolographicBadge } from 'tekivex-ui';
+import { useImmersive } from '../App';
 
 export function Hero() {
+  const { open: openImmersive } = useImmersive();
   return (
     <section
       id="top"
@@ -70,30 +72,33 @@ export function Hero() {
               marginBottom: 24,
             }}
           >
-            <a
-              href="#playground"
+            <button
+              type="button"
+              onClick={openImmersive}
               style={{
                 padding: '14px 28px',
-                background: 'linear-gradient(135deg, #00f5d4, #3a86ff)',
+                background: 'linear-gradient(135deg, #00f5d4, #3a86ff, #7b2ff7)',
+                backgroundSize: '200% 200%',
+                animation: 'tk-shimmer 8s ease infinite',
                 color: '#0a0a0f',
                 fontWeight: 700,
                 borderRadius: 999,
+                border: 'none',
                 fontSize: 15,
                 letterSpacing: '0.01em',
                 minHeight: 44,
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                boxShadow: '0 8px 24px rgba(0, 245, 212, 0.25)',
+                boxShadow: '0 8px 24px rgba(0, 245, 212, 0.3)',
+                cursor: 'pointer',
               }}
             >
-              Try the playground →
-            </a>
+              🌐 Enter 360° mode →
+            </button>
 
             <a
-              href="https://www.npmjs.com/package/tekivex-ui"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#playground"
               style={{
                 padding: '14px 28px',
                 background: 'rgba(255,255,255,0.05)',
@@ -107,9 +112,36 @@ export function Hero() {
                 alignItems: 'center',
               }}
             >
+              Try the playground
+            </a>
+
+            <a
+              href="https://www.npmjs.com/package/tekivex-ui"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: '14px 28px',
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: '#aaa',
+                fontWeight: 600,
+                borderRadius: 999,
+                fontSize: 14,
+                minHeight: 44,
+                display: 'inline-flex',
+                alignItems: 'center',
+              }}
+            >
               View on npm
             </a>
           </div>
+
+          <style>{`
+            @keyframes tk-shimmer {
+              0%, 100% { background-position: 0% 50%; }
+              50%      { background-position: 100% 50%; }
+            }
+          `}</style>
 
           <div
             className="tk-glass"
