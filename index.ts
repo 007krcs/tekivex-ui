@@ -303,6 +303,16 @@ export type {
 export { TkxAccessibilityChecker } from './src/components/TkxAccessibilityChecker';
 export type { TkxAccessibilityCheckerProps } from './src/components/TkxAccessibilityChecker';
 
+// ── Form builder ──────────────────────────────────────────────────────────────
+export { TkxFormBuilder, validateField } from './src/components/TkxFormBuilder';
+export type {
+  TkxFormBuilderProps,
+  FormSchema,
+  FormField,
+  FormFieldType,
+  FormFieldOption,
+} from './src/components/TkxFormBuilder';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → 'tekivex-ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)
