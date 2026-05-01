@@ -104,14 +104,15 @@ describe('TkxTemplateGenerator', () => {
     expect(screen.getByTestId('template-preview').textContent).toContain('New Name');
   });
 
-  it('download button is enabled and labelled "⬇ Download" for free templates', () => {
+  it('every template is locked by default (no pricing config required)', () => {
     render(<TkxTemplateGenerator />);
     const btn = screen.getByTestId('download-button');
-    expect(btn.textContent).toMatch(/Download/);
-    expect(btn.textContent).not.toMatch(/Unlock/);
+    expect(btn.textContent).toMatch(/Request access/i);
+    expect(btn.textContent).toMatch(/🔒/);
+    expect(screen.getByTestId('locked-banner')).toBeInTheDocument();
   });
 
-  it('download button is locked for paid + un-paid templates', () => {
+  it('download button is locked for paid templates (shows price)', () => {
     const pricing = { 'resume-modern-minimalist': { priceCents: 49900, priceCurrency: '₹' } };
     render(<TkxTemplateGenerator pricing={pricing} />);
     const btn = screen.getByTestId('download-button');
@@ -126,9 +127,26 @@ describe('TkxTemplateGenerator', () => {
     const btn = screen.getByTestId('download-button');
     expect(btn.textContent).not.toMatch(/Unlock/);
     expect(btn.textContent).toMatch(/Download/);
+    expect(screen.queryByTestId('locked-banner')).not.toBeInTheDocument();
   });
 
-  it('locked template fires onPurchase instead of onDownload', () => {
+  it('lockedByDefault=false reverts to the older behaviour (free templates download)', () => {
+    render(<TkxTemplateGenerator lockedByDefault={false} />);
+    const btn = screen.getByTestId('download-button');
+    expect(btn.textContent).toMatch(/^⬇ Download$/);
+    expect(screen.queryByTestId('locked-banner')).not.toBeInTheDocument();
+  });
+
+  it('locked-by-default template fires onPurchase, never onDownload', () => {
+    const onPurchase = vi.fn();
+    const onDownload = vi.fn();
+    render(<TkxTemplateGenerator onPurchase={onPurchase} onDownload={onDownload} />);
+    fireEvent.click(screen.getByTestId('download-button'));
+    expect(onPurchase).toHaveBeenCalled();
+    expect(onDownload).not.toHaveBeenCalled();
+  });
+
+  it('paid template fires onPurchase before unlock', () => {
     const onPurchase = vi.fn();
     const onDownload = vi.fn();
     const pricing = { 'resume-modern-minimalist': { priceCents: 49900 } };
@@ -138,18 +156,31 @@ describe('TkxTemplateGenerator', () => {
     expect(onDownload).not.toHaveBeenCalled();
   });
 
-  it('unlocked template fires onDownload (and triggers print)', () => {
+  it('unlocked template fires onDownload + triggers iframe-based print', () => {
     const onDownload = vi.fn();
-    // Mock window.print so jsdom doesn't open a real dialog
-    const printSpy = vi.spyOn(window, 'print').mockImplementation(() => undefined);
+    // The new triggerPrint creates an iframe and calls print() inside it.
+    // We can spy on createElement to confirm the iframe path runs.
+    const createSpy = vi.spyOn(document, 'createElement');
     try {
-      render(<TkxTemplateGenerator onDownload={onDownload} />);
+      const paidIds = new Set(['resume-modern-minimalist']);
+      render(<TkxTemplateGenerator paidIds={paidIds} onDownload={onDownload} />);
+      // Must visit preview tab so the print region is in the DOM
+      fireEvent.click(screen.getByTestId('tab-preview'));
       fireEvent.click(screen.getByTestId('download-button'));
       expect(onDownload).toHaveBeenCalled();
-      expect(printSpy).toHaveBeenCalled();
+      // Confirm the print iframe was inserted
+      const calledForIframe = createSpy.mock.calls.some((c) => c[0] === 'iframe');
+      expect(calledForIframe).toBe(true);
     } finally {
-      printSpy.mockRestore();
+      createSpy.mockRestore();
     }
+  });
+
+  it('shows the "Locked" chip on every picker card by default', () => {
+    render(<TkxTemplateGenerator kind="resume" />);
+    fireEvent.click(screen.getByTestId('tab-pick'));
+    const card = screen.getByTestId('template-card-resume-modern-minimalist');
+    expect(card.textContent?.toLowerCase()).toContain('locked');
   });
 
   it('biodata picker shows the price chip on a paid template', () => {

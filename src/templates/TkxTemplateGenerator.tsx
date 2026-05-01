@@ -49,7 +49,15 @@ export interface TkxTemplateGeneratorProps {
   paidIds?: Set<string>;
   /** Per-template prices (cents / paisa). 0 or unset = free. */
   pricing?: Record<string, { priceCents: number; priceCurrency?: string }>;
-  /** Fired when a paid template's download is attempted before payment. */
+  /**
+   * If true (default), every template is locked unless its id is in
+   * `paidIds`. The download button reads "🔒 Request access" (or
+   * "🔒 Unlock — ₹X" when a price is configured), and clicks fire
+   * `onPurchase`. Set false to revert to the older behaviour where
+   * only templates with a price > 0 are locked.
+   */
+  lockedByDefault?: boolean;
+  /** Fired when a locked template's download is attempted. */
   onPurchase?: (info: TemplateInfo) => void;
   /** Fired after a successful download trigger. */
   onDownload?: (info: TemplateInfo) => void;
@@ -67,6 +75,7 @@ export function TkxTemplateGenerator({
   initialBiodataData,
   paidIds,
   pricing,
+  lockedByDefault = true,
   onPurchase,
   onDownload,
   style,
@@ -93,8 +102,13 @@ export function TkxTemplateGenerator({
     return null;
   }, [entry.info.id, entry.info.priceCents, entry.info.priceCurrency, pricing]);
 
+  // Lock logic. Three states:
+  //   priced   — price configured AND not in paidIds → "🔒 Unlock — ₹X"
+  //   gated    — no price, lockedByDefault true, not in paidIds → "🔒 Request access"
+  //   unlocked — paidIds has it OR (no price AND lockedByDefault=false) → "⬇ Download"
   const isPaid = !!priceInfo && priceInfo.priceCents > 0;
-  const isUnlocked = !isPaid || (paidIds?.has(entry.info.id) ?? false);
+  const isInPaid = paidIds?.has(entry.info.id) ?? false;
+  const isUnlocked = isInPaid || (!isPaid && !lockedByDefault);
 
   const handleDownload = () => {
     if (!isUnlocked) {
@@ -160,6 +174,34 @@ export function TkxTemplateGenerator({
         />
       </div>
 
+      {/* Locked banner — visible whenever the active template is locked,
+          so the gate is unmistakable on the preview tab too. */}
+      {!isUnlocked && (
+        <div
+          role="status"
+          data-testid="locked-banner"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '10px 16px',
+            background: 'rgba(255, 190, 11, 0.08)',
+            borderBottom: '1px solid rgba(255, 190, 11, 0.25)',
+            color: '#ffbe0b',
+            fontSize: 13,
+            fontWeight: 600,
+          }}
+        >
+          <span aria-hidden="true">🔒</span>
+          <span style={{ flex: 1 }}>
+            <strong>Preview only.</strong>{' '}
+            {isPaid
+              ? `This template is paid (${formattedPrice}). Download unlocks after purchase.`
+              : 'Templates are released on request. Click "Request access" to ask the team for the source download.'}
+          </span>
+        </div>
+      )}
+
       {/* Tab content */}
       <div style={{ flex: 1, overflow: 'auto', padding: 16 }}>
         {tab === 'data' && (
@@ -173,6 +215,7 @@ export function TkxTemplateGenerator({
             currentId={entry.info.id}
             pricing={pricing}
             paidIds={paidIds}
+            lockedByDefault={lockedByDefault}
             onSelect={(id) => {
               setTemplateId(id);
               setTab('preview');
@@ -195,12 +238,19 @@ export function TkxTemplateGenerator({
 function DownloadButton({
   isPaid, isUnlocked, formattedPrice, onClick,
 }: { isPaid: boolean; isUnlocked: boolean; formattedPrice: string; onClick: () => void }) {
-  const label = !isPaid
-    ? '⬇ Download'
-    : isUnlocked
-      ? `⬇ Download (${formattedPrice})`
-      : `🔒 Unlock — ${formattedPrice}`;
-  const accent = !isPaid || isUnlocked ? '#00f5d4' : '#ffbe0b';
+  // Three states:
+  //   unlocked          → "⬇ Download" (green) — fires print
+  //   priced + locked   → "🔒 Unlock — ₹X" (amber) — fires onPurchase
+  //   gated (no price)  → "🔒 Request access" (amber) — fires onPurchase
+  let label: string;
+  if (isUnlocked) {
+    label = isPaid ? `⬇ Download (${formattedPrice})` : '⬇ Download';
+  } else if (isPaid) {
+    label = `🔒 Unlock — ${formattedPrice}`;
+  } else {
+    label = '🔒 Request access';
+  }
+  const accent = isUnlocked ? '#00f5d4' : '#ffbe0b';
   return (
     <button
       type="button"
@@ -243,12 +293,13 @@ function tabStyle(active: boolean): CSSProperties {
 // ── Picker ─────────────────────────────────────────────────────────────────
 
 function TemplatePicker({
-  kind, currentId, pricing, paidIds, onSelect,
+  kind, currentId, pricing, paidIds, lockedByDefault, onSelect,
 }: {
   kind: TemplateKind;
   currentId: string;
   pricing?: Record<string, { priceCents: number; priceCurrency?: string }>;
   paidIds?: Set<string>;
+  lockedByDefault: boolean;
   onSelect: (id: string) => void;
 }) {
   const list = kind === 'resume' ? RESUME_TEMPLATES : BIODATA_TEMPLATES;
@@ -263,8 +314,25 @@ function TemplatePicker({
     >
       {list.map(({ info }) => {
         const price = pricing?.[info.id] ?? (info.priceCents ? { priceCents: info.priceCents, priceCurrency: info.priceCurrency } : null);
-        const paid = !price || price.priceCents === 0 || (paidIds?.has(info.id) ?? false);
+        const isPriced = !!price && price.priceCents > 0;
+        const inPaid = paidIds?.has(info.id) ?? false;
+        const unlocked = inPaid || (!isPriced && !lockedByDefault);
         const active = info.id === currentId;
+
+        // Chip label: "unlocked", "₹X", or "🔒 Locked"
+        let chipLabel: string | null = null;
+        let chipBg = 'rgba(255,190,11,0.14)';
+        let chipFg = '#ffbe0b';
+        if (unlocked) {
+          chipLabel = 'unlocked';
+          chipBg = 'rgba(0,245,212,0.14)';
+          chipFg = '#00f5d4';
+        } else if (isPriced) {
+          chipLabel = `${price!.priceCurrency ?? '$'}${(price!.priceCents / 100).toFixed(0)}`;
+        } else {
+          chipLabel = '🔒 Locked';
+        }
+
         return (
           <button
             key={info.id}
@@ -288,19 +356,17 @@ function TemplatePicker({
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: 700, fontSize: 14 }}>{info.name}</span>
-              {price && price.priceCents > 0 && (
-                <span
-                  style={{
-                    fontSize: 10, fontWeight: 700,
-                    padding: '2px 8px', borderRadius: 999,
-                    background: paid ? 'rgba(0,245,212,0.14)' : 'rgba(255,190,11,0.14)',
-                    color:      paid ? '#00f5d4' : '#ffbe0b',
-                    letterSpacing: '0.06em', textTransform: 'uppercase',
-                  }}
-                >
-                  {paid ? 'unlocked' : `${price.priceCurrency ?? '$'}${(price.priceCents / 100).toFixed(0)}`}
-                </span>
-              )}
+              <span
+                style={{
+                  fontSize: 10, fontWeight: 700,
+                  padding: '2px 8px', borderRadius: 999,
+                  background: chipBg,
+                  color: chipFg,
+                  letterSpacing: '0.06em', textTransform: 'uppercase',
+                }}
+              >
+                {chipLabel}
+              </span>
             </div>
             <div style={{ fontSize: 12, color: '#aaa', lineHeight: 1.5 }}>{info.description}</div>
           </button>
@@ -594,32 +660,107 @@ function BiodataForm({ value, onChange }: { value: BiodataData; onChange: (v: Bi
 
 // ── Print trigger ──────────────────────────────────────────────────────────
 //
-// Browser-only PDF: inject a print stylesheet that hides every other element
-// so window.print() outputs ONLY the rendered template at A4. No Puppeteer,
-// no html2canvas, no extra deps — just the browser's own Save-as-PDF.
+// Earlier strategy used `visibility: hidden` to hide the rest of the document
+// during print. Problem: hidden elements still occupy layout space, so the
+// browser would generate one print page per "hidden" page-worth of DOM —
+// hence the user's "Print: 20 sheets" report. The fix is to print from an
+// isolated context (a new window or hidden iframe) that contains *only*
+// the template's outerHTML and the inline styles needed to render it.
+//
+// We use a hidden <iframe> rather than window.open() because:
+//   - window.open is frequently blocked by pop-up blockers
+//   - the iframe stays inside the user's tab → no extra browser window
+//   - we can clean it up after the print dialog closes
 
 function triggerPrint() {
   if (typeof document === 'undefined' || typeof window === 'undefined') return;
-  const STYLE_ID = 'tkx-template-print-style';
-  let style = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
-  if (!style) {
-    style = document.createElement('style');
-    style.id = STYLE_ID;
-    style.textContent = `
-      @media print {
-        body * { visibility: hidden !important; }
-        #tkx-template-print-region, #tkx-template-print-region * { visibility: visible !important; }
-        #tkx-template-print-region {
-          position: absolute !important;
-          left: 0 !important; top: 0 !important;
-          transform: none !important;
-          box-shadow: none !important;
-        }
-        @page { margin: 0; size: A4; }
-      }
-    `;
-    document.head.appendChild(style);
+  const region = document.getElementById('tkx-template-print-region');
+  if (!region) return;
+
+  // Find the actual A4 page node inside the print region — primitive.tsx
+  // tags it with data-tkx-template-page="" so we don't have to know the
+  // class/id structure of every individual template.
+  const page = region.querySelector('[data-tkx-template-page]') as HTMLElement | null;
+  if (!page) {
+    // Fallback: print the whole region. Shouldn't happen in practice.
+    window.print();
+    return;
   }
-  window.print();
+
+  // Snapshot every <style> + <link rel=stylesheet> in the host document so
+  // template-specific CSS (font imports, etc.) flows into the iframe.
+  const styles = Array.from(
+    document.querySelectorAll<HTMLStyleElement | HTMLLinkElement>('style, link[rel="stylesheet"]')
+  ).map((el) => el.outerHTML).join('\n');
+
+  // Inline the page node's HTML — including any uploaded image src as a
+  // data: URI, which embeds in the print payload directly.
+  const pageHtml = page.outerHTML;
+
+  // Hidden iframe takes up zero layout space.
+  const iframe = document.createElement('iframe');
+  iframe.setAttribute('aria-hidden', 'true');
+  iframe.style.position = 'fixed';
+  iframe.style.right = '0';
+  iframe.style.bottom = '0';
+  iframe.style.width = '0';
+  iframe.style.height = '0';
+  iframe.style.border = '0';
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentDocument;
+  if (!doc) {
+    document.body.removeChild(iframe);
+    return;
+  }
+
+  doc.open();
+  doc.write(`<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    ${styles}
+    <style>
+      html, body { margin: 0; padding: 0; background: #fff; }
+      /* Drop any transform from the on-screen preview wrapper so the page
+         renders at its natural A4 size, not 0.7× scaled. */
+      [data-tkx-template-page] {
+        transform: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+      }
+      @page { margin: 0; size: A4; }
+    </style>
+  </head>
+  <body>${pageHtml}</body>
+</html>`);
+  doc.close();
+
+  const cleanup = () => {
+    // Some browsers fire afterprint; others just resolve the print() call.
+    // Either way, give the user a moment to see the dialog before tearing down.
+    setTimeout(() => {
+      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+    }, 500);
+  };
+
+  // Wait for the iframe to be fully ready (images inside data URIs, etc.)
+  const printNow = () => {
+    try {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+    } finally {
+      iframe.contentWindow?.addEventListener('afterprint', cleanup);
+      // Backstop in case afterprint never fires (Safari quirk)
+      setTimeout(cleanup, 4000);
+    }
+  };
+
+  // Defer one frame so the iframe's layout settles before we print.
+  if (iframe.contentDocument?.readyState === 'complete') {
+    setTimeout(printNow, 50);
+  } else {
+    iframe.addEventListener('load', () => setTimeout(printNow, 50));
+  }
 }
 
