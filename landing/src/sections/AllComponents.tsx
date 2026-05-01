@@ -77,6 +77,8 @@ const GROUPS: ComponentGroup[] = [
       { name: 'Starfield',      slug: 'starfield',     isNew: true },
       { name: 'Planet',         slug: 'planet',        isNew: true },
       { name: 'OrbitPath',      slug: 'orbit-path',    isNew: true },
+      { name: 'Portal3D',       slug: 'portal-3d',     isNew: true },
+      { name: 'Avatar3D',       slug: 'avatar-3d',     isNew: true },
     ],
   },
   {

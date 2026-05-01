@@ -55,3 +55,6 @@ export type { TkxOrbitPathProps } from './OrbitPath';
 
 export { TkxPortal3D } from './Portal3D';
 export type { TkxPortal3DProps } from './Portal3D';
+
+export { TkxAvatar3D } from './Avatar3D';
+export type { TkxAvatar3DProps, AvatarState } from './Avatar3D';
