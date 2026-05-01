@@ -311,6 +311,17 @@ export type { TkxMindMapProps, MindMapNode } from './src/components/TkxMindMap';
 export { TkxGantt, parseDay, formatDay, dayDiff } from './src/components/TkxGantt';
 export type { TkxGanttProps, GanttTask } from './src/components/TkxGantt';
 
+// ── Spreadsheet ───────────────────────────────────────────────────────────────
+export {
+  TkxSpreadsheet,
+  evaluate as evaluateCell,
+  colLetter,
+  colIndex,
+  addr as cellAddr,
+  parseAddr as parseCellAddr,
+} from './src/components/TkxSpreadsheet';
+export type { TkxSpreadsheetProps, SpreadsheetData } from './src/components/TkxSpreadsheet';
+
 // ── Form builder ──────────────────────────────────────────────────────────────
 export { TkxFormBuilder, validateField } from './src/components/TkxFormBuilder';
 export type {
