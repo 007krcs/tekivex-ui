@@ -11,8 +11,9 @@
   "dependencies": {
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "tekivex-ui": "file:../",
+    "recharts": "^2.15.4",
     "tekivex-3d": "file:../packages/tekivex-3d",
+    "tekivex-ui": "file:../",
     "three": "^0.169.0"
   },
   "devDependencies": {

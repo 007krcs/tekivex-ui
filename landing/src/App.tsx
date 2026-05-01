@@ -3,6 +3,7 @@ import { Hero } from './sections/Hero';
 import { Stats } from './sections/Stats';
 import { Features } from './sections/Features';
 import { Playground } from './sections/Playground';
+import { DataDemo } from './sections/DataDemo';
 import { Tour360 } from './sections/Tour360';
 import { AllComponents } from './sections/AllComponents';
 import { Roadmap } from './sections/Roadmap';
@@ -41,6 +42,7 @@ export function App() {
         <Stats />
         <Features />
         <Playground />
+        <DataDemo />
         <Tour360 />
         <AllComponents />
         <Roadmap />

@@ -24,6 +24,9 @@ export default defineConfig({
       { find: 'three', replacement: resolve(__dirname, 'node_modules/three') },
 
       { find: 'tekivex-ui/styles', replacement: resolve(__dirname, '../dist/tekivex-ui.css') },
+      // Subpath exports — these MUST come before the bare 'tekivex-ui' alias
+      // so the longer prefix wins.
+      { find: 'tekivex-ui/charts', replacement: resolve(__dirname, '../src/charts/index.ts') },
       { find: 'tekivex-ui',        replacement: resolve(__dirname, '../index.ts') },
       { find: 'tekivex-3d',        replacement: resolve(__dirname, '../packages/tekivex-3d/src/index.ts') },
     ],
