@@ -1,0 +1,20 @@
+{
+  "name": "@shubhbio/workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ShubhBio — affordable multi-religion biodata creator built on tekivex-ui",
+  "license": "MIT",
+  "workspaces": [
+    "web",
+    "api",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @shubhbio/web",
+    "dev:api": "npm run dev --workspace @shubhbio/api",
+    "build:web": "npm run build --workspace @shubhbio/web",
+    "build:api": "npm run build --workspace @shubhbio/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  }
+}

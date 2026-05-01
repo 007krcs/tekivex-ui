@@ -1,0 +1,19 @@
+{
+  "name": "@shubhbio/templates",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Biodata template registry — pure Scene producers consumed by web preview, image export, and PDF rendering.",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "tekivex-ui": ">=2.7.0",
+    "@shubhbio/schemas": "*"
+  }
+}
