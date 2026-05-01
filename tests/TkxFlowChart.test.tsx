@@ -672,6 +672,176 @@ describe('TkxFlowChart edge creation by port drag', () => {
   });
 });
 
+describe('TkxFlowChart inline rename', () => {
+  it('double-click a node enters rename mode', () => {
+    render(<Harness />);
+    fireEvent.doubleClick(screen.getByTestId('flow-node-n1'));
+    expect(screen.getByTestId('flow-node-rename-n1')).toBeInTheDocument();
+  });
+
+  it('rename input commits the new label on blur', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    fireEvent.doubleClick(screen.getByTestId('flow-node-n1'));
+    const input = screen.getByTestId('flow-node-rename-n1') as HTMLInputElement;
+    input.value = 'Renamed';
+    fireEvent.blur(input);
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    expect(last?.nodes.find((n: FlowNode) => n.id === 'n1')?.label).toBe('Renamed');
+  });
+
+  it('Escape exits rename mode without committing', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    fireEvent.doubleClick(screen.getByTestId('flow-node-n1'));
+    const input = screen.getByTestId('flow-node-rename-n1') as HTMLInputElement;
+    input.value = 'WIP';
+    fireEvent.keyDown(input, { key: 'Escape' });
+    // Some implementations also fire blur — check that the label wasn't
+    // changed regardless.
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    if (last) {
+      expect(last.nodes.find((n: FlowNode) => n.id === 'n1')?.label).not.toBe('WIP');
+    }
+  });
+
+  it('does not enter rename mode when a custom renderNode is provided', () => {
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return (
+        <TkxFlowChart
+          data={data}
+          onChange={setData}
+          renderNode={(n) => <span>{n.label}</span>}
+        />
+      );
+    }
+    render(<H />);
+    fireEvent.doubleClick(screen.getByTestId('flow-node-n1'));
+    expect(screen.queryByTestId('flow-node-rename-n1')).not.toBeInTheDocument();
+  });
+});
+
+describe('TkxFlowChart edge selection + delete', () => {
+  it('clicking an edge highlights it and Delete removes only that edge', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    const { container } = render(<H />);
+    // Click the first edge — its hit-target is the transparent path
+    const edge = screen.getByTestId('flow-edge-e1');
+    const hitTarget = edge.querySelector('path[stroke="transparent"]') as SVGPathElement;
+    fireEvent.click(hitTarget);
+    fireEvent.keyDown(screen.getByTestId('tkx-flowchart'), { key: 'Delete' });
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    // e1 deleted, e2 + nodes preserved
+    expect(last?.edges.find((e: { id: string }) => e.id === 'e1')).toBeUndefined();
+    expect(last?.edges.find((e: { id: string }) => e.id === 'e2')).toBeTruthy();
+    expect(last?.nodes).toHaveLength(3);
+  });
+});
+
+describe('TkxFlowChart context menu', () => {
+  it('right-click opens the context menu', () => {
+    render(<Harness />);
+    fireEvent.contextMenu(screen.getByTestId('flow-node-n1'));
+    expect(screen.getByTestId('flow-context-menu')).toBeInTheDocument();
+    expect(screen.getByTestId('flow-menu-rename')).toBeInTheDocument();
+    expect(screen.getByTestId('flow-menu-duplicate')).toBeInTheDocument();
+    expect(screen.getByTestId('flow-menu-delete')).toBeInTheDocument();
+  });
+
+  it('clicking Duplicate adds a copy node', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    fireEvent.contextMenu(screen.getByTestId('flow-node-n1'));
+    fireEvent.click(screen.getByTestId('flow-menu-duplicate'));
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    expect(last?.nodes.length).toBe(SAMPLE.nodes.length + 1);
+    // The duplicate has the same label as n1
+    expect(last?.nodes.filter((n: FlowNode) => n.label === 'Start').length).toBe(2);
+  });
+
+  it('clicking Delete removes the right-clicked node', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    fireEvent.contextMenu(screen.getByTestId('flow-node-n2'));
+    fireEvent.click(screen.getByTestId('flow-menu-delete'));
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    expect(last?.nodes.find((n: FlowNode) => n.id === 'n2')).toBeUndefined();
+    // edges connected to n2 are gone too
+    expect(last?.edges.every((e: { from: string; to: string }) => e.from !== 'n2' && e.to !== 'n2')).toBe(true);
+  });
+
+  it('Esc closes the context menu', () => {
+    render(<Harness />);
+    fireEvent.contextMenu(screen.getByTestId('flow-node-n1'));
+    expect(screen.getByTestId('flow-context-menu')).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByTestId('flow-context-menu')).not.toBeInTheDocument();
+  });
+});
+
+describe('TkxFlowChart inspector', () => {
+  it('toggle button shows + hides the inspector', () => {
+    render(<Harness />);
+    // Select a node so the inspector has something to show
+    fireEvent.pointerDown(screen.getByTestId('flow-node-n1'), { pointerId: 1 });
+    fireEvent.click(screen.getByTestId('flow-toggle-inspector'));
+    expect(screen.getByTestId('flow-inspector')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('flow-toggle-inspector'));
+    expect(screen.queryByTestId('flow-inspector')).not.toBeInTheDocument();
+  });
+
+  it('inspector label edit flows back to data', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    fireEvent.pointerDown(screen.getByTestId('flow-node-n1'), { pointerId: 1 });
+    fireEvent.click(screen.getByTestId('flow-toggle-inspector'));
+    const labelInput = screen.getByTestId('inspector-label') as HTMLInputElement;
+    fireEvent.change(labelInput, { target: { value: 'Inspector renamed' } });
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    expect(last?.nodes.find((n: FlowNode) => n.id === 'n1')?.label).toBe('Inspector renamed');
+  });
+
+  it('inspector color picker patches the node color', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    fireEvent.pointerDown(screen.getByTestId('flow-node-n1'), { pointerId: 1 });
+    fireEvent.click(screen.getByTestId('flow-toggle-inspector'));
+    const color = screen.getByTestId('inspector-color') as HTMLInputElement;
+    fireEvent.change(color, { target: { value: '#ff006e' } });
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    expect(last?.nodes.find((n: FlowNode) => n.id === 'n1')?.color).toBe('#ff006e');
+  });
+});
+
 describe('TkxFlowChart accessibility', () => {
   it('exposes a role + aria-label on the root', () => {
     render(<Harness />);

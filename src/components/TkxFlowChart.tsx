@@ -27,6 +27,7 @@
 //   - Minimap — would be additive; lives outside this component
 // ─────────────────────────────────────────────────────────────────────────────
 
+import * as React from 'react';
 import {
   forwardRef,
   useCallback,
@@ -172,6 +173,12 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
     const [viewport, setViewport] = useState<Viewport>(initialViewport ?? DEFAULT_VIEWPORT);
     const [internalSelected, setInternalSelected] = useState<string | null>(null);
     const selected = controlledSelected !== undefined ? controlledSelected : internalSelected;
+
+    // ── Edit-mode state (PR #11: full editor) ──
+    const [editingNodeId, setEditingNodeId] = useState<string | null>(null);
+    const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+    const [contextMenu, setContextMenu] = useState<{ x: number; y: number; nodeId: string } | null>(null);
+    const [showInspector, setShowInspector] = useState(false);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const id = useId();
 
@@ -472,6 +479,18 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
 
     // ── Keyboard ────────────────────────────────────────────────────────
     const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+      // Edge takes priority — if an edge is selected and the user hits
+      // Delete, remove just that edge (not the connected nodes).
+      if (selectedEdgeId && (e.key === 'Delete' || e.key === 'Backspace')) {
+        e.preventDefault();
+        onChange({
+          ...data,
+          edges: data.edges.filter((ed) => ed.id !== selectedEdgeId),
+        });
+        setSelectedEdgeId(null);
+        return;
+      }
+
       if (!selected) {
         // Tab / Shift+Tab cycles through nodes when nothing selected
         if (e.key === 'Tab' && data.nodes.length > 0) {
@@ -648,15 +667,36 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
               const to = nodeMap.get(e.to);
               if (!from || !to) return null;
               const stroke = e.color ?? from.color ?? 'var(--tkx-accent, #00f5d4)';
+              const isEdgeSelected = e.id === selectedEdgeId;
               return (
-                <g key={e.id} data-testid={`flow-edge-${e.id}`} style={{ color: stroke }}>
+                <g key={e.id} data-testid={`flow-edge-${e.id}`} style={{ color: stroke, pointerEvents: 'auto', cursor: 'pointer' }}>
+                  {/* Wide invisible hit-target so the edge is easy to click
+                      even at small widths. */}
+                  <path
+                    d={edgePath(from, to)}
+                    stroke="transparent"
+                    strokeWidth={12 / viewport.scale}
+                    fill="none"
+                    onClick={(ev) => {
+                      ev.stopPropagation();
+                      setSelectedEdgeId(e.id);
+                      // Deselect any node when picking an edge so Delete
+                      // routes to the edge.
+                      select(null);
+                    }}
+                  />
+                  {/* Visible stroke */}
                   <path
                     d={edgePath(from, to)}
                     stroke={stroke}
-                    strokeWidth={1.5 / viewport.scale}
+                    strokeWidth={(isEdgeSelected ? 2.5 : 1.5) / viewport.scale}
                     fill="none"
                     markerEnd={`url(#tkx-flow-arrow-${id})`}
-                    strokeOpacity={0.8}
+                    strokeOpacity={isEdgeSelected ? 1 : 0.8}
+                    style={{
+                      filter: isEdgeSelected ? `drop-shadow(0 0 4px ${stroke})` : 'none',
+                      pointerEvents: 'none',
+                    }}
                   />
                   {e.label && (
                     <text
@@ -703,6 +743,21 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 onPointerMove={onNodePointerMove}
                 onPointerUp={onNodePointerUp}
                 onPointerCancel={onNodePointerUp}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  // Custom render swallows the double-click — only use
+                  // inline-rename when the default text renderer is active.
+                  if (!renderNode) {
+                    select(n.id);
+                    setEditingNodeId(n.id);
+                  }
+                }}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  select(n.id);
+                  setContextMenu({ x: e.clientX, y: e.clientY, nodeId: n.id });
+                }}
                 style={{
                   position: 'absolute',
                   left: n.x,
@@ -727,7 +782,46 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                   touchAction: 'none',
                 }}
               >
-                {renderNode ? renderNode(n, isSelected) : n.label}
+                {editingNodeId === n.id ? (
+                  <input
+                    autoFocus
+                    data-testid={`flow-node-rename-${n.id}`}
+                    defaultValue={n.label}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
+                    onBlur={(e) => {
+                      const next = e.currentTarget.value.trim();
+                      if (next && next !== n.label) {
+                        onChange({
+                          ...data,
+                          nodes: data.nodes.map((x) => (x.id === n.id ? { ...x, label: next } : x)),
+                        });
+                      }
+                      setEditingNodeId(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur();
+                      else if (e.key === 'Escape') {
+                        e.currentTarget.value = n.label;
+                        setEditingNodeId(null);
+                      }
+                      e.stopPropagation();
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '4px 6px',
+                      borderRadius: 4,
+                      border: `1px solid ${accent}`,
+                      background: 'rgba(8,10,25,0.95)',
+                      color: '#fff',
+                      textAlign: 'center',
+                      fontSize: 'inherit',
+                      fontWeight: 'inherit',
+                      fontFamily: 'inherit',
+                      outline: 'none',
+                    }}
+                  />
+                ) : renderNode ? renderNode(n, isSelected) : n.label}
                 {/* Input port (left) — visual only; this is the "drop target" */}
                 <span
                   aria-hidden="true"
@@ -857,12 +951,295 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
             >
               {Math.round(viewport.scale * 100)}%
             </span>
+            <CtrlButton
+              label="Toggle inspector"
+              onClick={() => setShowInspector((v) => !v)}
+              testId="flow-toggle-inspector"
+            >
+              ☰
+            </CtrlButton>
           </div>
         )}
+
+        {/* Right-click context menu */}
+        {contextMenu && (
+          <ContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            containerEl={containerRef.current}
+            onClose={() => setContextMenu(null)}
+            actions={[
+              {
+                id: 'rename',
+                label: 'Rename',
+                icon: '✏️',
+                run: () => { setEditingNodeId(contextMenu.nodeId); },
+              },
+              {
+                id: 'duplicate',
+                label: 'Duplicate',
+                icon: '⎘',
+                run: () => {
+                  const src = data.nodes.find((n) => n.id === contextMenu.nodeId);
+                  if (!src) return;
+                  const newId = `${src.id}-copy-${Date.now().toString(36)}`;
+                  onChange({
+                    ...data,
+                    nodes: [
+                      ...data.nodes,
+                      { ...src, id: newId, x: src.x + 20, y: src.y + 20 },
+                    ],
+                  });
+                  select(newId);
+                },
+              },
+              {
+                id: 'bring-to-front',
+                label: 'Bring to front',
+                icon: '⬆',
+                run: () => {
+                  const idx = data.nodes.findIndex((n) => n.id === contextMenu.nodeId);
+                  if (idx < 0) return;
+                  const reordered = [
+                    ...data.nodes.slice(0, idx),
+                    ...data.nodes.slice(idx + 1),
+                    data.nodes[idx],
+                  ];
+                  onChange({ ...data, nodes: reordered });
+                },
+              },
+              {
+                id: 'delete',
+                label: 'Delete',
+                icon: '🗑',
+                danger: true,
+                run: () => {
+                  onChange({
+                    nodes: data.nodes.filter((n) => n.id !== contextMenu.nodeId),
+                    edges: data.edges.filter(
+                      (ed) => ed.from !== contextMenu.nodeId && ed.to !== contextMenu.nodeId,
+                    ),
+                  });
+                  if (selected === contextMenu.nodeId) select(null);
+                },
+              },
+            ]}
+          />
+        )}
+
+        {/* Properties inspector */}
+        {showInspector && selected && (() => {
+          const node = data.nodes.find((n) => n.id === selected);
+          if (!node) return null;
+          const accent = node.color ?? '#00f5d4';
+          const w = node.width ?? 160;
+          const h = node.height ?? 60;
+          const patch = (next: Partial<FlowNode>) => {
+            onChange({
+              ...data,
+              nodes: data.nodes.map((x) => (x.id === selected ? { ...x, ...next } : x)),
+            });
+          };
+          return (
+            <div
+              role="region"
+              aria-label="Node properties"
+              data-testid="flow-inspector"
+              style={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
+                width: 220,
+                padding: 12,
+                borderRadius: 10,
+                background: 'rgba(8, 10, 25, 0.92)',
+                border: '1px solid rgba(196,168,255,0.3)',
+                color: '#dcdce8',
+                fontSize: 12,
+                backdropFilter: 'blur(8px)',
+                boxShadow: '0 12px 32px rgba(0,0,0,0.45)',
+                zIndex: 5,
+              }}
+            >
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#888', marginBottom: 8 }}>
+                Properties
+              </div>
+              <InspectorField label="Label">
+                <input
+                  data-testid="inspector-label"
+                  value={node.label}
+                  onChange={(e) => patch({ label: e.target.value })}
+                  style={inspectorInputStyle}
+                />
+              </InspectorField>
+              <InspectorField label="Color">
+                <input
+                  type="color"
+                  data-testid="inspector-color"
+                  value={hexFromColor(accent)}
+                  onChange={(e) => patch({ color: e.target.value })}
+                  style={{ ...inspectorInputStyle, padding: 0, height: 32 }}
+                />
+              </InspectorField>
+              <InspectorField label={`Width (${w}px)`}>
+                <input
+                  type="range"
+                  min={80} max={320}
+                  value={w}
+                  onChange={(e) => patch({ width: +e.target.value })}
+                  style={{ width: '100%' }}
+                />
+              </InspectorField>
+              <InspectorField label={`Height (${h}px)`}>
+                <input
+                  type="range"
+                  min={40} max={200}
+                  value={h}
+                  onChange={(e) => patch({ height: +e.target.value })}
+                  style={{ width: '100%' }}
+                />
+              </InspectorField>
+            </div>
+          );
+        })()}
       </div>
     );
   },
 );
+
+// ── Inspector helpers ──────────────────────────────────────────────────────
+
+function InspectorField({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8, fontSize: 11, color: '#aaa' }}>
+      {label}
+      {children}
+    </label>
+  );
+}
+
+const inspectorInputStyle: CSSProperties = {
+  padding: '6px 8px',
+  minHeight: 30,
+  borderRadius: 5,
+  border: '1px solid rgba(255,255,255,0.12)',
+  background: 'rgba(13, 13, 20, 0.6)',
+  color: '#e8e8f4',
+  fontSize: 12,
+  fontFamily: 'inherit',
+  width: '100%',
+};
+
+function hexFromColor(c: string): string {
+  // Accept hex (with/without #), rgb(...), or named — fallback white.
+  if (c.startsWith('#')) return c.length === 7 ? c : '#00f5d4';
+  if (c.startsWith('rgb')) {
+    const m = c.match(/\d+/g);
+    if (!m || m.length < 3) return '#00f5d4';
+    return '#' + m.slice(0, 3).map((n) => Number(n).toString(16).padStart(2, '0')).join('');
+  }
+  return '#00f5d4';
+}
+
+// ── Context menu ───────────────────────────────────────────────────────────
+
+interface MenuAction {
+  id: string;
+  label: string;
+  icon?: string;
+  danger?: boolean;
+  run: () => void;
+}
+
+function ContextMenu({
+  x, y, containerEl, actions, onClose,
+}: {
+  x: number;
+  y: number;
+  containerEl: HTMLDivElement | null;
+  actions: MenuAction[];
+  onClose: () => void;
+}) {
+  // Close on Esc + outside click
+  React.useEffect(() => {
+    const onDoc = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest?.('[data-tkx-context-menu]')) onClose();
+    };
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('mousedown', onDoc);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('mousedown', onDoc);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+
+  // Convert screen coords to relative coords inside the FlowChart container
+  const rect = containerEl?.getBoundingClientRect();
+  const relX = rect ? x - rect.left : x;
+  const relY = rect ? y - rect.top : y;
+
+  return (
+    <div
+      role="menu"
+      aria-label="Node actions"
+      data-testid="flow-context-menu"
+      data-tkx-context-menu=""
+      style={{
+        position: 'absolute',
+        left: Math.max(4, Math.min(relX, (rect?.width ?? 600) - 180)),
+        top: Math.max(4, Math.min(relY, (rect?.height ?? 400) - 200)),
+        minWidth: 180,
+        padding: 4,
+        borderRadius: 8,
+        background: 'rgba(8, 10, 25, 0.96)',
+        border: '1px solid rgba(196,168,255,0.3)',
+        color: '#dcdce8',
+        backdropFilter: 'blur(8px)',
+        boxShadow: '0 12px 32px rgba(0,0,0,0.55)',
+        zIndex: 10,
+      }}
+    >
+      {actions.map((a) => (
+        <button
+          key={a.id}
+          type="button"
+          role="menuitem"
+          data-testid={`flow-menu-${a.id}`}
+          onClick={() => {
+            a.run();
+            onClose();
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            width: '100%',
+            padding: '8px 12px',
+            minHeight: 36,
+            border: 'none',
+            background: 'transparent',
+            color: a.danger ? '#ff7eaf' : '#dcdce8',
+            cursor: 'pointer',
+            fontSize: 13,
+            fontWeight: 500,
+            fontFamily: 'inherit',
+            textAlign: 'left',
+            borderRadius: 5,
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(196,168,255,0.12)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+        >
+          <span aria-hidden="true">{a.icon}</span>
+          <span>{a.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function CtrlButton({
   children,
