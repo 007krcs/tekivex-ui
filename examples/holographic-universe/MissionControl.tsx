@@ -34,6 +34,7 @@ import {
   TkxHolographicProgress,
   TkxHolographicTerminal,
 } from 'tekivex-ui';
+import { TkxScene, TkxStarfield, TkxAvatar3D, TkxOrbitControls } from 'tekivex-3d';
 
 // ── 1. Crew roster ─────────────────────────────────────────────────────────
 //
@@ -231,6 +232,44 @@ export function MissionControl() {
         <TkxHolographicBadge tone="success">● Nominal</TkxHolographicBadge>
         <TkxHolographicBadge tone="info">SOL-3 → MARS-1</TkxHolographicBadge>
         <TkxHolographicBadge tone="neutral">orbit-1 of 7</TkxHolographicBadge>
+
+        {/* ── Captain feed (3D mini-scene) ── */}
+        <div
+          style={{
+            marginLeft: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            padding: '6px 14px 6px 6px',
+            borderRadius: 999,
+            background: 'rgba(8,10,25,0.7)',
+            border: '1px solid rgba(196,168,255,0.28)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          <div
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              overflow: 'hidden',
+              background: '#060615',
+              border: '1px solid rgba(0,245,212,0.4)',
+              flex: '0 0 48px',
+            }}
+            aria-label="Captain Aria Solis live feed"
+          >
+            <TkxScene fov={32} cameraPosition={[0, 1.45, 1.6]} background="transparent">
+              <TkxStarfield count={250} radius={20} />
+              <TkxAvatar3D state={log.length > 1 ? 'talk' : 'idle'} accent="#00f5d4" scale={0.95} />
+              <TkxOrbitControls preset="showcase" autoRotate autoRotateSpeed={0.3} enableZoom={false} enablePan={false} />
+            </TkxScene>
+          </div>
+          <div style={{ fontSize: 11, fontFamily: 'ui-monospace, monospace', lineHeight: 1.3 }}>
+            <div style={{ color: '#00f5d4', fontWeight: 700 }}>● LIVE</div>
+            <div style={{ color: '#aaa' }}>Capt. Solis</div>
+          </div>
+        </div>
       </div>
 
       {/* ── Grid: telemetry (left+center) + crew (right) ── */}

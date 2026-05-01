@@ -15,7 +15,7 @@
 // pre-filled with the right name.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { PREVIEWS } from './component-previews';
 
@@ -52,8 +52,6 @@ function buildIssueUrl(t: RequestTarget): string {
 }
 
 export function RequestAccessDialog({ target, onClose }: RequestAccessDialogProps) {
-  const [copied, setCopied] = useState(false);
-
   // ESC closes
   useEffect(() => {
     if (!target) return;
@@ -68,13 +66,6 @@ export function RequestAccessDialog({ target, onClose }: RequestAccessDialogProp
   if (typeof document === 'undefined') return null;
 
   const issueUrl = buildIssueUrl(target);
-  const installSnippet = `npm install ${target.pkg ?? 'tekivex-ui'}`;
-
-  const handleCopy = () => {
-    navigator.clipboard?.writeText(installSnippet);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1600);
-  };
 
   return createPortal(
     <div
@@ -222,6 +213,28 @@ export function RequestAccessDialog({ target, onClose }: RequestAccessDialogProp
           <Bullet>No paywall, no contract — just visibility into who needs what</Bullet>
         </ul>
 
+        <div
+          style={{
+            padding: '10px 14px',
+            borderRadius: 8,
+            background: 'rgba(196,168,255,0.08)',
+            border: '1px solid rgba(196,168,255,0.25)',
+            color: '#c4a8ff',
+            fontSize: 12,
+            marginBottom: 14,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <span aria-hidden="true">🔒</span>
+          <span>
+            <strong>View-only preview.</strong> The latest source isn't on
+            npm yet — releases are demand-driven. Send a one-line note and
+            we'll publish under your name within 24 hours.
+          </span>
+        </div>
+
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
           <a
             href={issueUrl}
@@ -232,9 +245,6 @@ export function RequestAccessDialog({ target, onClose }: RequestAccessDialogProp
           >
             Send my requirement →
           </a>
-          <button type="button" onClick={handleCopy} style={secondaryBtn}>
-            {copied ? '✓ Copied' : `Copy: ${installSnippet}`}
-          </button>
         </div>
 
         <p
@@ -338,15 +348,3 @@ const primaryBtn: React.CSSProperties = {
   boxShadow: '0 8px 24px rgba(0,245,212,0.3)',
 };
 
-const secondaryBtn: React.CSSProperties = {
-  flex: '1 1 auto',
-  minWidth: 200,
-  padding: '12px 18px',
-  borderRadius: 10,
-  border: '1px solid rgba(255,255,255,0.14)',
-  background: 'transparent',
-  color: '#dcdce8',
-  cursor: 'pointer',
-  fontSize: 13,
-  fontFamily: 'ui-monospace, SFMono-Regular, monospace',
-};

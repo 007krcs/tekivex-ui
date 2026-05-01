@@ -473,6 +473,142 @@ describe('TkxFlowChart edge labels', () => {
   });
 });
 
+describe('TkxFlowChart edge creation by port drag', () => {
+  it('renders an output-port button for every node', () => {
+    render(<Harness />);
+    expect(screen.getByTestId('flow-port-n1')).toBeInTheDocument();
+    expect(screen.getByTestId('flow-port-n2')).toBeInTheDocument();
+    expect(screen.getByTestId('flow-port-n3')).toBeInTheDocument();
+  });
+
+  it('shows the draft edge while the user drags from a port', () => {
+    render(<Harness />);
+    const port = screen.getByTestId('flow-port-n1');
+    fireEvent.pointerDown(port, { pointerId: 1, clientX: 200, clientY: 70 });
+    fireEvent.pointerMove(port, { pointerId: 1, clientX: 300, clientY: 80 });
+    expect(screen.getByTestId('flow-edge-draft')).toBeInTheDocument();
+  });
+
+  it('hides the draft edge after the drag ends', () => {
+    render(<Harness />);
+    const port = screen.getByTestId('flow-port-n1');
+    fireEvent.pointerDown(port, { pointerId: 1, clientX: 200, clientY: 70 });
+    fireEvent.pointerMove(port, { pointerId: 1, clientX: 300, clientY: 80 });
+    fireEvent.pointerUp(port, { pointerId: 1, clientX: 300, clientY: 80 });
+    expect(screen.queryByTestId('flow-edge-draft')).not.toBeInTheDocument();
+  });
+
+  it('creates a new edge when releasing over a different node', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState({
+        nodes: [
+          { id: 'a', label: 'A', x: 40,  y: 40 },
+          { id: 'b', label: 'B', x: 240, y: 40 },
+        ],
+        edges: [],
+      } as FlowChartData);
+      return (
+        <TkxFlowChart
+          data={data}
+          onChange={(next) => {
+            onChange(next);
+            setData(next);
+          }}
+        />
+      );
+    }
+    render(<H />);
+    const portA = screen.getByTestId('flow-port-a');
+    const nodeB = screen.getByTestId('flow-node-b');
+    // Start drag from A's port
+    fireEvent.pointerDown(portA, { pointerId: 1, clientX: 0, clientY: 0 });
+    // Place B at a known DOM position via getBoundingClientRect mocking — but
+    // jsdom returns zero rects, so document.elementFromPoint won't reliably
+    // find the target. Stub it for this test.
+    const orig = document.elementFromPoint;
+    document.elementFromPoint = () => nodeB;
+    try {
+      fireEvent.pointerUp(portA, { pointerId: 1, clientX: 250, clientY: 60 });
+    } finally {
+      document.elementFromPoint = orig;
+    }
+    const last = onChange.mock.calls[onChange.mock.calls.length - 1]?.[0];
+    expect(last?.edges).toHaveLength(1);
+    expect(last?.edges[0]).toMatchObject({ from: 'a', to: 'b' });
+  });
+
+  it('does not create an edge when releasing over the source node itself', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState({
+        nodes: [{ id: 'a', label: 'A', x: 40, y: 40 }],
+        edges: [],
+      } as FlowChartData);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    const portA = screen.getByTestId('flow-port-a');
+    const nodeA = screen.getByTestId('flow-node-a');
+    fireEvent.pointerDown(portA, { pointerId: 1, clientX: 0, clientY: 0 });
+    const orig = document.elementFromPoint;
+    document.elementFromPoint = () => nodeA;
+    try {
+      fireEvent.pointerUp(portA, { pointerId: 1, clientX: 50, clientY: 50 });
+    } finally {
+      document.elementFromPoint = orig;
+    }
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('does not duplicate an existing edge in the same direction', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState({
+        nodes: [
+          { id: 'a', label: 'A', x: 40,  y: 40 },
+          { id: 'b', label: 'B', x: 240, y: 40 },
+        ],
+        edges: [{ id: 'e1', from: 'a', to: 'b' }],
+      } as FlowChartData);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    const portA = screen.getByTestId('flow-port-a');
+    const nodeB = screen.getByTestId('flow-node-b');
+    fireEvent.pointerDown(portA, { pointerId: 1, clientX: 0, clientY: 0 });
+    const orig = document.elementFromPoint;
+    document.elementFromPoint = () => nodeB;
+    try {
+      fireEvent.pointerUp(portA, { pointerId: 1, clientX: 250, clientY: 60 });
+    } finally {
+      document.elementFromPoint = orig;
+    }
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('cancels the draft when released over empty canvas', () => {
+    const onChange = vi.fn();
+    function H() {
+      const [data, setData] = useState(SAMPLE);
+      return <TkxFlowChart data={data} onChange={(next) => { onChange(next); setData(next); }} />;
+    }
+    render(<H />);
+    const portN1 = screen.getByTestId('flow-port-n1');
+    fireEvent.pointerDown(portN1, { pointerId: 1, clientX: 0, clientY: 0 });
+    const orig = document.elementFromPoint;
+    document.elementFromPoint = () => null;
+    try {
+      fireEvent.pointerUp(portN1, { pointerId: 1, clientX: 600, clientY: 400 });
+    } finally {
+      document.elementFromPoint = orig;
+    }
+    // No edge added — onChange not called.
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.queryByTestId('flow-edge-draft')).not.toBeInTheDocument();
+  });
+});
+
 describe('TkxFlowChart accessibility', () => {
   it('exposes a role + aria-label on the root', () => {
     render(<Harness />);
