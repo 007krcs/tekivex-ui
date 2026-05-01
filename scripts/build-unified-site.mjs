@@ -106,7 +106,7 @@ console.log('══════════════════════�
 const DIST = resolve(ROOT, 'docs-site/dist');
 let landingSucceeded = false;
 try {
-  run('npm install --no-audit --no-fund', resolve(ROOT, 'landing'));
+  run('npm install --no-audit --no-fund --legacy-peer-deps', resolve(ROOT, 'landing'));
   run('npx vite build', resolve(ROOT, 'landing'));
   const landingDist = resolve(ROOT, 'landing/dist');
   if (existsSync(landingDist)) {
@@ -134,7 +134,7 @@ if (!astroSucceeded) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TekiVex UI — v3.0 · 11 packages on npm</title>
+  <title>TekiVex UI — v3.5 · 13 packages on npm · React in 360°</title>
   <meta name="description" content="Production-ready React component library — 99 components, WCAG 2.1 AAA, built-in security kernel, 1034 passing tests, Puppeteer-free PDF rendering.">
   <link rel="canonical" href="https://ui.tekivex.com/">
   <style>
@@ -179,7 +179,7 @@ if (!astroSucceeded) {
 <body>
   <main class="wrap">
     <header>
-      <span class="badge">v3.0.3 · 99 components · 1034 tests · MIT</span>
+      <span class="badge">v3.5.0 · 102 components · 13 packages · MIT · 🌐 360°/AR/VR-ready</span>
       <h1>TekiVex UI</h1>
       <p class="lead">Production-ready React component library. WCAG 2.1 AAA accessibility, built-in security kernel, Puppeteer-free PDF rendering, zero runtime dependencies.</p>
     </header>
@@ -196,7 +196,7 @@ if (!astroSucceeded) {
       </a>
     </div>
 
-    <h2>Live on npm <span class="label">11 packages, all unscoped</span></h2>
+    <h2>Live on npm <span class="label">13 packages, all unscoped</span></h2>
     <div class="grid">
       <a class="card" href="https://www.npmjs.com/package/tekivex-ui" target="_blank" rel="noopener">
         <h3>tekivex-ui</h3>
@@ -253,20 +253,19 @@ if (!astroSucceeded) {
         <p>Vertical pack: SignaturePad, Markdown, RichTextDisplay, Watermark, SEO helpers.</p>
         <span class="install">npm install tekivex-content</span>
       </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-3d" target="_blank" rel="noopener">
+        <h3>tekivex-3d</h3>
+        <p>Real WebGL 3D + 360° panoramas + AR/VR (WebXR). TkxScene, TkxPanorama360, TkxHotspot, TkxModel3D, TkxLogo3D, TkxParticleField, TkxXRSession.</p>
+        <span class="install">npm install tekivex-3d three</span>
+      </a>
+      <a class="card" href="https://www.npmjs.com/package/tekivex-figma-kit" target="_blank" rel="noopener">
+        <h3>tekivex-figma-kit</h3>
+        <p>Machine-readable design tokens + 13,103-variant catalog. Imports into Figma via Tokens Studio.</p>
+        <span class="install">npm install tekivex-figma-kit</span>
+      </a>
     </div>
 
-    <h2>Coming on demand <span class="label">source-only — open an issue to request publish</span></h2>
-    <div class="grid">
-      <div class="card-static">
-        <h3>tekivex-figma-kit</h3>
-        <p>Machine-readable design tokens + 13,103-variant catalog. Imports into Figma via Tokens Studio. Source-only — publish on demand because Figma teams using it tend to fork.</p>
-      </div>
-      <div class="card-static">
-        <h3>tekivex-pdf — public test results</h3>
-        <p>Smoke tests pass locally (5/5). Public CI badge + per-template visual regression coming once early adopters report real-world docs that need pixel verification.</p>
-      </div>
-    </div>
-    <p class="footnote">Both will publish to npm once there's real downstream demand. <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new" style="color: #00f5d4;">Open an issue</a> to request.</p>
+    <p class="footnote">If a build step ran into trouble you're seeing this fallback page. The full 360° experience lives at <a href="/" style="color: #00f5d4;">/</a> once the React landing finishes building. <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new" style="color: #00f5d4;">Report an issue</a>.</p>
 
     <div class="links">
       <a href="https://www.npmjs.com/package/tekivex-ui">npm</a>

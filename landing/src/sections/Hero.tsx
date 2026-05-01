@@ -1,254 +1,302 @@
-import { TkxScene, TkxCard3D } from 'tekivex-3d';
+// ─────────────────────────────────────────────────────────────────────────────
+// Hero — full-viewport 360° experience (the default first impression)
+//
+// First-of-its-kind: visitors don't click a CTA to enter 360° mode — they
+// land directly inside the sphere. Scroll past the hero to reach the
+// traditional sections (stats, features, etc.) for SEO and a11y.
+//
+// Composition:
+//   - TkxScene fills 100vh
+//   - TkxPanorama360 as the backdrop (cosmic equirectangular)
+//   - TkxParticleField on top for depth + motion
+//   - 6 TkxHotspots arranged around the user — each opens a quick info card
+//   - HTML overlay (gradient title, badges, install snippet) sits in front
+//     using pointerEvents: 'none' on the wrapper + 'auto' on interactive bits
+//     so the canvas underneath still receives drag/zoom events outside the
+//     content boxes
+//   - "↓ Scroll to explore" indicator at bottom
+// ─────────────────────────────────────────────────────────────────────────────
+
+import { useState } from 'react';
+import { TkxScene, TkxPanorama360, TkxHotspot, TkxParticleField, TkxXRSession } from 'tekivex-3d';
 import { TkxHolographicBadge } from 'tekivex-ui';
 import { useImmersive } from '../App';
 
+const SKY_360 =
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Equirectangular_projection_SW.jpg/2560px-Equirectangular_projection_SW.jpg';
+
+const HOTSPOTS: { id: string; label: string; pos: [number, number, number]; color: string; href: string }[] = [
+  { id: 'components', label: '🧩 102 components', pos: [-22, 6, -12], color: '#00f5d4', href: '#components' },
+  { id: 'playground', label: '🎮 Playground',     pos: [-12, -3, -22], color: '#3a86ff', href: '/playground/' },
+  { id: 'pdf',        label: '📄 PDF · no Puppeteer', pos: [12, 4, -22], color: '#ff006e', href: '#packages' },
+  { id: 'security',   label: '🛡️ Security kernel', pos: [22, -2, -10], color: '#ffbe0b', href: '#features' },
+  { id: 'roadmap',    label: '🗺️ Roadmap',         pos: [12, 6, 18], color: '#06d6a0', href: '#roadmap' },
+  { id: 'book',       label: '📖 Catalog',         pos: [-14, -2, 18], color: '#7b2ff7', href: '/book/' },
+];
+
 export function Hero() {
   const { open: openImmersive } = useImmersive();
+  const [hint, setHint] = useState(true);
+
+  function navigate(href: string) {
+    if (href.startsWith('#')) {
+      const el = document.querySelector(href);
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.location.href = href;
+    }
+  }
+
   return (
     <section
       id="top"
       style={{
         position: 'relative',
-        minHeight: '88vh',
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        alignItems: 'center',
-        padding: 'clamp(48px, 8vh, 120px) 24px 48px',
-        maxWidth: 1280,
-        margin: '0 auto',
+        height: '100vh',
+        minHeight: 600,
+        width: '100%',
+        overflow: 'hidden',
+        marginTop: -56, // pull under the sticky nav
       }}
+      onPointerDown={() => setHint(false)}
     >
+      {/* ── Full-viewport WebGL layer (drag/zoom/gyro are handled here) ─── */}
+      <div style={{ position: 'absolute', inset: 0 }}>
+        <TkxScene
+          fov={75}
+          cameraPosition={[0, 0, 0.01]}
+          background="transparent"
+        >
+          <TkxPanorama360 src={SKY_360} fadeMs={600} gyro />
+          <TkxParticleField count={3000} volume={[40, 20, 40]} driftSpeed={0.3} size={0.05} />
+          {HOTSPOTS.map((h) => (
+            <TkxHotspot
+              key={h.id}
+              position={h.pos}
+              label={h.label}
+              color={h.color}
+              size={1.6}
+              pulseSpeed={2}
+              onClick={() => navigate(h.href)}
+            />
+          ))}
+          <TkxXRSession />
+        </TkxScene>
+      </div>
+
+      {/* ── Vignette gradient for text legibility ──────────────────────── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,15,0.7) 75%, rgba(10,10,15,0.95) 100%)',
+        }}
+      />
+
+      {/* ── HTML overlay: title + CTAs + install snippet ───────────────── */}
       <div
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(320px, 1fr) minmax(320px, 1fr)',
-          gap: 'clamp(24px, 4vw, 64px)',
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none', // drag-through to canvas by default
+          display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
+          padding: 'clamp(24px, 5vh, 56px) 24px',
+          textAlign: 'center',
+          zIndex: 5,
         }}
-        className="hero-grid"
       >
-        {/* ── Left: copy + CTAs ───────────────────────────────────────────── */}
-        <div>
-          <div style={{ display: 'inline-flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
-            <TkxHolographicBadge size="sm">v3.1.0</TkxHolographicBadge>
-            <TkxHolographicBadge size="sm">12 packages</TkxHolographicBadge>
-            <TkxHolographicBadge size="sm">99 components</TkxHolographicBadge>
-          </div>
-
-          <h1
-            style={{
-              fontSize: 'clamp(2.4rem, 6vw, 4.5rem)',
-              fontWeight: 900,
-              lineHeight: 1.05,
-              letterSpacing: '-0.04em',
-              margin: '0 0 18px',
-            }}
-          >
-            <span className="tk-gradient-text">Production-grade</span>
-            <br />
-            React. <em style={{ fontStyle: 'normal', color: '#fff' }}>Now in 3D.</em>
-          </h1>
-
-          <p
-            style={{
-              fontSize: 'clamp(15px, 1.4vw, 18px)',
-              color: '#aaa',
-              maxWidth: 520,
-              lineHeight: 1.65,
-              margin: '0 0 32px',
-            }}
-          >
-            12 npm packages. 99 WCAG 2.1 AAA components. Real WebGL 3D, 360° viewers, AR/VR
-            support, holographic UI, built-in security kernel, Puppeteer-free PDF rendering.
-            Zero runtime dependencies in the core.
-          </p>
-
-          <div
-            style={{
-              display: 'flex',
-              gap: 12,
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              marginBottom: 24,
-            }}
-          >
-            <button
-              type="button"
-              onClick={openImmersive}
-              style={{
-                padding: '14px 28px',
-                background: 'linear-gradient(135deg, #00f5d4, #3a86ff, #7b2ff7)',
-                backgroundSize: '200% 200%',
-                animation: 'tk-shimmer 8s ease infinite',
-                color: '#0a0a0f',
-                fontWeight: 700,
-                borderRadius: 999,
-                border: 'none',
-                fontSize: 15,
-                letterSpacing: '0.01em',
-                minHeight: 44,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                boxShadow: '0 8px 24px rgba(0, 245, 212, 0.3)',
-                cursor: 'pointer',
-              }}
-            >
-              🌐 Enter 360° mode →
-            </button>
-
-            <a
-              href="#playground"
-              style={{
-                padding: '14px 28px',
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#fff',
-                fontWeight: 700,
-                borderRadius: 999,
-                fontSize: 15,
-                minHeight: 44,
-                display: 'inline-flex',
-                alignItems: 'center',
-              }}
-            >
-              Try the playground
-            </a>
-
-            <a
-              href="https://www.npmjs.com/package/tekivex-ui"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                padding: '14px 28px',
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: '#aaa',
-                fontWeight: 600,
-                borderRadius: 999,
-                fontSize: 14,
-                minHeight: 44,
-                display: 'inline-flex',
-                alignItems: 'center',
-              }}
-            >
-              View on npm
-            </a>
-          </div>
-
-          <style>{`
-            @keyframes tk-shimmer {
-              0%, 100% { background-position: 0% 50%; }
-              50%      { background-position: 100% 50%; }
-            }
-          `}</style>
-
-          <div
-            className="tk-glass"
-            style={{
-              padding: '14px 18px',
-              borderRadius: 12,
-              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-              fontSize: 14,
-              color: '#00f5d4',
-              maxWidth: 520,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-            }}
-          >
-            <span style={{ color: '#666' }}>$</span>
-            <span style={{ color: '#fff' }}>npm install</span>
-            <span>tekivex-ui</span>
-            <button
-              type="button"
-              onClick={() => {
-                navigator.clipboard?.writeText('npm install tekivex-ui');
-              }}
-              style={{
-                marginLeft: 'auto',
-                background: 'transparent',
-                border: '1px solid rgba(0, 245, 212, 0.3)',
-                color: '#00f5d4',
-                padding: '4px 10px',
-                borderRadius: 6,
-                cursor: 'pointer',
-                fontSize: 12,
-              }}
-              aria-label="Copy install command"
-            >
-              copy
-            </button>
-          </div>
-        </div>
-
-        {/* ── Right: live 3D scene with floating cards ──────────────────── */}
         <div
           style={{
-            height: 'clamp(380px, 60vh, 560px)',
-            borderRadius: 24,
-            overflow: 'hidden',
-            position: 'relative',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            background:
-              'radial-gradient(circle at 30% 20%, rgba(0,245,212,0.1), transparent 50%), radial-gradient(circle at 70% 80%, rgba(123,47,247,0.1), transparent 50%), #0d0d14',
+            display: 'inline-flex',
+            gap: 8,
+            marginBottom: 20,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            pointerEvents: 'auto',
           }}
-          aria-label="Interactive 3D card showcase"
         >
-          <TkxScene background="transparent" fov={45} cameraPosition={[0, 0, 7]}>
-            <TkxCard3D
-              position={[-1.6, 0.4, 0]}
-              size={[1.8, 2.4]}
-              color="#00f5d4"
-              roughness={0.2}
-              metalness={0.8}
-              autoRotate={0.3}
-              maxTilt={0.4}
-            />
-            <TkxCard3D
-              position={[0, -0.2, 0.5]}
-              size={[1.8, 2.4]}
-              color="#7b2ff7"
-              roughness={0.2}
-              metalness={0.8}
-              autoRotate={0.4}
-              maxTilt={0.4}
-            />
-            <TkxCard3D
-              position={[1.6, 0.4, 0]}
-              size={[1.8, 2.4]}
-              color="#3a86ff"
-              roughness={0.2}
-              metalness={0.8}
-              autoRotate={0.3}
-              maxTilt={0.4}
-            />
-          </TkxScene>
+          <TkxHolographicBadge size="sm">v3.5.0</TkxHolographicBadge>
+          <TkxHolographicBadge size="sm">13 packages</TkxHolographicBadge>
+          <TkxHolographicBadge size="sm">First 360° docs</TkxHolographicBadge>
+        </div>
 
-          <div
+        <h1
+          style={{
+            fontSize: 'clamp(2.4rem, 7vw, 5.5rem)',
+            fontWeight: 900,
+            lineHeight: 1.0,
+            letterSpacing: '-0.04em',
+            margin: '0 0 16px',
+            color: '#fff',
+            textShadow: '0 4px 32px rgba(0, 0, 0, 0.8)',
+            pointerEvents: 'none',
+          }}
+        >
+          <span className="tk-gradient-text">React</span> in{' '}
+          <em style={{ fontStyle: 'normal', color: '#fff' }}>360°</em>.
+        </h1>
+
+        <p
+          style={{
+            fontSize: 'clamp(15px, 1.4vw, 18px)',
+            color: '#dcdce8',
+            maxWidth: 620,
+            lineHeight: 1.6,
+            margin: '0 auto 28px',
+            textShadow: '0 2px 16px rgba(0, 0, 0, 0.7)',
+            pointerEvents: 'none',
+          }}
+        >
+          You're standing inside the docs. <strong>Drag to look around.</strong>{' '}
+          Click any hotspot to navigate. Step into VR or AR with one tap on Quest 3,
+          Vision Pro, or any ARCore phone.
+        </p>
+
+        <div
+          style={{
+            display: 'flex',
+            gap: 12,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            marginBottom: 24,
+            pointerEvents: 'auto',
+          }}
+        >
+          <button
+            type="button"
+            onClick={openImmersive}
             style={{
-              position: 'absolute',
-              bottom: 16,
-              left: 16,
-              right: 16,
-              padding: '10px 14px',
-              borderRadius: 10,
-              background: 'rgba(10, 10, 15, 0.65)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              fontSize: 12,
-              color: '#bbb',
-              textAlign: 'center',
+              padding: '14px 28px',
+              background: 'linear-gradient(135deg, #00f5d4, #3a86ff, #7b2ff7)',
+              backgroundSize: '200% 200%',
+              animation: 'tk-shimmer 8s ease infinite',
+              color: '#0a0a0f',
+              fontWeight: 700,
+              borderRadius: 999,
+              border: 'none',
+              fontSize: 15,
+              minHeight: 44,
+              cursor: 'pointer',
+              boxShadow: '0 8px 24px rgba(0, 245, 212, 0.4)',
             }}
           >
-            ← Move your cursor across the cards →
-          </div>
+            🌐 Fullscreen 360° →
+          </button>
+
+          <a
+            href="https://www.npmjs.com/package/tekivex-ui"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: '14px 28px',
+              background: 'rgba(10, 10, 15, 0.7)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              color: '#fff',
+              fontWeight: 700,
+              borderRadius: 999,
+              fontSize: 15,
+              minHeight: 44,
+              display: 'inline-flex',
+              alignItems: 'center',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            View on npm
+          </a>
         </div>
+
+        <code
+          style={{
+            display: 'inline-block',
+            padding: '10px 18px',
+            background: 'rgba(10, 10, 15, 0.75)',
+            border: '1px solid rgba(0, 245, 212, 0.3)',
+            borderRadius: 8,
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontSize: 13,
+            color: '#00f5d4',
+            backdropFilter: 'blur(8px)',
+            pointerEvents: 'auto',
+            cursor: 'copy',
+          }}
+          onClick={() => {
+            navigator.clipboard?.writeText('npm install tekivex-ui');
+          }}
+        >
+          $ npm install tekivex-ui
+        </code>
+      </div>
+
+      {/* ── Drag-to-look hint (auto-dismisses on first interaction) ──────── */}
+      {hint && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            padding: '14px 22px',
+            background: 'rgba(10, 10, 15, 0.85)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: 999,
+            color: '#fff',
+            fontSize: 13,
+            fontWeight: 600,
+            letterSpacing: '0.04em',
+            pointerEvents: 'none',
+            zIndex: 6,
+            opacity: 0.85,
+            animation: 'tk-bob 3s ease-in-out infinite',
+          }}
+        >
+          🖱️ click + drag · 📱 tilt your phone · 🥽 enter VR
+        </div>
+      )}
+
+      {/* ── Scroll indicator ─────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 24,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 4,
+          color: '#888',
+          fontSize: 11,
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          fontWeight: 700,
+          pointerEvents: 'none',
+          zIndex: 5,
+          animation: 'tk-bob 2.4s ease-in-out infinite',
+        }}
+      >
+        <span>Scroll for more</span>
+        <span style={{ fontSize: 18 }}>↓</span>
       </div>
 
       <style>{`
-        @media (max-width: 860px) {
-          .hero-grid { grid-template-columns: 1fr !important; }
+        @keyframes tk-shimmer {
+          0%, 100% { background-position: 0% 50%; }
+          50%      { background-position: 100% 50%; }
+        }
+        @keyframes tk-bob {
+          0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+          50%      { transform: translate(-50%, -50%) translateY(-6px); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="tk-shimmer"], [style*="tk-bob"] { animation: none !important; }
         }
       `}</style>
     </section>
