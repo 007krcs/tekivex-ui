@@ -12,3 +12,4 @@ export * from './quantum-ai';
 export { QuantumAI } from './quantum-ai';
 export * as Protect from './protect';
 export * as Captcha from './captcha';
+export * as CanvasEngine from './canvas';
