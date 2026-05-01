@@ -1,10 +1,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // AllComponents — directory of every Tkx* component grouped by family.
 //
-// Every entry deep-links to /playground/#/components/<slug> where the demo
-// SPA renders the interactive page for that component. Nothing was lost
-// in the landing-page refresh — this section makes the path obvious.
+// Click flow: visitor clicks a component name → RequestAccessDialog opens
+// with that component pre-filled. Primary CTA opens a pre-filled issue on
+// the public issue tracker so the team can ship the latest source to npm
+// for that visitor's specific use case.
 // ─────────────────────────────────────────────────────────────────────────────
+
+import { useState } from 'react';
+import { RequestAccessDialog, type RequestTarget } from '../RequestAccessDialog';
 
 interface ComponentGroup {
   emoji: string;
@@ -275,7 +279,14 @@ const GROUPS: ComponentGroup[] = [
 
 const TOTAL = GROUPS.reduce((n, g) => n + g.components.length, 0);
 
+// Map group title hint → package name (used to pre-fill the request issue)
+function pkgForGroup(title: string): string {
+  if (/3D \/ 360°|tekivex-3d/i.test(title)) return 'tekivex-3d';
+  return 'tekivex-ui';
+}
+
 export function AllComponents() {
+  const [requested, setRequested] = useState<RequestTarget | null>(null);
   return (
     <section
       id="components"
@@ -292,12 +303,14 @@ export function AllComponents() {
         >
           Browse all <span className="tk-gradient-text">{TOTAL}</span> components
         </h2>
-        <p style={{ color: '#888', maxWidth: 640, margin: '0 auto', fontSize: 16 }}>
-          Every component has a live, interactive demo at{' '}
+        <p style={{ color: '#b8b8d4', maxWidth: 660, margin: '0 auto', fontSize: 16, lineHeight: 1.65 }}>
+          Click any component below to request access — we publish the latest
+          source to npm on demand and email setup instructions back. Browse the
+          full live catalog at{' '}
           <a href="/playground/" style={{ color: '#00f5d4', fontWeight: 600 }}>
             /playground/
           </a>{' '}
-          — click any name below to open it. Storybook-style controls panel at{' '}
+          or storybook-style controls at{' '}
           <a href="/book/" style={{ color: '#00f5d4', fontWeight: 600 }}>
             /book/
           </a>
@@ -370,8 +383,15 @@ export function AllComponents() {
             >
               {g.components.map((c) => (
                 <li key={c.slug}>
-                  <a
-                    href={`/playground/#/components/${c.slug}`}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setRequested({
+                        name: c.name.startsWith('Tkx') ? c.name : `Tkx${c.name}`,
+                        slug: c.slug,
+                        pkg: pkgForGroup(g.title),
+                      })
+                    }
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -379,19 +399,21 @@ export function AllComponents() {
                       padding: '4px 10px',
                       borderRadius: 6,
                       background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                      color: '#bbb',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      color: '#dcdce8',
                       fontSize: 12,
                       fontWeight: 500,
                       transition: 'all 0.15s',
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = '#00f5d4';
                       e.currentTarget.style.borderColor = 'rgba(0, 245, 212, 0.4)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#bbb';
-                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+                      e.currentTarget.style.color = '#dcdce8';
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
                     }}
                   >
                     {c.name}
@@ -407,7 +429,7 @@ export function AllComponents() {
                         NEW
                       </span>
                     )}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -461,6 +483,8 @@ export function AllComponents() {
           📖 Open the catalog →
         </a>
       </div>
+
+      <RequestAccessDialog target={requested} onClose={() => setRequested(null)} />
     </section>
   );
 }
