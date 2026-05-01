@@ -381,22 +381,17 @@ export type {
 } from './src/components/TkxFormBuilder';
 
 // ── Resume + Biodata templates ────────────────────────────────────────────────
-export { TkxTemplateGenerator } from './src/templates';
-export type { TkxTemplateGeneratorProps } from './src/templates';
-export {
-  RESUME_TEMPLATES,
-  BIODATA_TEMPLATES,
-  ALL_TEMPLATES,
-  findTemplate as findResumeBiodataTemplate,
-  SAMPLE_RESUME,
-  SAMPLE_BIODATA,
-} from './src/templates';
-export type {
-  ResumeData,
-  BiodataData,
-  TemplateInfo,
-  TemplateKind,
-} from './src/templates';
+// Moved out of tekivex-ui into their own repos so apps that only need the
+// templates don't have to pull the entire UI library:
+//
+//   npm install tekivex-resume-templates    # 12 resume layouts + generator
+//   npm install tekivex-biodata-templates   # 12 biodata layouts + generator
+//
+// Both packages now declare tekivex-ui as a peer-dependency, so they
+// compose with the rest of this library when an app needs both.
+//
+//   https://github.com/007krcs/tekivex-resume-templates
+//   https://github.com/007krcs/tekivex-biodata-templates
 
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → 'tekivex-ui/quantum'
