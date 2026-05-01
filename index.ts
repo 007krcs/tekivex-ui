@@ -281,6 +281,18 @@ export type { TkxPhoneInputProps, CountryDialCode } from './src/components/TkxPh
 export { TkxMaskedInput } from './src/components/TkxMaskedInput';
 export type { TkxMaskedInputProps } from './src/components/TkxMaskedInput';
 
+// Biodata payment + download components (Phase 0b)
+export { TkxPaymentProvider, useTkxPayment } from './src/components/TkxPaymentProvider';
+export type { TkxPaymentProviderProps } from './src/components/TkxPaymentProvider';
+export { TkxRazorpayCheckout } from './src/components/TkxRazorpayCheckout';
+export type { TkxRazorpayCheckoutProps } from './src/components/TkxRazorpayCheckout';
+export { TkxCaptcha } from './src/components/TkxCaptcha';
+export type { TkxCaptchaProps } from './src/components/TkxCaptcha';
+export { TkxSecureDownload } from './src/components/TkxSecureDownload';
+export type { TkxSecureDownloadProps } from './src/components/TkxSecureDownload';
+export { TkxHoneypot } from './src/components/TkxHoneypot';
+export type { TkxHoneypotProps } from './src/components/TkxHoneypot';
+
 // Note: heavy feature bundles are exposed via subpath exports to keep the root bundle small.
 //   Quantum AI components & engine  → '@tekivex/ui/quantum'
 //     (TkxQuantumForm, TkxThemeBuilder, TkxPlayground, QuantumAI, Qubit, QuantumAnnealer, ...)

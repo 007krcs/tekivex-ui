@@ -110,7 +110,8 @@ export const TkxImageCrop = forwardRef<TkxImageCropHandle, TkxImageCropProps>(
     );
 
     const onPointerDown = (e: PointerEvent<HTMLDivElement>): void => {
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      const t = e.target as HTMLElement & { setPointerCapture?: (id: number) => void };
+      if (typeof t.setPointerCapture === 'function') t.setPointerCapture(e.pointerId);
       activePointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
       if (activePointers.current.size === 1) {

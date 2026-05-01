@@ -125,7 +125,8 @@ export const TkxSignaturePad = forwardRef<TkxSignaturePadHandle, TkxSignaturePad
     );
 
     const onPointerDown = (e: PointerEvent<HTMLCanvasElement>): void => {
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      const t = e.target as HTMLElement & { setPointerCapture?: (id: number) => void };
+      if (typeof t.setPointerCapture === 'function') t.setPointerCapture(e.pointerId);
       const pt = pointFrom(e);
       currentStroke.current = [pt];
       lastPoint.current = pt;
