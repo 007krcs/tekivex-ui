@@ -50,6 +50,7 @@ export default defineConfig({
         i18n: resolve(__dirname, 'src/i18n/index.ts'),
         quantum: resolve(__dirname, 'src/quantum/index.ts'),
         realtime: resolve(__dirname, 'src/realtime/index.ts'),
+        biodata: resolve(__dirname, 'src/biodata/index.ts'),
       },
       name: 'TekiVexUI',
       formats: ['es', 'cjs'],

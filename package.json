@@ -1,6 +1,6 @@
 {
   "name": "tekivex-ui",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Production-grade React component library — 70+ components, WCAG 2.1 AAA, WAI-ARIA 1.2, built-in charts, headless primitives, zero-runtime CSS engine, TypeScript-first.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -42,6 +42,11 @@
       "import": "./dist/realtime.js",
       "require": "./dist/realtime.cjs",
       "types": "./dist/realtime.d.ts"
+    },
+    "./biodata": {
+      "import": "./dist/biodata.js",
+      "require": "./dist/biodata.cjs",
+      "types": "./dist/biodata.d.ts"
     }
   },
   "sideEffects": [

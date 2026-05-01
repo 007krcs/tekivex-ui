@@ -5,6 +5,31 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] — 2026-05-01
+
+### Added — Biodata domain (Phase 0 of the ShubhBio app)
+
+- **Six new engine modules** under `src/engine/`, all dependency-free and SSR-safe:
+  - `engine/protect` — screenshot/print/clipboard/devtools detection primitives
+  - `engine/captcha` — math/slider/image-grid challenges with stateful + HMAC-signed verification
+  - `engine/canvas` — resolution-independent scene-graph DSL (`Scene`/`SceneNode` types) shared across DOM preview, canvas image export, and PDF rendering
+  - `engine/payment` — provider-plugin abstraction with Razorpay adapter and server-side `verifyRazorpaySignature`
+  - `engine/pdf` — native PDF 1.7 producer (header, indirect objects, byte-accurate xref, trailer; standard 14 fonts; JPEG embed via `/DCTDecode`; rounded-rect photo frames). No Puppeteer, no jsPDF.
+  - `engine/shaper` — Indic + RTL script support: detection, Indic cluster grouping (Devanagari/Bengali/Tamil/etc.), run partitioning, browser-canvas rasterize fallback for PDF embedding
+- **24 new components** for the biodata flow:
+  - Content protection: `TkxScreenshotGuard`, `TkxPrintGuard`, `TkxClipboardGuard`, `TkxDevToolsGuard`, `TkxDynamicWatermark`, `TkxBiodataPreview` (composite)
+  - Render: `TkxCanvasRenderer`, `TkxTemplateRenderer` (+ `createTemplateRegistry`, `useTemplateScene`), `TkxPdfExport`, `TkxImageExport`, `TkxIndicShaper`
+  - Form helpers: `TkxFieldArray`, `TkxImageCrop`, `TkxSignaturePad`, `TkxPhoneInput`, `TkxMaskedInput`
+  - Payment + download: `TkxPaymentProvider` (+ `useTkxPayment`), `TkxRazorpayCheckout`, `TkxCaptcha`, `TkxSecureDownload`, `TkxHoneypot`
+  - Misc: `TkxShareSheet`, `TkxFontPicker`, `TkxInstallPrompt`
+- **12 Indian regional locales**: hi-IN, ta-IN, te-IN, mr-IN, gu-IN, bn-IN, kn-IN, ml-IN, pa-IN, ur-IN (RTL), or-IN, as-IN. Brings the LOCALES total to 39.
+- **`tekivex-ui/biodata` sub-export** — single import surface for biodata-only apps; mirrors every symbol added in this release.
+
+### Stats
+- ~4,260 lines of new engine code, ~4,000 lines of new component code, ~1,500 lines of tests across 12 new test files.
+- 226+ passing tests added (148 engine + 66 component + 12 i18n).
+- Zero new npm dependencies; no Puppeteer; no jsPDF.
+
 ## [2.2.0] — 2026-04-07
 
 ### Added
