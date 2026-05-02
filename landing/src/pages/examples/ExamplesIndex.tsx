@@ -55,25 +55,7 @@ const EXAMPLES: ExampleCard[] = [
     group: 'use-case',
   },
 
-  // ─── Primitive showcases (the toolkit, not a product) ─────────────────
-  {
-    to: '/examples/360',
-    eyebrow: 'Primitive · 360°',
-    title: 'Multi-scene 360° tour',
-    blurb: 'Bare panorama + hotspot toolkit demo. Four scenes, gyro on mobile, fullscreen, thumbnail strip — the building blocks behind the property tour above.',
-    bullets: ['4 panorama scenes', 'Hotspot teleport', 'Gyroscope', 'Fullscreen toggle'],
-    hue: ['#06b6d4', '#3a86ff'],
-    group: 'primitive',
-  },
-  {
-    to: '/examples/ar-vr',
-    eyebrow: 'Primitive · WebXR',
-    title: 'AR / VR scene',
-    blurb: 'Bare WebXR session entry with AR + VR + desktop fallback. The building blocks behind the AR product preview above.',
-    bullets: ['AR + VR entry', 'Capability detection', 'Floating 3D card', 'Desktop fallback'],
-    hue: ['#7c3aed', '#3a86ff'],
-    group: 'primitive',
-  },
+  // ─── Primitive showcase (the toolkit, side-by-side) ──────────────────
   {
     to: '/examples/holographic',
     eyebrow: 'Primitive · Holographic UI',
@@ -96,7 +78,7 @@ export function ExamplesIndex() {
     <PageShell
       title="Examples"
       eyebrow="Showcase"
-      subtitle="Working examples built on the TekiVex UI stack — three full product use cases plus four bare-toolkit demos. Copy any of them as the starting point."
+      subtitle="Working examples built on the TekiVex UI stack — four full product use cases plus a holographic primitives gallery. Copy any of them as the starting point."
       breadcrumbs={[{ label: 'Examples' }]}
     >
       <p style={{ marginTop: 0 }}>

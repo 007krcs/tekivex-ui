@@ -59,20 +59,6 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples"/>
   </url>
   <url>
-    <loc>https://ui.tekivex.com/examples/360</loc>
-    <lastmod>2026-05-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/360"/>
-  </url>
-  <url>
-    <loc>https://ui.tekivex.com/examples/ar-vr</loc>
-    <lastmod>2026-05-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/ar-vr"/>
-  </url>
-  <url>
     <loc>https://ui.tekivex.com/examples/holographic</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
