@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/build-sitemap.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-router-dom": "^7.14.2",
     "recharts": "^2.15.4",
     "tekivex-3d": "file:../packages/tekivex-3d",
     "tekivex-ui": "file:../",

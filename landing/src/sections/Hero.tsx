@@ -20,7 +20,7 @@
 import { useState } from 'react';
 import { TkxScene, TkxPanorama360, TkxHotspot, TkxParticleField, TkxXRSession } from 'tekivex-3d';
 import { TkxHolographicBadge } from 'tekivex-ui';
-import { useImmersive } from '../App';
+import { useImmersive } from '../immersive-context';
 
 const SKY_360 =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Equirectangular_projection_SW.jpg/2560px-Equirectangular_projection_SW.jpg';

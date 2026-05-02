@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export function Footer() {
   return (
     <footer
@@ -16,7 +18,7 @@ export function Footer() {
           maxWidth: 1280,
           margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
           gap: 32,
         }}
       >
@@ -35,36 +37,51 @@ export function Footer() {
             <span className="tk-gradient-text">TekiVex UI</span>
           </div>
           <p style={{ color: '#b8b8d4', fontSize: 13, margin: 0, maxWidth: 280, lineHeight: 1.65 }}>
-            Production-grade React. WCAG 2.1 AAA. Real WebGL 3D. 113 components across 13 packages. MIT.
+            Production-grade React. WCAG 2.1 AAA. Real WebGL 3D. 113 components across 13
+            packages. MIT.
           </p>
         </div>
 
         <FooterCol
+          title="Product"
+          internal={[
+            { label: 'Documentation', to: '/docs' },
+            { label: 'Engineering blog', to: '/blog' },
+            { label: 'About', to: '/about' },
+            { label: 'Contact', to: '/contact' },
+          ]}
+        />
+
+        <FooterCol
           title="Try it"
-          links={[
-            { label: 'Playground (this page)', href: '#playground' },
-            { label: 'Interactive demo', href: '/playground/' },
+          external={[
+            { label: 'Interactive playground', href: '/playground/' },
             { label: 'Component catalog', href: '/book/' },
-            { label: '360° tour', href: '#tour' },
+          ]}
+          internal={[
+            { label: '360° tour', to: '/' },
           ]}
         />
 
         <FooterCol
           title="Packages"
-          links={[
+          external={[
             { label: 'tekivex-ui', href: 'https://www.npmjs.com/package/tekivex-ui' },
             { label: 'tekivex-3d', href: 'https://www.npmjs.com/package/tekivex-3d' },
-            { label: 'tekivex-pdf', href: 'https://www.npmjs.com/package/tekivex-pdf' },
-            { label: 'All 13 packages', href: '#packages' },
+            { label: 'tekivex-resume-templates', href: 'https://github.com/007krcs/tekivex-resume-templates' },
+            { label: 'tekivex-biodata-templates', href: 'https://github.com/007krcs/tekivex-biodata-templates' },
           ]}
         />
 
         <FooterCol
-          title="Support"
-          links={[
-            { label: 'Report an issue', href: 'https://github.com/novaai0401-ui/tekivex-issue-report/issues' },
-            { label: 'Request a feature', href: 'https://github.com/novaai0401-ui/tekivex-issue-report/issues/new' },
+          title="Legal"
+          internal={[
+            { label: 'Privacy Policy', to: '/privacy' },
+            { label: 'Terms of Service', to: '/terms' },
+          ]}
+          external={[
             { label: 'License (MIT)', href: 'https://opensource.org/licenses/MIT' },
+            { label: 'Report an issue', href: 'https://github.com/novaai0401-ui/tekivex-issue-report/issues' },
           ]}
         />
       </div>
@@ -80,19 +97,21 @@ export function Footer() {
           textAlign: 'center',
         }}
       >
-        © 2026 · MIT licensed · Built with tekivex-ui + tekivex-3d
+        © 2026 TekiVex UI contributors · MIT licensed · Built with{' '}
+        <code style={{ color: '#00f5d4', fontFamily: 'ui-monospace, monospace' }}>tekivex-ui</code> +{' '}
+        <code style={{ color: '#00f5d4', fontFamily: 'ui-monospace, monospace' }}>tekivex-3d</code>
       </div>
     </footer>
   );
 }
 
-function FooterCol({
-  title,
-  links,
-}: {
+interface FooterColProps {
   title: string;
-  links: { label: string; href: string }[];
-}) {
+  internal?: { label: string; to: string }[];
+  external?: { label: string; href: string }[];
+}
+
+function FooterCol({ title, internal, external }: FooterColProps) {
   return (
     <div>
       <div
@@ -108,16 +127,24 @@ function FooterCol({
         {title}
       </div>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {links.map((l) => (
+        {internal?.map((l) => (
+          <li key={l.to}>
+            <Link
+              to={l.to}
+              style={{ color: '#dcdce8', fontSize: 13, transition: 'color 0.15s', textDecoration: 'none' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#00f5d4')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#dcdce8')}
+            >
+              {l.label}
+            </Link>
+          </li>
+        ))}
+        {external?.map((l) => (
           <li key={l.href}>
             <a
               href={l.href}
               {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              style={{
-                color: '#dcdce8',
-                fontSize: 13,
-                transition: 'color 0.15s',
-              }}
+              style={{ color: '#dcdce8', fontSize: 13, transition: 'color 0.15s' }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#00f5d4')}
               onMouseLeave={(e) => (e.currentTarget.style.color = '#dcdce8')}
             >

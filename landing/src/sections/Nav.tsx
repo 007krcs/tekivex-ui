@@ -1,7 +1,11 @@
-import { useImmersive } from '../App';
+import { Link, useLocation } from 'react-router-dom';
+import { useImmersive } from '../immersive-context';
 
 export function Nav() {
   const { open: openImmersive } = useImmersive();
+  const { pathname } = useLocation();
+  const onHome = pathname === '/';
+
   return (
     <nav
       style={{
@@ -16,49 +20,60 @@ export function Nav() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: 12,
       }}
     >
-      <a href="#top" style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700 }}>
-        <span style={{ fontSize: 22 }}>⚡</span>
+      <Link
+        to="/"
+        style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 700, textDecoration: 'none' }}
+      >
+        <span style={{ fontSize: 22 }} aria-hidden="true">⚡</span>
         <span className="tk-gradient-text" style={{ fontSize: 18, letterSpacing: '-0.01em' }}>
           TekiVex UI
         </span>
-        <span style={{ fontSize: 11, color: '#8888aa', fontWeight: 600 }}>v3.1.0</span>
-      </a>
+      </Link>
 
-      <div style={{ display: 'flex', gap: 20, alignItems: 'center', fontSize: 14 }}>
-        <a href="#features" style={navLinkStyle}>Features</a>
-        <a href="#components" style={navLinkStyle}>Components</a>
-        <a href="#playground" style={navLinkStyle}>Playground</a>
-        <a href="#tour" style={navLinkStyle}>360°</a>
-        <a href="#packages" style={navLinkStyle}>Packages</a>
-        <a href="/playground/" style={navLinkStyle}>Demo</a>
-        <a href="/book/" style={navLinkStyle}>Book</a>
-        <button
-          type="button"
-          onClick={openImmersive}
-          style={{
-            ...navLinkStyle,
-            padding: '6px 14px',
-            background:
-              'linear-gradient(135deg, rgba(0,245,212,0.15), rgba(123,47,247,0.15))',
-            border: '1px solid rgba(0, 245, 212, 0.4)',
-            borderRadius: 8,
-            color: '#00f5d4',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-          }}
-        >
-          🌐 360° mode
-        </button>
+      <div
+        style={{
+          display: 'flex',
+          gap: 18,
+          alignItems: 'center',
+          fontSize: 14,
+          flexWrap: 'wrap',
+        }}
+      >
+        <Link to="/docs"   style={navLinkStyle(pathname.startsWith('/docs'))}>Docs</Link>
+        <Link to="/blog"   style={navLinkStyle(pathname.startsWith('/blog'))}>Blog</Link>
+        <Link to="/about"  style={navLinkStyle(pathname === '/about')}>About</Link>
+        <Link to="/contact" style={navLinkStyle(pathname === '/contact')}>Contact</Link>
+        {onHome && (
+          <button
+            type="button"
+            onClick={openImmersive}
+            style={{
+              padding: '6px 14px',
+              background: 'linear-gradient(135deg, rgba(0,245,212,0.15), rgba(123,47,247,0.15))',
+              border: '1px solid rgba(0, 245, 212, 0.4)',
+              borderRadius: 8,
+              color: '#00f5d4',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 14,
+              fontFamily: 'inherit',
+            }}
+          >
+            🌐 360° mode
+          </button>
+        )}
         <a
           href="https://www.npmjs.com/package/tekivex-ui"
           target="_blank"
           rel="noopener noreferrer"
-          style={navLinkStyle}
+          style={navLinkStyle(false)}
         >
           npm →
         </a>
@@ -67,8 +82,11 @@ export function Nav() {
   );
 }
 
-const navLinkStyle: React.CSSProperties = {
-  color: '#aaa',
-  fontWeight: 500,
-  transition: 'color 0.15s',
-};
+function navLinkStyle(active: boolean): React.CSSProperties {
+  return {
+    color: active ? '#00f5d4' : '#aaa',
+    fontWeight: active ? 700 : 500,
+    transition: 'color 0.15s',
+    textDecoration: 'none',
+  };
+}
