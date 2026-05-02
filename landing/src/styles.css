@@ -12,16 +12,57 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Cool, slightly-violet midnight — softer than pure black */
+  /* Light, professional surface — clean white with cool slate text. */
+  --tk-bg: #ffffff;
+  --tk-bg-deep: #f8fafc;
+  --tk-fg: #0f172a;
+  --tk-fg-muted: #475569;
+  --tk-accent: #06b6d4;       /* cyan — readable on white */
+  --tk-accent-2: #4f46e5;     /* indigo */
+  --tk-accent-3: #7c3aed;     /* violet */
+  --tk-border: rgba(15, 23, 42, 0.08);
+  --tk-border-strong: rgba(15, 23, 42, 0.14);
+  --tk-surface: #ffffff;
+  --tk-surface-2: #f8fafc;
+  --tk-prose-strong: #0f172a;
+  --tk-prose-link: #4f46e5;
+  --tk-prose-link-hover: #7c3aed;
+  --tk-prose-code-bg: rgba(79, 70, 229, 0.08);
+  --tk-prose-code-fg: #4338ca;
+  --tk-prose-pre-bg: #f8fafc;
+  --tk-prose-pre-border: rgba(15, 23, 42, 0.08);
+  --tk-prose-pre-fg: #0f172a;
+  --tk-prose-blockquote: #475569;
+  --tk-prose-th: #4f46e5;
+  --tk-prose-border: rgba(15, 23, 42, 0.08);
+}
+
+/* Dark theme — opt-in via [data-theme="dark"] on <html> or <body>. The
+   3D / cosmic sections still render their own dark canvases regardless;
+   this only changes the page chrome around them. */
+[data-theme="dark"] {
   --tk-bg: #0c0d1a;
   --tk-bg-deep: #0a0b15;
   --tk-fg: #e8e8f4;
   --tk-fg-muted: #b8b8d4;
   --tk-accent: #00f5d4;
-  --tk-accent-2: #7b8eff;   /* lavender — warmer pair than pure blue */
-  --tk-accent-3: #c4a8ff;   /* soft amethyst, professional-feeling */
+  --tk-accent-2: #7b8eff;
+  --tk-accent-3: #c4a8ff;
   --tk-border: rgba(255, 255, 255, 0.08);
   --tk-border-strong: rgba(255, 255, 255, 0.14);
+  --tk-surface: rgba(18, 20, 38, 0.55);
+  --tk-surface-2: rgba(8, 10, 25, 0.8);
+  --tk-prose-strong: #ffffff;
+  --tk-prose-link: #00f5d4;
+  --tk-prose-link-hover: #c4a8ff;
+  --tk-prose-code-bg: rgba(0,245,212,0.1);
+  --tk-prose-code-fg: #00f5d4;
+  --tk-prose-pre-bg: rgba(8, 10, 25, 0.8);
+  --tk-prose-pre-border: rgba(196,168,255,0.18);
+  --tk-prose-pre-fg: #dcdce8;
+  --tk-prose-blockquote: #b8b8d4;
+  --tk-prose-th: #c4a8ff;
+  --tk-prose-border: rgba(255,255,255,0.1);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -43,16 +84,26 @@ a { color: inherit; text-decoration: none; }
 button { font-family: inherit; }
 
 ::selection {
+  background: rgba(79, 70, 229, 0.18);
+  color: #0f172a;
+}
+[data-theme="dark"] ::selection {
   background: rgba(0, 245, 212, 0.3);
   color: #ffffff;
 }
 
-/* ── Aurora — soft luminous field, lifted out of pure black ──────────── */
+/* ── Aurora — soft luminous tinted field over the page background ─── */
 .tk-aurora {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  background:
+    radial-gradient(ellipse at 18% 8%,   rgba(79, 70, 229, 0.10)  0%, transparent 55%),
+    radial-gradient(ellipse at 82% 22%,  rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 95%,  rgba(6, 182, 212, 0.07)  0%, transparent 55%);
+}
+[data-theme="dark"] .tk-aurora {
   background:
     radial-gradient(ellipse at 18% 8%,   rgba(123,142,255,0.22) 0%, transparent 55%),
     radial-gradient(ellipse at 82% 22%,  rgba(196,168,255,0.16) 0%, transparent 50%),
@@ -67,11 +118,16 @@ button { font-family: inherit; }
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+[data-theme="dark"] .tk-grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
 }
 
 /* ── Sacred-geometry mandala ──────────────────────────────────────────── */
@@ -114,6 +170,10 @@ button { font-family: inherit; }
   z-index: 0;
   pointer-events: none;
   background:
+    radial-gradient(ellipse at center, transparent 35%, rgba(248, 250, 252, 0.5) 78%, rgba(248, 250, 252, 0.85) 100%);
+}
+[data-theme="dark"] .tk-vignette {
+  background:
     radial-gradient(ellipse at center, transparent 30%, rgba(10,11,21,0.55) 75%, rgba(10,11,21,0.85) 100%);
 }
 
@@ -125,48 +185,49 @@ button { font-family: inherit; }
 }
 
 .tk-glass {
-  background: rgba(18, 20, 38, 0.55);
+  background: var(--tk-surface);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   border: 1px solid var(--tk-border-strong);
 }
 
 /* ── Long-form prose ──────────────────────────────────────────────────── */
+.tk-prose { color: var(--tk-fg); }
 .tk-prose h2 {
   font-size: clamp(1.4rem, 2.6vw, 1.8rem);
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--tk-prose-strong);
   margin: 40px 0 14px;
 }
 .tk-prose h3 {
   font-size: clamp(1.15rem, 2vw, 1.35rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--tk-prose-strong);
   margin: 32px 0 10px;
 }
 .tk-prose p { margin: 0 0 16px; }
 .tk-prose ul, .tk-prose ol { margin: 0 0 16px; padding-left: 24px; }
 .tk-prose li { margin-bottom: 6px; }
 .tk-prose a {
-  color: #00f5d4;
+  color: var(--tk-prose-link);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
-.tk-prose a:hover { color: #c4a8ff; }
-.tk-prose strong { color: #fff; }
+.tk-prose a:hover { color: var(--tk-prose-link-hover); }
+.tk-prose strong { color: var(--tk-prose-strong); }
 .tk-prose code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.9em;
   padding: 1px 6px;
   border-radius: 4px;
-  background: rgba(0,245,212,0.1);
-  color: #00f5d4;
+  background: var(--tk-prose-code-bg);
+  color: var(--tk-prose-code-fg);
 }
 .tk-prose pre {
-  background: rgba(8, 10, 25, 0.8);
-  border: 1px solid rgba(196,168,255,0.18);
+  background: var(--tk-prose-pre-bg);
+  border: 1px solid var(--tk-prose-pre-border);
   border-radius: 8px;
   padding: 16px;
   overflow-x: auto;
@@ -178,13 +239,13 @@ button { font-family: inherit; }
 .tk-prose pre code {
   background: transparent;
   padding: 0;
-  color: #dcdce8;
+  color: var(--tk-prose-pre-fg);
 }
 .tk-prose blockquote {
-  border-left: 3px solid #c4a8ff;
+  border-left: 3px solid var(--tk-accent-3);
   padding: 4px 16px;
   margin: 16px 0;
-  color: #b8b8d4;
+  color: var(--tk-prose-blockquote);
   font-style: italic;
 }
 .tk-prose table {
@@ -194,14 +255,14 @@ button { font-family: inherit; }
   font-size: 14px;
 }
 .tk-prose th, .tk-prose td {
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid var(--tk-prose-border);
   padding: 8px 12px;
   text-align: left;
 }
-.tk-prose th { color: #c4a8ff; font-weight: 700; }
+.tk-prose th { color: var(--tk-prose-th); font-weight: 700; }
 .tk-prose hr {
   border: none;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid var(--tk-border);
   margin: 32px 0;
 }
 

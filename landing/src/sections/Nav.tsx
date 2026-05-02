@@ -13,8 +13,8 @@ export function Nav() {
         top: 0,
         zIndex: 50,
         padding: '14px 24px',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        background: 'rgba(10, 10, 15, 0.7)',
+        borderBottom: '1px solid var(--tk-border)',
+        background: 'rgba(255, 255, 255, 0.85)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         display: 'flex',
@@ -53,10 +53,10 @@ export function Nav() {
             onClick={openImmersive}
             style={{
               padding: '6px 14px',
-              background: 'linear-gradient(135deg, rgba(0,245,212,0.15), rgba(123,47,247,0.15))',
-              border: '1px solid rgba(0, 245, 212, 0.4)',
+              background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(124, 58, 237, 0.08))',
+              border: '1px solid rgba(79, 70, 229, 0.3)',
               borderRadius: 8,
-              color: '#00f5d4',
+              color: '#4f46e5',
               fontWeight: 700,
               cursor: 'pointer',
               display: 'inline-flex',
@@ -84,7 +84,7 @@ export function Nav() {
 
 function navLinkStyle(active: boolean): React.CSSProperties {
   return {
-    color: active ? '#00f5d4' : '#aaa',
+    color: active ? '#4f46e5' : '#475569',
     fontWeight: active ? 700 : 500,
     transition: 'color 0.15s',
     textDecoration: 'none',

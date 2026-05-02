@@ -6,11 +6,12 @@ export function Footer() {
       style={{
         padding: '64px 24px 48px',
         marginTop: 48,
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        borderTop: '1px solid var(--tk-border)',
         background:
-          'linear-gradient(to bottom, transparent, rgba(196, 168, 255, 0.04))',
+          'linear-gradient(to bottom, transparent, rgba(79, 70, 229, 0.04))',
         position: 'relative',
         zIndex: 1,
+        color: 'var(--tk-fg)',
       }}
     >
       <div
@@ -36,7 +37,7 @@ export function Footer() {
             <span style={{ fontSize: 22 }} aria-hidden="true">⚡</span>
             <span className="tk-gradient-text">TekiVex UI</span>
           </div>
-          <p style={{ color: '#b8b8d4', fontSize: 13, margin: 0, maxWidth: 280, lineHeight: 1.65 }}>
+          <p style={{ color: 'var(--tk-fg-muted)', fontSize: 13, margin: 0, maxWidth: 280, lineHeight: 1.65 }}>
             Production-grade React. WCAG 2.1 AAA. Real WebGL 3D. 113 components across 13
             packages. MIT.
           </p>
@@ -91,15 +92,15 @@ export function Footer() {
           maxWidth: 1280,
           margin: '48px auto 0',
           paddingTop: 24,
-          borderTop: '1px solid rgba(255,255,255,0.04)',
+          borderTop: '1px solid var(--tk-border)',
           fontSize: 12,
-          color: '#666',
+          color: 'var(--tk-fg-muted)',
           textAlign: 'center',
         }}
       >
         © 2026 TekiVex UI contributors · MIT licensed · Built with{' '}
-        <code style={{ color: '#00f5d4', fontFamily: 'ui-monospace, monospace' }}>tekivex-ui</code> +{' '}
-        <code style={{ color: '#00f5d4', fontFamily: 'ui-monospace, monospace' }}>tekivex-3d</code>
+        <code style={{ color: 'var(--tk-prose-link)', fontFamily: 'ui-monospace, monospace' }}>tekivex-ui</code> +{' '}
+        <code style={{ color: 'var(--tk-prose-link)', fontFamily: 'ui-monospace, monospace' }}>tekivex-3d</code>
       </div>
     </footer>
   );
@@ -117,7 +118,7 @@ function FooterCol({ title, internal, external }: FooterColProps) {
       <div
         style={{
           fontSize: 11,
-          color: '#888',
+          color: 'var(--tk-fg-muted)',
           fontWeight: 700,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
@@ -131,9 +132,9 @@ function FooterCol({ title, internal, external }: FooterColProps) {
           <li key={l.to}>
             <Link
               to={l.to}
-              style={{ color: '#dcdce8', fontSize: 13, transition: 'color 0.15s', textDecoration: 'none' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#00f5d4')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#dcdce8')}
+              style={{ color: 'var(--tk-fg)', fontSize: 13, transition: 'color 0.15s', textDecoration: 'none', fontWeight: 500 }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--tk-prose-link)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--tk-fg)')}
             >
               {l.label}
             </Link>
@@ -144,9 +145,9 @@ function FooterCol({ title, internal, external }: FooterColProps) {
             <a
               href={l.href}
               {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              style={{ color: '#dcdce8', fontSize: 13, transition: 'color 0.15s' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#00f5d4')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#dcdce8')}
+              style={{ color: 'var(--tk-fg)', fontSize: 13, transition: 'color 0.15s', textDecoration: 'none', fontWeight: 500 }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--tk-prose-link)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--tk-fg)')}
             >
               {l.label}
             </a>
