@@ -5,7 +5,7 @@
   <link>https://ui.tekivex.com/blog</link>
   <description>Deep dives, postmortems, and pattern writeups from building the TekiVex UI library and the tekivex-3d toolkit.</description>
   <language>en-us</language>
-  <lastBuildDate>Sat, 02 May 2026 20:43:58 GMT</lastBuildDate>
+  <lastBuildDate>Sat, 02 May 2026 20:56:45 GMT</lastBuildDate>
   <atom:link href="https://ui.tekivex.com/rss.xml" rel="self" type="application/rss+xml"/>
   <item>
     <title>How a hidden iframe gives us 1-page browser-only PDFs</title>
@@ -27,13 +27,6 @@
     <guid>https://ui.tekivex.com/blog/flowchart-window-listeners</guid>
     <pubDate>Wed, 22 Apr 2026 00:00:00 GMT</pubDate>
     <description>We shipped a node-connector port, the visual was perfect, the tests passed, but real browsers refused to draw the edge. The fix was to give up on pointer capture and listen on window directly. Here is the story.</description>
-  </item>
-  <item>
-    <title>Religion-agnostic biodata templates, with a custom-logo escape hatch</title>
-    <link>https://ui.tekivex.com/blog/religion-agnostic-biodata</link>
-    <guid>https://ui.tekivex.com/blog/religion-agnostic-biodata</guid>
-    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
-    <description>Marriage biodatas across faiths share the same data shape but want different glyphs at the top. Here is how we mapped a free-form religion field to ॐ / ✝ / ☪ / ☬ / ☸ / 🪷 — and why we shipped an upload control on top.</description>
   </item>
   <item>
     <title>A 360° tour without equirectangular photos</title>
