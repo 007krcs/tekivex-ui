@@ -125,6 +125,51 @@ const routes = [
     body:
       'API reference, examples, accessibility notes, and common pitfalls for every component shipped in TekiVex UI. Each page covers prop signatures, usage examples, and the WAI-ARIA accessibility model.',
   },
+  {
+    path: '/examples',
+    title: 'Examples — TekiVex UI',
+    description:
+      'Working example applications built with TekiVex UI: 360° tours, WebXR AR/VR scenes, holographic UI surfaces, and a fully configurable static blog.',
+    h1: 'Examples',
+    body:
+      'Four working example applications built on the TekiVex UI stack — a 360° multi-scene tour, an AR/VR WebXR scene, a holographic UI gallery, and a fully configurable static blog with markdown editor.',
+  },
+  {
+    path: '/examples/360',
+    title: '360° tour example — TekiVex UI',
+    description:
+      'A working multi-scene 360° tour built with tekivex-3d: drag to look, click hotspots to teleport between scenes, optional fullscreen and gyroscope.',
+    h1: '360° multi-scene tour',
+    body:
+      'Drag to look around. Click any glowing hotspot to teleport to another scene. On mobile, tilt your phone to control the camera. Built with TkxScene + TkxPanorama360 + TkxHotspot from tekivex-3d.',
+  },
+  {
+    path: '/examples/ar-vr',
+    title: 'AR / VR example — TekiVex UI',
+    description:
+      'A working WebXR demo: enter AR pass-through on Quest 3 / Vision Pro / ARCore phones, enter immersive VR on Quest, or interact with the 3D scene from any browser.',
+    h1: 'AR / VR scene',
+    body:
+      'A floating product card with a holographic logo and ambient particles. Tap to enter AR pass-through (Quest 3, Vision Pro, modern Android) or immersive VR (Quest, Pico). Drag to orbit from any device.',
+  },
+  {
+    path: '/examples/holographic',
+    title: 'Holographic UI example — TekiVex UI',
+    description:
+      'A working gallery of every holographic surface in tekivex-ui: cards, badges, avatars, gauges, terminals, and progress with live prismatic effects.',
+    h1: 'Holographic UI gallery',
+    body:
+      'Every holographic surface shipped in tekivex-ui — cards, badges, avatars, panels, gauges, terminals, and progress — rendered side-by-side with the props that control them.',
+  },
+  {
+    path: '/examples/blog',
+    title: 'Configurable blog example — TekiVex UI',
+    description:
+      'A fully configurable static blog: write posts with a markdown editor, upload cover images, drop in syntax-highlighted code blocks, organise by category and tags. No backend required.',
+    h1: 'Configurable blog',
+    body:
+      'A complete blog application: write posts with a markdown editor, upload images, drop in syntax-highlighted code blocks, organise by category and tags, search the archive, configure your brand. All persisted in localStorage — swap one file to point at a real backend.',
+  },
   ...blogPosts.map((p) => ({
     path: `/blog/${p.slug}`,
     title: `${p.title} — TekiVex UI engineering blog`,

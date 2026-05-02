@@ -43,9 +43,10 @@ export function Nav() {
           flexWrap: 'wrap',
         }}
       >
-        <Link to="/docs"   style={navLinkStyle(pathname.startsWith('/docs'))}>Docs</Link>
-        <Link to="/blog"   style={navLinkStyle(pathname.startsWith('/blog'))}>Blog</Link>
-        <Link to="/about"  style={navLinkStyle(pathname === '/about')}>About</Link>
+        <Link to="/docs"     style={navLinkStyle(pathname.startsWith('/docs'))}>Docs</Link>
+        <Link to="/examples" style={navLinkStyle(pathname.startsWith('/examples'))}>Examples</Link>
+        <Link to="/blog"     style={navLinkStyle(pathname.startsWith('/blog'))}>Blog</Link>
+        <Link to="/about"    style={navLinkStyle(pathname === '/about')}>About</Link>
         <Link to="/contact" style={navLinkStyle(pathname === '/contact')}>Contact</Link>
         {onHome && (
           <button
