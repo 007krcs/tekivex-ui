@@ -57,9 +57,9 @@ export function Footer() {
           title="Examples"
           internal={[
             { label: 'All examples', to: '/examples' },
-            { label: '360° tour', to: '/examples/360' },
-            { label: 'AR / VR scene', to: '/examples/ar-vr' },
-            { label: 'Holographic UI', to: '/examples/holographic' },
+            { label: 'Property tour (360°)', to: '/examples/property-tour' },
+            { label: 'AR product preview', to: '/examples/ar-product' },
+            { label: 'Mission control', to: '/examples/mission-control' },
             { label: 'Configurable blog', to: '/examples/blog' },
           ]}
         />

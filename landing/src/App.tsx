@@ -26,6 +26,9 @@ import { Example360 } from './pages/examples/Example360';
 import { ExampleARVR } from './pages/examples/ExampleARVR';
 import { ExampleHolographic } from './pages/examples/ExampleHolographic';
 import { BlogExample } from './pages/examples/blog/BlogExample';
+import { PropertyTour } from './pages/examples/PropertyTour';
+import { ARProduct } from './pages/examples/ARProduct';
+import { MissionControl } from './pages/examples/MissionControl';
 
 export { useImmersive } from './immersive-context';
 
@@ -64,6 +67,9 @@ export function App() {
           <Route path="/examples/ar-vr"         element={<ExampleARVR />} />
           <Route path="/examples/holographic"   element={<ExampleHolographic />} />
           <Route path="/examples/blog"          element={<BlogExample />} />
+          <Route path="/examples/property-tour" element={<PropertyTour />} />
+          <Route path="/examples/ar-product"    element={<ARProduct />} />
+          <Route path="/examples/mission-control" element={<MissionControl />} />
           <Route path="*"               element={<NotFound />} />
         </Routes>
       </main>

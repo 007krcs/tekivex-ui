@@ -87,6 +87,27 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/blog"/>
   </url>
   <url>
+    <loc>https://ui.tekivex.com/examples/property-tour</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/property-tour"/>
+  </url>
+  <url>
+    <loc>https://ui.tekivex.com/examples/ar-product</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/ar-product"/>
+  </url>
+  <url>
+    <loc>https://ui.tekivex.com/examples/mission-control</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/mission-control"/>
+  </url>
+  <url>
     <loc>https://ui.tekivex.com/blog/one-page-print</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>

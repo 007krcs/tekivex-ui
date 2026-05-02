@@ -69,7 +69,10 @@ const staticRoutes = [
   { loc: '/examples/360',           changefreq: 'monthly', priority: '0.85' },
   { loc: '/examples/ar-vr',         changefreq: 'monthly', priority: '0.85' },
   { loc: '/examples/holographic',   changefreq: 'monthly', priority: '0.85' },
-  { loc: '/examples/blog',          changefreq: 'monthly', priority: '0.85' },
+  { loc: '/examples/blog',            changefreq: 'monthly', priority: '0.85' },
+  { loc: '/examples/property-tour',   changefreq: 'monthly', priority: '0.9'  },
+  { loc: '/examples/ar-product',      changefreq: 'monthly', priority: '0.9'  },
+  { loc: '/examples/mission-control', changefreq: 'monthly', priority: '0.9'  },
 ];
 
 const blogRoutes = blogSlugs.map((s) => ({
