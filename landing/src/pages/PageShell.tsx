@@ -8,6 +8,7 @@
 
 import { Link } from 'react-router-dom';
 import type { ReactNode } from 'react';
+import { JsonLd, breadcrumbList } from '../JsonLd';
 
 export interface PageShellProps {
   /** Page title (also rendered as <h1>). */
@@ -31,7 +32,10 @@ export function PageShell({
   updated,
   children,
 }: PageShellProps) {
+  const crumbs = [{ label: 'Home', href: '/' }, ...(breadcrumbs ?? [{ label: title }])];
   return (
+    <>
+    <JsonLd data={breadcrumbList(crumbs)} />
     <article
       style={{
         position: 'relative',
@@ -142,6 +146,7 @@ export function PageShell({
         .
       </p>
     </article>
+    </>
   );
 }
 

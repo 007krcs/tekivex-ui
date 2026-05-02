@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>TekiVex UI engineering blog</title>
+  <link>https://ui.tekivex.com/blog</link>
+  <description>Deep dives, postmortems, and pattern writeups from building the TekiVex UI library and the tekivex-3d toolkit.</description>
+  <language>en-us</language>
+  <lastBuildDate>Sat, 02 May 2026 07:05:56 GMT</lastBuildDate>
+  <atom:link href="https://ui.tekivex.com/rss.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>How a hidden iframe gives us 1-page browser-only PDFs</title>
+    <link>https://ui.tekivex.com/blog/one-page-print</link>
+    <guid>https://ui.tekivex.com/blog/one-page-print</guid>
+    <pubDate>Thu, 30 Apr 2026 00:00:00 GMT</pubDate>
+    <description>When our resume + biodata templates started printing 20 sheets instead of 1, the fix was not &quot;patch the print stylesheet&quot; — it was &quot;isolate the print context entirely.&quot; Here is the deep dive.</description>
+  </item>
+  <item>
+    <title>Bidirectional spreadsheet ↔ chart sync in 100 lines</title>
+    <link>https://ui.tekivex.com/blog/spreadsheet-chart-sync</link>
+    <guid>https://ui.tekivex.com/blog/spreadsheet-chart-sync</guid>
+    <pubDate>Sat, 25 Apr 2026 00:00:00 GMT</pubDate>
+    <description>Two views of the same data, no React form library, no GraphQL plumbing — just two pure functions and a useMemo. Here is the pattern that powers our Data Demo section.</description>
+  </item>
+  <item>
+    <title>When setPointerCapture is not enough: a FlowChart drag bug</title>
+    <link>https://ui.tekivex.com/blog/flowchart-window-listeners</link>
+    <guid>https://ui.tekivex.com/blog/flowchart-window-listeners</guid>
+    <pubDate>Wed, 22 Apr 2026 00:00:00 GMT</pubDate>
+    <description>We shipped a node-connector port, the visual was perfect, the tests passed, but real browsers refused to draw the edge. The fix was to give up on pointer capture and listen on window directly. Here is the story.</description>
+  </item>
+  <item>
+    <title>Religion-agnostic biodata templates, with a custom-logo escape hatch</title>
+    <link>https://ui.tekivex.com/blog/religion-agnostic-biodata</link>
+    <guid>https://ui.tekivex.com/blog/religion-agnostic-biodata</guid>
+    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
+    <description>Marriage biodatas across faiths share the same data shape but want different glyphs at the top. Here is how we mapped a free-form religion field to ॐ / ✝ / ☪ / ☬ / ☸ / 🪷 — and why we shipped an upload control on top.</description>
+  </item>
+  <item>
+    <title>A 360° tour without equirectangular photos</title>
+    <link>https://ui.tekivex.com/blog/procedural-360-tour</link>
+    <guid>https://ui.tekivex.com/blog/procedural-360-tour</guid>
+    <pubDate>Sun, 12 Apr 2026 00:00:00 GMT</pubDate>
+    <description>Our landing tour goes from Earth orbit to the surface of Mars to deep space. Zero asset bytes ship — every star, planet, satellite, and orbit ring is generated at runtime from primitives. Here is how.</description>
+  </item>
+</channel>
+</rss>
