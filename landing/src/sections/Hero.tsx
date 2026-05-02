@@ -57,6 +57,14 @@ export function Hero() {
         width: '100%',
         overflow: 'hidden',
         marginTop: -56, // pull under the sticky nav
+        background: '#0a0b15', // dark island regardless of page theme — the
+                                // 360° panorama, particles, and white text
+                                // overlay are designed for a dark backdrop
+        color: '#ffffff',
+        isolation: 'isolate', // create a stacking context so the global
+                              // .tk-aurora / .tk-grid-bg / .tk-vignette
+                              // (z-index:0, position:fixed) don't bleed
+                              // through and wash out the edges
       }}
       onPointerDown={() => setHint(false)}
     >
