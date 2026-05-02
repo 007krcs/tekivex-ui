@@ -1,12 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // /examples/holographic — gallery of every holographic surface in tekivex-ui.
 //
-// Demonstrates: TkxHolographicSurface, TkxHolographicCard, TkxHolographicBadge,
-// TkxHolographicButton, TkxHolographicAvatar, TkxHolographicPanel,
-// TkxHolographicGauge, TkxHolographicProgress, TkxHolographicTerminal.
-//
-// The gallery uses a deep-violet "stage" backdrop so the prismatic effects
-// have something to glow against, but the surrounding shell stays light.
+// Each component is wired with its real prop signature (verified against the
+// source in src/components/TkxHolographic*). The deep-violet "stage"
+// backdrop isolates the prismatic effects against the light page chrome.
 // ─────────────────────────────────────────────────────────────────────────────
 import { useState } from 'react';
 import {
@@ -32,7 +29,7 @@ export function ExampleHolographic() {
     { keywords: 'tekivex, tekivex-ui, holographic ui, react components, glowing ui, prismatic, sci-fi ui' },
   );
 
-  const [progress, setProgress] = useState(62);
+  const [progress, setProgress] = useState(0.62);
 
   return (
     <ExampleShell
@@ -43,32 +40,39 @@ export function ExampleHolographic() {
       surface="light"
     >
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 24px 64px' }}>
-        {/* Stage — local dark island just for the holographic showcase */}
         <Stage title="Cards & surfaces">
           <Grid min={300}>
             <TkxHolographicCard
               title="Quarterly metrics"
               subtitle="Q3 2026"
-              tone="success"
+              badge={<TkxHolographicBadge size="sm" tone="success">+18%</TkxHolographicBadge>}
             >
               <div style={{ fontSize: 28, fontWeight: 800, color: '#fff' }}>$1.42M</div>
-              <div style={{ color: '#94a3b8', fontSize: 13 }}>+18.4% vs last quarter</div>
+              <div style={{ color: '#94a3b8', fontSize: 13 }}>vs. $1.20M last quarter</div>
             </TkxHolographicCard>
-            <TkxHolographicCard title="Active sessions" subtitle="Live" tone="info">
+            <TkxHolographicCard
+              title="Active sessions"
+              subtitle="Live"
+              badge={<TkxHolographicBadge size="sm" tone="info">live</TkxHolographicBadge>}
+            >
               <div style={{ fontSize: 28, fontWeight: 800, color: '#fff' }}>2,418</div>
               <div style={{ color: '#94a3b8', fontSize: 13 }}>across 38 regions</div>
             </TkxHolographicCard>
-            <TkxHolographicCard title="Capacity warning" subtitle="us-east-1" tone="warning">
+            <TkxHolographicCard
+              title="Capacity warning"
+              subtitle="us-east-1"
+              badge={<TkxHolographicBadge size="sm" tone="warning">87%</TkxHolographicBadge>}
+            >
               <div style={{ fontSize: 28, fontWeight: 800, color: '#fff' }}>87%</div>
               <div style={{ color: '#94a3b8', fontSize: 13 }}>scaling up next replica</div>
             </TkxHolographicCard>
           </Grid>
           <Spacer />
-          <TkxHolographicSurface tone="info" style={{ padding: 24 }}>
+          <TkxHolographicSurface style={{ padding: 24 }}>
             <h3 style={{ margin: '0 0 6px', color: '#fff', fontSize: 18 }}>Holographic surface</h3>
             <p style={{ margin: 0, color: '#cbd5e1', fontSize: 14, lineHeight: 1.6 }}>
-              The base component. Wraps any content in a glowing prismatic container with a
-              configurable tone. Cards, panels, terminals all extend it.
+              The base component. Wraps any content in a glowing prismatic container — Cards,
+              Avatars, and Buttons all extend it. Tones live on Badge / Button.
             </p>
           </TkxHolographicSurface>
         </Stage>
@@ -92,8 +96,12 @@ export function ExampleHolographic() {
         <Stage title="Buttons">
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
             {TONES.map((t) => (
-              <TkxHolographicButton key={t} tone={t} onClick={() => setProgress((p) => Math.min(100, p + 5))}>
-                {t} +5
+              <TkxHolographicButton
+                key={t}
+                tone={t}
+                onClick={() => setProgress((p) => Math.min(1, p + 0.05))}
+              >
+                {t} +5%
               </TkxHolographicButton>
             ))}
           </div>
@@ -102,18 +110,13 @@ export function ExampleHolographic() {
         <Stage title="Avatars">
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18, alignItems: 'center' }}>
             {[
-              { name: 'Aarav', tone: 'success' as const, status: 'online' },
-              { name: 'Mei',   tone: 'info' as const,    status: 'busy'   },
-              { name: 'Kabir', tone: 'warning' as const, status: 'away'   },
-              { name: 'Jin',   tone: 'danger' as const,  status: 'offline' },
+              { name: 'Aarav', initials: 'AS' },
+              { name: 'Mei',   initials: 'MZ' },
+              { name: 'Kabir', initials: 'KP' },
+              { name: 'Jin',   initials: 'JK' },
             ].map((p) => (
               <div key={p.name} style={{ textAlign: 'center', color: '#cbd5e1' }}>
-                <TkxHolographicAvatar
-                  name={p.name}
-                  size={80}
-                  tone={p.tone}
-                  status={p.status}
-                />
+                <TkxHolographicAvatar alt={p.name} size={80} initials={p.initials} />
                 <div style={{ fontSize: 12, marginTop: 6 }}>{p.name}</div>
               </div>
             ))}
@@ -123,26 +126,39 @@ export function ExampleHolographic() {
         <Stage title="Panels & gauges">
           <Grid min={280}>
             <TkxHolographicPanel
-              title="System diagnostics"
-              tone="info"
+              header={<strong style={{ color: '#fff', fontSize: 14 }}>System diagnostics</strong>}
               footer={<span style={{ color: '#cbd5e1', fontSize: 12 }}>uptime 99.982%</span>}
+              accent="#3a86ff"
             >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <Row label="CPU"      value="34%" />
-                <Row label="Memory"   value="61%" />
-                <Row label="Network"  value="118 Mb/s" />
-                <Row label="Errors"   value="0" />
+              <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <Row label="CPU"     value="34%" />
+                <Row label="Memory"  value="61%" />
+                <Row label="Network" value="118 Mb/s" />
+                <Row label="Errors"  value="0" />
               </div>
             </TkxHolographicPanel>
-            <TkxHolographicPanel title="Live capacity" tone="warning">
-              <TkxHolographicGauge value={progress} max={100} tone="warning" size={180} />
+            <TkxHolographicPanel
+              header={<strong style={{ color: '#fff', fontSize: 14 }}>Live capacity</strong>}
+              accent="#fbbf24"
+            >
+              <div style={{ padding: 16, display: 'grid', placeItems: 'center' }}>
+                <TkxHolographicGauge
+                  value={Math.round(progress * 100)}
+                  size={180}
+                  accent="#fbbf24"
+                  caption={<span style={{ color: '#cbd5e1', fontSize: 12 }}>capacity</span>}
+                />
+              </div>
             </TkxHolographicPanel>
-            <TkxHolographicPanel title="Build pipeline" tone="success">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 4 }}>
-                <Step label="Lint" value={100} />
-                <Step label="Test" value={100} />
-                <Step label="Build" value={progress} />
-                <Step label="Deploy" value={Math.max(0, progress - 20)} />
+            <TkxHolographicPanel
+              header={<strong style={{ color: '#fff', fontSize: 14 }}>Build pipeline</strong>}
+              accent="#22c55e"
+            >
+              <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <Step label="Lint"   value={1}                />
+                <Step label="Test"   value={1}                />
+                <Step label="Build"  value={progress}         />
+                <Step label="Deploy" value={Math.max(0, progress - 0.2)} />
               </div>
             </TkxHolographicPanel>
           </Grid>
@@ -150,45 +166,47 @@ export function ExampleHolographic() {
 
         <Stage title="Terminal">
           <TkxHolographicTerminal
-            tone="success"
+            accent="#00f5d4"
+            height={260}
+            prompt="$ "
             lines={[
-              { type: 'cmd',    text: 'npm install tekivex-ui tekivex-3d' },
-              { type: 'output', text: 'added 113 packages, audited 113 packages in 4.2s' },
-              { type: 'output', text: 'found 0 vulnerabilities' },
-              { type: 'cmd',    text: 'npm run dev' },
-              { type: 'output', text: '> vite dev' },
-              { type: 'output', text: '  ➜  Local:   http://localhost:5173/' },
-              { type: 'output', text: '  ➜  Network: http://10.0.1.42:5173/' },
-              { type: 'cmd',    text: 'tkx ship' },
-              { type: 'success',text: '✓ deployed to https://your-app.tekivex.dev' },
+              'npm install tekivex-ui tekivex-3d',
+              'added 113 packages, audited 113 packages in 4.2s',
+              'found 0 vulnerabilities',
+              'npm run dev',
+              '> vite dev',
+              '  ➜  Local:   http://localhost:5173/',
+              '  ➜  Network: http://10.0.1.42:5173/',
+              'tkx ship',
+              '✓ deployed to https://your-app.tekivex.dev',
             ]}
           />
         </Stage>
 
         <Stage title="Progress">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <TkxHolographicProgress value={progress} max={100} tone="info" label="Sync" />
-            <TkxHolographicProgress value={progress * 0.6} max={100} tone="success" label="Backup" />
-            <TkxHolographicProgress value={progress * 0.3} max={100} tone="warning" label="Reindex" />
+            <TkxHolographicProgress value={progress}        accent="#3a86ff" label="Sync"    valueLabel={`${Math.round(progress * 100)}%`} />
+            <TkxHolographicProgress value={progress * 0.6}  accent="#22c55e" label="Backup"  valueLabel={`${Math.round(progress * 60)}%`}  />
+            <TkxHolographicProgress value={progress * 0.3}  accent="#fbbf24" label="Reindex" valueLabel={`${Math.round(progress * 30)}%`}  />
           </div>
           <Spacer height={12} />
           <div style={{ display: 'flex', gap: 8 }}>
             <button
               type="button"
-              onClick={() => setProgress((p) => Math.max(0, p - 10))}
+              onClick={() => setProgress((p) => Math.max(0, p - 0.1))}
               style={btn}
             >
-              − 10
+              − 10%
             </button>
             <button
               type="button"
-              onClick={() => setProgress((p) => Math.min(100, p + 10))}
+              onClick={() => setProgress((p) => Math.min(1, p + 0.1))}
               style={btn}
             >
-              + 10
+              + 10%
             </button>
             <span style={{ color: '#475569', fontSize: 13, alignSelf: 'center' }}>
-              progress = {progress}
+              progress = {Math.round(progress * 100)}%
             </span>
           </div>
         </Stage>
@@ -216,18 +234,23 @@ export function ExampleHolographic() {
               overflowX: 'auto',
               color: '#dcdce8',
             }}
-          >{`import { TkxHolographicCard, TkxHolographicGauge, TkxHolographicTerminal } from 'tekivex-ui';
+          >{`import { TkxHolographicCard, TkxHolographicGauge, TkxHolographicTerminal, TkxHolographicBadge } from 'tekivex-ui';
 
-<TkxHolographicCard title="Live capacity" subtitle="us-east-1" tone="warning">
-  <TkxHolographicGauge value={87} max={100} tone="warning" size={180} />
+<TkxHolographicCard
+  title="Live capacity"
+  subtitle="us-east-1"
+  badge={<TkxHolographicBadge size="sm" tone="warning">87%</TkxHolographicBadge>}
+>
+  <TkxHolographicGauge value={87} size={180} accent="#fbbf24" />
 </TkxHolographicCard>
 
 <TkxHolographicTerminal
-  tone="success"
+  accent="#00f5d4"
+  height={260}
   lines={[
-    { type: 'cmd',    text: 'npm install tekivex-ui' },
-    { type: 'output', text: 'added 113 packages' },
-    { type: 'success',text: '✓ ready' },
+    'npm install tekivex-ui',
+    'added 113 packages',
+    '✓ ready',
   ]}
 />`}</pre>
         </details>
@@ -280,9 +303,7 @@ function Grid({ children, min = 280 }: { children: React.ReactNode; min?: number
   );
 }
 
-function Spacer({ height = 16 }: { height?: number }) {
-  return <div style={{ height }} />;
-}
+function Spacer({ height = 16 }: { height?: number }) { return <div style={{ height }} />; }
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
@@ -294,17 +315,17 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 function Step({ label, value }: { label: string; value: number }) {
-  const done = value >= 100;
+  const done = value >= 1;
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#cbd5e1', marginBottom: 4 }}>
         <span>{label}</span>
-        <span>{Math.round(value)}%</span>
+        <span>{Math.round(value * 100)}%</span>
       </div>
       <div style={{ height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
         <div
           style={{
-            width: `${Math.max(0, Math.min(100, value))}%`,
+            width: `${Math.max(0, Math.min(100, value * 100))}%`,
             height: '100%',
             background: done
               ? 'linear-gradient(90deg, #22c55e, #84cc16)'

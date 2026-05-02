@@ -23,7 +23,8 @@ import {
   resetConfig,
 } from './store';
 import { Editor } from './Editor';
-import { Markdown } from './Markdown';
+import { BlockRenderer } from './BlockRenderer';
+import { plainText } from './store';
 
 type View =
   | { kind: 'list' }
@@ -68,7 +69,7 @@ export function BlogExample() {
         return (
           p.title.toLowerCase().includes(q) ||
           p.excerpt.toLowerCase().includes(q) ||
-          p.content.toLowerCase().includes(q) ||
+          plainText(p.blocks).toLowerCase().includes(q) ||
           p.tags.some((t) => t.includes(q))
         );
       })
@@ -393,7 +394,7 @@ function PostList(p: PostListProps) {
                   {post.title || 'Untitled'}
                 </h3>
                 <p style={{ margin: 0, fontSize: 14, color: '#475569', lineHeight: 1.55, flex: 1 }}>
-                  {post.excerpt || post.content.slice(0, 140)}
+                  {post.excerpt || plainText(post.blocks).slice(0, 140)}
                 </p>
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   {post.tags.map((t) => (
@@ -487,7 +488,7 @@ function PostDetail(p: PostDetailProps) {
         <p style={{ margin: '0 0 24px', color: '#475569', fontSize: 17, lineHeight: 1.6 }}>{post.excerpt}</p>
       )}
       <div className="md-prose">
-        <Markdown source={post.content} />
+        <BlockRenderer blocks={post.blocks} />
       </div>
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 24 }}>
         {post.tags.map((t) => (
