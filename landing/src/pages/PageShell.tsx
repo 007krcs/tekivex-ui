@@ -45,21 +45,21 @@ export function PageShell({
         padding: 'clamp(48px, 7vw, 88px) 24px',
         fontSize: 'clamp(15px, 1.1vw, 17px)',
         lineHeight: 1.7,
-        color: '#dcdce8',
+        color: 'var(--tk-fg)',
       }}
     >
       <nav
         aria-label="Breadcrumb"
-        style={{ fontSize: 12, color: '#888', marginBottom: 18 }}
+        style={{ fontSize: 12, color: 'var(--tk-fg-muted)', marginBottom: 18 }}
       >
         <Link to="/" style={breadcrumbLink}>Home</Link>
         {breadcrumbs?.map((c, i) => (
           <span key={i}>
-            <span style={{ margin: '0 8px', color: '#555' }}>/</span>
+            <span style={{ margin: '0 8px', color: 'var(--tk-border-strong)' }}>/</span>
             {c.href ? (
               <Link to={c.href} style={breadcrumbLink}>{c.label}</Link>
             ) : (
-              <span style={{ color: '#aaa' }}>{c.label}</span>
+              <span style={{ color: 'var(--tk-fg-muted)' }}>{c.label}</span>
             )}
           </span>
         ))}
@@ -71,9 +71,9 @@ export function PageShell({
             display: 'inline-block',
             padding: '4px 12px',
             borderRadius: 999,
-            background: 'rgba(196,168,255,0.1)',
-            border: '1px solid rgba(196,168,255,0.3)',
-            color: '#c4a8ff',
+            background: 'rgba(79, 70, 229, 0.08)',
+            border: '1px solid rgba(79, 70, 229, 0.22)',
+            color: '#4f46e5',
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: '0.1em',
@@ -92,7 +92,7 @@ export function PageShell({
           fontWeight: 800,
           letterSpacing: '-0.03em',
           lineHeight: 1.1,
-          color: '#fff',
+          color: 'var(--tk-prose-strong)',
         }}
       >
         {title}
@@ -102,7 +102,7 @@ export function PageShell({
         <p
           style={{
             margin: '0 0 24px',
-            color: '#b8b8d4',
+            color: 'var(--tk-fg-muted)',
             fontSize: 'clamp(16px, 1.3vw, 19px)',
             lineHeight: 1.55,
           }}
@@ -112,7 +112,7 @@ export function PageShell({
       )}
 
       {updated && (
-        <p style={{ color: '#666', fontSize: 13, margin: '0 0 32px' }}>
+        <p style={{ color: 'var(--tk-fg-muted)', fontSize: 13, margin: '0 0 32px' }}>
           Last updated <time>{updated}</time>
         </p>
       )}
@@ -129,17 +129,17 @@ export function PageShell({
       <hr
         style={{
           border: 'none',
-          borderTop: '1px solid rgba(255,255,255,0.08)',
+          borderTop: '1px solid var(--tk-border)',
           margin: '48px 0 24px',
         }}
       />
-      <p style={{ color: '#888', fontSize: 13 }}>
+      <p style={{ color: 'var(--tk-fg-muted)', fontSize: 13 }}>
         Spotted an error or want to contribute?{' '}
         <a
           href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: '#00f5d4' }}
+          style={{ color: 'var(--tk-prose-link)' }}
         >
           Open an issue
         </a>
@@ -151,6 +151,6 @@ export function PageShell({
 }
 
 const breadcrumbLink: React.CSSProperties = {
-  color: '#c4a8ff',
+  color: 'var(--tk-prose-link)',
   textDecoration: 'none',
 };
