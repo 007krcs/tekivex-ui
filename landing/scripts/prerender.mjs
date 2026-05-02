@@ -194,12 +194,16 @@ function makeHtml(route) {
 
   // Prerendered body content — placed inside #root so the React hydrate
   // overwrites it. Crawlers see real H1 + paragraph + brand keywords.
+  // Clean, professional pre-hydration markup. Crawlers and AdSense see this
+  // straight from the HTML body; once React hydrates it is replaced by the
+  // real app. Uses neutral light styling so it reads as a polished,
+  // professional document rather than a placeholder.
   const ssr = `
-      <main style="max-width:760px;margin:0 auto;padding:64px 24px;color:#dcdce8;font:16px/1.6 system-ui,sans-serif;background:#0a0a0f;min-height:100vh">
-        <nav style="font-size:12px;color:#888;margin-bottom:18px"><a href="/" style="color:#c4a8ff;text-decoration:none">Home</a></nav>
-        <h1 style="font-size:2.4rem;font-weight:800;letter-spacing:-0.03em;color:#fff;margin:0 0 12px">${escapeHtml(route.h1)}</h1>
-        <p style="color:#b8b8d4;font-size:18px;line-height:1.6;margin:0 0 24px">${escapeHtml(route.body)}</p>
-        <p style="color:#888;font-size:13px">TekiVex UI · open-source React component library · MIT licensed.</p>
+      <main style="max-width:760px;margin:0 auto;padding:64px 24px;color:#1a1a2a;font:16px/1.65 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+        <nav aria-label="Breadcrumb" style="font-size:13px;color:#6b6b8a;margin-bottom:24px"><a href="/" style="color:#3a86ff;text-decoration:none">Home</a></nav>
+        <h1 style="font-size:2.4rem;font-weight:800;letter-spacing:-0.025em;color:#0a0a1a;margin:0 0 12px;line-height:1.15">${escapeHtml(route.h1)}</h1>
+        <p style="color:#3a3a52;font-size:18px;line-height:1.6;margin:0 0 32px">${escapeHtml(route.body)}</p>
+        <p style="color:#6b6b8a;font-size:13px;border-top:1px solid #e6e6ee;padding-top:20px">TekiVex UI · open-source React component library · MIT licensed · <a href="/about" style="color:#3a86ff;text-decoration:none">About</a> · <a href="/docs" style="color:#3a86ff;text-decoration:none">Docs</a> · <a href="/blog" style="color:#3a86ff;text-decoration:none">Blog</a></p>
       </main>`;
   html = html.replace('<div id="root"></div>', `<div id="root">${ssr}</div>`);
 
