@@ -58,13 +58,18 @@ const docSlugs  = extractSlugs(join(ROOT, 'src/pages/docs/docs-registry.ts'));
 const blogPosts = extractBlogPosts(join(ROOT, 'src/pages/blog/posts.ts'));
 
 const staticRoutes = [
-  { loc: '/',         changefreq: 'weekly',  priority: '1.0' },
-  { loc: '/about',    changefreq: 'monthly', priority: '0.8' },
-  { loc: '/contact',  changefreq: 'monthly', priority: '0.6' },
-  { loc: '/privacy',  changefreq: 'yearly',  priority: '0.4' },
-  { loc: '/terms',    changefreq: 'yearly',  priority: '0.4' },
-  { loc: '/blog',     changefreq: 'weekly',  priority: '0.9' },
-  { loc: '/docs',     changefreq: 'weekly',  priority: '0.95' },
+  { loc: '/',                       changefreq: 'weekly',  priority: '1.0'  },
+  { loc: '/about',                  changefreq: 'monthly', priority: '0.8'  },
+  { loc: '/contact',                changefreq: 'monthly', priority: '0.6'  },
+  { loc: '/privacy',                changefreq: 'yearly',  priority: '0.4'  },
+  { loc: '/terms',                  changefreq: 'yearly',  priority: '0.4'  },
+  { loc: '/blog',                   changefreq: 'weekly',  priority: '0.9'  },
+  { loc: '/docs',                   changefreq: 'weekly',  priority: '0.95' },
+  { loc: '/examples',               changefreq: 'weekly',  priority: '0.9'  },
+  { loc: '/examples/360',           changefreq: 'monthly', priority: '0.85' },
+  { loc: '/examples/ar-vr',         changefreq: 'monthly', priority: '0.85' },
+  { loc: '/examples/holographic',   changefreq: 'monthly', priority: '0.85' },
+  { loc: '/examples/blog',          changefreq: 'monthly', priority: '0.85' },
 ];
 
 const blogRoutes = blogSlugs.map((s) => ({

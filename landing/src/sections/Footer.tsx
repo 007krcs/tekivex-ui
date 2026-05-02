@@ -54,13 +54,13 @@ export function Footer() {
         />
 
         <FooterCol
-          title="Try it"
-          external={[
-            { label: 'Interactive playground', href: '/playground/' },
-            { label: 'Component catalog', href: '/book/' },
-          ]}
+          title="Examples"
           internal={[
-            { label: '360° tour', to: '/' },
+            { label: 'All examples', to: '/examples' },
+            { label: '360° tour', to: '/examples/360' },
+            { label: 'AR / VR scene', to: '/examples/ar-vr' },
+            { label: 'Holographic UI', to: '/examples/holographic' },
+            { label: 'Configurable blog', to: '/examples/blog' },
           ]}
         />
 

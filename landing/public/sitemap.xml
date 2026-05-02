@@ -52,6 +52,41 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/docs"/>
   </url>
   <url>
+    <loc>https://ui.tekivex.com/examples</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples"/>
+  </url>
+  <url>
+    <loc>https://ui.tekivex.com/examples/360</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/360"/>
+  </url>
+  <url>
+    <loc>https://ui.tekivex.com/examples/ar-vr</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/ar-vr"/>
+  </url>
+  <url>
+    <loc>https://ui.tekivex.com/examples/holographic</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/holographic"/>
+  </url>
+  <url>
+    <loc>https://ui.tekivex.com/examples/blog</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ui.tekivex.com/examples/blog"/>
+  </url>
+  <url>
     <loc>https://ui.tekivex.com/blog/one-page-print</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>

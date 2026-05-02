@@ -21,6 +21,11 @@ import { BlogIndex } from './pages/blog/BlogIndex';
 import { BlogPost } from './pages/blog/BlogPost';
 import { DocsIndex } from './pages/docs/DocsIndex';
 import { DocsPage } from './pages/docs/DocsPage';
+import { ExamplesIndex } from './pages/examples/ExamplesIndex';
+import { Example360 } from './pages/examples/Example360';
+import { ExampleARVR } from './pages/examples/ExampleARVR';
+import { ExampleHolographic } from './pages/examples/ExampleHolographic';
+import { BlogExample } from './pages/examples/blog/BlogExample';
 
 export { useImmersive } from './immersive-context';
 
@@ -54,6 +59,11 @@ export function App() {
           <Route path="/blog/:slug"     element={<BlogPost />} />
           <Route path="/docs"           element={<DocsIndex />} />
           <Route path="/docs/:slug"     element={<DocsPage />} />
+          <Route path="/examples"               element={<ExamplesIndex />} />
+          <Route path="/examples/360"           element={<Example360 />} />
+          <Route path="/examples/ar-vr"         element={<ExampleARVR />} />
+          <Route path="/examples/holographic"   element={<ExampleHolographic />} />
+          <Route path="/examples/blog"          element={<BlogExample />} />
           <Route path="*"               element={<NotFound />} />
         </Routes>
       </main>
