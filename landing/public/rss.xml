@@ -5,7 +5,7 @@
   <link>https://ui.tekivex.com/blog</link>
   <description>Deep dives, postmortems, and pattern writeups from building the TekiVex UI library and the tekivex-3d toolkit.</description>
   <language>en-us</language>
-  <lastBuildDate>Sat, 02 May 2026 19:56:40 GMT</lastBuildDate>
+  <lastBuildDate>Sat, 02 May 2026 20:18:28 GMT</lastBuildDate>
   <atom:link href="https://ui.tekivex.com/rss.xml" rel="self" type="application/rss+xml"/>
   <item>
     <title>How a hidden iframe gives us 1-page browser-only PDFs</title>

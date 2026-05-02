@@ -4,6 +4,7 @@
 import { Link } from 'react-router-dom';
 import { PageShell } from '../PageShell';
 import { usePageMeta } from '../../use-page-meta';
+import { BusinessCTA } from './BusinessCTA';
 
 interface ExampleCard {
   to: string;
@@ -135,6 +136,11 @@ export function ExamplesIndex() {
         {EXAMPLES.filter((e) => e.group === 'primitive').map((e) => renderCard(e))}
       </div>
 
+      <BusinessCTA
+        vertical="TekiVex example"
+        pitch="Each example above is a real product surface you can copy as your starting point. We help teams ship the production version — your data, your branding, your domain, your CRM — typically in 2–6 weeks."
+        hue={['#4f46e5', '#06b6d4']}
+      />
     </PageShell>
   );
 }

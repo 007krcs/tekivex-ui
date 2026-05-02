@@ -14,68 +14,143 @@
 import { useMemo, useState } from 'react';
 import { TkxScene, TkxPanorama360, TkxHotspot, TkxParticleField } from 'tekivex-3d';
 import { ExampleShell } from './ExampleShell';
+import { BusinessCTA } from './BusinessCTA';
 import { usePageMeta } from '../../use-page-meta';
+
+interface RoomPalette {
+  ceiling: string;
+  ceilingDark: string;
+  wall: string;
+  wallStripe: string;
+  floor: string;
+  floorDark: string;
+  furniture: string;
+  accent: string;
+}
 
 interface Room {
   id: string;
   label: string;
   emoji: string;
-  src: string;
-  thumb: string;
+  palette: RoomPalette;
   hotspots: { to: string; label: string; pos: [number, number, number]; color: string }[];
 }
 
+// Procedural panorama generator — guarantees the canvas always shows a
+// recognizable room with floor/ceiling/walls/furniture/label. No external
+// image dependencies, no 404s, works offline.
+//
+// Each panorama is a 4096×2048 SVG (the standard 2:1 equirectangular
+// aspect ratio) wrapped on a sphere by TkxPanorama360.
+function panoramaSvg(roomName: string, p: RoomPalette): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4096 2048" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="ceiling" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="${p.ceilingDark}"/>
+      <stop offset="100%" stop-color="${p.ceiling}"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="${p.floor}"/>
+      <stop offset="100%" stop-color="${p.floorDark}"/>
+    </linearGradient>
+  </defs>
+  <rect width="4096" height="700" fill="url(#ceiling)"/>
+  <rect y="700" width="4096" height="700" fill="${p.wall}"/>
+  <rect y="1400" width="4096" height="648" fill="url(#floor)"/>
+  ${[700, 1400].map(y => `<line x1="0" y1="${y}" x2="4096" y2="${y}" stroke="${p.accent}" stroke-width="3" opacity="0.18"/>`).join('')}
+  ${[1024, 2048, 3072].map(x => `<line x1="${x}" y1="700" x2="${x}" y2="1400" stroke="${p.accent}" stroke-width="2" opacity="0.12"/>`).join('')}
+  ${[
+    { x: 240,  type: 'window', wide: 600 },
+    { x: 1280, type: 'art' },
+    { x: 1696, type: 'door' },
+    { x: 2304, type: 'art' },
+    { x: 2848, type: 'window', wide: 600 },
+    { x: 3584, type: 'plant' },
+  ].map(f => {
+    if (f.type === 'window') {
+      return `<rect x="${f.x}" y="800" width="${f.wide}" height="380" fill="${p.ceilingDark}" opacity="0.55" rx="6"/>
+              <rect x="${f.x}" y="800" width="${f.wide}" height="380" fill="none" stroke="${p.accent}" stroke-width="2" opacity="0.3" rx="6"/>
+              <line x1="${(f.x ?? 0) + (f.wide ?? 0) / 2}" y1="800" x2="${(f.x ?? 0) + (f.wide ?? 0) / 2}" y2="1180" stroke="${p.accent}" stroke-width="1" opacity="0.25"/>`;
+    }
+    if (f.type === 'art') {
+      return `<rect x="${f.x}" y="900" width="200" height="240" fill="${p.furniture}" rx="4"/>
+              <rect x="${f.x}" y="900" width="200" height="240" fill="none" stroke="${p.accent}" stroke-width="3" opacity="0.4" rx="4"/>`;
+    }
+    if (f.type === 'door') {
+      return `<rect x="${f.x}" y="780" width="240" height="500" fill="${p.furniture}" opacity="0.6" rx="4"/>
+              <circle cx="${f.x + 220}" cy="1030" r="6" fill="${p.accent}"/>`;
+    }
+    if (f.type === 'plant') {
+      return `<rect x="${f.x}" y="1220" width="80" height="200" fill="${p.furniture}" rx="6"/>
+              <ellipse cx="${f.x + 40}" cy="1190" rx="100" ry="80" fill="${p.accent}" opacity="0.45"/>`;
+    }
+    return '';
+  }).join('')}
+  ${[600, 1648, 2696, 3744].map(x => `<rect x="${x - 180}" y="1430" width="360" height="180" fill="${p.furniture}" opacity="0.7" rx="14"/>`).join('')}
+  <text x="2048" y="1100" font-size="220" fill="${p.accent}" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" opacity="0.32">${roomName}</text>
+  <text x="2048" y="1200" font-size="48" fill="${p.accent}" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="600" opacity="0.4" letter-spacing="6">DRAG TO LOOK</text>
+</svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+const PALETTES: Record<string, RoomPalette> = {
+  living: {
+    ceiling: '#fef9f0', ceilingDark: '#f8eedc',
+    wall: '#f5e6cf', wallStripe: '#e8d4b3',
+    floor: '#a87b5a', floorDark: '#7a553a',
+    furniture: '#5a4530', accent: '#06b6d4',
+  },
+  kitchen: {
+    ceiling: '#ffffff', ceilingDark: '#f0f4f8',
+    wall: '#e7eef5', wallStripe: '#d0dae6',
+    floor: '#7d92ab', floorDark: '#56697f',
+    furniture: '#1e293b', accent: '#3a86ff',
+  },
+  bedroom: {
+    ceiling: '#fdf4f4', ceilingDark: '#f5e3e7',
+    wall: '#ead4d8', wallStripe: '#d9b8be',
+    floor: '#9b6d6e', floorDark: '#704c4d',
+    furniture: '#3f2330', accent: '#7c3aed',
+  },
+  balcony: {
+    ceiling: '#bfe1f3', ceilingDark: '#7bb8da',
+    wall: '#a9cee0', wallStripe: '#86b8cf',
+    floor: '#8a8a8a', floorDark: '#5a5a5a',
+    furniture: '#2c4759', accent: '#f59e0b',
+  },
+};
+
 const ROOMS: Room[] = [
   {
-    id: 'living',
-    label: 'Living room',
-    emoji: '🛋️',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Living_room_360_panorama.jpg/2560px-Living_room_360_panorama.jpg',
-    thumb: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Living_room_360_panorama.jpg/640px-Living_room_360_panorama.jpg',
+    id: 'living', label: 'Living room', emoji: '🛋️', palette: PALETTES.living,
     hotspots: [
-      { to: 'kitchen',  label: '🍳 Kitchen',  pos: [-22, 2, -10], color: '#06b6d4' },
+      { to: 'kitchen',  label: '🍳 Kitchen',  pos: [-22, 2, -10], color: '#3a86ff' },
       { to: 'bedroom',  label: '🛏️ Bedroom',  pos: [22, 2, -10],  color: '#7c3aed' },
       { to: 'balcony',  label: '🌅 Balcony',  pos: [0, 4, 22],    color: '#f59e0b' },
     ],
   },
   {
-    id: 'kitchen',
-    label: 'Kitchen',
-    emoji: '🍳',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Kitchen_360_panorama.jpg/2560px-Kitchen_360_panorama.jpg',
-    thumb: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Kitchen_360_panorama.jpg/640px-Kitchen_360_panorama.jpg',
+    id: 'kitchen', label: 'Kitchen', emoji: '🍳', palette: PALETTES.kitchen,
     hotspots: [
-      { to: 'living',   label: '↩ Living room', pos: [0, 2, -22], color: '#4f46e5' },
+      { to: 'living',   label: '↩ Living room', pos: [0, 2, -22], color: '#06b6d4' },
       { to: 'bedroom',  label: '🛏️ Bedroom',    pos: [22, 2, -10], color: '#7c3aed' },
     ],
   },
   {
-    id: 'bedroom',
-    label: 'Bedroom',
-    emoji: '🛏️',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Bedroom_360_panorama.jpg/2560px-Bedroom_360_panorama.jpg',
-    thumb: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Bedroom_360_panorama.jpg/640px-Bedroom_360_panorama.jpg',
+    id: 'bedroom', label: 'Bedroom', emoji: '🛏️', palette: PALETTES.bedroom,
     hotspots: [
-      { to: 'living',   label: '↩ Living room', pos: [0, 2, -22], color: '#4f46e5' },
+      { to: 'living',   label: '↩ Living room', pos: [0, 2, -22], color: '#06b6d4' },
       { to: 'balcony',  label: '🌅 Balcony',    pos: [22, 4, 18], color: '#f59e0b' },
     ],
   },
   {
-    id: 'balcony',
-    label: 'Balcony',
-    emoji: '🌅',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Balcony_360_panorama.jpg/2560px-Balcony_360_panorama.jpg',
-    thumb: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Balcony_360_panorama.jpg/640px-Balcony_360_panorama.jpg',
+    id: 'balcony', label: 'Balcony', emoji: '🌅', palette: PALETTES.balcony,
     hotspots: [
-      { to: 'living',  label: '↩ Living room', pos: [0, 2, -22],  color: '#4f46e5' },
+      { to: 'living',  label: '↩ Living room', pos: [0, 2, -22],  color: '#06b6d4' },
       { to: 'bedroom', label: '🛏️ Bedroom',    pos: [-22, 2, -10], color: '#7c3aed' },
     ],
   },
 ];
-
-// Note: if Wikipedia panorama URLs 404, three.js will continue with the
-// transparent canvas and the dark fallback shows through. The tour still
-// works — just without the imagery.
 
 const PROPERTY = {
   title: '2-Bedroom Garden Apartment',
@@ -117,6 +192,10 @@ export function PropertyTour() {
 
   const [activeRoomId, setActiveRoomId] = useState<string>('living');
   const active = ROOMS.find((r) => r.id === activeRoomId)!;
+  const activeSrc = useMemo(
+    () => panoramaSvg(active.label, active.palette),
+    [active.id, active.label, active.palette],
+  );
   const [downPaymentPct, setDownPaymentPct] = useState(20);
   const [years, setYears] = useState(20);
   const [rate, setRate] = useState(8.5);
@@ -176,7 +255,7 @@ export function PropertyTour() {
           <div>
             <div className="prop-tour-shell">
               <TkxScene fov={75} cameraPosition={[0, 0, 0.01]} background="transparent">
-                <TkxPanorama360 src={active.src} fadeMs={500} gyro />
+                <TkxPanorama360 src={activeSrc} fadeMs={500} gyro />
                 <TkxParticleField count={400} volume={[40, 20, 40]} driftSpeed={0.1} size={0.02} />
                 {active.hotspots.map((h) => (
                   <TkxHotspot
@@ -221,9 +300,12 @@ export function PropertyTour() {
                   onClick={() => setActiveRoomId(r.id)}
                   aria-pressed={r.id === activeRoomId}
                   className={`prop-room-btn ${r.id === activeRoomId ? 'is-active' : ''}`}
+                  style={{
+                    background: `linear-gradient(180deg, ${r.palette.ceiling} 0%, ${r.palette.ceilingDark} 30%, ${r.palette.wall} 30%, ${r.palette.wall} 70%, ${r.palette.floor} 70%, ${r.palette.floorDark} 100%)`,
+                  }}
                 >
-                  <img src={r.thumb} alt={r.label} loading="lazy" />
-                  <span>{r.emoji} {r.label}</span>
+                  <span className="prop-room-emoji" style={{ color: r.palette.accent }}>{r.emoji}</span>
+                  <span>{r.label}</span>
                 </button>
               ))}
             </div>
@@ -347,6 +429,12 @@ export function PropertyTour() {
             </div>
           </aside>
         </div>
+
+        <BusinessCTA
+          vertical="Property tour"
+          pitch="Real-estate, hotels, hospitality, event venues, museums — any vertical that sells a physical space wins from a 360° walkthrough. NAR data shows listings with virtual tours convert 3.4× higher than photo-only listings."
+          hue={['#06b6d4', '#3a86ff']}
+        />
 
         {/* Code reveal */}
         <details className="prop-code-reveal">
@@ -538,16 +626,22 @@ function PropertyStyles() {
         border: 2px solid #e6e8ef; transition: border-color 0.15s, transform 0.15s;
         font-family: inherit;
       }
-      .prop-room-btn img {
-        width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.9;
+      .prop-room-btn {
+        display: flex; flex-direction: column; align-items: flex-start;
+        justify-content: flex-end; padding: 14px;
+        color: #1e293b; gap: 4px;
       }
-      .prop-room-btn span {
-        position: absolute; left: 8px; bottom: 6px; right: 8px;
-        color: #fff; font-size: 12px; font-weight: 700;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); text-align: left;
+      .prop-room-btn > span:last-child {
+        font-size: 13px; font-weight: 800;
+        text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+      }
+      .prop-room-emoji {
+        font-size: 26px; line-height: 1;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
       }
       .prop-room-btn.is-active {
         border-color: #06b6d4; transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(6, 182, 212, 0.18);
       }
       .prop-features {
         display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px 16px;

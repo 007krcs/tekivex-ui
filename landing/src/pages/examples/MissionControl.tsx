@@ -23,6 +23,7 @@ import {
   TkxHolographicTerminal,
 } from 'tekivex-ui';
 import { ExampleShell } from './ExampleShell';
+import { BusinessCTA } from './BusinessCTA';
 import { usePageMeta } from '../../use-page-meta';
 
 interface AlertItem { id: number; sev: 'info' | 'warn' | 'crit'; text: string; at: string; }
@@ -247,6 +248,12 @@ export function MissionControl() {
             SaaS observability, trading floors, IoT monitoring, sports scoreboards, mission rooms.
           </p>
         </div>
+
+        <BusinessCTA
+          vertical="Mission control dashboard"
+          pitch="SaaS observability, IoT monitoring, trading desks, sports scoreboards, and ops centers all want this dense, glanceable, real-time vocabulary. We pipe it to your real metrics — Datadog, Prometheus, custom feeds, anything that emits JSON."
+          hue={['#7c3aed', '#ec4899']}
+        />
       </div>
     </ExampleShell>
   );
