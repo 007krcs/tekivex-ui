@@ -8,7 +8,6 @@ import type { ReactNode } from 'react';
 import { OnePagePrint } from './posts/one-page-print';
 import { BidirectionalSpreadsheetChart } from './posts/spreadsheet-chart-sync';
 import { FlowchartWindowListeners } from './posts/flowchart-window-listeners';
-import { ReligionAgnosticBiodata } from './posts/religion-agnostic-biodata';
 import { Procedural360Tour } from './posts/procedural-360-tour';
 
 export interface BlogPost {
@@ -59,18 +58,6 @@ export const BLOG_POSTS: BlogPost[] = [
     readingMinutes: 7,
     tags: ['React', 'pointer events', 'debugging'],
     render: FlowchartWindowListeners,
-  },
-  {
-    slug: 'religion-agnostic-biodata',
-    title: 'Religion-agnostic biodata templates, with a custom-logo escape hatch',
-    description:
-      'Marriage biodatas across faiths share the same data shape but want different glyphs at the top. Here is how we mapped a free-form religion field to ॐ / ✝ / ☪ / ☬ / ☸ / 🪷 — and why we shipped an upload control on top.',
-    summary:
-      'Marriage biodatas across faiths share the same data shape but want different glyphs at the top. Here is how we mapped a free-form religion field to ॐ / ✝ / ☪ / ☬ / ☸ / 🪷 — and why we shipped an upload control on top.',
-    publishedAt: '2026-04-18',
-    readingMinutes: 5,
-    tags: ['internationalization', 'cultural sensitivity', 'design'],
-    render: ReligionAgnosticBiodata,
   },
   {
     slug: 'procedural-360-tour',

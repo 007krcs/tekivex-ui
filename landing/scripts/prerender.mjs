@@ -87,7 +87,7 @@ const routes = [
       'Email, GitHub issue tracker, and a contact form for the TekiVex UI maintainers. Bug reports, feature requests, and consulting inquiries.',
     h1: 'Contact TekiVex UI',
     body:
-      'Reach the TekiVex UI maintainers by GitHub issue (bugs, features, doc fixes) or by email at hello@tekivex.com (commercial inquiries), privacy@tekivex.com, legal@tekivex.com, or security@tekivex.com.',
+      'Reach the TekiVex UI maintainers by GitHub issue (bugs, features, doc fixes) or by email at nishu_singh@tekivex.com or novaai0401@gmail.com (commercial inquiries), privacy@tekivex.com, legal@tekivex.com, or security@tekivex.com.',
   },
   {
     path: '/privacy',
