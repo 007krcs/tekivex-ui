@@ -165,10 +165,37 @@ const routes = [
     path: '/examples/blog',
     title: 'Configurable blog example — TekiVex UI',
     description:
-      'A fully configurable static blog: write posts with a markdown editor, upload cover images, drop in syntax-highlighted code blocks, organise by category and tags. No backend required.',
+      'A Medium-style block editor: write posts with paragraph + heading + image + code + quote + list + video blocks. No markdown visible to writers. Persists to localStorage; swap one file for any backend.',
     h1: 'Configurable blog',
     body:
-      'A complete blog application: write posts with a markdown editor, upload images, drop in syntax-highlighted code blocks, organise by category and tags, search the archive, configure your brand. All persisted in localStorage — swap one file to point at a real backend.',
+      'A complete block-based blog application: write posts with the same WYSIWYG blocks readers see, upload cover images, drop in syntax-highlighted code blocks, organise by category and tags, search the archive, configure your brand.',
+  },
+  {
+    path: '/examples/property-tour',
+    title: 'Property tour example — TekiVex UI',
+    description:
+      'A real-estate listing with an embedded 360° walkthrough — the same shape every real-estate, hotel, or venue site needs. Drag through rooms, click hotspots to teleport, request a viewing, and run a mortgage calculator without leaving the page.',
+    h1: 'Property tour',
+    body:
+      'A real-estate listing with an embedded 360° walkthrough: drag through rooms, click hotspots to teleport, request a viewing, and run a mortgage calculator. The shape every property, hotel, or venue site needs.',
+  },
+  {
+    path: '/examples/ar-product',
+    title: 'AR product preview example — TekiVex UI',
+    description:
+      'An e-commerce product page where shoppers place the item in their real room with WebXR AR. Falls back to a draggable 3D viewer on devices without AR.',
+    h1: 'AR product preview',
+    body:
+      'A furniture product page where shoppers place the item in their real room with WebXR AR — the shape every furniture, fashion, jewellery, or car-configurator brand needs. Falls back to a draggable 3D viewer on devices without AR.',
+  },
+  {
+    path: '/examples/mission-control',
+    title: 'Mission control example — TekiVex UI',
+    description:
+      'A live operations dashboard built with the tekivex-ui holographic surfaces — KPI tiles, gauges, deploy pipeline, alert feed terminal, regional capacity, commit stream, all updating in real time.',
+    h1: 'Mission control',
+    body:
+      'A NOC / SRE-style live operations dashboard built entirely with the tekivex-ui holographic surfaces: KPI tiles, gauges, deploy pipeline, alert feed terminal, regional capacity, commit stream — all updating in real time.',
   },
   ...blogPosts.map((p) => ({
     path: `/blog/${p.slug}`,

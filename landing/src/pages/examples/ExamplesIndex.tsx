@@ -12,40 +12,75 @@ interface ExampleCard {
   blurb: string;
   bullets: string[];
   hue: [string, string];
+  group: 'use-case' | 'primitive';
 }
 
 const EXAMPLES: ExampleCard[] = [
+  // ─── Use cases (commercial product surfaces) ──────────────────────────
   {
-    to: '/examples/360',
-    eyebrow: '360°',
-    title: 'Multi-scene 360° tour',
-    blurb: 'A working interactive 360° tour. Drag to look, click hotspots to teleport between scenes, fullscreen on any device, gyroscope on mobile.',
-    bullets: ['4 panorama scenes', 'Hotspot navigation', 'Gyroscope on mobile', 'Fullscreen toggle'],
+    to: '/examples/property-tour',
+    eyebrow: 'Real estate · 360°',
+    title: 'Property tour',
+    blurb: 'A real-estate listing with an embedded 360° walkthrough. Drag through rooms, click hotspots to teleport, request a viewing, and run a mortgage calculator without leaving the page.',
+    bullets: ['Multi-room 360° tour', 'Mortgage calculator', 'Schedule-a-visit form', 'Agent profile card'],
     hue: ['#06b6d4', '#3a86ff'],
+    group: 'use-case',
   },
   {
-    to: '/examples/ar-vr',
-    eyebrow: 'WebXR',
-    title: 'AR / VR scene',
-    blurb: 'Enter AR pass-through on Quest 3, Vision Pro, or any ARCore phone. Enter immersive VR on Quest. Fully interactive on every device that can run a browser.',
-    bullets: ['AR + VR session entry', 'Capability detection', 'Floating 3D card + logo', 'Graceful desktop fallback'],
-    hue: ['#7c3aed', '#3a86ff'],
+    to: '/examples/ar-product',
+    eyebrow: 'E-commerce · AR',
+    title: 'AR product preview',
+    blurb: 'A furniture product page where shoppers place the item in their real room with WebXR AR. Falls back to a draggable 3D viewer on devices without AR.',
+    bullets: ['Variant swatches + qty', 'AR / VR session entry', 'Capability detection', 'Reviews + specs'],
+    hue: ['#7c3aed', '#4f46e5'],
+    group: 'use-case',
   },
   {
-    to: '/examples/holographic',
-    eyebrow: 'Holographic UI',
-    title: 'Holographic surface gallery',
-    blurb: 'Every holographic primitive shipped in tekivex-ui — cards, badges, avatars, panels, gauges, terminals, and progress with live prismatic effects.',
-    bullets: ['9 surface variants', 'Live progress controls', 'Five tone palettes', 'Copy-paste props table'],
+    to: '/examples/mission-control',
+    eyebrow: 'Live ops · Holographic',
+    title: 'Mission control',
+    blurb: 'A NOC / SRE-style live operations dashboard. KPI tiles, holographic gauges, deploy pipeline, alert feed, regional capacity, commit stream — all updating in real time.',
+    bullets: ['Real-time KPI tiles', 'Holographic gauges', 'Live deploy pipeline', 'Alert feed terminal'],
     hue: ['#c4a8ff', '#ec4899'],
+    group: 'use-case',
   },
   {
     to: '/examples/blog',
-    eyebrow: 'Blog',
+    eyebrow: 'Publishing · Editor',
     title: 'Configurable blog',
-    blurb: 'Full editorial blog: write posts with a markdown editor, upload cover images, drop in syntax-highlighted code blocks, organise by category and tags. No backend required.',
-    bullets: ['Full markdown editor', 'Image upload + code blocks', 'Tags + search + pagination', 'Live brand customisation'],
+    blurb: 'Medium-style block editor: title, cover image, paragraph + heading + image + code + quote + list + video + divider blocks. No backend needed.',
+    bullets: ['Block editor (no markdown)', 'Image upload + code blocks', 'Tags + search + pagination', 'Live brand customisation'],
     hue: ['#4f46e5', '#06b6d4'],
+    group: 'use-case',
+  },
+
+  // ─── Primitive showcases (the toolkit, not a product) ─────────────────
+  {
+    to: '/examples/360',
+    eyebrow: 'Primitive · 360°',
+    title: 'Multi-scene 360° tour',
+    blurb: 'Bare panorama + hotspot toolkit demo. Four scenes, gyro on mobile, fullscreen, thumbnail strip — the building blocks behind the property tour above.',
+    bullets: ['4 panorama scenes', 'Hotspot teleport', 'Gyroscope', 'Fullscreen toggle'],
+    hue: ['#06b6d4', '#3a86ff'],
+    group: 'primitive',
+  },
+  {
+    to: '/examples/ar-vr',
+    eyebrow: 'Primitive · WebXR',
+    title: 'AR / VR scene',
+    blurb: 'Bare WebXR session entry with AR + VR + desktop fallback. The building blocks behind the AR product preview above.',
+    bullets: ['AR + VR entry', 'Capability detection', 'Floating 3D card', 'Desktop fallback'],
+    hue: ['#7c3aed', '#3a86ff'],
+    group: 'primitive',
+  },
+  {
+    to: '/examples/holographic',
+    eyebrow: 'Primitive · Holographic UI',
+    title: 'Holographic surface gallery',
+    blurb: 'Every holographic surface shipped in tekivex-ui — cards, badges, avatars, panels, gauges, terminals, progress — side by side with live controls.',
+    bullets: ['9 surface variants', 'Live progress controls', 'Five tone palettes', 'Code snippets'],
+    hue: ['#c4a8ff', '#ec4899'],
+    group: 'primitive',
   },
 ];
 
@@ -60,85 +95,100 @@ export function ExamplesIndex() {
     <PageShell
       title="Examples"
       eyebrow="Showcase"
-      subtitle="Four working applications built on the TekiVex UI stack — copy any of them as the starting point for your project."
+      subtitle="Working examples built on the TekiVex UI stack — three full product use cases plus four bare-toolkit demos. Copy any of them as the starting point."
       breadcrumbs={[{ label: 'Examples' }]}
     >
       <p style={{ marginTop: 0 }}>
         Every example is a real React route that runs live in your browser, with full source linked
-        on GitHub. Pick one to launch the interactive demo, or read the source to lift the bits you need.
+        on GitHub. <strong>Use cases</strong> are complete product pages you can copy as a starting
+        point; <strong>Primitives</strong> are bare-toolkit demos that show what each component does
+        on its own.
       </p>
 
+      <h2 style={{ marginTop: 32, fontSize: 18, color: '#0f172a', fontWeight: 800 }}>
+        Use cases
+      </h2>
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
           gap: 18,
-          marginTop: 24,
+          marginTop: 12,
           marginBottom: 16,
         }}
       >
-        {EXAMPLES.map((e) => (
-          <Link
-            key={e.to}
-            to={e.to}
-            style={{
-              textDecoration: 'none',
-              color: 'inherit',
-              padding: 22,
-              borderRadius: 14,
-              border: '1px solid #e6e8ef',
-              background: '#ffffff',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 10,
-              transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
-            }}
-            onMouseEnter={(ev) => {
-              ev.currentTarget.style.transform = 'translateY(-2px)';
-              ev.currentTarget.style.boxShadow = '0 12px 32px rgba(15, 23, 42, 0.08)';
-              ev.currentTarget.style.borderColor = '#cbd5e1';
-            }}
-            onMouseLeave={(ev) => {
-              ev.currentTarget.style.transform = 'translateY(0)';
-              ev.currentTarget.style.boxShadow = 'none';
-              ev.currentTarget.style.borderColor = '#e6e8ef';
-            }}
-          >
-            <div
-              aria-hidden="true"
-              style={{
-                height: 8,
-                borderRadius: 999,
-                background: `linear-gradient(90deg, ${e.hue[0]}, ${e.hue[1]})`,
-                marginBottom: 4,
-              }}
-            />
-            <div
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: e.hue[0],
-              }}
-            >
-              {e.eyebrow}
-            </div>
-            <h3 style={{ margin: 0, fontSize: 19, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.01em' }}>
-              {e.title}
-            </h3>
-            <p style={{ margin: 0, fontSize: 14, color: '#475569', lineHeight: 1.55 }}>
-              {e.blurb}
-            </p>
-            <ul style={{ margin: '4px 0 0', padding: '0 0 0 18px', color: '#475569', fontSize: 13, lineHeight: 1.7 }}>
-              {e.bullets.map((b) => <li key={b}>{b}</li>)}
-            </ul>
-            <span style={{ marginTop: 10, color: e.hue[1], fontWeight: 700, fontSize: 13 }}>
-              Open the example →
-            </span>
-          </Link>
-        ))}
+        {EXAMPLES.filter((e) => e.group === 'use-case').map((e) => renderCard(e))}
       </div>
+
+      <h2 style={{ marginTop: 24, fontSize: 18, color: '#0f172a', fontWeight: 800 }}>
+        Primitives
+      </h2>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 18,
+          marginTop: 12,
+          marginBottom: 16,
+        }}
+      >
+        {EXAMPLES.filter((e) => e.group === 'primitive').map((e) => renderCard(e))}
+      </div>
+
     </PageShell>
+  );
+}
+
+function renderCard(e: ExampleCard) {
+  return (
+    <Link
+      key={e.to}
+      to={e.to}
+      style={{
+        textDecoration: 'none', color: 'inherit', padding: 22,
+        borderRadius: 14, border: '1px solid #e6e8ef', background: '#ffffff',
+        display: 'flex', flexDirection: 'column', gap: 10,
+        transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
+      }}
+      onMouseEnter={(ev) => {
+        ev.currentTarget.style.transform = 'translateY(-2px)';
+        ev.currentTarget.style.boxShadow = '0 12px 32px rgba(15, 23, 42, 0.08)';
+        ev.currentTarget.style.borderColor = '#cbd5e1';
+      }}
+      onMouseLeave={(ev) => {
+        ev.currentTarget.style.transform = 'translateY(0)';
+        ev.currentTarget.style.boxShadow = 'none';
+        ev.currentTarget.style.borderColor = '#e6e8ef';
+      }}
+    >
+      <div
+        aria-hidden="true"
+        style={{
+          height: 8, borderRadius: 999,
+          background: `linear-gradient(90deg, ${e.hue[0]}, ${e.hue[1]})`,
+          marginBottom: 4,
+        }}
+      />
+      <div
+        style={{
+          fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: e.hue[0],
+        }}
+      >
+        {e.eyebrow}
+      </div>
+      <h3 style={{ margin: 0, fontSize: 19, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.01em' }}>
+        {e.title}
+      </h3>
+      <p style={{ margin: 0, fontSize: 14, color: '#475569', lineHeight: 1.55 }}>
+        {e.blurb}
+      </p>
+      <ul style={{ margin: '4px 0 0', padding: '0 0 0 18px', color: '#475569', fontSize: 13, lineHeight: 1.7 }}>
+        {e.bullets.map((b) => <li key={b}>{b}</li>)}
+      </ul>
+      <span style={{ marginTop: 10, color: e.hue[1], fontWeight: 700, fontSize: 13 }}>
+        Open the example →
+      </span>
+    </Link>
   );
 }
