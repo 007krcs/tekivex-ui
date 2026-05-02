@@ -1,41 +1,41 @@
-import { useState, useCallback, createContext, useContext } from 'react';
-import { Hero } from './sections/Hero';
-import { Stats } from './sections/Stats';
-import { Features } from './sections/Features';
-import { Playground } from './sections/Playground';
-import { DataDemo } from './sections/DataDemo';
-import { Tour360 } from './sections/Tour360';
-import { AllComponents } from './sections/AllComponents';
-import { Roadmap } from './sections/Roadmap';
-import { Packages } from './sections/Packages';
-import { CodeShowcase } from './sections/CodeShowcase';
+// ─────────────────────────────────────────────────────────────────────────────
+// App — the route table.
+//
+// Real URLs (not hash anchors) so the AdSense crawler indexes each page
+// distinctly. Each route renders a different page; the shared chrome
+// (Nav, decorative background layers, Footer) stays mounted across
+// route changes.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Footer } from './sections/Footer';
 import { Nav } from './sections/Nav';
-import { Immersive } from './Immersive';
 import { SacredGeometry } from './SacredGeometry';
-import { HolographicUniverse } from './sections/HolographicUniverse';
-import { GalaxyMap360 } from './sections/GalaxyMap360';
-import { FlowChartDemo } from './sections/FlowChartDemo';
+import { Home } from './pages/Home';
+import { Privacy } from './pages/Privacy';
+import { Terms } from './pages/Terms';
+import { About } from './pages/About';
+import { Contact } from './pages/Contact';
+import { BlogIndex } from './pages/blog/BlogIndex';
+import { BlogPost } from './pages/blog/BlogPost';
+import { DocsIndex } from './pages/docs/DocsIndex';
+import { DocsPage } from './pages/docs/DocsPage';
 
-interface ImmersiveCtx {
-  open: () => void;
-}
+export { useImmersive } from './immersive-context';
 
-const ImmersiveContext = createContext<ImmersiveCtx | null>(null);
-
-export function useImmersive(): ImmersiveCtx {
-  const ctx = useContext(ImmersiveContext);
-  if (!ctx) throw new Error('useImmersive() outside provider');
-  return ctx;
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
 }
 
 export function App() {
-  const [immersiveOpen, setImmersiveOpen] = useState(false);
-  const open = useCallback(() => setImmersiveOpen(true), []);
-  const close = useCallback(() => setImmersiveOpen(false), []);
-
   return (
-    <ImmersiveContext.Provider value={{ open }}>
+    <BrowserRouter>
+      <ScrollToTop />
       <div className="tk-aurora" aria-hidden="true" />
       <SacredGeometry />
       <div className="tk-grid-bg" aria-hidden="true" />
@@ -44,23 +44,57 @@ export function App() {
       <Nav />
 
       <main style={{ position: 'relative', zIndex: 1 }}>
-        <Hero />
-        <Stats />
-        <Features />
-        <Playground />
-        <DataDemo />
-        <FlowChartDemo />
-        <HolographicUniverse />
-        <GalaxyMap360 />
-        <Tour360 />
-        <AllComponents />
-        <Roadmap />
-        <CodeShowcase />
-        <Packages />
-        <Footer />
+        <Routes>
+          <Route path="/"               element={<Home />} />
+          <Route path="/privacy"        element={<Privacy />} />
+          <Route path="/terms"          element={<Terms />} />
+          <Route path="/about"          element={<About />} />
+          <Route path="/contact"        element={<Contact />} />
+          <Route path="/blog"           element={<BlogIndex />} />
+          <Route path="/blog/:slug"     element={<BlogPost />} />
+          <Route path="/docs"           element={<DocsIndex />} />
+          <Route path="/docs/:slug"     element={<DocsPage />} />
+          <Route path="*"               element={<NotFound />} />
+        </Routes>
       </main>
 
-      <Immersive open={immersiveOpen} onClose={close} />
-    </ImmersiveContext.Provider>
+      <Footer />
+    </BrowserRouter>
+  );
+}
+
+function NotFound() {
+  return (
+    <div
+      style={{
+        position: 'relative',
+        zIndex: 1,
+        maxWidth: 720,
+        margin: '0 auto',
+        padding: 'clamp(64px, 9vw, 120px) 24px',
+        textAlign: 'center',
+        color: '#dcdce8',
+      }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          letterSpacing: '0.16em',
+          textTransform: 'uppercase',
+          color: '#c4a8ff',
+          fontWeight: 700,
+          marginBottom: 16,
+        }}
+      >
+        404
+      </div>
+      <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, margin: '0 0 12px', color: '#fff' }}>
+        Page not found
+      </h1>
+      <p style={{ color: '#b8b8d4' }}>
+        That URL doesn't exist on the site. Try the <a href="/" style={{ color: '#00f5d4' }}>home page</a>{' '}
+        or the <a href="/docs" style={{ color: '#00f5d4' }}>docs index</a>.
+      </p>
+    </div>
   );
 }

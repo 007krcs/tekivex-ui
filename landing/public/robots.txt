@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Allow Google AdSense crawler explicit permission
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://ui.tekivex.com/sitemap.xml
