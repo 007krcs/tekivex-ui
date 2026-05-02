@@ -66,8 +66,6 @@ const staticRoutes = [
   { loc: '/blog',                   changefreq: 'weekly',  priority: '0.9'  },
   { loc: '/docs',                   changefreq: 'weekly',  priority: '0.95' },
   { loc: '/examples',               changefreq: 'weekly',  priority: '0.9'  },
-  { loc: '/examples/360',           changefreq: 'monthly', priority: '0.85' },
-  { loc: '/examples/ar-vr',         changefreq: 'monthly', priority: '0.85' },
   { loc: '/examples/holographic',   changefreq: 'monthly', priority: '0.85' },
   { loc: '/examples/blog',            changefreq: 'monthly', priority: '0.85' },
   { loc: '/examples/property-tour',   changefreq: 'monthly', priority: '0.9'  },
@@ -140,8 +138,7 @@ const humans = [
   '  Standards: HTML5, CSS3, ES2022, WCAG 2.1 AAA',
   '  Components: React 19, three.js, recharts',
   '  Components count: 113',
-  '  Packages: tekivex-ui, tekivex-3d, tekivex-resume-templates,',
-  '            tekivex-biodata-templates, tekivex-pdf',
+  '  Packages: tekivex-ui, tekivex-3d, tekivex-pdf',
   '  License: MIT',
   '',
 ].join('\n');

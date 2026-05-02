@@ -52,18 +52,6 @@ export function About() {
           OrbitPath, Portal3D, Avatar3D, plus a Card3D primitive for foiled-card layouts.
         </li>
         <li>
-          <strong><code>tekivex-resume-templates</code></strong> — twelve resume layouts and
-          a generator that fetches user data, previews live, and produces a 1-page A4 PDF via
-          the browser's own Save-as-PDF path. Locked-by-default policy, optional per-template
-          paywall.
-        </li>
-        <li>
-          <strong><code>tekivex-biodata-templates</code></strong> — twelve marriage-biodata
-          layouts with auto-derived religious symbols (ॐ, ✝, ☪, ☬, ☸, 🪷) and an upload
-          control for custom logos. Plus eleven vendored helper components from a parallel
-          biodata-app implementation.
-        </li>
-        <li>
           <strong><code>tekivex-pdf</code></strong> — Puppeteer-free PDF rendering for
           serverless environments. Five built-in templates, browser-API based.
         </li>

@@ -3,7 +3,10 @@
 // commercial use-case example. Tells the visitor exactly how to reach the
 // Tekivex team if they want this in their own product.
 // ─────────────────────────────────────────────────────────────────────────────
-import { Link } from 'react-router-dom';
+// Primary contact channels for sales / partnership inquiries.
+// Both inboxes are monitored — pick whichever you prefer.
+const PRIMARY_EMAIL = 'nishu_singh@tekivex.com';
+const SECONDARY_EMAIL = 'novaai0401@gmail.com';
 
 export interface BusinessCTAProps {
   /** Vertical the example demonstrates — used in the headline. */
@@ -15,10 +18,11 @@ export interface BusinessCTAProps {
 }
 
 export function BusinessCTA({ vertical, pitch, hue = ['#4f46e5', '#06b6d4'] }: BusinessCTAProps) {
-  const subject = encodeURIComponent(`[TekiVex UI] Demo request — ${vertical}`);
+  const subject = encodeURIComponent(`[TekiVex UI] Inquiry — ${vertical}`);
   const body = encodeURIComponent(
     `Hi Tekivex team,\n\nI saw the ${vertical} example at https://ui.tekivex.com/examples and would like to discuss using it for my product.\n\nA bit about us:\n- Company:\n- Use case:\n- Timeline:\n\nThanks,\n`,
   );
+  const recipients = `${PRIMARY_EMAIL},${SECONDARY_EMAIL}`;
 
   return (
     <section
@@ -93,16 +97,19 @@ export function BusinessCTA({ vertical, pitch, hue = ['#4f46e5', '#06b6d4'] }: B
             2–6 weeks. Book a 15-minute call and we'll walk you through it.
           </p>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 220 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 240 }}>
           <a
-            href={`mailto:hello@tekivex.com?subject=${subject}&body=${body}`}
+            href={`mailto:${recipients}?subject=${subject}&body=${body}`}
             className="biz-cta-primary"
           >
-            ✉ Email hello@tekivex.com
+            ✉ Email {PRIMARY_EMAIL}
           </a>
-          <Link to="/contact" className="biz-cta-secondary">
-            📅 Schedule a 15-min demo
-          </Link>
+          <a
+            href={`mailto:${SECONDARY_EMAIL}?subject=${subject}&body=${body}`}
+            className="biz-cta-secondary"
+          >
+            ✉ {SECONDARY_EMAIL}
+          </a>
           <a
             href="https://www.npmjs.com/package/tekivex-ui"
             target="_blank"

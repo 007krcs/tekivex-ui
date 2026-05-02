@@ -88,9 +88,6 @@ const ITEMS: RoadmapItem[] = [
 
   { name: 'TkxFlowChart',              pkg: 'tekivex-ui', release: 'v3.15', status: 'shipped',
     desc: 'Node-edge graph editor. Drag/pinch/wheel, keyboard nav, custom renderers, ≥85% tests.' },
-  { name: 'Resume + Biodata templates', pkg: 'tekivex-resume-templates / tekivex-biodata-templates', release: 'v3.16',  status: 'shipped',
-    desc: '24 layouts + smart generator extracted into their own repos. Both declare tekivex-ui as a peer-dep.' },
-
   // ── what's actually next ────────────────────────────────────────────
   { name: 'TkxFormulaBar',             pkg: 'tekivex-ui', release: 'v3.14', status: 'planned',
     desc: 'Companion to TkxSpreadsheet. Shows raw cell content for the active cell, with name-box.' },

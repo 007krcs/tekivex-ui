@@ -25,7 +25,7 @@ export function Contact() {
     const body = encodeURIComponent(
       `From: ${name} <${email}>\nTopic: ${topic}\n\n${message}\n\n---\nSent from ui.tekivex.com/contact`,
     );
-    window.location.href = `mailto:hello@tekivex.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:nishu_singh@tekivex.com,novaai0401@gmail.com?subject=${subject}&body=${body}`;
     setSent(true);
   }
 
@@ -59,9 +59,10 @@ export function Contact() {
       <h2>For commercial / consulting inquiries</h2>
       <p>
         We take on integration work and custom components. Email{' '}
-        <a href="mailto:hello@tekivex.com">hello@tekivex.com</a> with a brief description of what
-        you're building, your timeline, and whether the work needs an NDA. We typically respond
-        within one business day.
+        <a href="mailto:nishu_singh@tekivex.com">nishu_singh@tekivex.com</a> or{' '}
+        <a href="mailto:novaai0401@gmail.com">novaai0401@gmail.com</a> with a brief description of
+        what you're building, your timeline, and whether the work needs an NDA. We typically
+        respond within one business day.
       </p>
 
       <h2>For privacy + legal</h2>
@@ -90,7 +91,8 @@ export function Contact() {
           }}
         >
           ✓ Your mail client should have opened. If nothing happened, copy the message and email
-          us at <a href="mailto:hello@tekivex.com">hello@tekivex.com</a>.
+          us at <a href="mailto:nishu_singh@tekivex.com">nishu_singh@tekivex.com</a> or{' '}
+          <a href="mailto:novaai0401@gmail.com">novaai0401@gmail.com</a>.
         </div>
       ) : (
         <form

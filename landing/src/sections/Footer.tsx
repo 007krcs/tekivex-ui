@@ -69,8 +69,6 @@ export function Footer() {
           external={[
             { label: 'tekivex-ui', href: 'https://www.npmjs.com/package/tekivex-ui' },
             { label: 'tekivex-3d', href: 'https://www.npmjs.com/package/tekivex-3d' },
-            { label: 'tekivex-resume-templates', href: 'https://github.com/007krcs/tekivex-resume-templates' },
-            { label: 'tekivex-biodata-templates', href: 'https://github.com/007krcs/tekivex-biodata-templates' },
           ]}
         />
 

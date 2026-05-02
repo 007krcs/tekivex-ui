@@ -19,7 +19,7 @@ const FAQS: { question: string; answer: string }[] = [
   {
     question: 'What does Tekivex mean and who builds it?',
     answer:
-      'Tekivex is the umbrella brand for the TekiVex UI ecosystem of React libraries — tekivex-ui, tekivex-3d, tekivex-resume-templates, tekivex-biodata-templates, tekivex-pdf, and related packages. The project is maintained by an open-source collective and distributed under the MIT license at ui.tekivex.com.',
+      'Tekivex is the umbrella brand for the TekiVex UI ecosystem of React libraries — tekivex-ui, tekivex-3d, tekivex-pdf, and related packages. The project is maintained by an open-source collective and distributed under the MIT license at ui.tekivex.com.',
   },
   {
     question: 'How do I install Tekivex UI?',
@@ -49,7 +49,7 @@ const FAQS: { question: string; answer: string }[] = [
   {
     question: 'How do I report a bug or request a feature?',
     answer:
-      'File an issue on the public GitHub issue tracker at github.com/novaai0401-ui/tekivex-issue-report — the maintainers respond inside 24 hours on weekdays. For private security disclosures, email security@tekivex.com. For commercial enquiries, hello@tekivex.com.',
+      'File an issue on the public GitHub issue tracker at github.com/novaai0401-ui/tekivex-issue-report — the maintainers respond inside 24 hours on weekdays. For commercial enquiries, email nishu_singh@tekivex.com or novaai0401@gmail.com.',
   },
 ];
 
@@ -108,12 +108,10 @@ export function BrandFaq() {
           }}
         >
           TekiVex UI is an open-source React component library. The Tekivex
-          family of npm packages — <code>tekivex-ui</code>, <code>tekivex-3d</code>,{' '}
-          <code>tekivex-resume-templates</code>, <code>tekivex-biodata-templates</code>,
-          and <code>tekivex-pdf</code> — gives React developers a single, MIT-licensed
-          source for accessible primitives, real WebGL 3D, holographic surfaces,
-          browser-native PDF, and printable templates. 113 components, 13 packages,
-          WCAG 2.1 AAA, zero runtime dependencies.
+          family of npm packages — <code>tekivex-ui</code>, <code>tekivex-3d</code>, and{' '}
+          <code>tekivex-pdf</code> — gives React developers a single, MIT-licensed
+          source for accessible primitives, real WebGL 3D, holographic surfaces, and
+          browser-native PDF. 113 components, WCAG 2.1 AAA, zero runtime dependencies.
         </p>
       </header>
 
@@ -140,13 +138,8 @@ export function BrandFaq() {
           and documented at <a href="https://ui.tekivex.com">ui.tekivex.com</a>. The library
           covers everything most production React applications need: form primitives, data
           tables, charts, navigation, overlays, motion, a built-in design-token system, and
-          a 3D + 360° toolkit shipped as <code>tekivex-3d</code>. The companion repos{' '}
-          <a href="https://github.com/007krcs/tekivex-resume-templates">tekivex-resume-templates</a>{' '}
-          and{' '}
-          <a href="https://github.com/007krcs/tekivex-biodata-templates">tekivex-biodata-templates</a>{' '}
-          provide print-ready React templates that render to PDF directly from the browser.
-          Every Tekivex package is open-source under the MIT license and ships full
-          TypeScript declarations.
+          a 3D + 360° toolkit shipped as <code>tekivex-3d</code>. Every Tekivex package is
+          open-source under the MIT license and ships full TypeScript declarations.
         </p>
         <p style={{ margin: '16px 0 0' }}>
           Looking for the docs? Browse the <Link to="/docs">component documentation</Link>,

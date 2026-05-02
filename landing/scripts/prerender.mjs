@@ -78,7 +78,7 @@ const routes = [
       'TekiVex UI is a React component library covering 113 production primitives, a WebGL 3D toolkit, a Holographic UI family, and a printable-template pipeline. Read why we built it and how we plan to keep it maintained.',
     h1: 'About TekiVex UI',
     body:
-      'TekiVex UI is an open-source React component library distributed under the MIT license. The Tekivex package family — tekivex-ui, tekivex-3d, tekivex-resume-templates, tekivex-biodata-templates, and tekivex-pdf — gives React developers 113 accessible components, a real WebGL 3D toolkit, holographic surfaces, browser-native PDF, and printable templates.',
+      'TekiVex UI is an open-source React component library distributed under the MIT license. The Tekivex package family — tekivex-ui, tekivex-3d, and tekivex-pdf — gives React developers 113 accessible components, a real WebGL 3D toolkit, holographic surfaces, browser-native PDF, and printable templates.',
   },
   {
     path: '/contact',
@@ -132,25 +132,7 @@ const routes = [
       'Working example applications built with TekiVex UI: 360° tours, WebXR AR/VR scenes, holographic UI surfaces, and a fully configurable static blog.',
     h1: 'Examples',
     body:
-      'Four working example applications built on the TekiVex UI stack — a 360° multi-scene tour, an AR/VR WebXR scene, a holographic UI gallery, and a fully configurable static blog with markdown editor.',
-  },
-  {
-    path: '/examples/360',
-    title: '360° tour example — TekiVex UI',
-    description:
-      'A working multi-scene 360° tour built with tekivex-3d: drag to look, click hotspots to teleport between scenes, optional fullscreen and gyroscope.',
-    h1: '360° multi-scene tour',
-    body:
-      'Drag to look around. Click any glowing hotspot to teleport to another scene. On mobile, tilt your phone to control the camera. Built with TkxScene + TkxPanorama360 + TkxHotspot from tekivex-3d.',
-  },
-  {
-    path: '/examples/ar-vr',
-    title: 'AR / VR example — TekiVex UI',
-    description:
-      'A working WebXR demo: enter AR pass-through on Quest 3 / Vision Pro / ARCore phones, enter immersive VR on Quest, or interact with the 3D scene from any browser.',
-    h1: 'AR / VR scene',
-    body:
-      'A floating product card with a holographic logo and ambient particles. Tap to enter AR pass-through (Quest 3, Vision Pro, modern Android) or immersive VR (Quest, Pico). Drag to orbit from any device.',
+      'Five working example applications built on the TekiVex UI stack — a property tour with embedded 360°, an AR product preview, a live mission-control dashboard, a holographic UI gallery, and a configurable Medium-style blog.',
   },
   {
     path: '/examples/holographic',
@@ -324,7 +306,7 @@ for (const route of routes) {
       'Open-source React component library: 113 accessible primitives, a WebGL 3D + 360° toolkit, holographic UI, browser-native PDF, and printable templates. MIT licensed, WCAG 2.1 AAA.',
     h1: 'TekiVex UI — Production-grade React components, in 360°',
     body:
-      'TekiVex UI is the React component library at the core of the Tekivex ecosystem — 113 accessible components across 13 npm packages including tekivex-ui, tekivex-3d, tekivex-resume-templates, tekivex-biodata-templates, and tekivex-pdf. WCAG 2.1 AAA, MIT licensed, zero runtime dependencies.',
+      'TekiVex UI is the React component library at the core of the Tekivex ecosystem — 113 accessible components across 13 npm packages including tekivex-ui, tekivex-3d, and tekivex-pdf. WCAG 2.1 AAA, MIT licensed, zero runtime dependencies.',
   };
   writeFileSync(join(DIST, 'index.html'), makeHtml(home), 'utf8');
   count++;
