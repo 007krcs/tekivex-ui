@@ -282,3 +282,70 @@ button { font-family: inherit; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   .tk-home — local dark island for the home page
+   The home page (Hero + Stats + Features + Playground + ... + BrandFaq)
+   was authored for a dark cosmic backdrop: white headlines, neon accents,
+   semi-transparent dark glass panels, particle fields. Re-tinting every
+   inline style to fit a light theme would flatten the showcase. So we
+   keep the home page on its original dark palette while every other
+   route (/about, /privacy, /blog, /docs, ...) keeps the new light theme.
+   ───────────────────────────────────────────────────────────────────── */
+.tk-home--dark {
+  /* Re-bind the design tokens to their original dark values for everything
+     inside this wrapper. */
+  --tk-bg: #0c0d1a;
+  --tk-bg-deep: #0a0b15;
+  --tk-fg: #e8e8f4;
+  --tk-fg-muted: #b8b8d4;
+  --tk-accent: #00f5d4;
+  --tk-accent-2: #7b8eff;
+  --tk-accent-3: #c4a8ff;
+  --tk-border: rgba(255, 255, 255, 0.08);
+  --tk-border-strong: rgba(255, 255, 255, 0.14);
+  --tk-surface: rgba(18, 20, 38, 0.55);
+  --tk-surface-2: rgba(8, 10, 25, 0.8);
+  --tk-prose-strong: #ffffff;
+  --tk-prose-link: #00f5d4;
+  --tk-prose-link-hover: #c4a8ff;
+  --tk-prose-code-bg: rgba(0,245,212,0.1);
+  --tk-prose-code-fg: #00f5d4;
+  --tk-prose-pre-bg: rgba(8, 10, 25, 0.8);
+  --tk-prose-pre-border: rgba(196,168,255,0.18);
+  --tk-prose-pre-fg: #dcdce8;
+  --tk-prose-blockquote: #b8b8d4;
+  --tk-prose-th: #c4a8ff;
+  --tk-prose-border: rgba(255,255,255,0.1);
+
+  background: #0c0d1a;
+  color: #e8e8f4;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+}
+
+/* Re-tint the global aurora / grid / vignette layers when the home dark
+   island is mounted (they're position:fixed so they sit BEHIND the home
+   wrapper; the wrapper has its own opaque background, but we still want
+   the strip below the wrapper to read as dark cosmic until the next
+   section starts). */
+body:has(.tk-home--dark) .tk-aurora {
+  background:
+    radial-gradient(ellipse at 18% 8%,   rgba(123,142,255,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 22%,  rgba(196,168,255,0.16) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 95%,  rgba(0,245,212,0.10)  0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%,  rgba(20,22,45,0.0)    0%, #0a0b15 80%);
+}
+body:has(.tk-home--dark) .tk-grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+}
+body:has(.tk-home--dark) .tk-vignette {
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(10,11,21,0.55) 75%, rgba(10,11,21,0.85) 100%);
+}
+body:has(.tk-home--dark) {
+  background: #0c0d1a;
+}
