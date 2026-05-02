@@ -36,20 +36,27 @@ export function Home() {
 
   return (
     <ImmersiveContext.Provider value={{ open }}>
-      <Hero />
-      <Stats />
-      <Features />
-      <Playground />
-      <DataDemo />
-      <FlowChartDemo />
-      <HolographicUniverse />
-      <GalaxyMap360 />
-      <Tour360 />
-      <AllComponents />
-      <Roadmap />
-      <CodeShowcase />
-      <Packages />
-      <BrandFaq />
+      {/* Home page is the immersive cosmic showcase — designed for a dark
+          backdrop. Wrap it in a "dark island" that overrides the global
+          light tokens locally so the 3D scenes, particle fields, and
+          neon-on-deep-violet aesthetic read as intended. The text routes
+          (/about, /privacy, /blog, /docs, ...) keep the new light theme. */}
+      <div className="tk-home tk-home--dark">
+        <Hero />
+        <Stats />
+        <Features />
+        <Playground />
+        <DataDemo />
+        <FlowChartDemo />
+        <HolographicUniverse />
+        <GalaxyMap360 />
+        <Tour360 />
+        <AllComponents />
+        <Roadmap />
+        <CodeShowcase />
+        <Packages />
+        <BrandFaq />
+      </div>
       <Immersive open={immersiveOpen} onClose={close} />
     </ImmersiveContext.Provider>
   );
