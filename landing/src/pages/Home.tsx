@@ -20,6 +20,7 @@ import { CodeShowcase } from '../sections/CodeShowcase';
 import { HolographicUniverse } from '../sections/HolographicUniverse';
 import { GalaxyMap360 } from '../sections/GalaxyMap360';
 import { FlowChartDemo } from '../sections/FlowChartDemo';
+import { BrandFaq } from '../sections/BrandFaq';
 import { Immersive } from '../Immersive';
 import { ImmersiveContext } from '../immersive-context';
 import { usePageMeta } from '../use-page-meta';
@@ -48,6 +49,7 @@ export function Home() {
       <Roadmap />
       <CodeShowcase />
       <Packages />
+      <BrandFaq />
       <Immersive open={immersiveOpen} onClose={close} />
     </ImmersiveContext.Provider>
   );
