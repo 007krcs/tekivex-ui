@@ -107,7 +107,12 @@ const DIST = resolve(ROOT, 'docs-site/dist');
 let landingSucceeded = false;
 try {
   run('npm install --no-audit --no-fund --legacy-peer-deps', resolve(ROOT, 'landing'));
-  run('npx vite build', resolve(ROOT, 'landing'));
+  // Use the landing project's `npm run build` (vite build && build-sitemap
+  // && prerender) instead of `npx vite build` directly. Without this,
+  // /examples/index.html, /about/index.html, /blog/<slug>/index.html etc.
+  // never get generated and Render returns "Not Found" for any non-root
+  // path that React Router needs to handle.
+  run('npm run build', resolve(ROOT, 'landing'));
   const landingDist = resolve(ROOT, 'landing/dist');
   if (existsSync(landingDist)) {
     if (existsSync(DIST)) rmSync(DIST, { recursive: true, force: true });
