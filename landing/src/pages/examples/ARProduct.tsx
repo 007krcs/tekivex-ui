@@ -14,12 +14,12 @@ import { useEffect, useState } from 'react';
 import {
   TkxScene,
   TkxCard3D,
-  TkxLogo3D,
   TkxParticleField,
   TkxOrbitControls,
   TkxXRSession,
 } from 'tekivex-3d';
 import { ExampleShell } from './ExampleShell';
+import { BusinessCTA } from './BusinessCTA';
 import { usePageMeta } from '../../use-page-meta';
 
 interface Variant {
@@ -34,6 +34,96 @@ const VARIANTS: Variant[] = [
   { id: 'sage',    label: 'Sage upholstery', swatch: '#8a9b6e', cardColor: '#8a9b6e' },
   { id: 'navy',    label: 'Deep navy',    swatch: '#1e293b', cardColor: '#1e293b' },
 ];
+
+// Procedural product photo — guaranteed to load, recolours per variant.
+// Renders a stylized chair illustration as an SVG so the gallery has
+// real, recognizable product imagery without depending on external CDNs.
+function chairPhoto(opts: {
+  variant: Variant;
+  angle: 'front' | 'side' | 'detail' | 'lifestyle';
+}): string {
+  const { variant, angle } = opts;
+  const c = variant.cardColor;
+  const dark = shade(c, -0.25);
+  const light = shade(c, 0.18);
+  const shadow = 'rgba(15, 23, 42, 0.18)';
+  const bg = angle === 'lifestyle'
+    ? 'linear-gradient(180deg, #f8eedc 0%, #ead4b3 50%, #b88f5e 100%)'
+    : '#f4f0ea';
+
+  const chair =
+    angle === 'side' ? (
+      // Side view — show the recline curve
+      `<g transform="translate(120 70)">
+        <path d="M 60 280 Q 60 100 200 80 L 380 80 Q 460 80 470 110 L 470 260 Q 470 290 440 290 L 90 290 Q 60 290 60 280 Z"
+              fill="${c}" stroke="${dark}" stroke-width="3"/>
+        <ellipse cx="265" cy="295" rx="200" ry="14" fill="${shadow}"/>
+        <path d="M 100 290 L 95 380 L 130 380 L 135 290 Z" fill="${dark}"/>
+        <path d="M 425 290 L 420 380 L 455 380 L 460 290 Z" fill="${dark}"/>
+        <line x1="200" y1="100" x2="380" y2="100" stroke="${light}" stroke-width="2" opacity="0.6"/>
+      </g>`
+    ) : angle === 'detail' ? (
+      // Detail — show stitching on the leather sling
+      `<g transform="translate(60 60)">
+        <rect x="40" y="40" width="500" height="320" rx="40" fill="${c}" stroke="${dark}" stroke-width="3"/>
+        ${Array.from({ length: 26 }, (_, i) =>
+          `<line x1="${70 + i * 18}" y1="80" x2="${70 + i * 18}" y2="92" stroke="${dark}" stroke-width="1.5"/>`
+        ).join('')}
+        ${Array.from({ length: 26 }, (_, i) =>
+          `<line x1="${70 + i * 18}" y1="308" x2="${70 + i * 18}" y2="320" stroke="${dark}" stroke-width="1.5"/>`
+        ).join('')}
+        <path d="M 60 200 L 540 200" stroke="${light}" stroke-width="2" opacity="0.4"/>
+      </g>`
+    ) : angle === 'lifestyle' ? (
+      // Lifestyle — chair in a room
+      `<g>
+        <rect y="280" width="600" height="120" fill="rgba(255,255,255,0.4)"/>
+        <rect x="40" y="120" width="160" height="220" fill="rgba(255,255,255,0.6)" stroke="rgba(15,23,42,0.1)" stroke-width="2"/>
+        <line x1="120" y1="120" x2="120" y2="340" stroke="rgba(15,23,42,0.1)" stroke-width="1"/>
+        <line x1="40" y1="230" x2="200" y2="230" stroke="rgba(15,23,42,0.1)" stroke-width="1"/>
+        <g transform="translate(280 100)">
+          <ellipse cx="100" cy="245" rx="100" ry="10" fill="${shadow}"/>
+          <rect x="20" y="140" width="160" height="80" rx="20" fill="${c}" stroke="${dark}" stroke-width="2"/>
+          <rect x="30" y="60" width="140" height="100" rx="16" fill="${c}" stroke="${dark}" stroke-width="2"/>
+          <rect x="35" y="220" width="14" height="40" fill="${dark}"/>
+          <rect x="151" y="220" width="14" height="40" fill="${dark}"/>
+        </g>
+        <rect x="450" y="200" width="100" height="140" fill="rgba(122, 85, 58, 0.25)" rx="3"/>
+      </g>`
+    ) : (
+      // Front view (default)
+      `<g transform="translate(80 60)">
+        <ellipse cx="220" cy="345" rx="200" ry="12" fill="${shadow}"/>
+        <rect x="40" y="40" width="360" height="160" rx="22" fill="${c}" stroke="${dark}" stroke-width="3"/>
+        <rect x="20" y="200" width="400" height="100" rx="18" fill="${light}" stroke="${dark}" stroke-width="3"/>
+        <rect x="30" y="296" width="20" height="58" fill="${dark}" rx="2"/>
+        <rect x="390" y="296" width="20" height="58" fill="${dark}" rx="2"/>
+        <rect x="50" y="296" width="20" height="58" fill="${dark}" rx="2" opacity="0.55"/>
+        <rect x="370" y="296" width="20" height="58" fill="${dark}" rx="2" opacity="0.55"/>
+        <line x1="60" y1="80" x2="380" y2="80" stroke="${light}" stroke-width="2" opacity="0.55"/>
+        <line x1="60" y1="160" x2="380" y2="160" stroke="${light}" stroke-width="2" opacity="0.55"/>
+      </g>`
+    );
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 460">` +
+    (bg.startsWith('linear')
+      ? `<defs><linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f8eedc"/><stop offset="50%" stop-color="#ead4b3"/><stop offset="100%" stop-color="#b88f5e"/></linearGradient></defs><rect width="600" height="460" fill="url(#bg)"/>`
+      : `<rect width="600" height="460" fill="${bg}"/>`) +
+    chair +
+    `</svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+// Simple HSL-aware color shading helper.
+function shade(hex: string, amt: number): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  const adj = (n: number) => Math.max(0, Math.min(255, Math.round(n + 255 * amt)));
+  return `#${[adj(r), adj(g), adj(b)].map((n) => n.toString(16).padStart(2, '0')).join('')}`;
+}
 
 const PRODUCT = {
   brand: 'Lumen Studio',
@@ -84,8 +174,17 @@ export function ARProduct() {
   const variant = VARIANTS.find((v) => v.id === variantId)!;
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [view, setView] = useState<'photos' | '3d'>('photos');
+  const [activePhoto, setActivePhoto] = useState(0);
   const xr = useXRSupport();
   const [sessionMode, setSessionMode] = useState<'ar' | 'vr' | null>(null);
+
+  const photos = [
+    { angle: 'front'     as const, label: 'Front'     },
+    { angle: 'side'      as const, label: 'Side'      },
+    { angle: 'detail'    as const, label: 'Stitching' },
+    { angle: 'lifestyle' as const, label: 'In a room' },
+  ];
 
   function addToCart() {
     setAdded(true);
@@ -104,45 +203,96 @@ export function ARProduct() {
 
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '24px 24px 64px' }}>
         <div className="ar-grid">
-          {/* Left: 3D viewer / AR preview */}
+          {/* Left: photo gallery / 3D viewer / AR preview */}
           <div>
-            <div className="ar-viewer">
-              <TkxScene fov={50} cameraPosition={[2.5, 1.6, 3.4]} background="transparent">
-                <TkxParticleField count={600} volume={[8, 6, 8]} driftSpeed={0.15} size={0.02} />
-                <TkxLogo3D position={[0, 2.4, -1.6]} scale={0.9} text="Aurora" />
-                <TkxCard3D
-                  position={[0, 1.0, 0]}
-                  size={[1.4, 1.6]}
-                  color={variant.cardColor}
-                  title={PRODUCT.name}
-                  subtitle={variant.label}
-                />
-                <TkxOrbitControls preset="orbit" autoRotate />
-                <TkxXRSession
-                  ar
-                  vr
-                  onSessionStart={(m) => setSessionMode(m as 'ar' | 'vr')}
-                  onSessionEnd={() => setSessionMode(null)}
-                />
-              </TkxScene>
-
-              <div className="ar-viewer-hud">
-                <div className="ar-viewer-pill">
-                  <span className="ar-eyebrow">Variant</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span className="ar-swatch" style={{ background: variant.swatch }} aria-hidden="true" />
-                    {variant.label}
-                  </span>
-                </div>
-                <div className="ar-actions">
-                  <ActionButton mode="ar" available={xr.ar} active={sessionMode === 'ar'} checking={xr.checking} />
-                  <ActionButton mode="vr" available={xr.vr} active={sessionMode === 'vr'} checking={xr.checking} />
-                </div>
-              </div>
-              <div className="ar-viewer-hint" aria-hidden="true">
-                🖱 drag to orbit · 🔍 scroll to zoom · 🥽 tap "View in your room" on a Quest 3 / Vision Pro / ARCore phone
-              </div>
+            {/* View tabs */}
+            <div className="ar-view-tabs" role="tablist" aria-label="Product views">
+              <button type="button" role="tab" aria-selected={view === 'photos'}
+                className={`ar-view-tab ${view === 'photos' ? 'is-active' : ''}`}
+                onClick={() => setView('photos')}>📸 Photos</button>
+              <button type="button" role="tab" aria-selected={view === '3d'}
+                className={`ar-view-tab ${view === '3d' ? 'is-active' : ''}`}
+                onClick={() => setView('3d')}>🔄 3D view</button>
+              <span className="ar-eyebrow" style={{ marginLeft: 'auto', alignSelf: 'center' }}>
+                {view === 'photos' ? `${activePhoto + 1} / ${photos.length}` : '360° rotation'}
+              </span>
             </div>
+
+            {view === 'photos' ? (
+              <>
+                <div className="ar-photo-main">
+                  <img
+                    src={chairPhoto({ variant, angle: photos[activePhoto].angle })}
+                    alt={`${PRODUCT.name} — ${photos[activePhoto].label} view (${variant.label})`}
+                  />
+                  <div className="ar-photo-pill">
+                    <span className="ar-eyebrow">Finish</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span className="ar-swatch" style={{ background: variant.swatch }} aria-hidden="true" />
+                      {variant.label}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setView('3d')}
+                    className="ar-photo-cta"
+                    data-tkx-xr-button="ar"
+                  >
+                    👓 View in your room
+                  </button>
+                </div>
+                <div className="ar-photo-thumbs">
+                  {photos.map((p, i) => (
+                    <button
+                      key={p.angle}
+                      type="button"
+                      onClick={() => setActivePhoto(i)}
+                      aria-pressed={i === activePhoto}
+                      className={`ar-photo-thumb ${i === activePhoto ? 'is-active' : ''}`}
+                    >
+                      <img src={chairPhoto({ variant, angle: p.angle })} alt="" loading="lazy" />
+                      <span>{p.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="ar-viewer">
+                <TkxScene fov={45} cameraPosition={[2.4, 1.6, 3.6]} background="transparent">
+                  <TkxParticleField count={300} volume={[8, 6, 8]} driftSpeed={0.1} size={0.02} />
+                  {/* Chair built from primitives — seat, back, 4 legs */}
+                  <TkxCard3D position={[0, 0.95, 0]}     size={[1.3, 0.18]} color={variant.cardColor} />
+                  <TkxCard3D position={[0, 1.55, -0.55]} size={[1.3, 1.0]}  color={variant.cardColor} />
+                  <TkxCard3D position={[-0.55, 0.45, -0.45]} size={[0.12, 0.85]} color={shade(variant.cardColor, -0.25)} />
+                  <TkxCard3D position={[ 0.55, 0.45, -0.45]} size={[0.12, 0.85]} color={shade(variant.cardColor, -0.25)} />
+                  <TkxCard3D position={[-0.55, 0.45,  0.45]} size={[0.12, 0.85]} color={shade(variant.cardColor, -0.25)} />
+                  <TkxCard3D position={[ 0.55, 0.45,  0.45]} size={[0.12, 0.85]} color={shade(variant.cardColor, -0.25)} />
+                  <TkxOrbitControls preset="orbit" autoRotate />
+                  <TkxXRSession
+                    ar vr
+                    onSessionStart={(m) => setSessionMode(m as 'ar' | 'vr')}
+                    onSessionEnd={() => setSessionMode(null)}
+                  />
+                </TkxScene>
+
+                <div className="ar-viewer-hud">
+                  <div className="ar-viewer-pill">
+                    <span className="ar-eyebrow">Variant</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span className="ar-swatch" style={{ background: variant.swatch }} aria-hidden="true" />
+                      {variant.label}
+                    </span>
+                  </div>
+                  <div className="ar-actions">
+                    <ActionButton mode="ar" available={xr.ar} active={sessionMode === 'ar'} checking={xr.checking} />
+                    <ActionButton mode="vr" available={xr.vr} active={sessionMode === 'vr'} checking={xr.checking} />
+                  </div>
+                </div>
+                <div className="ar-viewer-hint" aria-hidden="true">
+                  🖱 drag to orbit · 🔍 scroll to zoom · 🥽 tap "View in your room" on a Quest 3 / Vision Pro / ARCore phone
+                </div>
+              </div>
+            )}
 
             {/* Capability + AR explainer cards */}
             <div className="ar-cap-row">
@@ -267,6 +417,12 @@ export function ARProduct() {
 
         <ReviewsSection />
 
+        <BusinessCTA
+          vertical="AR product preview"
+          pitch="Furniture, fashion, jewellery, eyewear, watches, and car configurators all win from a 'see it in your room' button. Returns drop 30–40% when shoppers can preview the item at scale before buying (Shopify, 2023)."
+          hue={['#7c3aed', '#4f46e5']}
+        />
+
         <details className="ar-code-reveal">
           <summary>Show the source for the AR preview</summary>
           <pre>{`import { TkxScene, TkxXRSession, TkxCard3D, TkxOrbitControls } from 'tekivex-3d';
@@ -364,6 +520,70 @@ function ARStyles() {
       .ar-grid {
         display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px;
       }
+
+      /* View tabs */
+      .ar-view-tabs {
+        display: flex; gap: 6px; align-items: center;
+        background: #f1f5f9; border: 1px solid #e6e8ef;
+        border-radius: 999px; padding: 4px;
+        margin-bottom: 14px; max-width: fit-content;
+        padding-right: 16px;
+      }
+      .ar-view-tab {
+        padding: 7px 16px; border-radius: 999px;
+        background: transparent; border: none; cursor: pointer;
+        font-size: 13px; font-weight: 700; color: #64748b;
+        font-family: inherit; transition: background 0.15s, color 0.15s;
+      }
+      .ar-view-tab:hover { color: #0f172a; }
+      .ar-view-tab.is-active { background: #ffffff; color: #4f46e5; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08); }
+
+      /* Photo gallery */
+      .ar-photo-main {
+        position: relative; aspect-ratio: 4 / 3; border-radius: 18px; overflow: hidden;
+        background: #f4f0ea; border: 1px solid #e6e8ef;
+        box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+      }
+      .ar-photo-main img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+      }
+      .ar-photo-pill {
+        position: absolute; top: 14px; left: 14px;
+        background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px);
+        padding: 8px 14px; border-radius: 999px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        color: #0f172a; font-size: 13px; font-weight: 700;
+        display: flex; gap: 10px; align-items: center;
+      }
+      .ar-photo-pill .ar-eyebrow { color: #64748b; }
+      .ar-photo-cta {
+        position: absolute; right: 14px; bottom: 14px;
+        padding: 11px 18px; border-radius: 999px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: #fff; border: none; font-weight: 800; font-size: 14px;
+        cursor: pointer; font-family: inherit;
+        box-shadow: 0 8px 22px rgba(79, 70, 229, 0.35);
+        transition: transform 0.15s;
+      }
+      .ar-photo-cta:hover { transform: translateY(-1px); }
+      .ar-photo-thumbs {
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        gap: 10px; margin-top: 14px;
+      }
+      .ar-photo-thumb {
+        position: relative; padding: 0; cursor: pointer;
+        border: 2px solid #e6e8ef; border-radius: 12px; overflow: hidden;
+        background: #f4f0ea; aspect-ratio: 4 / 3;
+        transition: border-color 0.15s, transform 0.15s;
+      }
+      .ar-photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .ar-photo-thumb span {
+        position: absolute; left: 8px; bottom: 6px;
+        font-size: 11px; font-weight: 700; color: #0f172a;
+        background: rgba(255, 255, 255, 0.85); padding: 2px 8px; border-radius: 4px;
+      }
+      .ar-photo-thumb.is-active { border-color: #4f46e5; transform: translateY(-2px); }
+
       .ar-aside { display: flex; flex-direction: column; }
       .ar-viewer {
         position: relative; aspect-ratio: 4 / 3; border-radius: 18px; overflow: hidden;
