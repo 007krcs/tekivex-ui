@@ -5,6 +5,45 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.16.1] — 2026-05-04
+
+### Fixed
+
+- **`sanitizeString` no longer renders the literal word "undefined"**
+  ([#25](https://github.com/007krcs/tekivex-ui/pull/25)). Passing an absent
+  optional prop (e.g. a missing `label`, `placeholder`, or `hint`) used to
+  surface the string `"undefined"` in the UI because `String(undefined)`
+  returns the literal `"undefined"`. The sanitizer now treats `null` and
+  `undefined` as the empty string. This is a one-line root-cause fix that
+  silently corrects every component that pipes an optional prop through
+  the sanitizer (≈200 call-sites: `TkxInput`, `TkxAutocomplete`,
+  `TkxBreadcrumb`, `TkxBottomNav`, `TkxCascader`, `TkxChat`,
+  `TkxCheckbox`, `TkxClock`, `TkxFileUpload`, `TkxAppBar`, and others).
+- **`TkxAppBar` now has a real `leading` slot**
+  ([#25](https://github.com/007krcs/tekivex-ui/pull/25)). The component's
+  documented slots were `title / logo / actions / navigation` — there was
+  no `leading` prop, so consumers passing `leading={<BackButton/>}` saw
+  their back-arrow silently dropped. The new `leading?: ReactNode` prop
+  renders before the logo and is the canonical home for back arrows and
+  drawer toggles. The `navigation` prop continues to host full nav menus.
+
+### Tests
+
+- Regression test asserting `sanitizeString(null)` and
+  `sanitizeString(undefined)` return `''`, and that the literal word
+  `"undefined"` never appears in their output.
+- Smoke test asserting `TkxAppBar` renders the `leading` slot, and that
+  passing no optional props produces no `"undefined"` in the rendered text.
+
+### Migration
+
+No code changes required. Behavior changes:
+
+- `sanitizeString(null)` now returns `''` (previously `'null'`).
+- `sanitizeString(undefined)` now returns `''` (previously `'undefined'`).
+
+If you were relying on the old behavior anywhere, pass an explicit string.
+
 ## [2.2.0] — 2026-04-07
 
 ### Added
