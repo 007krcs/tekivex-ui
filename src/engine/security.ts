@@ -25,6 +25,12 @@ const HTML_ENTITIES: Record<string, string> = {
  * HTML input, use a dedicated sanitizer such as DOMPurify.
  */
 export function sanitizeString(input: unknown): string {
+  // Treat null/undefined as the empty string. Without this guard,
+  // String(undefined) returns the literal "undefined", which silently
+  // leaks into every component that calls sanitizeString(optionalProp)
+  // — labels, hints, captions, search placeholders all start showing
+  // the word "undefined" when the prop is absent.
+  if (input == null) return "";
   let s = String(input);
   // Strip NUL + disallowed C0 controls (keep \t \n \r).
   // eslint-disable-next-line no-control-regex
