@@ -41,7 +41,24 @@ describe('sanitizeString', () => {
 
   it('coerces non-string input to string then sanitizes', () => {
     expect(sanitizeString(42)).toBe('42');
-    expect(sanitizeString(null)).toBe('null');
+    expect(sanitizeString(0)).toBe('0');
+    expect(sanitizeString(true)).toBe('true');
+  });
+
+  // Regression: passing an optional prop that's null/undefined to a
+  // component that does sanitizeString(prop) used to render the literal
+  // word "undefined" / "null" in the UI (visible above the search box,
+  // labels, hints, captions, etc.). The sanitizer now treats both as the
+  // empty string so the surrounding JSX renders nothing.
+  it('returns empty string for null', () => {
+    expect(sanitizeString(null)).toBe('');
+  });
+  it('returns empty string for undefined', () => {
+    expect(sanitizeString(undefined)).toBe('');
+  });
+  it('does not leak the word "undefined" anywhere', () => {
+    expect(sanitizeString(undefined)).not.toContain('undefined');
+    expect(sanitizeString(null)).not.toContain('null');
   });
 });
 

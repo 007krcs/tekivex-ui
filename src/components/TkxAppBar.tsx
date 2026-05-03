@@ -18,6 +18,12 @@ import { tkx } from '../engine/tkx';
 
 export interface TkxAppBarProps {
   title?: ReactNode;
+  /**
+   * Slot rendered at the absolute start of the bar, before the logo. Used
+   * for back arrows, drawer toggles, or any single "go up a level" affordance.
+   * For full navigation menus use `navigation` instead.
+   */
+  leading?: ReactNode;
   logo?: ReactNode;
   actions?: ReactNode;
   navigation?: ReactNode;
@@ -83,6 +89,7 @@ function useIsMobile(): boolean {
 
 export function TkxAppBar({
   title,
+  leading,
   logo,
   actions,
   navigation,
@@ -176,6 +183,13 @@ export function TkxAppBar({
         className={tkx('flex items-center h-full px-4')}
         style={{ maxWidth: 1440, margin: '0 auto' }}
       >
+        {/* Leading area (back arrow, drawer toggle, etc.) — sits before logo. */}
+        {leading && (
+          <div className={tkx('flex items-center shrink-0 mr-2')}>
+            {leading}
+          </div>
+        )}
+
         {/* Logo area */}
         {logo && (
           <div

@@ -120,6 +120,14 @@ describe('TkxAppBar', () => {
     render(<TkxAppBar title="App" />, { wrapper: W });
     expect(screen.getByText('App')).toBeInTheDocument();
   });
+  it('renders a leading slot for back arrows / drawer toggles', () => {
+    render(<TkxAppBar title="Settings" leading={<button>back</button>} />, { wrapper: W });
+    expect(screen.getByRole('button', { name: 'back' })).toBeInTheDocument();
+  });
+  it('does NOT render the literal word "undefined" when no optional props are passed', () => {
+    render(<TkxAppBar title="App" />, { wrapper: W });
+    expect(document.body.textContent ?? '').not.toContain('undefined');
+  });
 });
 
 describe('TkxBottomNav', () => {
