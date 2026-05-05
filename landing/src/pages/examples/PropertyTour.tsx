@@ -14,7 +14,7 @@
 import { useMemo, useState } from 'react';
 import { TkxScene, TkxPanorama360, TkxHotspot, TkxParticleField } from 'tekivex-3d';
 import { ExampleShell } from './ExampleShell';
-import { BusinessCTA } from './BusinessCTA';
+import { OpenSourceFooter } from './OpenSourceFooter';
 import { usePageMeta } from '../../use-page-meta';
 
 interface RoomPalette {
@@ -430,11 +430,7 @@ export function PropertyTour() {
           </aside>
         </div>
 
-        <BusinessCTA
-          vertical="Property tour"
-          pitch="Real-estate, hotels, hospitality, event venues, museums — any vertical that sells a physical space wins from a 360° walkthrough. NAR data shows listings with virtual tours convert 3.4× higher than photo-only listings."
-          hue={['#06b6d4', '#3a86ff']}
-        />
+        <OpenSourceFooter />
 
         {/* Code reveal */}
         <details className="prop-code-reveal">

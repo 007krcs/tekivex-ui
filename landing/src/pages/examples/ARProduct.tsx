@@ -19,7 +19,7 @@ import {
   TkxXRSession,
 } from 'tekivex-3d';
 import { ExampleShell } from './ExampleShell';
-import { BusinessCTA } from './BusinessCTA';
+import { OpenSourceFooter } from './OpenSourceFooter';
 import { usePageMeta } from '../../use-page-meta';
 
 interface Variant {
@@ -417,11 +417,7 @@ export function ARProduct() {
 
         <ReviewsSection />
 
-        <BusinessCTA
-          vertical="AR product preview"
-          pitch="Furniture, fashion, jewellery, eyewear, watches, and car configurators all win from a 'see it in your room' button. Returns drop 30–40% when shoppers can preview the item at scale before buying (Shopify, 2023)."
-          hue={['#7c3aed', '#4f46e5']}
-        />
+        <OpenSourceFooter />
 
         <details className="ar-code-reveal">
           <summary>Show the source for the AR preview</summary>
