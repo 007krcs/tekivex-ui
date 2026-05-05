@@ -4,7 +4,7 @@
 import { Link } from 'react-router-dom';
 import { PageShell } from '../PageShell';
 import { usePageMeta } from '../../use-page-meta';
-import { BusinessCTA } from './BusinessCTA';
+import { OpenSourceFooter } from './OpenSourceFooter';
 
 interface ExampleCard {
   to: string;
@@ -78,14 +78,14 @@ export function ExamplesIndex() {
     <PageShell
       title="Examples"
       eyebrow="Showcase"
-      subtitle="Working examples built on the TekiVex UI stack — four full product use cases plus a holographic primitives gallery. Copy any of them as the starting point."
+      subtitle="A few small examples I built while learning what TekiVex UI can do — four product-shaped pages plus a holographic primitives gallery. The source is open; feel free to copy or fork anything that's useful."
       breadcrumbs={[{ label: 'Examples' }]}
     >
       <p style={{ marginTop: 0 }}>
-        Every example is a real React route that runs live in your browser, with full source linked
-        on GitHub. <strong>Use cases</strong> are complete product pages you can copy as a starting
-        point; <strong>Primitives</strong> are bare-toolkit demos that show what each component does
-        on its own.
+        Each example is a real React route that runs live in your browser, with the source linked on
+        GitHub. <strong>Use cases</strong> are product-shaped pages stitched together while learning
+        the library; <strong>Primitives</strong> are bare-toolkit demos that show what a single
+        component does on its own. Everything is MIT-licensed and free to lift.
       </p>
 
       <h2 style={{ marginTop: 32, fontSize: 18, color: '#0f172a', fontWeight: 800 }}>
@@ -118,11 +118,7 @@ export function ExamplesIndex() {
         {EXAMPLES.filter((e) => e.group === 'primitive').map((e) => renderCard(e))}
       </div>
 
-      <BusinessCTA
-        vertical="TekiVex example"
-        pitch="Each example above is a real product surface you can copy as your starting point. We help teams ship the production version — your data, your branding, your domain, your CRM — typically in 2–6 weeks."
-        hue={['#4f46e5', '#06b6d4']}
-      />
+      <OpenSourceFooter />
     </PageShell>
   );
 }
