@@ -49,7 +49,7 @@ const FAQS: { question: string; answer: string }[] = [
   {
     question: 'How do I report a bug or request a feature?',
     answer:
-      'File an issue on the public GitHub issue tracker at github.com/novaai0401-ui/tekivex-issue-report — the maintainers respond inside 24 hours on weekdays. For commercial enquiries, email nishu_singh@tekivex.com or novaai0401@gmail.com.',
+      'File an issue on the public GitHub issue tracker at github.com/novaai0401-ui/tekivex-issue-report — the maintainers respond inside 24 hours on weekdays. For commercial enquiries, use the contact form at ui.tekivex.com/contact and the maintainers will get back to you.',
   },
 ];
 

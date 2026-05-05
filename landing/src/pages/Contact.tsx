@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PageShell } from './PageShell';
 import { usePageMeta } from '../use-page-meta';
+import { openMail } from '../contact-mail';
 
 export const meta = {
   title: 'Contact TekiVex UI',
@@ -18,14 +19,10 @@ export function Contact() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Construct a mailto: link so the visitor's mail client picks up the
-    // message — no server-side email plumbing needed for an open-source
-    // project's contact page.
-    const subject = encodeURIComponent(`[TekiVex UI · ${topic}] from ${name || 'Anonymous'}`);
-    const body = encodeURIComponent(
-      `From: ${name} <${email}>\nTopic: ${topic}\n\n${message}\n\n---\nSent from ui.tekivex.com/contact`,
-    );
-    window.location.href = `mailto:nishu_singh@tekivex.com,novaai0401@gmail.com?subject=${subject}&body=${body}`;
+    openMail({
+      subject: `[TekiVex UI · ${topic}] from ${name || 'Anonymous'}`,
+      body: `From: ${name} <${email}>\nTopic: ${topic}\n\n${message}\n\n---\nSent from ui.tekivex.com/contact`,
+    });
     setSent(true);
   }
 
@@ -58,11 +55,16 @@ export function Contact() {
 
       <h2>For commercial / consulting inquiries</h2>
       <p>
-        We take on integration work and custom components. Email{' '}
-        <a href="mailto:nishu_singh@tekivex.com">nishu_singh@tekivex.com</a> or{' '}
-        <a href="mailto:novaai0401@gmail.com">novaai0401@gmail.com</a> with a brief description of
-        what you're building, your timeline, and whether the work needs an NDA. We typically
-        respond within one business day.
+        We take on integration work and custom components.{' '}
+        <button
+          type="button"
+          onClick={() => openMail({ subject: '[TekiVex UI] Consulting inquiry' })}
+          style={inlineLinkStyle}
+        >
+          Send the maintainers an email
+        </button>{' '}
+        with a brief description of what you're building, your timeline, and whether the work
+        needs an NDA. We typically respond within one business day.
       </p>
 
       <h2>For privacy + legal</h2>
@@ -90,9 +92,11 @@ export function Contact() {
             color: '#00f5d4',
           }}
         >
-          ✓ Your mail client should have opened. If nothing happened, copy the message and email
-          us at <a href="mailto:nishu_singh@tekivex.com">nishu_singh@tekivex.com</a> or{' '}
-          <a href="mailto:novaai0401@gmail.com">novaai0401@gmail.com</a>.
+          ✓ Your mail client should have opened. If nothing happened, copy the message and{' '}
+          <button type="button" onClick={() => openMail()} style={inlineLinkStyle}>
+            click here to retry
+          </button>
+          .
         </div>
       ) : (
         <form
@@ -189,4 +193,18 @@ const inputStyle: React.CSSProperties = {
   color: '#e8e8f4',
   fontSize: 14,
   fontFamily: 'inherit',
+};
+
+// Used for inline buttons that should look like text links — no
+// "click here mailto:foo@bar.com" tooltip leaks because there's no href.
+const inlineLinkStyle: React.CSSProperties = {
+  background: 'transparent',
+  border: 'none',
+  padding: 0,
+  margin: 0,
+  font: 'inherit',
+  color: 'var(--tk-prose-link)',
+  textDecoration: 'underline',
+  textUnderlineOffset: 3,
+  cursor: 'pointer',
 };
