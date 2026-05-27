@@ -65,6 +65,15 @@ const EXAMPLES: ExampleCard[] = [
     hue: ['#c4a8ff', '#ec4899'],
     group: 'primitive',
   },
+  {
+    to: '/examples/3d',
+    eyebrow: 'Primitive · 3D · 360° · WebXR',
+    title: '3D & immersive showcase',
+    blurb: 'The full spatial-UI gallery: 360° panorama, holographic universe, galaxy map, and the live JSX playground. Used to live on the home page — now a dedicated destination.',
+    bullets: ['360° panorama + hotspots', 'Holographic universe scene', 'Galaxy map navigation', 'Live JSX playground'],
+    hue: ['#7c3aed', '#06b6d4'],
+    group: 'primitive',
+  },
 ];
 
 export function ExamplesIndex() {

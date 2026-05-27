@@ -1,8 +1,20 @@
 import { useState } from 'react';
 import type { ThemeTokens } from 'tekivex-ui';
-import { TkxQuantumForm } from '../../src/quantum';
+// TkxQuantumForm is in the experimental surface — pin your version, API may change.
+import { TkxQuantumForm } from '../../src/experimental';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
+
+const EXPERIMENTAL_BANNER = {
+  background: 'rgba(247, 37, 133, 0.10)',
+  border: '1px solid rgba(247, 37, 133, 0.45)',
+  color: '#f72585',
+  padding: '12px 16px',
+  borderRadius: 8,
+  marginBottom: 24,
+  fontSize: 14,
+  fontWeight: 500,
+} as const;
 
 // ── Prop definitions ──────────────────────────────────────────────────────────
 
@@ -87,6 +99,15 @@ export function QuantumFormPage({ theme }: { theme: ThemeTokens }) {
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '48px 32px 80px' }}>
+
+      {/* Experimental banner — surface API instability up front */}
+      <div role="alert" style={EXPERIMENTAL_BANNER}>
+        ⚠ <strong>Experimental.</strong> This component is in the
+        <code style={{ background: 'rgba(247,37,133,0.15)', padding: '2px 6px', borderRadius: 4, margin: '0 4px' }}>
+          tekivex-ui/experimental
+        </code>
+        subpath. The API may change or be removed between minor versions — pin your version explicitly.
+      </div>
 
       {/* Hero */}
       <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: theme.text, margin: '0 0 12px', letterSpacing: '-0.03em', lineHeight: 1.15 }}>

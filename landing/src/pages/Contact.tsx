@@ -42,7 +42,7 @@ export function Contact() {
 
       <h2>For bug reports + feature requests</h2>
       <p>
-        Open an issue on our <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues" target="_blank" rel="noopener noreferrer">public GitHub issue tracker</a>.
+        Open an issue on our <a href="https://github.com/007krcs/tekivex-ui/issues" target="_blank" rel="noopener noreferrer">public GitHub issue tracker</a>.
         Public issues are the fastest path to a fix because anyone can see the discussion and
         contribute. Please include:
       </p>
@@ -71,7 +71,7 @@ export function Contact() {
       <ul>
         <li>Privacy: <a href="mailto:privacy@tekivex.com">privacy@tekivex.com</a></li>
         <li>Legal / trademark: <a href="mailto:legal@tekivex.com">legal@tekivex.com</a></li>
-        <li>Security disclosure: <a href="mailto:security@tekivex.com">security@tekivex.com</a> (PGP key on request)</li>
+        <li>Security disclosure: <a href="mailto:novaai0401@gmail.com">novaai0401@gmail.com</a> (PGP key on request)</li>
       </ul>
 
       <h2>For everything else, the form below</h2>

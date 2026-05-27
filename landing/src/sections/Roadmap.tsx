@@ -348,7 +348,7 @@ export function Roadmap() {
       >
         Want something on this list sooner?{' '}
         <a
-          href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new"
+          href="https://github.com/007krcs/tekivex-ui/issues/new"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: '#00f5d4', fontWeight: 600 }}

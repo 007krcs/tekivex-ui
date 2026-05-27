@@ -2,11 +2,11 @@
 
 # ⚡ TekiVex UI
 
-**The first React UI library with a security kernel built in. And a 3D toolkit. And a holographic UI family. And a spreadsheet. And…**
+**The React component library that ships with a threat model.**
 
-WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME) · **113 Components** · Zero Dependencies
+WCAG 2.1 AAA (audit-firm engagement open) · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME · Trusted Types) · **115 production components** (+ 4 experimental, opt-in) · Zero runtime dependencies in core
 
-📄 **[Security Threat Model](./docs/SECURITY-THREAT-MODEL.md)** — the only mainstream React UI library that publishes one.
+📄 **[Security Threat Model](./docs/SECURITY-THREAT-MODEL.md)** — the only mainstream React UI library that publishes one. 15 STRIDE-mapped threats with CWE references.
 
 [![npm version](https://img.shields.io/npm/v/tekivex-ui?color=00f5d4&label=tekivex-ui&logo=npm)](https://www.npmjs.com/package/tekivex-ui)
 [![npm downloads](https://img.shields.io/npm/dw/tekivex-ui?color=00f5d4)](https://www.npmjs.com/package/tekivex-ui)
@@ -14,8 +14,10 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18+-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
 [![WCAG 2.1 AAA](https://img.shields.io/badge/WCAG-2.1%20AAA-00c853.svg)](https://www.w3.org/TR/WCAG21/)
-[![Tests](https://img.shields.io/badge/Tests-1300%2B%20passing-00c853.svg)](#testing)
+[![Tests](https://img.shields.io/badge/Tests-1777%20passing-00c853.svg)](#testing)
 [![SecurityCore](https://img.shields.io/badge/SecurityCore-v3.0-f72585.svg)](./docs/SECURITY-THREAT-MODEL.md)
+[![Socket.dev](https://socket.dev/api/badge/npm/package/tekivex-ui)](https://socket.dev/npm/package/tekivex-ui)
+[![SBOM](https://img.shields.io/badge/SBOM-CycloneDX%201.5-7c5cff.svg)](https://ui.tekivex.com/security/sbom.json)
 
 <br/>
 
@@ -23,9 +25,43 @@ WCAG 2.1 AAA · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan 
 npm install tekivex-ui
 ```
 
-[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://ui.tekivex.com) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/novaai0401-ui/tekivex-issue-report/issues) · [⭐ Star](https://github.com/novaai0401-ui/tekivex-issue-report/stargazers)
+[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://ui.tekivex.com) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/007krcs/tekivex-ui/issues) · [⭐ Star](https://github.com/007krcs/tekivex-ui/stargazers)
 
 </div>
+
+---
+
+## Project status — read before adopting
+
+TekiVex UI is **pre-1.0** and currently maintained by a single developer
+([007krcs](https://github.com/007krcs)) on `novaai0401@gmail.com`. We
+publish to npm with [provenance attestations](https://docs.npmjs.com/generating-provenance-statements),
+ship a public [CycloneDX SBOM](https://ui.tekivex.com/security/sbom.json),
+a [security threat model](./docs/SECURITY-THREAT-MODEL.md) (15 STRIDE
+threats with CWE refs), and 1,777 tests at the published version — but
+none of that substitutes for the human-scale risk of any pre-1.0,
+single-maintainer library.
+
+**Honest guidance:**
+
+- **Pin your version** (`"tekivex-ui": "3.18.0"`, not `"^3.18.0"`) until v4.0
+- **Read [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** before integrating — covers known Next.js / RSC / SSR / hydration issues
+- **Audit the SBOM** at [`ui.tekivex.com/security/sbom.json`](https://ui.tekivex.com/security/sbom.json) — verifies zero runtime deps
+- **Verify the package** with `npm view tekivex-ui` before installing if you're concerned about typosquats (the legitimate name is exactly `tekivex-ui`)
+- **Check Socket.dev** [![Socket.dev](https://socket.dev/api/badge/npm/package/tekivex-ui)](https://socket.dev/npm/package/tekivex-ui) for supply-chain risk score
+- **For regulated-industry teams**: the [design-partner program](./docs/design-partners/README.md) gets a direct Slack channel + priority response + custom-components on demand. Free.
+
+**Expect breaking changes at v4.0** — see [docs/ROADMAP.md](./docs/ROADMAP.md).
+Until then, the API surface marked stable will not break in minor or
+patch releases.
+
+**Recent compatibility fixes** (v3.18, published 2026-05-28):
+
+- Build no longer emits Vite's chunk runtime format — **works in Next.js / RSC** (was broken pre-v3.18)
+- ThemeProvider `mode="auto"` is now SSR-safe + `themeInitScript()` helper for FOUC-free initialisation
+- `'use client'` directives on every hook-using component
+- `isDisabled` absorbed as a deprecated alias (no longer pollutes DOM)
+- `background` / `backgroundImage` shorthand conflict removed
 
 ---
 
@@ -43,10 +79,6 @@ Both repos ship the same generator pattern (form → A4 preview → 1-page print
 ---
 
 ## What's new in v3.6 → v3.15
-
-Source HEAD as of this commit. **npm version is held at the last
-demand-driven release** — file an issue with your use case and we
-publish to npm within 24 hours.
 
 | Component                | Lands in | Tests | Coverage              |
 | ------------------------ | -------- | ----- | --------------------- |
@@ -74,25 +106,24 @@ Portal3D, Avatar3D — 14 primitives at source v0.7).
 
 | Feature | TekiVex UI | MUI | Ant Design | Mantine | shadcn/ui |
 |---|:---:|:---:|:---:|:---:|:---:|
-| WCAG **AAA** (not just AA) | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **XSS** — automatic sanitisation on every prop | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Clickjacking** — `isFramed()` + `frame-ancestors` CSP | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Trojan Source** — bidi/zero-width stripped on inputs | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Prototype pollution** — safe `JSON.parse` | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **File upload** — magic-byte MIME verification | ✅ | ❌ | ❌ | ❌ | ❌ |
+| WCAG **AAA** target (third-party audit-firm engagement open) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **XSS** — string props sanitised by default across all text components | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Clickjacking** — `isFramed()` detection + `frame-ancestors` CSP | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Trojan Source** — bidi/zero-width stripped from text inputs | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Prototype pollution** — `sanitizeJSON()` safe parser | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **File upload** — magic-byte MIME verification (real signatures) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **CSP builder** — one-line strict policy | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Trusted Types** — one-call policy install | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **PII redaction** — pre-LLM / pre-analytics | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Rate limiter** — client-side DoS guard | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Immutable security audit trail + integrity check | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **PII redaction** — regex + Luhn-validated CC, pre-LLM/pre-analytics | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Rate limiter** — client-side token-bucket DoS guard | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Tamper-evident SHA-256 hash-chained audit trail | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Published threat model | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Full-featured DataGrid — **free** | ✅ | 💰 Pro | Partial | Partial | ❌ |
-| 80+ production components — **free** | ✅ | ✅ | ✅ | ✅ | 30 |
+| 115 production components — **free** | ✅ | ✅ | ✅ | ✅ | 30 |
 | Hooks layer (a11y, theme, i18n) | ✅ | ❌ | ❌ | ✅ | ✅ |
-| i18n — 27 locales incl. RTL | ✅ | ✅ | ✅ | Partial | ❌ |
+| i18n — 44 locales incl. RTL | ✅ | ✅ | ✅ | Partial | ❌ |
 | Plugin-extensible CSS engine | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Zero extra dependencies | ✅ | ❌ | ❌ | ❌ | ✅ |
-| **No `src/` in npm tarball** (IP protection) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Zero runtime deps in core (recharts optional) | ✅ | ❌ | ❌ | ❌ | ✅ |
 
 ---
 
@@ -145,7 +176,7 @@ export default function App() {
 
 ## Package Exports
 
-TekiVex UI ships as **three tree-shakeable entry points** — import only what you need:
+TekiVex UI ships **tree-shakeable entry points** — import only what you need:
 
 ```ts
 // Core components + theme + engine  (~120 kB gzip)
@@ -156,11 +187,16 @@ import { TkxAreaChart, TkxBarChart, TkxLineChart, TkxPieChart } from 'tekivex-ui
 
 // 10 headless hooks — zero styles, your UI  (~2.6 kB gzip)
 import { useDisclosure, useFormState, useListSelection } from 'tekivex-ui/headless';
+
+// Agent runtime — Anthropic/OpenAI/Gemini/Ollama, RAG, MCP, A2A, tools (~16 kB gzip)
+import { createAgent, AnthropicProvider, useAgent } from 'tekivex-ui/agent';
 ```
+
+📘 **[Full agent runtime reference → docs/AGENT.md](./docs/AGENT.md)**
 
 ---
 
-## Components (70+)
+## Components (115)
 
 <details>
 <summary><strong>Layout & Navigation</strong></summary>
@@ -265,6 +301,24 @@ import { useDisclosure, useFormState, useListSelection } from 'tekivex-ui/headle
 | `TkxIcon` | 200+ built-in icons |
 | `TkxDivider` | Horizontal/vertical with optional label |
 | `TkxTypography` | Title, Text, Paragraph — semantic HTML |
+
+</details>
+
+<details>
+<summary><strong>Experimental (opt-in, API not stable)</strong></summary>
+
+These components live in-tree but are excluded from the public barrel — the
+API surface, prop names, and runtime behaviour MAY change in any minor
+release. They are not counted in the 115-component headline number.
+
+Import path: `import { TkxQuantumForm } from 'tekivex-ui/experimental';`
+
+| Component | Notes |
+|---|---|
+| `TkxQuantumForm` | "Quantum-AI" form inference — research-grade, unverified accuracy claims |
+| `TkxAIConfidenceBar` | Display widget for model-confidence values |
+| `TkxAIThinking` | Animated "thinking" dots for chat surfaces |
+| `TkxAIChatBubble` | Single chat-message bubble — overlaps `TkxChat`; prefer `TkxChat` for new code |
 
 </details>
 
@@ -386,7 +440,7 @@ CSS custom properties are injected automatically — no flash of unstyled conten
 
 ---
 
-## Internationalisation (27 locales)
+## Internationalisation (44 locales)
 
 ```tsx
 import { I18nProvider, zhCN, arSA, jaJP, ptBR } from 'tekivex-ui';
@@ -510,6 +564,8 @@ import { TkxDataGrid } from 'tekivex-ui';
 |---|:---:|:---:|:---:|
 | Sorting | ✅ | ✅ | ✅ |
 | Column filtering | ✅ | 💰 Pro | ✅ |
+| Column pinning (left/right) | ✅ | 💰 Pro | ✅ |
+| Row grouping + aggregations | ✅ | 💰 Pro | 💰 Enterprise |
 | Pagination | ✅ | ✅ | ✅ |
 | Row selection | ✅ | ✅ | ✅ |
 | CSV export | ✅ | 💰 Pro | 💰 Enterprise |
@@ -543,7 +599,7 @@ npm install
 # Build the library
 npm run build
 
-# Run all 1034 tests
+# Run all 1777 tests
 npm test
 
 # Run tests with coverage report
@@ -573,11 +629,11 @@ npm run security:audit
 ## Testing
 
 ```
-82 test files · 1034 tests · 0 failures · 1 todo
-Coverage: 64.84% lines · 51.10% functions · 56.77% branches · 61.41% statements
+90 dedicated component test files · 1777 tests · 0 failures · 1 todo
+Coverage: 64.84% lines · 51.10% functions · 56.77% branches · 61.41% statements (ratchet enforced in CI)
 ```
 
-Coverage includes unit tests for all 99 components, 7 chart types, headless hooks (incl. useWebSocket / useSSE / useMediaQuery), the TKX CSS engine, the WCAG engine, the security (Shield) engine, the i18n provider, and Indian KYC validators (Aadhaar Verhoeff, PAN, Voter ID, DL).
+Coverage includes dedicated unit tests for 88 of 115 production components plus smoke coverage for the rest, 7 chart types, headless hooks (incl. useWebSocket / useSSE / useMediaQuery), the TKX CSS engine, the WCAG engine, the security (Shield) engine, the i18n provider, and Indian KYC validators (Aadhaar Verhoeff, PAN, Voter ID, DL).
 
 Coverage thresholds are enforced as a CI ratchet in `vitest.config.ts` — the floor never drops between releases. Path to 90/90/85 is documented in [`docs/test-coverage-roadmap.md`](./docs/test-coverage-roadmap.md).
 
@@ -585,13 +641,29 @@ Coverage thresholds are enforced as a CI ratchet in `vitest.config.ts` — the f
 
 ## Roadmap
 
-- [ ] Storybook integration + published Storybook site
-- [ ] Figma design token export
-- [ ] Zod / Valibot schema resolver for `TkxForm`
-- [ ] 40+ additional locales (target: 70+ matching Ant Design)
-- [ ] Third-party WCAG 2.1 AAA accessibility audit certificate
-- [ ] Heatmap, Funnel, Treemap, Gauge chart types
-- [ ] Column pinning and row grouping in DataGrid
+Full roadmap with version targets, owners, and definition-of-done at
+**[`docs/ROADMAP.md`](./docs/ROADMAP.md)**.
+
+**Nearest milestones:**
+
+- **v3.18** (target 2026-07-15) — *"Land the audit + first partner."* Sign
+  a third-party WCAG audit SOW (Deque / TPGi / WebAIM), land 1 design-partner
+  logo, lift `TkxDataGrid` to 50+ tests. No new components.
+- **v3.19** (target 2026-09-01) — *"Coverage + DataGrid completeness."*
+  Ratchet coverage 64.84% → 75% lines, ship DataGrid column-pinning and
+  row-grouping, deep-test `TkxSelect`, `TkxDatePicker`, `TkxMenu`,
+  `TkxOrgChart`, `TkxTreeView`.
+- **v3.20** (target 2026-10-15) — *"Forms + i18n depth."* Zod + Valibot
+  resolvers for `TkxForm`, RHF adapter, drop hardcoded-string count below
+  100, ship 9 new locales (35 → 44).
+- **v3.21** (target 2026-12-01) — *"Charts + visualizations."* New
+  `TkxHeatmap`, `TkxFunnelChart`, `TkxTreemap`, `TkxGauge`, `TkxSparkline`.
+- **v4.0** (target 2026-12 to 2027-Q1) — *"Stable."* Third-party AAA VPAT
+  published, 90/90/85 coverage, 70+ locales, 5 published case studies,
+  React 19 required, codemod for the v3 → v4 migration.
+
+[Read the full plan, what we WILL NOT do, and how to propose changes →
+`docs/ROADMAP.md`](./docs/ROADMAP.md)
 
 ---
 
@@ -599,7 +671,7 @@ Coverage thresholds are enforced as a CI ratchet in `vitest.config.ts` — the f
 
 Found a bug or have a feature request? Please open an issue on our dedicated issue tracker:
 
-**👉 [github.com/novaai0401-ui/tekivex-issue-report/issues](https://github.com/novaai0401-ui/tekivex-issue-report/issues)**
+**👉 [github.com/007krcs/tekivex-ui/issues](https://github.com/007krcs/tekivex-ui/issues)**
 
 When reporting, please include:
 - tekivex-ui version (`npm list tekivex-ui`)

@@ -1,14 +1,21 @@
 ---
 title: TkxAIConfidenceBar
-description: AIConfidenceBar — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: AIConfidenceBar — experimental React component from tekivex-ui. API not stable.
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Experimental — API not stable">
+  This component lives in the `tekivex-ui/experimental` subpath. Its API may change or be removed
+  between minor versions. Pin your version explicitly and check the [changelog](/changelog) before upgrading.
+</Aside>
+
 ```tsx
-import { TkxAIConfidenceBar } from 'tekivex-ui';
+import { TkxAIConfidenceBar } from 'tekivex-ui/experimental';
 ```
 
-AIConfidenceBar is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+AIConfidenceBar is part of the **experimental** surface of tekivex-ui. Use it
+for prototypes; pin and audit before production.
 
 ## Props
 

@@ -1,3 +1,5 @@
+'use client';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TkxAccessibilityChecker — runtime axe-core badge
 //

@@ -129,9 +129,9 @@ export function Hero() {
             pointerEvents: 'auto',
           }}
         >
-          <TkxHolographicBadge size="sm" tone="success">v3.15 source · 113 components</TkxHolographicBadge>
-          <TkxHolographicBadge size="sm" tone="info">13 packages</TkxHolographicBadge>
-          <TkxHolographicBadge size="sm" tone="neutral">first 360° docs</TkxHolographicBadge>
+          <TkxHolographicBadge size="sm" tone="success">114 components · published threat model</TkxHolographicBadge>
+          <TkxHolographicBadge size="sm" tone="info">SHA-256 audit trail</TkxHolographicBadge>
+          <TkxHolographicBadge size="sm" tone="neutral">zero runtime deps</TkxHolographicBadge>
         </div>
 
         <h1
@@ -146,24 +146,26 @@ export function Hero() {
             pointerEvents: 'none',
           }}
         >
-          <span className="tk-gradient-text">React</span> in{' '}
-          <em style={{ fontStyle: 'normal', color: '#fff' }}>360°</em>.
+          The <span className="tk-gradient-text">React component library</span>{' '}
+          that ships with a <em style={{ fontStyle: 'normal', color: '#fff' }}>threat model</em>.
         </h1>
 
         <p
           style={{
             fontSize: 'clamp(15px, 1.4vw, 18px)',
             color: '#dcdce8',
-            maxWidth: 620,
+            maxWidth: 720,
             lineHeight: 1.6,
             margin: '0 auto 28px',
             textShadow: '0 2px 16px rgba(0, 0, 0, 0.7)',
             pointerEvents: 'none',
           }}
         >
-          You're standing inside the docs. <strong>Drag to look around.</strong>{' '}
-          Click any hotspot to navigate. Step into VR or AR with one tap on Quest 3,
-          Vision Pro, or any ARCore phone.
+          115 production components. WCAG 2.1 AAA target (audit-firm engagement open). Zero runtime dependencies in core.
+          Tamper-evident SHA-256 audit trail. <strong>SecurityCore:</strong> XSS sanitization,
+          Trojan Source defense, magic-byte MIME verification, CSP builder, Trusted Types,
+          PII redaction with Luhn-validated credit cards. The threat model is published —
+          every other major React UI library expects you to write your own.
         </p>
 
         <div

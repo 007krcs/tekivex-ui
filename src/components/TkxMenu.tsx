@@ -432,8 +432,14 @@ function MenuPanel({
         fi.item.onChange?.(fi.item.options[fi.optionIdx].value);
       } else if (fi.kind === 'submenu') {
         if (fi.item.disabled) return;
-        // handled by hover/enter
-        setOpenSubmenuId(fi.item.id);
+        // Resolve the menuitem element via data-midx so we can compute the
+        // submenu position. Without this, openSubmenuId is set but submenuPos
+        // remains null and the panel renders empty.
+        const el = panelRef.current?.querySelector<HTMLElement>(
+          `[data-midx="${fi.idx}"]`,
+        );
+        if (el) openSubmenu(fi.item, el);
+        else setOpenSubmenuId(fi.item.id);
       }
     },
     [onCloseAll],
@@ -480,7 +486,12 @@ function MenuPanel({
       case 'ArrowRight':
         e.preventDefault();
         if (activeIdx >= 0 && flat[activeIdx]?.kind === 'submenu') {
-          setOpenSubmenuId((flat[activeIdx] as { kind: 'submenu'; item: MenuSubMenu }).item.id);
+          const subFlat = flat[activeIdx] as { kind: 'submenu'; item: MenuSubMenu; idx: number };
+          const el = panelRef.current?.querySelector<HTMLElement>(
+            `[data-midx="${subFlat.idx}"]`,
+          );
+          if (el) openSubmenu(subFlat.item, el);
+          else setOpenSubmenuId(subFlat.item.id);
         }
         break;
       case 'ArrowLeft':
@@ -733,8 +744,12 @@ function MenuPanel({
               onMouseLeave={() => {
                 // keep submenu open while mouse is on it
               }}
-              onClick={() => {
-                if (!isDisabled) setOpenSubmenuId(isSubmenuOpen ? null : item.id);
+              onClick={(e) => {
+                if (isDisabled) return;
+                // Both openSubmenuId AND submenuPos are required for the
+                // panel to render — call openSubmenu() to set both.
+                if (isSubmenuOpen) closeSubmenu();
+                else openSubmenu(item, e.currentTarget as HTMLElement);
               }}
             >
               <span style={{ width: 16, flexShrink: 0, display: 'flex', alignItems: 'center' }}>

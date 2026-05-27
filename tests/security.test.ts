@@ -135,8 +135,9 @@ describe('Audit Trail', () => {
     const entry = audit('render', 'TkxButton', { variant: 'solid' });
     expect(entry.component).toBe('TkxButton');
     expect(entry.action).toBe('render');
-    expect(entry.propsHash).toMatch(/^[0-9a-f]{8}$/);
-    expect(entry.chainHash).toMatch(/^[0-9a-f]{8}$/);
+    // SHA-256 — 64 lowercase hex chars
+    expect(entry.propsHash).toMatch(/^[0-9a-f]{64}$/);
+    expect(entry.chainHash).toMatch(/^[0-9a-f]{64}$/);
   });
 
   it('verifyAuditIntegrity returns true for unmodified trail', () => {

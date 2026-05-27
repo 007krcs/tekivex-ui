@@ -13,7 +13,7 @@ For CVE reports, supply-chain compromises, and availability incidents in `@tekiv
 
 ## Intake
 
-1. Report arrives via `security@tekivex.com` or GitHub Security Advisory
+1. Report arrives via `novaai0401@gmail.com` or GitHub Security Advisory
 2. **On-call responder** acknowledges within SLA (see `SECURITY.md`)
 3. Open a **private fork** or draft advisory — do not commit to public main
 4. Create an internal tracking issue in a private repo or encrypted notes; include:

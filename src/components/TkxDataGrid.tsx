@@ -11,6 +11,7 @@ import {
   type CSSProperties,
   type MouseEvent as ReactMouseEvent,
   type ChangeEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { useTheme } from '../themes';
 import { useLocale } from '../i18n';
@@ -20,6 +21,17 @@ import { TkxSkeleton } from './TkxSkeleton';
 import { tkx } from '../engine/tkx';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Custom cell editor render contract. The editor owns its own input element
+ * and signals completion via the supplied callbacks.
+ */
+export interface CellEditorRenderArgs<T = any> {
+  value: any;
+  row: T;
+  onCommit: (v: any) => void;
+  onCancel: () => void;
+}
 
 export interface DataGridColumn<T = any> {
   key: string;
@@ -32,6 +44,45 @@ export interface DataGridColumn<T = any> {
   renderHeader?: (col: DataGridColumn<T>) => ReactNode;
   align?: 'left' | 'center' | 'right';
   pinned?: 'left' | 'right';
+  /**
+   * Aggregation rendered in the group header row when `groupBy` is set on
+   * the grid. Built-in numeric aggregates ('sum' | 'avg' | 'min' | 'max')
+   * silently skip non-numeric values. 'count' works on any column. Pass a
+   * function for custom logic.
+   */
+  aggregate?:
+    | 'sum'
+    | 'avg'
+    | 'count'
+    | 'min'
+    | 'max'
+    | ((rows: T[]) => string | number);
+  /**
+   * Enable cell-level editing on this column. Pass a predicate to allow
+   * editing on a per-row basis (e.g. `editable: row => !row.locked`).
+   */
+  editable?: boolean | ((row: T) => boolean);
+  /**
+   * Editor variant. Defaults to `'text'`. `'number'` renders an
+   * `<input type="number">`. `'select'` renders a native `<select>` whose
+   * options come from `editorOptions.options`. A function lets you render
+   * a fully custom editor — call `onCommit(value)` or `onCancel()` to
+   * leave edit mode.
+   */
+  editor?:
+    | 'text'
+    | 'number'
+    | 'select'
+    | ((args: CellEditorRenderArgs<T>) => ReactNode);
+  editorOptions?: {
+    options?: Array<{ value: any; label: string }>;
+  };
+  /**
+   * Validate a candidate value on commit. Return an error message string
+   * to block the commit, or `null` to accept. The error is surfaced via
+   * a small inline message and `aria-describedby` on the editor.
+   */
+  validateCell?: (value: any, row: T) => string | null;
 }
 
 export interface TkxDataGridProps<T = any> {
@@ -77,6 +128,43 @@ export interface TkxDataGridProps<T = any> {
   loadingMore?: boolean;
   /** How many pixels from the bottom to trigger onLoadMore. Default: 200 */
   loadMoreThreshold?: number;
+  /**
+   * Column key to group rows by. Group header rows render between detail
+   * rows; each group is collapsible. When undefined, the grid renders
+   * exactly as without grouping (zero-cost no-op).
+   */
+  groupBy?: string;
+  /**
+   * Which groups start expanded. `'all'` (default) opens everything,
+   * `'none'` collapses everything, or pass an explicit array of group
+   * keys.
+   */
+  defaultExpandedGroups?: 'all' | 'none' | string[];
+  /** Fired when a group header is toggled. */
+  onGroupToggle?: (groupKey: string, expanded: boolean) => void;
+  /**
+   * Fired when a cell edit commits (after passing `validateCell`). May
+   * return a Promise; the cell shows a loading state until it resolves.
+   */
+  onCellEdit?: (params: {
+    rowId: string | number;
+    columnKey: string;
+    newValue: any;
+    oldValue: any;
+    row: T;
+  }) => void | Promise<void>;
+  /** Fired when a cell enters edit mode. */
+  onCellEditStart?: (params: {
+    rowId: string | number;
+    columnKey: string;
+    row: T;
+  }) => void;
+  /** Fired when a cell edit is cancelled (Escape / programmatic cancel). */
+  onCellEditCancel?: (params: {
+    rowId: string | number;
+    columnKey: string;
+    row: T;
+  }) => void;
 }
 
 // ── Sort icon ─────────────────────────────────────────────────────────────────
@@ -98,6 +186,27 @@ function SortIcon({ direction }: { direction: 'asc' | 'desc' | null }) {
       ) : (
         <path d="M7 10l5 5 5-5H7zM7 14l5-5 5 5H7z" opacity="0.35" />
       )}
+    </svg>
+  );
+}
+
+// ── Group caret ──────────────────────────────────────────────────────────────
+
+function GroupCaret({ expanded }: { expanded: boolean }) {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      aria-hidden="true"
+      style={{
+        display: 'inline-block',
+        marginRight: 6,
+        transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+        transition: 'transform 120ms ease',
+      }}
+    >
+      <path d="M2 1l6 4-6 4z" fill="currentColor" />
     </svg>
   );
 }
@@ -142,6 +251,38 @@ function compareValues(a: unknown, b: unknown): number {
   if (b == null) return -1;
   if (typeof a === 'number' && typeof b === 'number') return a - b;
   return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
+}
+
+function computeAggregate<T>(
+  col: DataGridColumn<T>,
+  rows: T[],
+): string | number | undefined {
+  const agg = col.aggregate;
+  if (agg == null) return undefined;
+  if (typeof agg === 'function') {
+    try {
+      return agg(rows);
+    } catch {
+      return undefined;
+    }
+  }
+  if (agg === 'count') return rows.length;
+  // Built-in numeric aggregates: only consider rows whose value coerces to
+  // a finite number. If none qualify, return undefined (don't crash).
+  const nums: number[] = [];
+  for (const r of rows) {
+    const v = (r as Record<string, unknown>)[col.key];
+    const n = typeof v === 'number' ? v : Number(v);
+    if (Number.isFinite(n)) nums.push(n);
+  }
+  if (nums.length === 0) return undefined;
+  switch (agg) {
+    case 'sum': return nums.reduce((a, b) => a + b, 0);
+    case 'avg': return nums.reduce((a, b) => a + b, 0) / nums.length;
+    case 'min': return Math.min(...nums);
+    case 'max': return Math.max(...nums);
+    default: return undefined;
+  }
 }
 
 function escapeCSV(value: unknown): string {
@@ -338,6 +479,209 @@ function PaginationBar({
   );
 }
 
+// ── Cell editor ───────────────────────────────────────────────────────────────
+
+interface CellEditorProps<T> {
+  col: DataGridColumn<T>;
+  row: T;
+  initialValue: unknown;
+  onCommit: (newValue: unknown) => void;
+  onCancel: () => void;
+}
+
+function CellEditor<T>({
+  col,
+  row,
+  initialValue,
+  onCommit,
+  onCancel,
+}: CellEditorProps<T>) {
+  const theme = useTheme();
+  const [value, setValue] = useState<unknown>(initialValue);
+  const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement | HTMLSelectElement | null>(null);
+  const errorId = useId();
+  const skipBlurCommitRef = useRef(false);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+      if (
+        'select' in inputRef.current &&
+        typeof (inputRef.current as HTMLInputElement).select === 'function'
+      ) {
+        try {
+          (inputRef.current as HTMLInputElement).select();
+        } catch {
+          /* not all input types support select() */
+        }
+      }
+    }
+  }, []);
+
+  const tryCommit = useCallback(
+    (candidate: unknown) => {
+      if (col.validateCell) {
+        const err = col.validateCell(candidate, row);
+        if (err) {
+          setError(err);
+          return false;
+        }
+      }
+      setError(null);
+      onCommit(candidate);
+      return true;
+    },
+    [col, row, onCommit],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: ReactKeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        tryCommit(value);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        skipBlurCommitRef.current = true;
+        onCancel();
+      }
+    },
+    [value, tryCommit, onCancel],
+  );
+
+  const handleBlur = useCallback(() => {
+    if (skipBlurCommitRef.current) {
+      skipBlurCommitRef.current = false;
+      return;
+    }
+    tryCommit(value);
+  }, [tryCommit, value]);
+
+  // Custom editor function — delegate fully.
+  if (typeof col.editor === 'function') {
+    return (
+      <>
+        {col.editor({
+          value: initialValue,
+          row,
+          onCommit: (v: unknown) => tryCommit(v),
+          onCancel,
+        })}
+        {error && (
+          <span
+            id={errorId}
+            role="alert"
+            style={{
+              display: 'block',
+              marginTop: 2,
+              fontSize: 11,
+              color: '#dc2626',
+            }}
+          >
+            {error}
+          </span>
+        )}
+      </>
+    );
+  }
+
+  const ariaLabel = `Edit ${col.header}`;
+  const commonStyle: CSSProperties = {
+    width: '100%',
+    padding: '3px 6px',
+    fontSize: 13,
+    borderRadius: 4,
+    border: `1px solid ${error ? '#dc2626' : theme.primary}`,
+    backgroundColor: theme.bg,
+    color: theme.text,
+    outline: 'none',
+    boxSizing: 'border-box',
+  };
+
+  let editorEl: ReactNode;
+  if (col.editor === 'select') {
+    const options = col.editorOptions?.options ?? [];
+    editorEl = (
+      <select
+        ref={el => {
+          inputRef.current = el;
+        }}
+        value={value as string}
+        onChange={e => setValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
+        aria-label={ariaLabel}
+        aria-describedby={error ? errorId : undefined}
+        style={commonStyle}
+      >
+        {options.map(opt => (
+          <option key={String(opt.value)} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    );
+  } else if (col.editor === 'number') {
+    editorEl = (
+      <input
+        ref={el => {
+          inputRef.current = el;
+        }}
+        type="number"
+        value={value == null ? '' : String(value)}
+        onChange={e => {
+          const raw = e.target.value;
+          setValue(raw === '' ? '' : Number(raw));
+        }}
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
+        aria-label={ariaLabel}
+        aria-describedby={error ? errorId : undefined}
+        style={commonStyle}
+      />
+    );
+  } else {
+    editorEl = (
+      <input
+        ref={el => {
+          inputRef.current = el;
+        }}
+        type="text"
+        value={value == null ? '' : String(value)}
+        onChange={e => setValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
+        aria-label={ariaLabel}
+        aria-describedby={error ? errorId : undefined}
+        style={commonStyle}
+      />
+    );
+  }
+
+  return (
+    <>
+      {editorEl}
+      {error && (
+        <span
+          id={errorId}
+          role="alert"
+          data-cell-error=""
+          style={{
+            display: 'block',
+            marginTop: 2,
+            fontSize: 11,
+            color: '#dc2626',
+          }}
+        >
+          {error}
+        </span>
+      )}
+    </>
+  );
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function TkxDataGrid<T = any>({
@@ -369,6 +713,12 @@ export function TkxDataGrid<T = any>({
   hasMore,
   loadingMore = false,
   loadMoreThreshold = 200,
+  groupBy,
+  defaultExpandedGroups = 'all',
+  onGroupToggle,
+  onCellEdit,
+  onCellEditStart,
+  onCellEditCancel,
 }: TkxDataGridProps<T>) {
   const theme = useTheme();
   const t = useLocale();
@@ -429,19 +779,128 @@ export function TkxDataGrid<T = any>({
     );
   }, [sortedData, filters]);
 
+  // ── Grouping ────────────────────────────────────────────────────────────
+  // Validate `groupBy` once and warn if it doesn't match any column. Treat
+  // an unknown key as ungrouped so the grid keeps rendering.
+  const validGroupBy = useMemo<string | undefined>(() => {
+    if (!groupBy) return undefined;
+    const exists = columns.some(c => c.key === groupBy);
+    if (!exists) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[TkxDataGrid] groupBy="${groupBy}" does not match any column key — rendering ungrouped.`,
+      );
+      return undefined;
+    }
+    return groupBy;
+  }, [groupBy, columns]);
+
+  // Buckets are built off the filtered+sorted set so sort order is
+  // preserved within each group. Map insertion order also preserves the
+  // order groups first appear in the sorted list.
+  const groups = useMemo<Array<{ key: string; rows: T[] }>>(() => {
+    if (!validGroupBy) return [];
+    const buckets = new Map<string, T[]>();
+    for (const row of filteredData) {
+      const raw = (row as Record<string, unknown>)[validGroupBy];
+      const k = String(raw ?? '');
+      const arr = buckets.get(k);
+      if (arr) arr.push(row);
+      else buckets.set(k, [row]);
+    }
+    return Array.from(buckets.entries()).map(([key, rows]) => ({ key, rows }));
+  }, [filteredData, validGroupBy]);
+
+  // Expansion state. Initialised from `defaultExpandedGroups` on first
+  // render, then user toggles take over.
+  const initialExpanded = useMemo<Set<string>>(() => {
+    if (defaultExpandedGroups === 'none') return new Set();
+    if (Array.isArray(defaultExpandedGroups)) return new Set(defaultExpandedGroups);
+    // 'all' — populated lazily when groups appear (see effect below).
+    return new Set();
+  }, [defaultExpandedGroups]);
+  const [expanded, setExpanded] = useState<Set<string>>(initialExpanded);
+
+  // When defaultExpandedGroups='all', expand any new group keys that
+  // appear (e.g. after data load). Existing user toggles are preserved.
+  const seenGroupsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (!validGroupBy || defaultExpandedGroups !== 'all') return;
+    let dirty = false;
+    setExpanded(prev => {
+      const next = new Set(prev);
+      for (const g of groups) {
+        if (!seenGroupsRef.current.has(g.key)) {
+          seenGroupsRef.current.add(g.key);
+          next.add(g.key);
+          dirty = true;
+        }
+      }
+      return dirty ? next : prev;
+    });
+  }, [groups, validGroupBy, defaultExpandedGroups]);
+
+  const toggleGroup = useCallback(
+    (key: string) => {
+      setExpanded(prev => {
+        const next = new Set(prev);
+        const willExpand = !next.has(key);
+        if (willExpand) next.add(key);
+        else next.delete(key);
+        onGroupToggle?.(key, willExpand);
+        return next;
+      });
+    },
+    [onGroupToggle],
+  );
+
+  // Flatten groups into a render plan: a single list of "row items" that
+  // is either a group header or a detail row. Detail rows from collapsed
+  // groups are skipped entirely.
+  type RowItem =
+    | { type: 'group'; key: string; rows: T[] }
+    | { type: 'row'; row: T };
+  const rowItems = useMemo<RowItem[]>(() => {
+    if (!validGroupBy) {
+      return filteredData.map(row => ({ type: 'row' as const, row }));
+    }
+    const items: RowItem[] = [];
+    for (const g of groups) {
+      items.push({ type: 'group', key: g.key, rows: g.rows });
+      if (expanded.has(g.key)) {
+        for (const row of g.rows) items.push({ type: 'row', row });
+      }
+    }
+    return items;
+  }, [validGroupBy, filteredData, groups, expanded]);
+
   // ── Pagination ──────────────────────────────────────────────────────────
   const [page, setPage] = useState(1);
   const isPaginated = pageSize > 0;
-  const totalRows = filteredData.length;
+  // Pagination is applied to the FLAT post-grouping row list so a single
+  // group can span multiple pages.
+  const totalRows = rowItems.length;
   const totalPages = isPaginated ? Math.max(1, Math.ceil(totalRows / pageSize)) : 1;
 
   // Reset to page 1 when filters/sort change
   useEffect(() => { setPage(1); }, [filters, sortKey, sortDir]);
 
+  // When grouping is OFF, pagedData stays a plain T[] (existing semantics).
+  // When grouping is ON, the render path consumes `pagedItems` instead and
+  // pagedData collapses to an empty array (kept only for downstream type
+  // compatibility of legacy code paths like virtual scroll).
+  const pagedItems = useMemo<RowItem[]>(() => {
+    if (!isPaginated) return rowItems;
+    return rowItems.slice((page - 1) * pageSize, page * pageSize);
+  }, [rowItems, isPaginated, page, pageSize]);
+
   const pagedData = useMemo<T[]>(() => {
+    // Used by the virtual-scroll branch (which only fires when grouping is
+    // off — see render path) so it stays the flat T[] it always was.
+    if (validGroupBy) return [];
     if (!isPaginated) return filteredData;
     return filteredData.slice((page - 1) * pageSize, page * pageSize);
-  }, [filteredData, isPaginated, page, pageSize]);
+  }, [filteredData, isPaginated, page, pageSize, validGroupBy]);
 
   // ── Virtual scroll ─────────────────────────────────────────────────────
   const OVERSCAN = 10;
@@ -532,6 +991,117 @@ export function TkxDataGrid<T = any>({
   const [colWidths, setColWidths] = useState<Record<string, number>>({});
   const resizeRef = useRef<{ key: string; startX: number; startWidth: number } | null>(null);
 
+  // ── Column pinning ────────────────────────────────────────────────────
+  // Compute cumulative left/right offsets for sticky positioning. Pinned
+  // columns stay in their logical DOM position; CSS sticky handles visual
+  // placement so a11y row/col indices remain correct.
+  const pinnedOffsets = useMemo(() => {
+    const map: Record<
+      string,
+      { side: 'left' | 'right'; offset: number; isEdge: boolean }
+    > = {};
+    const leftCols = columns.filter(c => c.pinned === 'left');
+    const rightCols = columns.filter(c => c.pinned === 'right');
+    const widthOf = (c: DataGridColumn<T>): number => {
+      const w = colWidths[c.key] ?? c.width;
+      if (typeof w === 'number') return w;
+      // Width may be a string like "120px" or undefined — fall back to a
+      // sensible default that matches getColStyle's minWidth (80).
+      if (typeof w === 'string') {
+        const px = parseFloat(w);
+        if (!Number.isNaN(px)) return px;
+      }
+      return 150;
+    };
+    // Selection checkbox column (when selectable) sits before pinned-left
+    // columns, occupying 40px. Pinned-left offsets start after it.
+    let leftOffset = selectable ? 40 : 0;
+    leftCols.forEach((c, i) => {
+      map[c.key] = {
+        side: 'left',
+        offset: leftOffset,
+        isEdge: i === leftCols.length - 1,
+      };
+      leftOffset += widthOf(c);
+    });
+    let rightOffset = 0;
+    // Walk right-pinned columns from rightmost → leftmost so cumulative
+    // offsets accumulate against the right edge correctly.
+    for (let i = rightCols.length - 1; i >= 0; i--) {
+      const c = rightCols[i];
+      map[c.key] = {
+        side: 'right',
+        offset: rightOffset,
+        isEdge: i === 0,
+      };
+      rightOffset += widthOf(c);
+    }
+    return map;
+  }, [columns, colWidths, selectable]);
+
+  const hasPinned = Object.keys(pinnedOffsets).length > 0;
+
+  // ── Pinned-column scroll-shadow detection ─────────────────────────────
+  // Track horizontal scroll position on the scroll container; expose state
+  // via data-attrs so CSS can paint a subtle shadow on the boundary column.
+  const [scrolledLeft, setScrolledLeft] = useState(false);
+  const [scrolledRight, setScrolledRight] = useState(false);
+  const scrollRafRef = useRef<number | null>(null);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    // "scrolled left" = content has been scrolled toward the right, i.e.
+    // there is content hidden behind the left-pinned columns.
+    setScrolledLeft(el.scrollLeft > 0);
+    setScrolledRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  }, []);
+
+  const handleHorizontalScroll = useCallback(() => {
+    if (scrollRafRef.current != null) return;
+    scrollRafRef.current = requestAnimationFrame(() => {
+      scrollRafRef.current = null;
+      updateScrollState();
+    });
+  }, [updateScrollState]);
+
+  useEffect(() => {
+    if (!hasPinned) return;
+    // Run once on mount/columns-change so initial scrolledRight reflects
+    // whether the table is wider than the container.
+    updateScrollState();
+    return () => {
+      if (scrollRafRef.current != null) cancelAnimationFrame(scrollRafRef.current);
+    };
+  }, [hasPinned, updateScrollState, columns.length]);
+
+  // Build the sticky CSS for a pinned cell. Shared between header and body.
+  const getPinnedStyle = useCallback(
+    (col: DataGridColumn<T>, isHeader: boolean): CSSProperties => {
+      const pin = pinnedOffsets[col.key];
+      if (!pin) return {};
+      const showLeftShadow =
+        pin.side === 'left' && pin.isEdge && scrolledLeft;
+      const showRightShadow =
+        pin.side === 'right' && pin.isEdge && scrolledRight;
+      const shadow = showLeftShadow
+        ? '2px 0 4px rgba(0,0,0,0.15)'
+        : showRightShadow
+          ? '-2px 0 4px rgba(0,0,0,0.15)'
+          : undefined;
+      return {
+        position: 'sticky',
+        [pin.side]: pin.offset,
+        // Header pinned cells need a higher z-index so they stay above body
+        // pinned cells when the header is also sticky.
+        zIndex: isHeader ? 3 : 2,
+        backgroundColor: theme.surface,
+        boxShadow: shadow,
+      };
+    },
+    [pinnedOffsets, scrolledLeft, scrolledRight, theme.surface],
+  );
+
   const handleResizeStart = useCallback(
     (key: string, e: ReactMouseEvent) => {
       e.preventDefault();
@@ -577,6 +1147,118 @@ export function TkxDataGrid<T = any>({
     URL.revokeObjectURL(url);
   }, [columns, filteredData, exportFileName]);
 
+  // ── Cell editing ────────────────────────────────────────────────────────
+  // Tracks which (rowId, columnKey) cell is currently being edited and any
+  // in-flight async commit. Editing one cell while another is active forces
+  // a commit of the previous one first.
+  const [editing, setEditing] = useState<
+    { rowId: string; columnKey: string } | null
+  >(null);
+  const [savingCell, setSavingCell] = useState<
+    { rowId: string; columnKey: string } | null
+  >(null);
+  const focusCellRef = useRef<{ rowId: string; columnKey: string } | null>(null);
+  const cellRefs = useRef<Map<string, HTMLTableCellElement>>(new Map());
+  // Warn once per session about rows missing a stable rowId.
+  const missingRowIdWarnedRef = useRef(false);
+
+  const isColumnEditable = useCallback(
+    (col: DataGridColumn<T>, row: T): boolean => {
+      if (col.editable == null || col.editable === false) return false;
+      if (typeof col.editable === 'function') {
+        try {
+          return col.editable(row);
+        } catch {
+          return false;
+        }
+      }
+      return col.editable === true;
+    },
+    [],
+  );
+
+  const enterEdit = useCallback(
+    (rowId: string, col: DataGridColumn<T>, row: T) => {
+      // If rowId looks bogus (e.g. "undefined"/"null") warn and bail.
+      if (rowId === 'undefined' || rowId === 'null' || rowId === '') {
+        if (!missingRowIdWarnedRef.current) {
+          missingRowIdWarnedRef.current = true;
+          // eslint-disable-next-line no-console
+          console.warn(
+            '[TkxDataGrid] Cannot edit cell — row has no stable rowId. Editing disabled for this row.',
+          );
+        }
+        return;
+      }
+      setEditing({ rowId, columnKey: col.key });
+      onCellEditStart?.({ rowId, columnKey: col.key, row });
+    },
+    [onCellEditStart],
+  );
+
+  const exitEditWithFocus = useCallback(
+    (rowId: string, columnKey: string) => {
+      focusCellRef.current = { rowId, columnKey };
+      setEditing(null);
+    },
+    [],
+  );
+
+  // Restore focus to the cell after the editor unmounts.
+  useEffect(() => {
+    if (editing !== null || !focusCellRef.current) return;
+    const { rowId, columnKey } = focusCellRef.current;
+    const key = `${rowId}::${columnKey}`;
+    const el = cellRefs.current.get(key);
+    if (el) el.focus();
+    focusCellRef.current = null;
+  }, [editing]);
+
+  const handleCellCommit = useCallback(
+    (row: T, col: DataGridColumn<T>, newValue: unknown) => {
+      const rowId = getRowId(row, rowKey);
+      const oldValue = getCellValue(row, col.key);
+      if (oldValue === newValue) {
+        exitEditWithFocus(rowId, col.key);
+        return;
+      }
+      const result = onCellEdit?.({
+        rowId,
+        columnKey: col.key,
+        newValue,
+        oldValue,
+        row,
+      });
+      if (result && typeof (result as Promise<void>).then === 'function') {
+        setSavingCell({ rowId, columnKey: col.key });
+        exitEditWithFocus(rowId, col.key);
+        (result as Promise<void>)
+          .catch(() => {
+            /* surface via consumer's own error handling */
+          })
+          .finally(() => {
+            setSavingCell(prev =>
+              prev && prev.rowId === rowId && prev.columnKey === col.key
+                ? null
+                : prev,
+            );
+          });
+      } else {
+        exitEditWithFocus(rowId, col.key);
+      }
+    },
+    [rowKey, onCellEdit, exitEditWithFocus],
+  );
+
+  const handleCellCancel = useCallback(
+    (row: T, col: DataGridColumn<T>) => {
+      const rowId = getRowId(row, rowKey);
+      onCellEditCancel?.({ rowId, columnKey: col.key, row });
+      exitEditWithFocus(rowId, col.key);
+    },
+    [rowKey, onCellEditCancel, exitEditWithFocus],
+  );
+
   // ── Cell sizing ─────────────────────────────────────────────────────────
   const py = compact ? '4px' : '8px';
   const px = compact ? '8px' : '12px';
@@ -618,7 +1300,14 @@ export function TkxDataGrid<T = any>({
 
       <div
         ref={scrollContainerRef}
-        onScroll={isVirtual ? handleScroll : undefined}
+        data-scrolled-left={hasPinned && scrolledLeft ? '' : undefined}
+        data-scrolled-right={hasPinned && scrolledRight ? '' : undefined}
+        onScroll={(e) => {
+          if (isVirtual) handleScroll();
+          if (hasPinned) handleHorizontalScroll();
+          // suppress unused
+          void e;
+        }}
         style={{
           maxHeight: maxHeight ?? 'none',
           overflowX: 'auto',
@@ -638,8 +1327,10 @@ export function TkxDataGrid<T = any>({
                   scope="col"
                   role="columnheader"
                   style={{
-                    position: stickyHeader ? 'sticky' : 'static',
-                    top: 0, zIndex: 2,
+                    position: stickyHeader || hasPinned ? 'sticky' : 'static',
+                    top: 0,
+                    left: hasPinned ? 0 : undefined,
+                    zIndex: 3,
                     backgroundColor: theme.surface,
                     borderBottom: `2px solid ${theme.border}`,
                     borderRight,
@@ -667,18 +1358,22 @@ export function TkxDataGrid<T = any>({
                 const isSortable = (col.sortable ?? sortable) && col.sortable !== false;
                 const isSorted = sortKey === col.key;
                 const safeHeader = sanitizeString(col.header);
+                const pinnedHeaderStyle = getPinnedStyle(col, true);
+                const isPinned = !!pinnedOffsets[col.key];
 
                 return (
                   <th
                     key={col.key}
                     scope="col"
                     role="columnheader"
+                    data-pinned={pinnedOffsets[col.key]?.side}
                     aria-sort={isSorted ? (sortDir === 'asc' ? 'ascending' : 'descending') : (isSortable ? 'none' : undefined)}
                     className={tkx('text-xs font-semibold uppercase tracking-wider')}
                     style={{
                       ...getColStyle(col),
-                      position: stickyHeader ? 'sticky' : 'static',
-                      top: 0, zIndex: 2,
+                      position: stickyHeader || isPinned ? 'sticky' : 'static',
+                      top: 0,
+                      zIndex: isPinned ? (pinnedHeaderStyle.zIndex as number) : 2,
                       backgroundColor: theme.surface,
                       color: theme.textMuted,
                       borderBottom: `2px solid ${theme.border}`,
@@ -687,6 +1382,9 @@ export function TkxDataGrid<T = any>({
                       userSelect: 'none',
                       whiteSpace: 'nowrap',
                       transition: reduced ? 'none' : 'background-color 150ms ease',
+                      // Pinned-cell overrides (left/right offset + box-shadow).
+                      // Spread AFTER base so sticky offset & shadow win.
+                      ...pinnedHeaderStyle,
                     }}
                     onClick={isSortable ? () => handleSort(col.key) : undefined}
                     onKeyDown={isSortable ? e => {
@@ -730,18 +1428,31 @@ export function TkxDataGrid<T = any>({
                       borderRight,
                       padding: `4px ${px}`,
                       width: 40,
+                      ...(hasPinned
+                        ? { position: 'sticky', left: 0, zIndex: 2 }
+                        : {}),
                     }}
                   />
                 )}
-                {columns.map(col => (
+                {columns.map(col => {
+                  const pinned = pinnedOffsets[col.key];
+                  return (
                   <th
                     key={col.key}
                     scope="col"
+                    data-pinned={pinned?.side}
                     style={{
                       backgroundColor: theme.surfaceAlt,
                       borderBottom: `1px solid ${theme.border}`,
                       borderRight,
                       padding: `4px ${px}`,
+                      ...(pinned
+                        ? {
+                            position: 'sticky',
+                            [pinned.side]: pinned.offset,
+                            zIndex: 2,
+                          }
+                        : {}),
                     }}
                   >
                     {(col.filterable || showFilters) && (
@@ -766,7 +1477,8 @@ export function TkxDataGrid<T = any>({
                       />
                     )}
                   </th>
-                ))}
+                  );
+                })}
               </tr>
             )}
           </thead>
@@ -777,13 +1489,262 @@ export function TkxDataGrid<T = any>({
           {/* ── Body ──────────────────────────────────────────────── */}
           {!loading && (
             <tbody>
-              {pagedData.length === 0 ? (
+              {pagedItems.length === 0 ? (
                 <tr>
                   <td colSpan={totalCols} className={tkx('text-center py-10')}
                     style={{ color: theme.textMuted }}>
                     {safeEmpty}
                   </td>
                 </tr>
+              ) : validGroupBy ? (
+                <>
+                  {pagedItems.map((item, i) => {
+                    if (item.type === 'group') {
+                      const isExpanded = expanded.has(item.key);
+                      const groupRowsId = `${gridId}-group-${item.key}`;
+                      return (
+                        <tr
+                          key={`group:${item.key}`}
+                          role="row"
+                          data-group-row=""
+                          data-group-key={item.key}
+                          tabIndex={0}
+                          onClick={() => toggleGroup(item.key)}
+                          onKeyDown={e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              toggleGroup(item.key);
+                            }
+                          }}
+                          style={{
+                            backgroundColor: theme.surfaceAlt,
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                          }}
+                        >
+                          {selectable && (
+                            <td
+                              style={{
+                                borderBottom: `1px solid ${theme.border}`,
+                                borderRight,
+                                padding: `${py} ${px}`,
+                                width: 40,
+                                backgroundColor: theme.surfaceAlt,
+                                ...(hasPinned
+                                  ? { position: 'sticky', left: 0, zIndex: 2 }
+                                  : {}),
+                              }}
+                            />
+                          )}
+                          {columns.map((col, ci) => {
+                            const pinnedCellStyle = getPinnedStyle(col, false);
+                            // Override pinned background to surfaceAlt so
+                            // the group row reads as a single band even
+                            // across pinned columns.
+                            const pinned = !!pinnedOffsets[col.key];
+                            const aggValue = computeAggregate(col, item.rows);
+                            const isFirstCol = ci === 0;
+                            return (
+                              <td
+                                key={col.key}
+                                role={isFirstCol ? 'rowheader' : 'gridcell'}
+                                data-pinned={pinnedOffsets[col.key]?.side}
+                                aria-expanded={isFirstCol ? isExpanded : undefined}
+                                aria-controls={isFirstCol ? groupRowsId : undefined}
+                                className={tkx('text-sm')}
+                                style={{
+                                  ...getColStyle(col),
+                                  borderBottom: `1px solid ${theme.border}`,
+                                  borderRight,
+                                  color: theme.text,
+                                  whiteSpace: 'nowrap',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  ...pinnedCellStyle,
+                                  ...(pinned
+                                    ? { backgroundColor: theme.surfaceAlt }
+                                    : {}),
+                                }}
+                              >
+                                {isFirstCol ? (
+                                  <span>
+                                    <GroupCaret expanded={isExpanded} />
+                                    {sanitizeString(item.key) || '(empty)'}
+                                    <span
+                                      style={{
+                                        marginLeft: 8,
+                                        fontWeight: 400,
+                                        color: theme.textMuted,
+                                        fontSize: 12,
+                                      }}
+                                    >
+                                      ({item.rows.length} row{item.rows.length !== 1 ? 's' : ''})
+                                    </span>
+                                    {aggValue !== undefined && col.key !== validGroupBy && (
+                                      <span
+                                        style={{
+                                          marginLeft: 12,
+                                          fontWeight: 400,
+                                          color: theme.textMuted,
+                                          fontSize: 12,
+                                        }}
+                                        data-group-agg={col.key}
+                                      >
+                                        {String(aggValue)}
+                                      </span>
+                                    )}
+                                  </span>
+                                ) : aggValue !== undefined ? (
+                                  <span data-group-agg={col.key}>
+                                    {String(aggValue)}
+                                  </span>
+                                ) : null}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    }
+                    // Detail row
+                    const row = item.row;
+                    const rowIndex = i;
+                    const id = getRowId(row, rowKey);
+                    const isSelected = selectedSet.has(id);
+                    const isStriped = striped && rowIndex % 2 === 1;
+                    let rowBg = 'transparent';
+                    if (isSelected) rowBg = `${theme.primary}22`;
+                    else if (isStriped) rowBg = theme.surfaceAlt;
+                    return (
+                      <tr
+                        key={id}
+                        role="row"
+                        aria-rowindex={rowIndex + 1}
+                        aria-selected={selectable ? isSelected : undefined}
+                        data-group-key={String((row as Record<string, unknown>)[validGroupBy] ?? '')}
+                        onClick={onRowClick ? () => onRowClick(row) : undefined}
+                        onKeyDown={onRowClick ? e => {
+                          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRowClick(row); }
+                        } : undefined}
+                        tabIndex={onRowClick ? 0 : undefined}
+                        className={tkx(onRowClick ? 'cursor-pointer' : '')}
+                        style={{
+                          backgroundColor: rowBg,
+                          transition: reduced ? 'none' : 'background-color 120ms ease',
+                        }}
+                      >
+                        {selectable && (
+                          <td
+                            role="gridcell"
+                            style={{
+                              borderBottom: `1px solid ${theme.border}`,
+                              borderRight,
+                              padding: `${py} ${px}`,
+                              textAlign: 'center',
+                              width: 40,
+                              ...(hasPinned
+                                ? {
+                                    position: 'sticky',
+                                    left: 0,
+                                    zIndex: 2,
+                                    backgroundColor: theme.surface,
+                                  }
+                                : {}),
+                            }}
+                          >
+                            <label
+                              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', margin: '0 auto', width: 16 }}
+                              onClick={e => e.stopPropagation()}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggleRow(id)}
+                                aria-label={isSelected ? `Deselect row ${id}` : `Select row ${id}`}
+                                style={{ position: 'absolute', opacity: 0, width: 16, height: 16, cursor: 'pointer', margin: 0 }}
+                              />
+                              <CheckboxIcon checked={isSelected} />
+                            </label>
+                          </td>
+                        )}
+                        {columns.map(col => {
+                          const value = getCellValue(row, col.key);
+                          const cellContent = col.renderCell
+                            ? col.renderCell(value, row)
+                            : typeof value === 'string'
+                              ? sanitizeString(value)
+                              : String(value ?? '');
+                          const pinnedCellStyle = getPinnedStyle(col, false);
+                          const editableHere = isColumnEditable(col, row);
+                          const isEditing =
+                            editing?.rowId === id && editing.columnKey === col.key;
+                          const isSaving =
+                            savingCell?.rowId === id &&
+                            savingCell.columnKey === col.key;
+                          const cellKey = `${id}::${col.key}`;
+                          return (
+                            <td
+                              key={col.key}
+                              role="gridcell"
+                              data-pinned={pinnedOffsets[col.key]?.side}
+                              data-editing={isEditing ? '' : undefined}
+                              data-saving={isSaving ? '' : undefined}
+                              aria-readonly={editableHere ? 'false' : undefined}
+                              tabIndex={editableHere ? 0 : undefined}
+                              ref={el => {
+                                if (el) cellRefs.current.set(cellKey, el);
+                                else cellRefs.current.delete(cellKey);
+                              }}
+                              onDoubleClick={
+                                editableHere && !isEditing
+                                  ? e => {
+                                      e.stopPropagation();
+                                      enterEdit(id, col, row);
+                                    }
+                                  : undefined
+                              }
+                              onKeyDown={
+                                editableHere && !isEditing
+                                  ? e => {
+                                      if (e.key === 'Enter' || e.key === 'F2') {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        enterEdit(id, col, row);
+                                      }
+                                    }
+                                  : undefined
+                              }
+                              className={tkx('text-sm')}
+                              style={{
+                                ...getColStyle(col),
+                                borderBottom: `1px solid ${theme.border}`,
+                                borderRight,
+                                color: theme.text,
+                                overflow: isEditing ? 'visible' : 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: isEditing ? 'normal' : 'nowrap',
+                                opacity: isSaving ? 0.6 : 1,
+                                cursor: editableHere && !isEditing ? 'text' : undefined,
+                                ...pinnedCellStyle,
+                              }}
+                            >
+                              {isEditing ? (
+                                <CellEditor
+                                  col={col}
+                                  row={row}
+                                  initialValue={value}
+                                  onCommit={v => handleCellCommit(row, col, v)}
+                                  onCancel={() => handleCellCancel(row, col)}
+                                />
+                              ) : (
+                                cellContent
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </>
               ) : (
                 <>
                   {/* Top spacer for virtual scrolling */}
@@ -838,6 +1799,14 @@ export function TkxDataGrid<T = any>({
                               padding: `${py} ${px}`,
                               textAlign: 'center',
                               width: 40,
+                              ...(hasPinned
+                                ? {
+                                    position: 'sticky',
+                                    left: 0,
+                                    zIndex: 2,
+                                    backgroundColor: theme.surface,
+                                  }
+                                : {}),
                             }}
                           >
                             <label
@@ -865,22 +1834,71 @@ export function TkxDataGrid<T = any>({
                               ? sanitizeString(value)
                               : String(value ?? '');
 
+                          const pinnedCellStyle = getPinnedStyle(col, false);
+                          const editableHere = isColumnEditable(col, row);
+                          const isEditing =
+                            editing?.rowId === id && editing.columnKey === col.key;
+                          const isSaving =
+                            savingCell?.rowId === id &&
+                            savingCell.columnKey === col.key;
+                          const cellKey = `${id}::${col.key}`;
                           return (
                             <td
                               key={col.key}
                               role="gridcell"
+                              data-pinned={pinnedOffsets[col.key]?.side}
+                              data-editing={isEditing ? '' : undefined}
+                              data-saving={isSaving ? '' : undefined}
+                              aria-readonly={editableHere ? 'false' : undefined}
+                              tabIndex={editableHere ? 0 : undefined}
+                              ref={el => {
+                                if (el) cellRefs.current.set(cellKey, el);
+                                else cellRefs.current.delete(cellKey);
+                              }}
+                              onDoubleClick={
+                                editableHere && !isEditing
+                                  ? e => {
+                                      e.stopPropagation();
+                                      enterEdit(id, col, row);
+                                    }
+                                  : undefined
+                              }
+                              onKeyDown={
+                                editableHere && !isEditing
+                                  ? e => {
+                                      if (e.key === 'Enter' || e.key === 'F2') {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        enterEdit(id, col, row);
+                                      }
+                                    }
+                                  : undefined
+                              }
                               className={tkx('text-sm')}
                               style={{
                                 ...getColStyle(col),
                                 borderBottom: `1px solid ${theme.border}`,
                                 borderRight,
                                 color: theme.text,
-                                overflow: 'hidden',
+                                overflow: isEditing ? 'visible' : 'hidden',
                                 textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
+                                whiteSpace: isEditing ? 'normal' : 'nowrap',
+                                opacity: isSaving ? 0.6 : 1,
+                                cursor: editableHere && !isEditing ? 'text' : undefined,
+                                ...pinnedCellStyle,
                               }}
                             >
-                              {cellContent}
+                              {isEditing ? (
+                                <CellEditor
+                                  col={col}
+                                  row={row}
+                                  initialValue={value}
+                                  onCommit={v => handleCellCommit(row, col, v)}
+                                  onCancel={() => handleCellCancel(row, col)}
+                                />
+                              ) : (
+                                cellContent
+                              )}
                             </td>
                           );
                         })}

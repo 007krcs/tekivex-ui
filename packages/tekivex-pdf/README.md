@@ -159,5 +159,5 @@ This package is **preview**. The API surface is stable enough to use; we
 publish to npm on demand once a real consumer hits a workflow that needs
 it. The source is production-ready in this repo today.
 
-[Open an issue](https://github.com/novaai0401-ui/tekivex-issue-report/issues/new) and we'll
+[Open an issue](https://github.com/007krcs/tekivex-ui/issues/new) and we'll
 tag a release within 48 hours.

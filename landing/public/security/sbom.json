@@ -1,0 +1,83 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:7c3f9a2e-5b8d-4e1f-9c6a-2d4b8e7f1a3c",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-05-26T00:00:00Z",
+    "tools": [
+      {
+        "vendor": "TekiVex",
+        "name": "scripts/generate-sbom.mjs",
+        "version": "1.0.0"
+      }
+    ],
+    "component": {
+      "type": "library",
+      "bom-ref": "pkg:npm/tekivex-ui@3.17.0",
+      "name": "tekivex-ui",
+      "version": "3.17.0",
+      "description": "Production-grade React component library — 115 components (plus 4 experimental, opt-in), WCAG 2.1 AAA, WAI-ARIA 1.2, built-in security kernel with published threat model, built-in charts, headless primitives, zero-runtime CSS engine, 44-locale i18n, Indian KYC pack, agent runtime (Anthropic/OpenAI/Gemini/Ollama/MCP/A2A), TypeScript-first.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/tekivex-ui@3.17.0",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://ui.tekivex.com/"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/007krcs/tekivex-ui.git"
+        },
+        {
+          "type": "issue-tracker",
+          "url": "https://github.com/007krcs/tekivex-ui/issues"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/react",
+      "name": "react",
+      "version": ">=18.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/react@%3E%3D18.0.0",
+      "description": "React peer dependency (host-provided)."
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/react-dom",
+      "name": "react-dom",
+      "version": ">=18.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/react-dom@%3E%3D18.0.0",
+      "description": "React DOM peer dependency (host-provided)."
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/recharts",
+      "name": "recharts",
+      "version": ">=2.0.0 || >=3.0.0",
+      "scope": "optional",
+      "purl": "pkg:npm/recharts@%3E%3D2.0.0%20%7C%7C%20%3E%3D3.0.0",
+      "description": "Optional peer dependency — required only when using tekivex-ui/charts."
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/three",
+      "name": "three",
+      "version": ">=0.160.0",
+      "scope": "optional",
+      "purl": "pkg:npm/three@%3E%3D0.160.0",
+      "description": "Optional peer dependency — required only when using tekivex-ui/quantum 3D primitives."
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 // One-shot cleanup: replace every github.com/007krcs/* and github.com/sponsors/007krcs
 // reference across the codebase with ui.tekivex.com. Keep only the public
-// issue-report repo URL (https://github.com/novaai0401-ui/tekivex-issue-report).
+// issue-report repo URL (https://github.com/007krcs/tekivex-ui).
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ALLOWED = 'https://github.com/novaai0401-ui/tekivex-issue-report';
+const ALLOWED = 'https://github.com/007krcs/tekivex-ui';
 const SITE = 'https://ui.tekivex.com';
 
 function walk(dir, exts) {
@@ -60,9 +60,9 @@ for (const f of targets) {
   // 6. github.com/seemaalmas → site
   s = s.replace(/https?:\/\/github\.com\/seemaalmas/g, SITE);
 
-  // 7. user-only github.com/novaai0401-ui without tekivex-issue-report → site
+  // 7. user-only github.com/novaai0401-ui → site (legacy team identity)
   s = s.replace(
-    /https?:\/\/github\.com\/novaai0401-ui(?!\/tekivex-issue-report)/g,
+    /https?:\/\/github\.com\/novaai0401-ui[\w\-/]*/g,
     SITE,
   );
 

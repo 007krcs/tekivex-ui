@@ -35,12 +35,35 @@ class ChunkErrorBoundary extends Component<
 
   render() {
     if (this.state.hasError && this.state.reloaded) {
+      const reset = () => {
+        try {
+          sessionStorage.removeItem('tkx-chunk-reloaded');
+          sessionStorage.removeItem('tkx-route');
+        } catch { /* ignore */ }
+        window.location.replace(window.location.pathname);
+      };
       return (
-        <div style={{ padding: '48px 32px', color: '#f72585', fontFamily: 'monospace' }}>
-          <strong>⚠ TekiVex UI — Render Error</strong>
-          <p style={{ marginTop: 12, color: '#e8e8f4', fontSize: 14 }}>
-            A page chunk failed to load. Please hard-refresh (Ctrl+Shift+R) to clear the cache.
+        <div style={{ padding: '48px 32px', color: '#f72585', fontFamily: 'monospace', maxWidth: 720 }}>
+          <strong style={{ fontSize: 18 }}>⚠ TekiVex UI — Render Error</strong>
+          <p style={{ marginTop: 16, color: '#e8e8f4', fontSize: 14, lineHeight: 1.6 }}>
+            A page chunk failed to load. This usually means the dev server is stale —
+            either it was restarted, or it&apos;s running an older config.
           </p>
+          <ol style={{ color: '#e8e8f4', fontSize: 14, lineHeight: 1.8, paddingLeft: 20 }}>
+            <li>In the terminal where vite is running, press <code>Ctrl+C</code> and re-run <code>npm run dev</code>.</li>
+            <li>Click the button below — it clears the chunk-reload guard and reloads the page.</li>
+          </ol>
+          <button
+            type="button"
+            onClick={reset}
+            style={{
+              marginTop: 16, padding: '10px 20px', borderRadius: 8, border: 'none',
+              background: '#00f5d4', color: '#0a0a1a', fontWeight: 700, cursor: 'pointer',
+              fontFamily: 'inherit', fontSize: 14,
+            }}
+          >
+            Reset and reload
+          </button>
         </div>
       );
     }
@@ -131,6 +154,9 @@ const LiveMetricsPage = lazy(() => import('./docs/LiveMetricsPage').then(m => ({
 const RealTimeChartPage = lazy(() => import('./docs/RealTimeChartPage').then(m => ({ default: m.RealTimeChartPage })));
 const LiveLogPage = lazy(() => import('./docs/LiveLogPage').then(m => ({ default: m.LiveLogPage })));
 const DataGridInfinitePage = lazy(() => import('./docs/DataGridInfinitePage').then(m => ({ default: m.DataGridInfinitePage })));
+
+// ── Agent runtime page — lazy loaded ──────────────────────────────────────────
+const AgentPage = lazy(() => import('./docs/AgentPage').then(m => ({ default: m.AgentPage })));
 
 // ── Quantum AI pages — lazy loaded ────────────────────────────────────────────
 const QuantumFormPage = lazy(() => import('./docs/QuantumFormPage').then(m => ({ default: m.QuantumFormPage })));
@@ -246,6 +272,8 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/realtime-chart': RealTimeChartPage,
   '/live-log': LiveLogPage,
   '/datagrid-infinite': DataGridInfinitePage,
+  // ── Agent runtime ─────────────────────────────────────────────────────────
+  '/agent': AgentPage,
   // ── Quantum AI routes ─────────────────────────────────────────────────────
   '/quantum-form': QuantumFormPage,
   '/theme-builder': ThemeBuilderPage,

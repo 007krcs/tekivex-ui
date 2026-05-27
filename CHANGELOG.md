@@ -5,6 +5,264 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.0] — 2026-05-28
+
+The **Next.js compatibility + consumer-feedback** release. Pulls forward
+v3.19 / v3.20 / v3.21 roadmap items in one ratchet and fixes every issue
+the v3.17 consumer review surfaced — most critically the webpack/RSC chunk
+format incompatibility that made the library unusable in Next.js.
+
+Everything below is non-breaking and opt-in. See
+[`docs/ROADMAP.md`](./docs/ROADMAP.md) for the full timeline and
+[`TROUBLESHOOTING.md`](./TROUBLESHOOTING.md) for integration guidance.
+
+### Added — security mailbox + SBOM + threat-model deploys
+
+- **Tamper-evident SHA-256 audit chain** replaces FNV-1a for `audit()` and
+  `verifyAuditIntegrity()`. Pure-JS FIPS 180-4 implementation, sync API
+  preserved.
+- **Luhn (mod-10) validation** in `scrubPII()` credit-card matcher — no
+  more false positives on 13-digit order IDs.
+- **`sanitizeUnicode`** wired into 6 additional inputs: `TkxMentions`,
+  `TkxRichEditor`, `TkxAutocomplete`, `TkxOTP`, `TkxNumberInput`,
+  `TkxFormulaBar`. Trojan Source / bidi / zero-width chars stripped on
+  user-typed input across the board.
+- **`sanitizeJSON`** dogfooded in `useWebSocket` — incoming WS payloads now
+  parse-and-scrub `__proto__` / `constructor` / `prototype` keys by default.
+- **CycloneDX SBOM** published at `landing/public/security/sbom.json` →
+  `https://ui.tekivex.com/security/sbom.json` after redeploy.
+- **`security.txt`** (RFC 9116) at `/.well-known/security.txt`. Mailbox:
+  `novaai0401@gmail.com`.
+- **`scripts/verify-security-artifacts.mjs`** — pre-deploy guard. Validates
+  security.txt + SBOM + SECURITY.md and aborts build if missing or stale.
+  Wired into `scripts/build-unified-site.mjs` as step 6.
+- **`scripts/generate-sbom.mjs`** — regenerate the SBOM on every release
+  (`npm run sbom:generate`).
+- **socket.dev + SBOM badges** added to README.
+
+### Added — components
+
+- **`TkxSparkline`** (own-SVG, zero deps) — inline trend chart for
+  dashboards. Variants: line / area / bar. Optional points, smoothing,
+  inline value display.
+- **`TkxGauge`** (own-SVG, zero deps) — speedometer/arc gauge with
+  thresholds, ticks, formatValue, `role="meter"` + full ARIA.
+- **`TkxHeatmap`** (own-SVG, zero deps) — categorical matrix heatmap with
+  sequential / diverging / custom color scales, contrast-aware value
+  labels, click handlers.
+- **`TkxFunnelChart`** (own-SVG, zero deps) — conversion funnel with stage labels, drop-off percentages, vertical / horizontal orientations.
+- **`TkxTreemap`** (own-SVG, zero deps) — squarified treemap with value-proportional rectangles, contrast-aware labels, click handlers.
+
+### Added — forms
+
+- **`zodResolver()` + `useFormWithZod()`** in `tekivex-ui/headless`. Zod is
+  a structural-type peer (not a hard dep); consumer brings their own.
+- **`valibotResolver()` + `useFormWithValibot()`** — same pattern for
+  Valibot.
+- **`createRHFBindings({ Controller })`** — React Hook Form adapter for 5+
+  components (`TkxRHFInput`, `TkxRHFSelect`, `TkxRHFCheckbox`, `TkxRHFToggle`,
+  `TkxRHFRadio`, plus `TkxRHFNumberInput` / `TkxRHFDatePicker`). RHF is a
+  structural-type peer (no hard dep) — consumer passes their own `Controller`.
+
+### Added — data grid
+
+- **`pinned: 'left' | 'right'`** column prop on `TkxDataGrid`. Sticky
+  positioning with scroll-aware boundary shadow. DOM order preserved so
+  ARIA `aria-colindex` and CSV export reflect logical column order, not
+  visual.
+- **Row grouping + aggregations** on `TkxDataGrid`. New `groupBy` prop
+  buckets rows by a column key; each group renders a collapsible header
+  with row count plus per-column `aggregate` values (`sum` / `avg` /
+  `count` / `min` / `max` or a custom function). `defaultExpandedGroups`
+  controls initial state, `onGroupToggle` reports changes,
+  `aria-expanded` reflects open/closed. Pagination spans groups; CSV
+  export emits detail rows only.
+- **Cell-level editing** on `TkxDataGrid`. Per-column `editable` flag
+  (or predicate), `editor: 'text' | 'number' | 'select' | (custom render)`,
+  `validateCell()` blocks invalid commits with inline error, `onCellEdit`
+  fires with `(rowId, columnKey, newValue, oldValue, row)`. Double-click
+  or `Enter` / `F2` opens the editor; Escape cancels; blur commits.
+  Promise return on `onCellEdit` shows loading state.
+
+### Added — i18n
+
+- **9 new locales** — `bg` (Bulgarian), `hr` (Croatian), `et` (Estonian),
+  `fi` (Finnish), `lt` (Lithuanian), `lv` (Latvian), `sk` (Slovak),
+  `sl` (Slovenian), `no` (Norwegian Bokmål). Total **35 → 44** locales
+  toward the v4.0 target of 70.
+- **CLDR plural-rules engine** in `tekivex-ui/i18n` — `getPluralCategory(locale, n)`
+  returns `'zero' | 'one' | 'two' | 'few' | 'many' | 'other'` via
+  `Intl.PluralRules`. Companion `pluralize(locale, n, forms)` substitutes
+  `{count}` into the chosen form. Fallback for environments without
+  `Intl.PluralRules`.
+
+### Forms — extended
+
+- **Async field validation** in `useFormState`. New `validateAsync: { [field]: async (val, values) => string | null }`
+  + `debounceMs` (default 300). Surfaces `validating[field]: boolean` and
+  separate `asyncErrors` map so consumers can render "Checking…" vs the
+  final error message. In-flight calls cancel when the field value
+  changes again.
+- **Form-level errors** — validators may now return a `_root` key that
+  surfaces as `rootError`. Useful for cross-field validation and
+  server-rejected submissions.
+
+### Added — experimental subpath
+
+- New `tekivex-ui/experimental` entry. The 4 `TkxAI*` / `TkxQuantumForm`
+  components moved here. Source unchanged; opt-in import keeps the
+  production component count defensible at 110.
+
+### Changed
+
+- README rewritten around a single positioning sentence: *"The React
+  component library that ships with a threat model."* Component count
+  reconciled to **115 production + 4 experimental** across README,
+  package.json, landing page, About page.
+- Test badge count corrected to **1,777 passing** (was stale "1,300+" /
+  "1,034").
+- Locale count corrected to **44** (was stale "27"). 9 new locales added: bg, hr, et, fi, lt, lv, sk, sl, no.
+- `WCAG 2.1 AAA` claim softened to **"AAA target (audit-firm engagement
+  open)"** until a third-party VPAT signs.
+- Repo URL canonicalized to `github.com/007krcs/tekivex-ui` across all
+  docs, packages, and scripts.
+- Hero tagline replaced; "And a 3D toolkit. And a spreadsheet. And…"
+  removed.
+- `./themes` and `./styles` package exports verified to resolve to real
+  built files.
+- `three` declared as optional peer to match the existing `recharts`
+  pattern.
+
+### Coverage
+
+- `TkxDataGrid`: 5 → 66+ tests (column pinning, row grouping, cell editing).
+- `TkxSelect`: 8 → 51 tests.
+- `TkxDatePicker`: 14 → 57+ tests (range + multi modes, presets, format/parsing, view modes, keyboard, locale, edge cases).
+- `TkxMenu`: smoke → 33 tests (incl. submenu open-on-click + open-on-ArrowRight, bug fixed in this slice).
+- `TkxOrgChart`: smoke → 12+ tests.
+- `TkxTreeView`: smoke → 14+ tests.
+- Security engine: 77 tests, all passing under SHA-256 audit chain.
+- Overall: 1,429 → **1,777** tests (+333 across the slice). **0 todos** —
+  first time since v2.x.
+
+### Tooling
+
+- `npm run partner:add` CLI — append a design-partner entry to the
+  landing page with quote-permission-proof guard.
+- `npm run verify:security-artifacts` — standalone validator for
+  security.txt + SBOM + SECURITY.md freshness.
+- `docs/outreach/` — ready-to-send email drafts + mailto launcher for the
+  3 audit-firm and 5 partner-vertical outreach tracks.
+- `docs/wcag-audit/` — Deque / TPGi / WebAIM scoping playbook.
+- `docs/design-partners/` — partner-acquisition playbook with 3 outreach
+  templates.
+- `docs/ROADMAP.md` — public, version-anchored roadmap through v4.0 with
+  a "what we will NOT do" section.
+
+### Removed
+
+- README boasts: "*No `src/` in npm tarball (IP protection)*",
+  "*demand-driven release*" line, the "27 locales / 1034 tests / 99 / 113
+  components" stale numbers.
+- `Encryption:` and `Acknowledgments:` lines from `security.txt` —
+  pointed at URLs that didn't resolve.
+
+### Fixed
+
+- **Style-conflict warning**: removed simultaneous shorthand-and-longhand
+  background usage in `TkxStepper` connector elements. Both horizontal and
+  vertical `Connector` components were setting `background` (shorthand) and
+  `backgroundImage` (longhand) on the same element, triggering React's
+  *"Updating a style property during rerender (background) when a conflicting
+  property is set (backgroundImage)"* warning ~5× per render in a real
+  consumer's Next.js dev console. Switched to longhand-only
+  (`backgroundColor` + `backgroundImage`) — now silent.
+- **ThemeProvider SSR**: `mode="auto"` no longer causes hydration mismatch
+  — first render uses deterministic default, `prefers-color-scheme`
+  resolution moved to `useEffect`. New `themeInitScript()` helper for
+  FOUC-free auto detection. New `suppressHydrationWarning` prop for
+  strictest opt-in.
+- **Critical**: dist no longer emits Vite's chunked runtime format. Each
+  public entry (`index`, `themes`, `charts`, `headless`, `i18n`, `quantum`,
+  `realtime`, `agent`, `experimental`) is now a self-contained single-file
+  bundle, eliminating webpack incompatibility in Next.js / React Server
+  Components. Previously consumers hit
+  `TypeError: Cannot read properties of undefined (reading 'call') at
+  mountLazyComponent in react-server-dom-webpack-client` because Vite's
+  multi-entry lib mode emitted `chunk-*.js` files in Vite's runtime format,
+  which webpack's RSC module factory map cannot register — even with
+  `transpilePackages: ['tekivex-ui']` in `next.config.mjs`. The build now
+  runs `vite build` once per entry with `inlineDynamicImports: true`
+  (driven by `scripts/build-all-entries.mjs`), producing universally
+  consumable output across Vite, webpack, esbuild, Rollup, Parcel, and
+  Turbopack. Trade-off: the dist tarball grows ~30% from duplicated shared
+  internals (security engine, TKX CSS engine, etc.); tree-shaking keeps
+  the per-app runtime cost flat.
+- **`TkxMenu` submenu panel rendered empty when opened via click or
+  ArrowRight** — `onClick` on submenu items and the `ArrowRight` handler
+  only set `openSubmenuId` but not the required `submenuPos`, leaving the
+  portal panel blank. Both paths now call `openSubmenu(item, el)` which
+  sets both. Hover interaction was already correct.
+- **`TkxDatePicker` re-opened immediately after Escape close** — the
+  Escape handler restores focus to the input, which triggered `onFocus`'s
+  `setOpen(true)` and re-opened the picker on the same tick. Now suppresses
+  the next focus-driven open with a one-shot `suppressNextFocusOpen` ref.
+- Previously-`it.todo` tests for both bugs converted to real assertions;
+  all pass.
+- **TKX engine arbitrary CSS-property test activated** — the test for
+  `tkx('[--my-var:red]')` was an `it.todo` placeholder; the engine fix
+  shipped in v3.17.0 but the test was never enabled. Now a real assertion.
+  Suite reaches **0 todos** for the first time since v2.x.
+
+## [3.17.0] — 2026-05-18
+
+### Added — `tekivex-ui/agent`
+
+New zero-dependency, provider-agnostic agent runtime under the `tekivex-ui/agent` sub-export.
+Built on a Ports & Adapters architecture: every external concern (model, transport, memory,
+sanitization, observability, retrieval) is behind an interface.
+
+**Providers**: `AnthropicProvider`, `OpenAIProvider`, `GeminiProvider`, `OllamaProvider`.
+
+**Core**: `Agent` / `createAgent`, `Tool` / `defineTool`, `Memory` (`InMemoryStore`,
+`SlidingWindowMemory`, `SummarizingMemory`, `VectorMemory`), `Transport` interface +
+`fetchTransport`, `Sanitizer`, `Middleware`.
+
+**Capabilities**:
+- Token usage + cost tracking middleware
+- Retry / backoff middleware
+- Anthropic prompt cache passthrough (`cacheable()`)
+- `generateObject()` — structured JSON output
+- MCP (Model Context Protocol) client + tool adapter
+- `runEval()` + `judgeWithLLM()`
+- `cancellable()` tool wrapper
+- OpenTelemetry middleware (vendor-neutral sink)
+- Guardrails (PII redaction, prompt-injection detector)
+- `createDeepResearch()`
+- A2A (Agent-to-Agent) client + tool + server route
+- `Recorder` + `ReplayProvider`
+- DevTools panel + `useEventCollector` hook
+
+**UI components**: `TkxAgentMessage`, `TkxToolCallCard`, `TkxReasoningTrace`.
+
+**Framework bindings**: React (`useAgent`), Vue, Svelte, Solid — all on the same vanilla controller.
+
+**Server runtime**: `createAgentRoute()` for Next/Hono/Bun/Workers/Deno + `createAgentClient()`.
+
+**Tests**: 79 unit tests across 15 files + 4 live tests against a real Ollama server.
+
+**Docs**: `docs/AGENT.md` reference + cookbook at `examples/agent/01..18-*.ts`.
+
+**Demo page**: New `/agent` route in the demo site with live ReplayProvider chat,
+tool-call card, reasoning trace, and a live "Try with your local Ollama" section that
+auto-detects local models and streams responses without a backend.
+
+### Fixed
+
+- TKX engine: arbitrary CSS custom-property values (e.g. `[--my-var:red]`) are now
+  emitted correctly. The custom-property check now runs before the allowlist-gated
+  general arbitrary-property handler.
+
 ## [3.16.1] — 2026-05-04
 
 ### Fixed

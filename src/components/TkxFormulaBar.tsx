@@ -1,3 +1,5 @@
+'use client';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TkxFormulaBar — companion to TkxSpreadsheet
 //
@@ -26,6 +28,7 @@
 
 import { useEffect, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { addr, parseAddr, evaluate, type SpreadsheetData } from './TkxSpreadsheet';
+import { sanitizeUnicode } from '../engine/security';
 
 export interface TkxFormulaBarProps {
   /** The same SpreadsheetData passed to TkxSpreadsheet. */
@@ -125,7 +128,7 @@ export function TkxFormulaBar({
         aria-label="Cell address"
         data-testid="formula-bar-name"
         value={nameDraft}
-        onChange={(e) => setNameDraft(e.target.value)}
+        onChange={(e) => setNameDraft(sanitizeUnicode(e.target.value))}
         onKeyDown={onNameKey}
         onBlur={() => {
           // Revert on blur if the address didn't parse — prevents "stuck" bad text.
@@ -171,7 +174,7 @@ export function TkxFormulaBar({
         aria-label="Cell content"
         data-testid="formula-bar-input"
         value={draft}
-        onChange={(e) => setDraft(e.target.value)}
+        onChange={(e) => setDraft(sanitizeUnicode(e.target.value))}
         onKeyDown={onFormulaKey}
         onBlur={commitFormula}
         placeholder="Type a value or =formula"

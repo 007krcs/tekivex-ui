@@ -136,7 +136,7 @@ export function PageShell({
       <p style={{ color: 'var(--tk-fg-muted)', fontSize: 13 }}>
         Spotted an error or want to contribute?{' '}
         <a
-          href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new"
+          href="https://github.com/007krcs/tekivex-ui/issues/new"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: 'var(--tk-prose-link)' }}

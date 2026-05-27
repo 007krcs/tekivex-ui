@@ -13,6 +13,16 @@ export default defineConfig({
       '**/dist/**',
       // Playwright spec — runs under @playwright/test, not Vitest.
       'tests/visual/**',
+      // tekivex-3d is a separate workspace package with its own test
+      // runner. Its component tests import `three` (a heavy peer dep) that
+      // we don't install at the root to keep the dev install lean. Run them
+      // from packages/tekivex-3d/ instead: `cd packages/tekivex-3d && npx vitest run`
+      'packages/tekivex-3d/**',
+      'tests/TkxAvatar3D.test.tsx',
+      'tests/TkxOrbitPath.test.tsx',
+      'tests/TkxPlanet.test.tsx',
+      'tests/TkxPortal3D.test.tsx',
+      'tests/TkxStarfield.test.tsx',
     ],
     coverage: {
       provider: 'v8',

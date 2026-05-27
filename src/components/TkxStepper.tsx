@@ -220,14 +220,12 @@ function Connector({
         style={{
           flex: 1,
           height: connectorWidth,
-          background: connectorStyle === 'solid'
-            ? color
-            : 'none',
+          backgroundColor: connectorStyle === 'solid' ? color : 'transparent',
           backgroundImage: connectorStyle !== 'solid'
             ? `repeating-linear-gradient(90deg, ${color} 0, ${color} 6px, transparent 6px, transparent ${connectorStyle === 'dashed' ? 12 : 9}px)`
             : 'none',
           borderRadius: 1,
-          transition: reducedMotion ? 'none' : 'background 0.3s ease',
+          transition: reducedMotion ? 'none' : 'background-color 0.3s ease, background-image 0.3s ease',
           alignSelf: 'center',
           marginLeft: 4,
           marginRight: 4,
@@ -243,14 +241,12 @@ function Connector({
         width: connectorWidth,
         flex: 1,
         minHeight: 20,
-        background: connectorStyle === 'solid'
-          ? color
-          : 'none',
+        backgroundColor: connectorStyle === 'solid' ? color : 'transparent',
         backgroundImage: connectorStyle !== 'solid'
           ? `repeating-linear-gradient(180deg, ${color} 0, ${color} 6px, transparent 6px, transparent ${connectorStyle === 'dashed' ? 12 : 9}px)`
           : 'none',
         borderRadius: 1,
-        transition: reducedMotion ? 'none' : 'background 0.3s ease',
+        transition: reducedMotion ? 'none' : 'background-color 0.3s ease, background-image 0.3s ease',
         alignSelf: 'stretch',
         marginTop: 4,
         marginBottom: 4,

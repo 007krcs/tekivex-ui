@@ -2,7 +2,7 @@
 
 import { type ReactNode, useState, useRef, useCallback, useEffect } from 'react';
 import { useTheme } from '../themes';
-import { sanitizeString } from '../engine/security';
+import { sanitizeString, sanitizeUnicode } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
 
@@ -53,7 +53,7 @@ export function TkxMentions({
 
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const val = e.target.value;
+      const val = sanitizeUnicode(e.target.value);
       setText(val);
       onChange?.(val);
 

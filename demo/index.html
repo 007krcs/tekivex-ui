@@ -267,19 +267,22 @@
           scroll-behavior: auto !important;
         }
       }
-      /* ── Mobile (≤640 px) — collapse rigid grids and trim padding ────── */
+      /* ── Mobile (≤640 px) — collapse rigid multi-column grids only ───── */
       @media (max-width: 640px) {
-        /* Any inline-style grid with multiple columns collapses to 1.
-           We target every variant of the property string React might emit. */
-        [style*="grid-template-columns"],
-        [style*="gridTemplateColumns"],
-        [style*="repeat("],
-        [style*="1fr 1fr"],
+        /* Collapse RIGID multi-column inline grids. We only target patterns
+           that clearly assume desktop widths. Responsive grids (auto-fill,
+           minmax, or pages that already branch on isMobile) are NOT touched. */
+        [style*="repeat(3, 1fr)"],
+        [style*="repeat(3,1fr)"],
+        [style*="repeat(4, 1fr)"],
+        [style*="repeat(4,1fr)"],
+        [style*="1fr 1fr 1fr"],
         [style*="2fr 1fr"] {
           grid-template-columns: 1fr !important;
         }
-        /* Stats / hero / feature cards: never let a card exceed the screen */
-        [style*="grid-template-columns"] > * {
+        /* Never let any grid child exceed the screen — applies to any grid */
+        [style*="display: grid"] > *,
+        [style*="display:grid"] > * {
           min-width: 0 !important;
           max-width: 100% !important;
         }

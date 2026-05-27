@@ -21,7 +21,7 @@ Hard-refresh (Ctrl+Shift+R or Cmd+Shift+R). You should see:
       360° tour, **All 102 components grid**, **Roadmap section**,
       Code Showcase, 13-package list, Footer
 - [ ] Footer "Report an issue" links to
-      https://github.com/novaai0401-ui/tekivex-issue-report/issues
+      https://github.com/007krcs/tekivex-ui/issues
 - [ ] No `github.com/007krcs` link visible anywhere on the page
 
 If any of these fail, paste the build log in the next message and we'll
@@ -64,9 +64,9 @@ If any show `npm error 404`, paste it back.
 Visit each at `https://www.npmjs.com/package/<name>`. For each, the right
 sidebar should show:
 
-- [ ] **Repository**: `github.com/novaai0401-ui/tekivex-issue-report`
+- [ ] **Repository**: `github.com/007krcs/tekivex-ui`
 - [ ] **Homepage**: `ui.tekivex.com`
-- [ ] **Bug reports**: `github.com/novaai0401-ui/tekivex-issue-report/issues`
+- [ ] **Bug reports**: `github.com/007krcs/tekivex-ui/issues`
 
 NOT `github.com/007krcs/tekivex-ui` anywhere. If you see the source repo
 exposed on any package page, it's because of CDN cache — wait 30 minutes

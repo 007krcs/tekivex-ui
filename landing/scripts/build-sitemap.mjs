@@ -131,7 +131,7 @@ const humans = [
   '/* TEAM */',
   '  Project: TekiVex UI',
   '  Site:    https://ui.tekivex.com',
-  '  Source:  https://github.com/novaai0401-ui/tekivex-issue-report',
+  '  Source:  https://github.com/007krcs/tekivex-ui',
   '',
   '/* SITE */',
   `  Last update: ${TODAY}`,

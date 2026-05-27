@@ -1,8 +1,20 @@
 import { useState } from 'react';
 import type { ThemeTokens } from 'tekivex-ui';
-import { TkxAIConfidenceBar, TkxAIChatBubble, TkxAIThinking } from 'tekivex-ui';
+// AI components live in the experimental surface — opt-in via tekivex-ui/experimental.
+import { TkxAIConfidenceBar, TkxAIChatBubble, TkxAIThinking } from '../../src/experimental';
 import { DemoSection } from '../layout/DemoSection';
 import { PropTable } from '../layout/PropTable';
+
+const EXPERIMENTAL_BANNER = {
+  background: 'rgba(247, 37, 133, 0.10)',
+  border: '1px solid rgba(247, 37, 133, 0.45)',
+  color: '#f72585',
+  padding: '12px 16px',
+  borderRadius: 8,
+  marginBottom: 24,
+  fontSize: 14,
+  fontWeight: 500,
+} as const;
 
 interface Props { theme: ThemeTokens }
 
@@ -30,6 +42,15 @@ export function AIComponentsPage({ theme }: Props) {
 
   return (
     <div style={sectionStyle}>
+      {/* Experimental banner — surface API instability up front */}
+      <div role="alert" style={EXPERIMENTAL_BANNER}>
+        ⚠ <strong>Experimental.</strong> These components live in the
+        <code style={{ background: 'rgba(247,37,133,0.15)', padding: '2px 6px', borderRadius: 4, margin: '0 4px' }}>
+          tekivex-ui/experimental
+        </code>
+        subpath. The API may change or be removed between minor versions — pin your version explicitly.
+      </div>
+
       {/* Header */}
       <div style={{ marginBottom: 40 }}>
         <div style={{
@@ -38,7 +59,7 @@ export function AIComponentsPage({ theme }: Props) {
           color: theme.primary, fontSize: 11, fontWeight: 700,
           letterSpacing: '0.06em', marginBottom: 16,
         }}>
-          ⚛ AI-NATIVE COMPONENTS · BETA
+          ⚛ AI-NATIVE COMPONENTS · EXPERIMENTAL
         </div>
         <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 900, margin: '0 0 12px', letterSpacing: '-0.02em' }}>
           AI-Native UI Components

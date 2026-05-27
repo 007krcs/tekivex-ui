@@ -252,12 +252,17 @@ export { TkxDropdown } from './src/components/TkxDropdown';
 export type { TkxDropdownProps, DropdownItem, DropdownGroup } from './src/components/TkxDropdown';
 
 // ── AI-native components ──────────────────────────────────────────────────────
-export { TkxAIConfidenceBar } from './src/components/TkxAIConfidenceBar';
-export type { TkxAIConfidenceBarProps } from './src/components/TkxAIConfidenceBar';
-export { TkxAIChatBubble } from './src/components/TkxAIChatBubble';
-export type { TkxAIChatBubbleProps, AIRole } from './src/components/TkxAIChatBubble';
-export { TkxAIThinking } from './src/components/TkxAIThinking';
-export type { TkxAIThinkingProps } from './src/components/TkxAIThinking';
+// [experimental] TkxAIConfidenceBar, TkxAIChatBubble, TkxAIThinking, TkxQuantumForm
+// — gated until v3.18; not part of public API.
+// Opt-in via 'tekivex-ui/experimental'. Source files remain in src/components/ but
+// are excluded from the public bundle so the headline component count reflects
+// production-grade, test-covered components only.
+// export { TkxAIConfidenceBar } from './src/components/TkxAIConfidenceBar';
+// export type { TkxAIConfidenceBarProps } from './src/components/TkxAIConfidenceBar';
+// export { TkxAIChatBubble } from './src/components/TkxAIChatBubble';
+// export type { TkxAIChatBubbleProps, AIRole } from './src/components/TkxAIChatBubble';
+// export { TkxAIThinking } from './src/components/TkxAIThinking';
+// export type { TkxAIThinkingProps } from './src/components/TkxAIThinking';
 
 // ── Holographic / 3D-tilt family ──────────────────────────────────────────────
 export {
@@ -339,6 +344,22 @@ export type {
   CommandPaletteCommand,
   CommandHotkey,
 } from './src/components/TkxCommandPalette';
+
+// ── Chart primitives (v3.21) — zero runtime dependencies ─────────────────────
+export { TkxSparkline } from './src/components/TkxSparkline';
+export type { TkxSparklineProps, SparklineVariant } from './src/components/TkxSparkline';
+
+export { TkxGauge } from './src/components/TkxGauge';
+export type { TkxGaugeProps, GaugeVariant, GaugeThreshold } from './src/components/TkxGauge';
+
+export { TkxHeatmap } from './src/components/TkxHeatmap';
+export type { TkxHeatmapProps, TkxHeatmapCell } from './src/components/TkxHeatmap';
+
+export { TkxFunnelChart } from './src/components/TkxFunnelChart';
+export type { TkxFunnelChartProps, TkxFunnelStage } from './src/components/TkxFunnelChart';
+
+export { TkxTreemap } from './src/components/TkxTreemap';
+export type { TkxTreemapProps, TkxTreemapNode } from './src/components/TkxTreemap';
 
 // ── Gantt chart ───────────────────────────────────────────────────────────────
 export { TkxGantt, parseDay, formatDay, dayDiff } from './src/components/TkxGantt';

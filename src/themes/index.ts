@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useLayoutEffect, useEffect, useState, type ReactNode, createElement } from 'react';
 import { cssVar } from '../engine/css';
 import { meetsAA, meetsAAA } from '../engine/wcag';
@@ -106,28 +108,52 @@ export interface ThemeProviderProps {
    * - "auto" (default if no `theme` provided): follow `prefers-color-scheme`,
    *   reacting live to system changes.
    * Ignored when `theme` is explicitly set.
+   *
+   * SSR note: when `mode="auto"`, the server cannot know the user's
+   * `prefers-color-scheme`. To prevent a React 18 hydration mismatch the
+   * server *and* the first client render emit `defaultMode` (see prop
+   * below; defaults to "light"); the real preference is resolved inside
+   * `useEffect` after mount. To avoid a flash, inject {@link themeInitScript}
+   * into `<head>` so `data-tkx-scheme` is set before React hydrates.
    */
   mode?: ColorScheme;
   /** Theme used when system prefers light. Defaults to {@link auroraLight}. */
   lightTheme?: ThemeTokens;
   /** Theme used when system prefers dark. Defaults to {@link quantumDark}. */
   darkTheme?: ThemeTokens;
+  /**
+   * Deterministic theme used for SSR + the first client render when
+   * `mode="auto"`. Defaults to `"light"` — matches the most common
+   * consumer-default and `prefers-color-scheme: light` fallback.
+   */
+  defaultMode?: 'light' | 'dark';
+  /**
+   * When `true`, defer all theme resolution (and the wrapper's inline
+   * CSS variables) until after the first effect tick. Server HTML and the
+   * first client render emit a plain `display: contents` wrapper with
+   * NO theme-specific styles, giving the strictest possible hydration
+   * safety at the cost of a one-frame unstyled flash. Mirrors the pattern
+   * used by `next-themes`.
+   */
+  suppressHydrationWarning?: boolean;
   children: ReactNode;
 }
 
 /**
  * Reads `prefers-color-scheme` and re-evaluates on system changes.
- * Returns true while the OS reports dark mode; false during SSR.
+ *
+ * SSR-safe: the initial value is ALWAYS `null` (unknown) on both server
+ * and the first client render, so server HTML == first client HTML.
+ * After mount, an effect populates the real value from `window.matchMedia`
+ * and subscribes to live system changes.
  */
-function usePrefersDark(enabled: boolean): boolean {
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    if (!enabled || typeof window === 'undefined' || !window.matchMedia) return true;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
+function usePrefersDark(enabled: boolean): boolean | null {
+  const [isDark, setIsDark] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!enabled || typeof window === 'undefined' || !window.matchMedia) return;
     const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDark(mql.matches);
     const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
     // Safari < 14 only supports the deprecated addListener API.
     if (mql.addEventListener) {
@@ -142,20 +168,37 @@ function usePrefersDark(enabled: boolean): boolean {
   return isDark;
 }
 
+/**
+ * Tracks whether the component has mounted on the client. Always returns
+ * `false` during SSR + the first client render; `true` after the first
+ * effect tick. Identical pattern to `next-themes`.
+ */
+function useMounted(): boolean {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
+}
+
 export function ThemeProvider({
   theme,
   mode,
   lightTheme = auroraLight,
   darkTheme = quantumDark,
+  defaultMode = 'light',
+  suppressHydrationWarning = false,
   children,
 }: ThemeProviderProps) {
   // Resolution rules:
   //  1. If `theme` is explicitly provided, honour it (pre-2.7 behaviour).
   //  2. Else if `mode` is "light"/"dark", pin to that built-in theme.
-  //  3. Else (mode === "auto" or unset), track prefers-color-scheme.
+  //  3. Else (mode === "auto" or unset), use `defaultMode` for SSR + first
+  //     client render, then switch to prefers-color-scheme after mount.
   const explicit = theme !== undefined;
   const followSystem = !explicit && (mode === 'auto' || mode === undefined);
   const prefersDark = usePrefersDark(followSystem);
+  const mounted = useMounted();
+
+  const autoFallback = defaultMode === 'dark' ? darkTheme : lightTheme;
 
   let resolved: ThemeTokens;
   if (explicit) {
@@ -164,14 +207,24 @@ export function ThemeProvider({
     resolved = lightTheme;
   } else if (mode === 'dark') {
     resolved = darkTheme;
+  } else if (prefersDark === null) {
+    // Pre-mount (SSR + first client render): deterministic default.
+    resolved = autoFallback;
   } else {
     resolved = prefersDark ? darkTheme : lightTheme;
   }
+
+  // When `suppressHydrationWarning` is set, gate DOM-mutating effects AND
+  // the inline CSS variables on `mounted`. The first render emits no
+  // theme-specific markup, so server HTML matches the first client render
+  // byte-for-byte (the next-themes pattern).
+  const gated = suppressHydrationWarning && !mounted;
 
   // useLayoutEffect fires synchronously after DOM mutations and before paint,
   // eliminating the flash-of-unstyled-content that useEffect causes.
   // The isomorphic alias silently falls back to useEffect during SSR.
   useIsomorphicLayoutEffect(() => {
+    if (gated) return;
     const vars = (Object.entries(resolved) as [keyof ThemeTokens, string][])
       .map(([key, value]) => cssVar(key, value))
       .join(' ');
@@ -195,22 +248,59 @@ export function ThemeProvider({
       'data-tkx-scheme',
       resolved === darkTheme ? 'dark' : resolved === lightTheme ? 'light' : 'custom',
     );
-  }, [resolved, darkTheme, lightTheme]);
+  }, [resolved, darkTheme, lightTheme, gated]);
 
   // Also set CSS variables as inline style on the provider wrapper so that
   // SSR-rendered HTML already contains the correct values without a round-trip.
-  const inlineVars = Object.fromEntries(
-    (Object.entries(resolved) as [keyof ThemeTokens, string][]).map(([key, value]) => [
-      `--tkx-${key}`,
-      value,
-    ]),
-  ) as Record<string, string>;
+  // Skip when gated — wrapper stays plain so SSR == first client render.
+  const inlineVars: Record<string, string> = gated
+    ? {}
+    : (Object.fromEntries(
+        (Object.entries(resolved) as [keyof ThemeTokens, string][]).map(([key, value]) => [
+          `--tkx-${key}`,
+          value,
+        ]),
+      ) as Record<string, string>);
 
   return createElement(
     ThemeContext.Provider,
     { value: resolved },
     createElement('div', { style: { display: 'contents', ...inlineVars } }, children),
   );
+}
+
+/**
+ * Returns an HTML `<script>` body (an IIFE) to inject into the document
+ * head BEFORE the React app loads. Reads `prefers-color-scheme` and an
+ * optional `localStorage` key, then sets `document.documentElement.dataset.theme`
+ * (`"light"` or `"dark"`) so the page renders correctly on first paint
+ * with no FOUC.
+ *
+ * The returned string is the SCRIPT BODY only — wrap it in a `<script>`
+ * tag yourself. Safe to inline via `dangerouslySetInnerHTML`: it is a
+ * self-contained IIFE with no closures over outer variables and no
+ * user-controllable interpolation (only the JSON-encoded options).
+ *
+ * @example Next.js (`app/layout.tsx`):
+ * ```tsx
+ * <head>
+ *   <script dangerouslySetInnerHTML={{ __html: themeInitScript() }} />
+ * </head>
+ * ```
+ */
+export function themeInitScript(opts?: {
+  /** localStorage key checked first; falls back to `prefers-color-scheme`. Default: `'tkx-theme'`. */
+  storageKey?: string;
+  /** Fallback when neither localStorage nor `prefers-color-scheme` yields a value. Default: `'light'`. */
+  defaultMode?: 'light' | 'dark';
+}): string {
+  const storageKey = opts?.storageKey ?? 'tkx-theme';
+  const defaultMode = opts?.defaultMode === 'dark' ? 'dark' : 'light';
+  // JSON.stringify guarantees the values are safely embedded with no XSS
+  // surface even if a future caller passes a hostile string.
+  const k = JSON.stringify(storageKey);
+  const d = JSON.stringify(defaultMode);
+  return `(function(){try{var k=${k};var d=${d};var s=null;try{s=window.localStorage.getItem(k);}catch(e){}var m=s;if(m!=="light"&&m!=="dark"){m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":d);}var r=document.documentElement;r.dataset.theme=m;r.setAttribute("data-tkx-scheme",m);}catch(e){}})();`;
 }
 
 export function useTheme(): ThemeTokens {

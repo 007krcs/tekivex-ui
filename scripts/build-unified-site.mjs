@@ -270,11 +270,11 @@ if (!astroSucceeded) {
       </a>
     </div>
 
-    <p class="footnote">If a build step ran into trouble you're seeing this fallback page. The full 360° experience lives at <a href="/" style="color: #00f5d4;">/</a> once the React landing finishes building. <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new" style="color: #00f5d4;">Report an issue</a>.</p>
+    <p class="footnote">If a build step ran into trouble you're seeing this fallback page. The full 360° experience lives at <a href="/" style="color: #00f5d4;">/</a> once the React landing finishes building. <a href="https://github.com/007krcs/tekivex-ui/issues/new" style="color: #00f5d4;">Report an issue</a>.</p>
 
     <div class="links">
       <a href="https://www.npmjs.com/package/tekivex-ui">npm</a>
-      <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues">Report an issue</a>
+      <a href="https://github.com/007krcs/tekivex-ui/issues">Report an issue</a>
       <a href="/playground/">Playground</a>
       <a href="/book/">Catalog</a>
     </div>
@@ -309,7 +309,33 @@ run('npx vite build --base=/book/', resolve(ROOT, 'packages/tkx-book'));
 copyTree(resolve(ROOT, 'packages/tkx-book/dist'), resolve(DIST, 'book'));
 verifyBase(resolve(DIST, 'book/index.html'), '/book/');
 
-// ── 5. Mirror to demo/dist so it works regardless of which path Render
+// ── 5. Security artifacts (security.txt + SBOM) — copy unconditionally.
+//    When the landing build succeeds, Vite already copies landing/public/*
+//    into landing/dist/ and we mirror that into DIST. But if the landing
+//    build FAILS and the stub homepage takes over (above), those artifacts
+//    vanish — which is precisely when a procurement scanner is most likely
+//    to find a 404 at /.well-known/security.txt and treat the site as
+//    immature. Belt AND braces: copy directly here too.
+console.log('\n══════════════════════════════════════════════════════');
+console.log('Step 5/6 — copy security artifacts (defense against stub fallback)');
+console.log('══════════════════════════════════════════════════════');
+const SEC_SOURCES = [
+  ['landing/public/.well-known/security.txt', '.well-known/security.txt'],
+  ['landing/public/security/sbom.json',        'security/sbom.json'],
+];
+for (const [src, dest] of SEC_SOURCES) {
+  const srcPath = resolve(ROOT, src);
+  const destPath = resolve(DIST, dest);
+  if (!existsSync(srcPath)) {
+    console.warn(`  ⚠ security artifact missing at source: ${src}`);
+    continue;
+  }
+  mkdirSync(dirname(destPath), { recursive: true });
+  cpSync(srcPath, destPath);
+  console.log(`  ✓ ${src} → ${dest}`);
+}
+
+// ── 6. Mirror to demo/dist so it works regardless of which path Render
 //    is configured to publish. The original demo/dist (containing only
 //    the SPA) is replaced with the merged tree. The SPA is preserved
 //    inside the new demo/dist/playground/ subfolder.
@@ -320,12 +346,12 @@ verifyBase(resolve(DIST, 'book/index.html'), '/book/');
 //    old setting until manually re-synced. Mirroring guarantees the
 //    deploy works whether Render reads docs-site/dist OR demo/dist.
 console.log('\n══════════════════════════════════════════════════════');
-console.log('Step 5/5 — mirror merged tree to demo/dist (compat shim)');
+console.log('Step 6/6 — mirror merged tree to demo/dist (compat shim)');
 console.log('══════════════════════════════════════════════════════');
 const DEMO_DIST = resolve(ROOT, 'demo/dist');
 copyTree(DIST, DEMO_DIST);
 
-// ── Done
+// ── Done — verify security artifacts before declaring success
 console.log('\n══════════════════════════════════════════════════════');
 console.log('✓ Unified site built at TWO publish targets:');
 console.log('    docs-site/dist/    (canonical, render.yaml v3)');
@@ -334,4 +360,17 @@ console.log('  Each contains:');
 console.log('    /                  → Astro docs (canonical)');
 console.log('    /playground/       → demo SPA');
 console.log('    /book/             → component catalog');
+console.log('    /.well-known/security.txt');
+console.log('    /security/sbom.json');
 console.log('══════════════════════════════════════════════════════\n');
+
+// Run the verifier as a real subprocess so its exit code becomes ours.
+// Without this, a deploy with missing security.txt would still succeed.
+console.log('Running security-artifact verification ...');
+try {
+  run(`node ${JSON.stringify(resolve(__dirname, 'verify-security-artifacts.mjs'))}`, ROOT);
+} catch (err) {
+  console.error('✗ Build aborted: security-artifact verification failed.');
+  console.error('  Set TEKIVEX_SKIP_SEC_VERIFY=1 to override (NOT recommended).');
+  process.exit(1);
+}

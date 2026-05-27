@@ -30,7 +30,7 @@ or just brutal feedback on the API.
 
 - [ ] Reply to **every** comment with a substantive answer (not "thanks!")
 - [ ] If anyone asks for a feature, link to the public issue tracker:
-      https://github.com/novaai0401-ui/tekivex-issue-report/issues/new
+      https://github.com/007krcs/tekivex-ui/issues/new
 - [ ] DM 5–10 people in your network who'd care (specific tech leads,
       not blast)
 

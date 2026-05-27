@@ -1,3 +1,5 @@
+'use client';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TkxHolographic — 3D-tilt + iridescent-foil component family
 //

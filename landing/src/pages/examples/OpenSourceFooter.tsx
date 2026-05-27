@@ -106,7 +106,7 @@ export function OpenSourceFooter() {
           <div style={{ fontSize: 12.5, color: '#64748b', lineHeight: 1.6 }}>
             Found a bug or have an idea?{' '}
             <a
-              href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new"
+              href="https://github.com/007krcs/tekivex-ui/issues/new"
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: '#4f46e5' }}

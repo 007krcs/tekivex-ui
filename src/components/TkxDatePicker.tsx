@@ -210,7 +210,7 @@ function getDecadeStart(year: number): number {
 function buildBuiltinPresets(t?: LocaleStrings): DatePreset[] {
   // Optional locale strings — falls back to English. The new optional fields
   // (yesterday, last7Days, last30Days, thisMonth, lastMonth) are translated
-  // gradually across the 35 locales.
+  // gradually across the 44 locales.
   const lbl = {
     today: t?.today ?? 'Today',
     yesterday: t?.yesterday ?? 'Yesterday',
@@ -713,6 +713,10 @@ export function TkxDatePicker({
   const anchorRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Set briefly when Escape closes the picker, so the programmatic
+  // input.focus() that follows doesn't immediately re-open via onFocus.
+  // Cleared on the next user-initiated click.
+  const suppressNextFocusOpen = useRef(false);
 
   const POPUP_ESTIMATED_HEIGHT = showPresets ? 420 : showTime ? 480 : 360;
 
@@ -776,6 +780,8 @@ export function TkxDatePicker({
     const handler = (e: globalThis.KeyboardEvent) => {
       if (e.key === 'Escape') {
         setOpen(false);
+        // Guard against onFocus reopening the picker on the focus restoration.
+        suppressNextFocusOpen.current = true;
         inputRef.current?.focus();
       }
     };
@@ -1549,9 +1555,13 @@ export function TkxDatePicker({
           readOnly={mode === 'range' || mode === 'multiple'}
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={() => {
-            if (!isDisabled) {
-              setOpen(true);
+            if (isDisabled) return;
+            if (suppressNextFocusOpen.current) {
+              // Programmatic focus from Escape-close — don't re-open.
+              suppressNextFocusOpen.current = false;
+              return;
             }
+            setOpen(true);
           }}
           style={{
             flex: 1,

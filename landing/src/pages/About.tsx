@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { usePageMeta } from '../use-page-meta';
 
 export const meta = {
-  title: 'About TekiVex UI — Open-source React components built for production',
+  title: 'About TekiVex UI — The React component library that ships with a threat model',
   description:
-    'TekiVex UI is a React component library covering 113 production primitives, a WebGL 3D toolkit, a Holographic UI family, and a printable-template pipeline. Read why we built it and how we plan to keep it maintained.',
+    'TekiVex UI is the only mainstream React component library with a published threat model. 115 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core, tamper-evident SHA-256 audit trail. Read why we built it and how we keep it maintained.',
 };
 
 export function About() {
@@ -14,7 +14,7 @@ export function About() {
     <PageShell
       title="About TekiVex UI"
       eyebrow="About"
-      subtitle="Why we built it, what's in it, and how we keep it maintained."
+      subtitle="The React component library that ships with a threat model. 115 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core."
       breadcrumbs={[{ label: 'About' }]}
       updated="2026-05-02"
     >
@@ -29,7 +29,7 @@ export function About() {
       </p>
 
       <p>
-        After two years and 113 components, we think the result is worth sharing more widely.
+        After two years and 114 components, we think the result is worth sharing more widely.
         This page covers what's in the library, the principles behind it, and how we plan to
         keep it sustainable.
       </p>
@@ -38,7 +38,7 @@ export function About() {
       <p>The TekiVex UI family is split across several packages so consumers only pay for what they use.</p>
       <ul>
         <li>
-          <strong><code>tekivex-ui</code></strong> — the main package. 113 production primitives:
+          <strong><code>tekivex-ui</code></strong> — the main package. 114 production primitives:
           buttons, inputs, badges, modals, tabs, tooltips, autocomplete, color picker, OTP
           input, file upload, charts (via a thin Recharts wrapper), masonry, watermarks, an
           accessibility checker, and the new productivity components (FlowChart, MindMap,
@@ -58,7 +58,7 @@ export function About() {
         <li>
           Additional packages for India-specific components (Aadhaar / PAN / Voter ID
           validators, INR currency formatting, India Post PIN lookup, Tithi/Nakshatra
-          calendar) and for internationalization across 35 locales.
+          calendar) and for internationalization across 44 locales.
         </li>
       </ul>
 
@@ -134,7 +134,7 @@ export function About() {
           Read the <Link to="/blog">engineering blog</Link>
         </li>
         <li>
-          File a <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues">bug or feature request</a>
+          File a <a href="https://github.com/007krcs/tekivex-ui/issues">bug or feature request</a>
         </li>
         <li>
           Reach the team via the <Link to="/contact">contact page</Link>

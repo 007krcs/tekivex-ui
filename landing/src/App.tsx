@@ -27,6 +27,7 @@ import { BlogExample } from './pages/examples/blog/BlogExample';
 import { PropertyTour } from './pages/examples/PropertyTour';
 import { ARProduct } from './pages/examples/ARProduct';
 import { MissionControl } from './pages/examples/MissionControl';
+import { Immersive3D } from './pages/examples/Immersive3D';
 
 export { useImmersive } from './immersive-context';
 
@@ -66,6 +67,7 @@ export function App() {
           <Route path="/examples/property-tour" element={<PropertyTour />} />
           <Route path="/examples/ar-product"    element={<ARProduct />} />
           <Route path="/examples/mission-control" element={<MissionControl />} />
+          <Route path="/examples/3d"             element={<Immersive3D />} />
           <Route path="*"               element={<NotFound />} />
         </Routes>
       </main>

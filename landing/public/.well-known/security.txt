@@ -1,0 +1,6 @@
+Contact: mailto:novaai0401@gmail.com
+Contact: https://github.com/007krcs/tekivex-ui/security/advisories/new
+Expires: 2027-05-26T23:59:59Z
+Preferred-Languages: en
+Canonical: https://ui.tekivex.com/.well-known/security.txt
+Policy: https://github.com/007krcs/tekivex-ui/blob/main/SECURITY.md

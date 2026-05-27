@@ -570,7 +570,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           animation: 'tkxSlideUp 0.6s ease both',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: theme.primary, display: 'inline-block', animation: 'tkxPulseRing 1.5s ease-out infinite' }} />
-          v3.0.3 · 99 components · 1034 tests
+          v3.17.0 · 99 components · agent runtime · 1034+ tests
         </div>
 
         {/* Main headline */}
@@ -794,7 +794,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
               🛡 Explore SecurityCore →
             </button>
             <button
-              onClick={() => window.open('https://github.com/novaai0401-ui/tekivex-issue-report/blob/main/SECURITY-THREAT-MODEL.md', '_blank')}
+              onClick={() => window.open('https://github.com/007krcs/tekivex-ui/blob/main/SECURITY-THREAT-MODEL.md', '_blank')}
               style={{ padding: '10px 22px', borderRadius: 10, border: `1px solid ${theme.border}`, background: `${theme.surface}cc`, color: theme.text, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}
             >
               📄 Threat Model
@@ -1076,7 +1076,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
               Start Building Free →
             </button>
             <button
-              onClick={() => window.open('https://github.com/novaai0401-ui/tekivex-issue-report', '_blank')}
+              onClick={() => window.open('https://github.com/007krcs/tekivex-ui', '_blank')}
               style={{ padding: '16px 32px', borderRadius: 12, border: `1px solid ${theme.border}`, cursor: 'pointer', background: `${theme.surface}cc`, color: theme.text, fontWeight: 600, fontSize: 16, backdropFilter: 'blur(10px)', transition: 'all 0.2s' }}
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = theme.primary + '66'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = theme.border; }}
@@ -1090,12 +1090,12 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <footer style={{ position: 'relative', zIndex: 1, padding: isMobile ? '32px 16px' : '40px 32px', borderTop: `1px solid ${theme.border}`, textAlign: 'center', color: theme.textMuted, fontSize: 13 }}>
         <p style={{ margin: '0 0 8px' }}>
-          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v3.0.3 · 99 components · 1034 tests · MIT License
+          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v3.17.0 · 99 components · agent runtime · MIT License
         </p>
         <p style={{ margin: 0 }}>
           © 2026 <a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a> ·
-          {' '}<a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues" target="_blank" rel="noreferrer" style={{ color: theme.danger, textDecoration: 'none', fontWeight: 600 }}>🐛 Report Issue</a> ·
-          {' '}<a href="https://github.com/novaai0401-ui/tekivex-issue-report/stargazers" target="_blank" rel="noreferrer" style={{ color: theme.warning, textDecoration: 'none', fontWeight: 600 }}>⭐ Star on GitHub</a>
+          {' '}<a href="https://github.com/007krcs/tekivex-ui/issues" target="_blank" rel="noreferrer" style={{ color: theme.danger, textDecoration: 'none', fontWeight: 600 }}>🐛 Report Issue</a> ·
+          {' '}<a href="https://github.com/007krcs/tekivex-ui/stargazers" target="_blank" rel="noreferrer" style={{ color: theme.warning, textDecoration: 'none', fontWeight: 600 }}>⭐ Star on GitHub</a>
         </p>
       </footer>
     </div>

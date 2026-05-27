@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TekiVex UI — Outreach launcher</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+           background: #0a0a0f; color: #e8e8f4; line-height: 1.6; margin: 0; padding: 48px 24px; }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin: 0 0 8px; letter-spacing: -0.02em; }
+    h2 { font-size: 1.3rem; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .lead { color: rgba(255,255,255,0.65); margin: 0 0 24px; }
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 20px; margin-bottom: 14px; }
+    .card-head { display: flex; justify-content: space-between; align-items: baseline;
+                 flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+    .card-title { font-weight: 700; font-size: 1rem; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 999px;
+             font-size: 11px; font-weight: 700; letter-spacing: 0.06em; }
+    .badge-healthtech { background: rgba(0,245,212,0.12); color: #00f5d4; }
+    .badge-fintech { background: rgba(124,92,255,0.12); color: #aa92ff; }
+    .badge-gov { background: rgba(61,169,252,0.12); color: #5bb8ff; }
+    .badge-audit { background: rgba(247,37,133,0.12); color: #ff7eb6; }
+    .desc { color: rgba(255,255,255,0.6); font-size: 14px; margin: 4px 0 12px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 8px 14px; border-radius: 8px; text-decoration: none;
+           font-size: 13px; font-weight: 600; transition: opacity 150ms ease; }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #00f5d4; color: #0a0a0f; }
+    .btn-secondary { background: rgba(255,255,255,0.08); color: #e8e8f4; border: 1px solid rgba(255,255,255,0.12); }
+    .footnote { color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 48px;
+                padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); }
+    code { background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⚡ TekiVex UI — Outreach launcher</h1>
+  <p class="lead">
+    Open each draft to read + personalize → click <strong>Open in mail client</strong> →
+    Gmail/Apple Mail launches with subject + body pre-filled. Edit the <code>[BRACKETED]</code>
+    fields, hit Send.
+  </p>
+
+  <h2>WCAG audit firms (send all 3 — get competing quotes)</h2>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Deque Systems</div>
+      <span class="badge badge-audit">AUDIT FIRM</span>
+    </div>
+    <div class="desc">Industry leader, built axe-core, $18-25k typical quote, 4-6 week turnaround. Use web form — Deque doesn't publish a sales email.</div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="01-deque.md">Read draft</a>
+      <a class="btn btn-primary" href="https://www.deque.com/contact/" target="_blank" rel="noopener">Open Deque contact form ↗</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">TPGi (Vispero)</div>
+      <span class="badge badge-audit">AUDIT FIRM</span>
+    </div>
+    <div class="desc">JAWS-strong matrix testing, $12-18k typical, 3-5 week turnaround. Use web form.</div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="02-tpgi.md">Read draft</a>
+      <a class="btn btn-primary" href="https://www.tpgi.com/contact/" target="_blank" rel="noopener">Open TPGi contact form ↗</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">WebAIM</div>
+      <span class="badge badge-audit">AUDIT FIRM</span>
+    </div>
+    <div class="desc">Academic / nonprofit roots, open to phased $5-10k v1 scopes, 5-8 week turnaround. Direct email.</div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="03-webaim.md">Read draft</a>
+      <a class="btn btn-primary" href="mailto:audit@webaim.org?subject=Phased%20WCAG%202.1%20AAA%20audit%20quote%20%E2%80%94%20open-source%20React%20UI%20library%20%28110%20components%29&body=Hi%20WebAIM%20team%2C%0A%0A%5BPaste%20body%20from%2003-webaim.md%5D">Open in mail client ↗</a>
+    </div>
+  </div>
+
+  <h2>Design partners (personalize per company before sending)</h2>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Healthtech / EHR template</div>
+      <span class="badge badge-healthtech">HEALTHTECH</span>
+    </div>
+    <div class="desc">Target HIPAA-regulated companies. Lead with the threat model + magic-byte MIME story for clinical-document uploads.</div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="partners/01-healthtech.md">Read draft</a>
+      <a class="btn btn-primary" href="mailto:?subject=A%20React%20component%20kit%20with%20a%20published%20threat%20model%20%E2%80%94%20design-partner%20spot%20for%20%5BCOMPANY%5D%3F&body=%5BPaste%20body%20from%20partners%2F01-healthtech.md%20after%20personalizing%5D">Open template ↗</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Fintech / payments / lending template</div>
+      <span class="badge badge-fintech">FINTECH</span>
+    </div>
+    <div class="desc">Target SOC 2 / PCI-DSS shops. Lead with Luhn-validated PII redaction + tamper-evident audit trail for SOC 2 evidence.</div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="partners/02-fintech.md">Read draft</a>
+      <a class="btn btn-primary" href="mailto:?subject=Threat-model-first%20React%20UI%20library%20%E2%80%94%20design-partner%20spot%20for%20%5BCOMPANY%5D%3F&body=%5BPaste%20body%20from%20partners%2F02-fintech.md%20after%20personalizing%5D">Open template ↗</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">GovTech / public-sector template</div>
+      <span class="badge badge-gov">GOVTECH</span>
+    </div>
+    <div class="desc">Target U.S. fed / state / local + EU public-sector vendors. Lead with VPAT + Section 508 + SBOM story.</div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="partners/03-govtech.md">Read draft</a>
+      <a class="btn btn-primary" href="mailto:?subject=WCAG%20AAA%20%2B%20Section%20508%20%2B%20published%20threat%20model%20%E2%80%94%20design%20partner%20for%20%5BCOMPANY%5D%3F&body=%5BPaste%20body%20from%20partners%2F03-govtech.md%20after%20personalizing%5D">Open template ↗</a>
+    </div>
+  </div>
+
+  <p class="footnote">
+    Track status in <a href="../STATUS.md" style="color:#00f5d4;">STATUS.md</a>. Replies land
+    at <code>novaai0401@gmail.com</code>. Set up a Gmail filter for replies containing
+    "TekiVex" → auto-label "Outreach replies" → never miss one.
+  </p>
+</div>
+</body>
+</html>

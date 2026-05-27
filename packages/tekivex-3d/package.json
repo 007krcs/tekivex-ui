@@ -56,10 +56,10 @@
   "homepage": "https://ui.tekivex.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
+    "url": "https://github.com/007krcs/tekivex-ui.git"
   },
   "bugs": {
-    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
+    "url": "https://github.com/007krcs/tekivex-ui/issues"
   },
   "engines": {
     "node": ">=20.0.0"

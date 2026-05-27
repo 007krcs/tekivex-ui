@@ -19,7 +19,7 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { PREVIEWS } from './component-previews';
 
-const ISSUE_BASE = 'https://github.com/novaai0401-ui/tekivex-issue-report/issues/new';
+const ISSUE_BASE = 'https://github.com/007krcs/tekivex-ui/issues/new';
 
 export interface RequestTarget {
   /** Display name shown to the user, e.g. "TkxCommandPalette". */

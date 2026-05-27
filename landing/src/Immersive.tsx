@@ -152,7 +152,7 @@ npm install tekivex-pdf`}
         <p>
           Public issue tracker. Bugs, feature requests, publish requests — all welcome.{' '}
           <a
-            href="https://github.com/novaai0401-ui/tekivex-issue-report/issues/new"
+            href="https://github.com/007krcs/tekivex-ui/issues/new"
             target="_blank"
             rel="noopener noreferrer"
             style={linkStyle}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { sanitizeJSON } from '../engine/security';
 
 export interface WebSocketOptions {
   url: string;
@@ -130,12 +131,12 @@ export function useWebSocket<T = unknown>(options: WebSocketOptions): WebSocketS
     ws.onmessage = (event) => {
       if (!mountedRef.current) return;
 
-      let parsed: T;
-      try {
-        parsed = JSON.parse(event.data as string) as T;
-      } catch {
-        parsed = event.data as unknown as T;
-      }
+      // sanitizeJSON parses + scrubs __proto__/constructor/prototype keys.
+      // WebSocket messages are untrusted input — defend against prototype
+      // pollution from a hostile or compromised server. Returns null on
+      // non-JSON payloads; we fall back to the raw data in that case.
+      const clean = sanitizeJSON<T>(event.data as string);
+      const parsed: T = clean !== null ? clean : (event.data as unknown as T);
 
       // Latency tracking: respond to pong
       const asRecord = parsed as Record<string, unknown>;

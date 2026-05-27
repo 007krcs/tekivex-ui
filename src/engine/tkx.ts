@@ -216,6 +216,16 @@ type Declarations = Record<string, string>;
 
 // eslint-disable-next-line complexity
 function resolveUtility(u: string): Declarations | null {
+  // ── CSS custom property passthrough: [--my-var:value] ─────────────────────
+  // Custom properties can't trigger side effects (they're just variables),
+  // so they bypass the SAFE_CSS_PROPS allowlist — value is still guarded.
+  const customProp = u.match(/^\[(--[a-zA-Z0-9_-]+):(.+)]$/);
+  if (customProp) {
+    const safeVal = sanitizeCSSValue(customProp[2]);
+    if (safeVal) return { [customProp[1]]: safeVal };
+    return null;
+  }
+
   // ── Arbitrary value shorthand: [css-prop:value] — security-guarded ────────
   const fullArb = u.match(/^\[([a-zA-Z-]+):(.+)]$/);
   if (fullArb) {

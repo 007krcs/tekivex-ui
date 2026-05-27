@@ -1,3 +1,5 @@
+'use client';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TkxCalendarHeatmap — GitHub-style activity heatmap
 //

@@ -13,7 +13,7 @@ import {
 import { useTheme } from '../themes';
 import { useLocale } from '../i18n';
 import { tkx, cx } from '../engine/tkx';
-import { sanitizeString } from '../engine/security';
+import { sanitizeString, sanitizeUnicode } from '../engine/security';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -266,7 +266,9 @@ export function TkxNumberInput({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRawInput(e.target.value);
+    // Strip bidi-override / zero-width chars before they reach parseFloat —
+    // numeric input shouldn't carry them but they're a known smuggling vector.
+    setRawInput(sanitizeUnicode(e.target.value));
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

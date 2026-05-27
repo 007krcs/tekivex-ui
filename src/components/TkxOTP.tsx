@@ -14,7 +14,7 @@ import {
 import { useTheme } from '../themes';
 import { useLocale } from '../i18n';
 import { tkx, cx } from '../engine/tkx';
-import { sanitizeString } from '../engine/security';
+import { sanitizeString, sanitizeUnicode } from '../engine/security';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -199,8 +199,10 @@ export function TkxOTP({
 
   const handleInput = (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isDisabled) return;
-    // The value might be empty (deletion handled by keydown) or contain a char
-    const raw = e.target.value;
+    // The value might be empty (deletion handled by keydown) or contain a char.
+    // Strip bidi-override / zero-width chars first so a "smuggled" cell can't
+    // hide a hostile codepoint that survives downstream verification.
+    const raw = sanitizeUnicode(e.target.value);
     // Take only the last character typed (handles replacement)
     const char = raw.slice(-1);
     if (!char) return;
@@ -219,7 +221,7 @@ export function TkxOTP({
   const handlePaste = (idx: number) => (e: ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (isDisabled) return;
-    const pasted = e.clipboardData.getData('text');
+    const pasted = sanitizeUnicode(e.clipboardData.getData('text'));
     const chars = pasted.split('').map((c) => filterByType(c, type)).filter(Boolean);
     if (!chars.length) return;
 

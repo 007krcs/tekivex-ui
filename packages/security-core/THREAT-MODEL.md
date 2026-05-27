@@ -316,7 +316,7 @@ The `dist/` tarball is 386 kB (gzip ~96 kB). Compare with MUI Core (several MB, 
 
 Found a security issue? Please do **not** open a public GitHub issue. Instead:
 
-1. Email: security@tekivex.dev (placeholder until we set up the alias)
+1. Email: novaai0401@gmail.com (placeholder until we set up the alias)
 2. Include: version, reproduction steps, impact assessment
 3. Expected response SLA: 72 hours for acknowledgment, 30 days for patch + advisory
 4. CVE coordination: we will file CVEs for any confirmed vulnerability via GitHub Security Advisories

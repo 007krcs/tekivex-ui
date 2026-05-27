@@ -35,7 +35,7 @@ Major releases happen **at most once per quarter**, and only when there's substa
 | 2.0 | 2025-09 | Atomic CSS engine + first 70 components |
 | 2.5 | 2026-01 | Charts, headless layer, DataGrid rewrite |
 | 2.6 | 2026-04 | SecurityCore + TkxOrgChart |
-| 2.7 | 2026-04 | v2.7 platform — image editor, phone, captcha, watermark v2, 35 locales |
+| 2.7 | 2026-04 | v2.7 platform — image editor, phone, captcha, watermark v2, 44 locales |
 | 2.8 | 2026-04 | gap closure — payments, signature, address, currency, sortable, confetti, SEO, calendar lunar, checkout, shadcn-style CLI |
 | 3.0 | 2026-Q3 (target) | Stable `@tekivex/pdf` v1, full i18n component sweep |
 

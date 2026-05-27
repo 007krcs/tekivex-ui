@@ -14,7 +14,7 @@ import {
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
 import { useLocale } from '../i18n';
-import { sanitizeString } from '../engine/security';
+import { sanitizeString, sanitizeUnicode } from '../engine/security';
 import { useReducedMotion, useEscapeKey } from '../hooks';
 import { tkx } from '../engine/tkx';
 
@@ -205,7 +205,7 @@ export function TkxAutocomplete({
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
+    const val = sanitizeUnicode(e.target.value);
     setInputValue(val);
     onInputChange?.(val);
     if (!isOpen) setIsOpen(true);

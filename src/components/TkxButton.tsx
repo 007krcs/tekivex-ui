@@ -21,6 +21,15 @@ export interface TkxButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> 
   rightIcon?: ReactNode;
   isFullWidth?: boolean;
   glow?: boolean;
+  /**
+   * @deprecated Use the native HTML `disabled` prop instead.
+   * Accepted as a forgiving alias because the rest of this component's
+   * API uses `isLoading` / `isFullWidth` — consumers commonly reach for
+   * `isDisabled` by analogy. Without this absorption the prop would be
+   * forwarded to the DOM as a literal attribute and trigger a React
+   * "Unknown prop" warning in every render.
+   */
+  isDisabled?: boolean;
 }
 
 const SIZE_CLASS: Record<ButtonSize, string> = {
@@ -76,6 +85,7 @@ export const TkxButton = forwardRef<HTMLButtonElement, TkxButtonProps>(
       isFullWidth = false,
       glow = false,
       disabled,
+      isDisabled: isDisabledAlias,
       children,
       className,
       style,
@@ -83,9 +93,27 @@ export const TkxButton = forwardRef<HTMLButtonElement, TkxButtonProps>(
     },
     ref,
   ) => {
+    // Dev-only deprecation nudge for the isDisabled alias.
+    // Cast through globalThis avoids needing @types/node in a browser
+    // library — bundlers (Vite/webpack/esbuild) replace
+    // `process.env.NODE_ENV` at build time, and the typeof guard handles
+    // any runtime where `process` is genuinely undefined.
+    const __proc = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process;
+    if (
+      __proc?.env?.NODE_ENV !== 'production' &&
+      isDisabledAlias !== undefined &&
+      disabled === undefined
+    ) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[TkxButton] `isDisabled` is not a real prop — use the native `disabled` instead. ' +
+          'Accepted as an alias for compatibility; will be removed in v4.0.',
+      );
+    }
     const theme = useTheme();
     const reducedMotion = useReducedMotion();
-    const isDisabled = disabled || isLoading;
+    const isDisabled = disabled ?? isDisabledAlias ?? false;
+    const isButtonDisabled = isDisabled || isLoading;
 
     const colorMap: Record<ButtonColorScheme, string> = {
       primary: theme.primary, secondary: theme.secondary,
@@ -120,7 +148,7 @@ export const TkxButton = forwardRef<HTMLButtonElement, TkxButtonProps>(
       SIZE_MIN_H[size],
       variant !== 'link' && SIZE_MIN_H[size],
       isFullWidth && 'w-full',
-      isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
+      isButtonDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
       !reducedMotion && 'transition-all duration-200',
       'focus-visible:focus-ring',
     );
@@ -129,8 +157,8 @@ export const TkxButton = forwardRef<HTMLButtonElement, TkxButtonProps>(
       <button
         ref={ref}
         aria-busy={isLoading}
-        aria-disabled={isDisabled}
-        disabled={isDisabled}
+        aria-disabled={isButtonDisabled}
+        disabled={isButtonDisabled}
         className={cx(base, className)}
         style={{ ...variantStyle, ...style }}
         {...rest}

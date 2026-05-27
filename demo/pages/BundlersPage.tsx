@@ -554,7 +554,7 @@ export function HealthCheck() {
   );
 }`}</pre>
           <p style={{ color: theme.textMuted, lineHeight: 1.75, margin: '16px 0 0', fontSize: 14 }}>
-            Bundler not listed? <a href="https://github.com/novaai0401-ui/tekivex-issue-report/issues" style={{ color: theme.primary }}>Open an issue</a> with your config and we'll add a recipe.
+            Bundler not listed? <a href="https://github.com/007krcs/tekivex-ui/issues" style={{ color: theme.primary }}>Open an issue</a> with your config and we'll add a recipe.
           </p>
         </TkxCardBody>
       </TkxCard>

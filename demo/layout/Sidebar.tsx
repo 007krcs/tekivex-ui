@@ -36,6 +36,12 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    title: '🤖 Agent runtime',
+    items: [
+      { label: 'Agent overview', route: '/agent' },
+    ],
+  },
+  {
     title: '⚛ Quantum AI',
     items: [
       { label: 'Quantum Form', route: '/quantum-form' },
@@ -409,7 +415,7 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
         <IconLogo />
         <div style={brandTextStyle}>
           <span style={brandNameStyle}>TekiVex UI</span>
-          <span style={versionBadgeStyle}>v3.0.0</span>
+          <span style={versionBadgeStyle}>v3.17.0</span>
         </div>
       </div>
 

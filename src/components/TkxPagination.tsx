@@ -165,7 +165,7 @@ export function TkxPagination({
   const selectId = useId();
 
   // i18n strings with English fallbacks. The optional locale fields
-  // (firstPage, lastPage, etc.) land gradually across the 35 locales —
+  // (firstPage, lastPage, etc.) land gradually across the 44 locales —
   // until then, fall back to the existing strings or English.
   // Individual page buttons keep the "Page N" pattern for screen-reader
   // brevity (saying "Page 1 of 5" on every button is too noisy).

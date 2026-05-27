@@ -50,3 +50,24 @@ export { useSSE } from './useSSE';
 export type { SSEOptions, SSEState } from './useSSE';
 export { useInfiniteQuery } from './useInfiniteQuery';
 export type { InfiniteQueryOptions, InfiniteQueryState } from './useInfiniteQuery';
+
+// ── Validation resolvers (bring-your-own zod / valibot) ──────────────────────
+export { zodResolver, useFormWithZod } from './zodResolver';
+export type { ZodResolverConfig, ZodSchemaLike, ZodIssueLike } from './zodResolver';
+export { valibotResolver, useFormWithValibot } from './valibotResolver';
+export type {
+  ValibotResolverConfig,
+  ValibotSafeParseFn,
+  ValibotSafeParseResult,
+  ValibotIssueLike,
+} from './valibotResolver';
+
+// ── React Hook Form adapter (bring-your-own Controller) ──────────────────────
+export { createRHFBindings } from './rhfBindings';
+export type {
+  RHFControl,
+  RHFFieldRenderProps,
+  RHFBindings,
+  RHFControllerComponent,
+  CreateRHFBindingsConfig,
+} from './rhfBindings';

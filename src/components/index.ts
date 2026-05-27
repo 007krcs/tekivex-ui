@@ -75,7 +75,16 @@ export * from './TkxOrgChart';
 //   TkxLiveFeed, TkxLiveMetrics, TkxRealTimeChart, TkxLiveLog → 'tekivex-ui/realtime'
 export * from './TkxDropdown';
 
+// ── v3.21 chart primitives — zero-dep SVG charts ─────────────────────────────
+export * from './TkxSparkline';
+export * from './TkxGauge';
+export * from './TkxHeatmap';
+export * from './TkxFunnelChart';
+export * from './TkxTreemap';
+
 // ── AI-native components ──────────────────────────────────────────────────────
-export * from './TkxAIConfidenceBar';
-export * from './TkxAIChatBubble';
-export * from './TkxAIThinking';
+// [experimental] TkxAIConfidenceBar, TkxAIChatBubble, TkxAIThinking — gated until v3.18;
+// available via 'tekivex-ui/experimental'. Not part of public API.
+// export * from './TkxAIConfidenceBar';
+// export * from './TkxAIChatBubble';
+// export * from './TkxAIThinking';

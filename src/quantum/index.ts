@@ -9,8 +9,9 @@
 // Import from 'tekivex-ui/quantum'.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export { TkxQuantumForm } from '../components/TkxQuantumForm';
-export type { TkxQuantumFormProps, QuantumFieldConfig } from '../components/TkxQuantumForm';
+// [experimental] TkxQuantumForm — gated until v3.18; available via 'tekivex-ui/experimental'.
+// export { TkxQuantumForm } from '../components/TkxQuantumForm';
+// export type { TkxQuantumFormProps, QuantumFieldConfig } from '../components/TkxQuantumForm';
 
 export { TkxThemeBuilder } from '../components/TkxThemeBuilder';
 export type { TkxThemeBuilderProps } from '../components/TkxThemeBuilder';

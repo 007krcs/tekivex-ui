@@ -1,9 +1,9 @@
 const STATS = [
-  { value: '113', label: 'Components' },
+  { value: '115', label: 'Production components' },
   { value: '13', label: 'npm packages' },
-  { value: '1,150+', label: 'Tests passing' },
-  { value: 'AAA', label: 'WCAG 2.1' },
-  { value: '0', label: 'Runtime deps' },
+  { value: '1,777', label: 'Tests passing' },
+  { value: 'AAA', label: 'WCAG 2.1 target' },
+  { value: '0', label: 'Runtime deps in core' },
   { value: 'MIT', label: 'License' },
 ];
 

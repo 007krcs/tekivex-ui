@@ -1,63 +1,74 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Home page — the original interactive landing.
+// Home page — professional security-first landing.
 //
-// Lives at "/". All other pages (privacy, terms, about, contact, blog,
-// docs/*) are real React Router routes so AdSense's crawler sees them as
-// distinct URLs with substantive content.
+// Redesigned 2026-Q2 to lead with the threat-model positioning instead of the
+// cosmic / 3D / holographic showcase. The flashy stuff still ships at
+// `/examples/3d` (see pages/examples/Immersive3D.tsx) — but the first thing
+// a CISO, procurement reviewer, or staff engineer sees on `/` is now a
+// text-first hero with a code snippet, compliance framework alignment, and
+// concrete security primitives.
+//
+// Section order (top to bottom):
+//   1. HeroPro             — text-first hero with code card, NO 3D
+//   2. TrustBar            — HIPAA / PCI-DSS / SOC 2 / Section 508 / EAA / GDPR / FedRAMP frameworks
+//   3. Stats               — 6 headline numbers
+//   4. SecurityDeepDive    — 3 primitives (scrubPII / sniffMimeType / audit) with real code
+//   5. Features            — competitor comparison table
+//   6. DesignPartners      — slots reserved + outreach call-to-action
+//   7. CodeShowcase        — quick start code samples
+//   8. DataDemo            — live DataGrid demo (real, not flashy)
+//   9. FlowChartDemo       — live FlowChart (real, useful)
+//  10. AllComponents       — full component browser
+//  11. Packages            — companion packages
+//  12. Roadmap             — version-anchored roadmap
+//  13. BrandFaq            — common questions
+//
+// Moved off home (still shipping at /examples/3d):
+//   - Hero (3D panorama scene)
+//   - Tour360
+//   - GalaxyMap360
+//   - HolographicUniverse
+//   - Playground (heavy live JSX editor; the /playground/ subapp is the
+//     canonical home for interactive sandbox)
+//   - Immersive overlay
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, useCallback } from 'react';
-import { Hero } from '../sections/Hero';
+import { HeroPro } from '../sections/HeroPro';
+import { TrustBar } from '../sections/TrustBar';
 import { Stats } from '../sections/Stats';
+import { SecurityDeepDive } from '../sections/SecurityDeepDive';
+import { DesignPartners } from '../sections/DesignPartners';
 import { Features } from '../sections/Features';
-import { Playground } from '../sections/Playground';
 import { DataDemo } from '../sections/DataDemo';
-import { Tour360 } from '../sections/Tour360';
 import { AllComponents } from '../sections/AllComponents';
 import { Roadmap } from '../sections/Roadmap';
 import { Packages } from '../sections/Packages';
 import { CodeShowcase } from '../sections/CodeShowcase';
-import { HolographicUniverse } from '../sections/HolographicUniverse';
-import { GalaxyMap360 } from '../sections/GalaxyMap360';
 import { FlowChartDemo } from '../sections/FlowChartDemo';
 import { BrandFaq } from '../sections/BrandFaq';
-import { Immersive } from '../Immersive';
-import { ImmersiveContext } from '../immersive-context';
 import { usePageMeta } from '../use-page-meta';
 
 export function Home() {
   usePageMeta(
-    'TekiVex UI — Production-grade React components, in 360°',
-    'Open-source React component library: 113 accessible primitives, a WebGL 3D + 360° toolkit, holographic UI, browser-native PDF, and printable templates. MIT licensed, WCAG 2.1 AAA.',
+    'TekiVex UI — The React component library that ships with a threat model',
+    '115 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core, built-in security kernel with published threat model. MIT licensed.',
   );
-  const [immersiveOpen, setImmersiveOpen] = useState(false);
-  const open = useCallback(() => setImmersiveOpen(true), []);
-  const close = useCallback(() => setImmersiveOpen(false), []);
 
   return (
-    <ImmersiveContext.Provider value={{ open }}>
-      {/* Home page is the immersive cosmic showcase — designed for a dark
-          backdrop. Wrap it in a "dark island" that overrides the global
-          light tokens locally so the 3D scenes, particle fields, and
-          neon-on-deep-violet aesthetic read as intended. The text routes
-          (/about, /privacy, /blog, /docs, ...) keep the new light theme. */}
-      <div className="tk-home tk-home--dark">
-        <Hero />
-        <Stats />
-        <Features />
-        <Playground />
-        <DataDemo />
-        <FlowChartDemo />
-        <HolographicUniverse />
-        <GalaxyMap360 />
-        <Tour360 />
-        <AllComponents />
-        <Roadmap />
-        <CodeShowcase />
-        <Packages />
-        <BrandFaq />
-      </div>
-      <Immersive open={immersiveOpen} onClose={close} />
-    </ImmersiveContext.Provider>
+    <div className="tk-home tk-home--dark">
+      <HeroPro />
+      <TrustBar />
+      <Stats />
+      <SecurityDeepDive />
+      <Features />
+      <DesignPartners />
+      <CodeShowcase />
+      <DataDemo />
+      <FlowChartDemo />
+      <AllComponents />
+      <Packages />
+      <Roadmap />
+      <BrandFaq />
+    </div>
   );
 }

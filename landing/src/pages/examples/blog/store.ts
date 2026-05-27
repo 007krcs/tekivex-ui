@@ -210,12 +210,12 @@ function seedPosts(): BlogPost[] {
     {
       id: 'seed-2',
       slug: 'design-tokens-that-scale',
-      title: 'Design tokens that scale across 113 components',
+      title: 'Design tokens that scale across 115 components',
       subtitle: 'Three rewrites. One rule that finally stuck.',
       excerpt:
         'A short tour of the token system behind tekivex-ui — what we kept simple, what we got wrong twice, and the rule that made theming painless.',
       blocks: [
-        { id: blockId(), type: 'paragraph', text: 'We rewrote our token system three times before it stuck. Here\'s the version that survived contact with 113 components and four themes.' },
+        { id: blockId(), type: 'paragraph', text: 'We rewrote our token system three times before it stuck. Here\'s the version that survived contact with 115 components and four themes.' },
         { id: blockId(), type: 'heading', level: 2, text: 'Rule one: tokens are nouns, not adjectives' },
         { id: blockId(), type: 'paragraph', text: 'Early on we had --color-button-primary. That was wrong: every component had to know about every other component\'s colors.' },
         { id: blockId(), type: 'code', lang: 'css', code: ':root {\n  --tk-bg: #ffffff;\n  --tk-fg: #0f172a;\n  --tk-accent: #4f46e5;\n  --tk-surface: #f8fafc;\n}' },

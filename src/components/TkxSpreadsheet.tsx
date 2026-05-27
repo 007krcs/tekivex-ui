@@ -1,3 +1,5 @@
+'use client';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TkxSpreadsheet — editable grid with a formula evaluator
 //

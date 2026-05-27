@@ -30,11 +30,11 @@
     "node": ">=18"
   },
   "bugs": {
-    "url": "https://github.com/novaai0401-ui/tekivex-issue-report/issues"
+    "url": "https://github.com/007krcs/tekivex-ui/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/novaai0401-ui/tekivex-issue-report.git"
+    "url": "https://github.com/007krcs/tekivex-ui.git"
   },
   "homepage": "https://ui.tekivex.com/"
 }

@@ -16,8 +16,15 @@ Pro-tier customers: see SLA terms in your contract.
 
 **Do not open a public GitHub issue.** Disclose privately:
 
-- **Email:** `security@tekivex.com` (PGP key: [link when live])
+- **Email:** `novaai0401@gmail.com` (PGP key: [link when live])
 - **GitHub Security Advisories:** <https://github.com/007krcs/tekivex-ui/security/advisories/new>
+
+The same channels are advertised machine-readably per [RFC 9116](https://www.rfc-editor.org/rfc/rfc9116):
+
+- **security.txt:** <https://ui.tekivex.com/.well-known/security.txt>
+- **CycloneDX SBOM (1.5):** <https://ui.tekivex.com/security/sbom.json>
+
+Regenerate the SBOM locally with `npm run sbom:generate`.
 
 Include:
 - Affected package and version (`tekivex-ui@2.6.0`, `@tekivex/security-core@0.1.0`, etc.)

@@ -65,7 +65,7 @@ What I'd love feedback on:
 - Anything you'd build with this? Anything that breaks?
 
 Source: https://www.npmjs.com/package/tekivex-ui
-Issues: https://github.com/novaai0401-ui/tekivex-issue-report/issues
+Issues: https://github.com/007krcs/tekivex-ui/issues
 
 MIT licensed. Built solo over 12 months. Ask me anything.
 ```

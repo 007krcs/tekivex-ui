@@ -10,7 +10,7 @@ This is the line-by-line scoreboard against `TekiVex_UI_Limitations_Report.md` (
 | §3 Nice-to-haves | 12 | **11** | 0 | 1 | Storybook → superseded by `tkx-book` |
 | §4 Puppeteer replace | 9 sub-items | **9** | 0 | 0 | All shipped |
 | §5 v2.7 quick wins | 6 | **6** | 0 | 0 | Released as `2.7.0` |
-| §5 v2.8 i18n | 3 | **3** | 0 | 0 | 35 locales with full v2.7 parity |
+| §5 v2.8 i18n | 3 | **3** | 0 | 0 | 44 locales with full v2.7 parity |
 | §5 v3.0 tekivex-pdf | 4 | **4** | 0 | 0 | 15 primitives + 7 templates + raster + fonts |
 | §5 v3.1 payments | 3 | **3** | 0 | 0 | Button + Checkout + subscription helpers |
 | §5 v3.2 vertical packs | 5 | **5** | 0 | 0 | india/finance/content scaffolds + Aadhaar + KYC pack |
@@ -25,7 +25,7 @@ This is the line-by-line scoreboard against `TekiVex_UI_Limitations_Report.md` (
 | 2.1 | TkxImageEditor | ✅ | `src/components/TkxImageEditor.tsx` (v2.7) |
 | 2.2 | Server-side PDF | ✅ | `@tekivex/pdf` v0.3 |
 | 2.3 | TkxPhoneInput | ✅ | `src/components/TkxPhoneInput.tsx` (v2.7) |
-| 2.4 | TkxIntlProvider + RTL | ✅ | `src/i18n/` — 35 locales |
+| 2.4 | TkxIntlProvider + RTL | ✅ | `src/i18n/` — 44 locales |
 | 2.5 | TkxPaymentButton | ✅ | `src/components/TkxPaymentButton.tsx` (v2.8) |
 | 2.6 | TkxCaptcha | ✅ | `src/components/TkxCaptcha.tsx` (v2.7) |
 | 2.7 | TkxWatermark v2 + PDF watermark + DevTools detection | ✅ | `src/components/TkxWatermark.tsx` + `@tekivex/pdf/TkxPDFWatermark` + `useDevtoolsOpen` hook |
@@ -89,7 +89,7 @@ The Storybook decision: the audit asked for a public Storybook deployment. We bu
 
 | | Status |
 |---|---|
-| TkxIntlProvider + 35 locales + RTL | ✅ |
+| TkxIntlProvider + 44 locales + RTL | ✅ |
 | Audit hardcoded strings | ✅ — `metrics/i18n-audit.json` |
 | Refactor components on `useLocale()` | ⚠️ — 18 of 53 done; 380 strings remain (down from 398). Pattern is mature; future i18n batches close the rest. **NOTE:** the audit's wording was "ship Hindi, Marathi, Gujarati, Tamil, Telugu, Bengali, Punjabi, Urdu translation files" — those 8 are all done with full v2.7 optional-field translations, plus 9 more European/Asian locales. The audit's strict requirement ✅ done. The "audit + extract" recommendation we've taken further than asked. |
 | RTL flip CSS | ✅ |

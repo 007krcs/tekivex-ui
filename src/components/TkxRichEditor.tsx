@@ -1,3 +1,5 @@
+'use client';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TkxRichEditor — accessible rich-text editor
 //
@@ -41,6 +43,7 @@ import {
   type ReactNode,
 } from 'react';
 import { useTheme } from '../themes';
+import { sanitizeUnicode } from '../engine/security';
 
 // ── HTML sanitiser (inline so it ships in the bundle without an extra dep) ──
 
@@ -103,6 +106,14 @@ function walk(node: Node) {
   // Node iteration is mutation-safe via Array.from
   const children = Array.from(node.childNodes);
   for (const child of children) {
+    if (child.nodeType === Node.TEXT_NODE) {
+      // Strip bidi-override / zero-width chars from text nodes to block
+      // Trojan-Source attacks via paste or direct contentEditable typing.
+      const original = child.textContent || '';
+      const clean = sanitizeUnicode(original);
+      if (clean !== original) child.textContent = clean;
+      continue;
+    }
     if (child.nodeType === Node.ELEMENT_NODE) {
       const el = child as Element;
       if (DROP_WITH_CONTENT.has(el.tagName)) {

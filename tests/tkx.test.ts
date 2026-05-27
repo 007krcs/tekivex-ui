@@ -65,11 +65,14 @@ describe('tkx — utility resolution', () => {
     expect(extractAtomicCSS()).toContain('width:42px');
   });
 
-  // Tailwind-style arbitrary CSS-property syntax is a known gap in the TKX
-  // engine — the parser currently treats `[--my-var:red]` as an attribute
-  // selector rather than emitting a custom-property declaration. Tracked
-  // for v3.0 of the engine. Marked todo so the gate stays honest.
-  it.todo('resolves arbitrary CSS property [--my-var:red]');
+  // Fixed in v3.17.0 — the custom-property check now runs before the
+  // allowlist-gated general arbitrary-property handler, so `[--my-var:red]`
+  // emits a CSS custom-property declaration instead of being treated as
+  // an attribute selector.
+  it('resolves arbitrary CSS property [--my-var:red]', () => {
+    tkx('[--my-var:red]');
+    expect(extractAtomicCSS()).toContain('--my-var:red');
+  });
 });
 
 describe('tkx — variants', () => {
