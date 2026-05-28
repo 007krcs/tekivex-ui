@@ -17,7 +17,7 @@ I'm [YOUR NAME], maintainer of TekiVex UI. We're a React component library desig
 - **Published threat model** at https://ui.tekivex.com/docs/security-threat-model — 15 STRIDE-mapped threats, CWE references, per-component coverage matrix. No other mainstream React UI library publishes one.
 - **CycloneDX SBOM** at https://ui.tekivex.com/security/sbom.json — clean SBOM, zero runtime dependencies in core, ready for the FedRAMP / StateRAMP supply-chain attestations.
 - **Trusted Types + CSP builder + magic-byte MIME verification + tamper-evident SHA-256 audit trail** — primitives that make agency-side security review faster.
-- **MIT licensed**, 115 production components, 1,777 unit tests, 44-locale i18n with RTL.
+- **MIT licensed**, 116 production components, 1,798 unit tests, 44-locale i18n with RTL.
 
 [COMPANY]'s [SPECIFIC PRODUCT — e.g. "permit-issuance platform," "court e-filing portal," "Medicaid eligibility dashboard"] is exactly the kind of project where this checklist matters — agencies' procurement teams parse the VPAT and SBOM before they parse the demo.
 

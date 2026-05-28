@@ -20,7 +20,7 @@
 
 1. **The full-bleed 360° panorama hero.** `landing/src/sections/Hero.tsx` opens with a WebGL sphere, 3,000-particle field, six pulsing hotspots, gyroscope hint, and a triple-gradient shimmering CTA. This is the visual vocabulary of a *creative agency portfolio*, not a security-conscious component library. A buyer who lands here and is told 60 seconds later that the library "ships with a threat model" experiences cognitive dissonance.
 2. **The four-color holographic palette.** Cyan `#00f5d4`, blue `#3a86ff`, magenta `#ff006e`, amber `#ffbe0b`, mint `#06d6a0`, violet `#7b2ff7` — six accents in a single hero. Every gold-standard reference uses one.
-3. **The "and also" tagline pattern.** The README, hero sub, and several sections boast "115 components · spreadsheet primitive · 3D toolkit · PDF without Puppeteer · flow chart canvas · 360° panorama". This is a *features list*. A positioning statement says one thing. The "ships with a threat model" line is the right one — let it stand alone.
+3. **The "and also" tagline pattern.** The README, hero sub, and several sections boast "116 components · spreadsheet primitive · 3D toolkit · PDF without Puppeteer · flow chart canvas · 360° panorama". This is a *features list*. A positioning statement says one thing. The "ships with a threat model" line is the right one — let it stand alone.
 
 ---
 

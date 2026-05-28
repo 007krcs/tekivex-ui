@@ -14,7 +14,7 @@ const FAQS: { question: string; answer: string }[] = [
   {
     question: 'What is TekiVex UI?',
     answer:
-      'TekiVex UI is an open-source, MIT-licensed React component library. It ships 115 production-grade components across 13 npm packages, including primitives (Button, Card, Input, Badge), layout (Grid, Stack, Tabs), data display (Table, DataExplorer, Spreadsheet), an accessible WebGL 3D toolkit (tekivex-3d), a Holographic UI family, browser-native PDF generation (no Puppeteer or headless Chrome required), and printable resume + biodata templates. Every component meets WCAG 2.1 AAA contrast and keyboard requirements.',
+      'TekiVex UI is an open-source, MIT-licensed React component library. It ships 116 production-grade components across 13 npm packages, including primitives (Button, Card, Input, Badge), layout (Grid, Stack, Tabs), data display (Table, DataExplorer, Spreadsheet), an accessible WebGL 3D toolkit (tekivex-3d), a Holographic UI family, browser-native PDF generation (no Puppeteer or headless Chrome required), and printable resume + biodata templates. Every component meets WCAG 2.1 AAA contrast and keyboard requirements.',
   },
   {
     question: 'What does Tekivex mean and who builds it?',
@@ -111,7 +111,7 @@ export function BrandFaq() {
           family of npm packages — <code>tekivex-ui</code>, <code>tekivex-3d</code>, and{' '}
           <code>tekivex-pdf</code> — gives React developers a single, MIT-licensed
           source for accessible primitives, real WebGL 3D, holographic surfaces, and
-          browser-native PDF. 115 components, zero runtime dependencies.
+          browser-native PDF. 116 components, zero runtime dependencies.
         </p>
       </header>
 

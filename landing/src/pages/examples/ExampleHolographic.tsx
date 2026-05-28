@@ -88,7 +88,7 @@ export function ExampleHolographic() {
           <Spacer height={12} />
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
             <TkxHolographicBadge size="sm" tone="success">v3.15 GA</TkxHolographicBadge>
-            <TkxHolographicBadge size="md" tone="info">115 components</TkxHolographicBadge>
+            <TkxHolographicBadge size="md" tone="info">116 components</TkxHolographicBadge>
             <TkxHolographicBadge size="lg" tone="warning">beta route</TkxHolographicBadge>
           </div>
         </Stage>

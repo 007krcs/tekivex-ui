@@ -5,6 +5,52 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.2] — 2026-05-28
+
+The **honest scope** release. Consumer feedback caught that none of
+the existing chat components (`TkxChat`, `TkxAIChatBubble`,
+`TkxAgentMessage`) fit peer-to-peer messaging — they're all LLM
+conversation primitives. v3.18.2 ships a real P2P primitive without
+faking it, and clarifies the scope on the existing components so the
+mistake doesn't repeat. Also bumps headline counts to reflect the new
+component.
+
+### Added
+
+- **`TkxMessageThread`** — a peer-to-peer chat primitive (742 LOC,
+  21 tests). Covers arbitrary `senders: Record<string, PeerSender>`
+  identity, image / file / audio / video attachments (with
+  magic-byte verification via `sniffMimeType` — mismatched files are
+  refused per-file with an inline warning, good files still flow
+  through to `onAttach`), reactions with a configurable emoji
+  picker, one-level reply threading rendered both as a quoted block
+  above the bubble AND as a cancellable chip above the composer,
+  inline edit + soft-delete actions, five delivery-state icons on
+  own messages (sending / sent / delivered / read / failed), and
+  "Today" / "Yesterday" / locale-formatted day separators with
+  consecutive-message grouping in 5-minute windows.
+
+  Backend-dependent features (typing indicators, real-time message
+  arrival, delivery-state transitions, presence updates, upload
+  progress, end-to-end encryption) are explicitly NOT implemented
+  and called out at the bottom of the source file as consumer
+  responsibilities. Pre-1.0: API may shift; the stable `TkxPeerChat`
+  promotion is named in [`docs/ROADMAP.md`](./docs/ROADMAP.md) v3.19.
+
+### Changed
+
+- **`TkxChat`** scope clarified in JSDoc — it's an LLM conversation
+  primitive (OpenAI / Anthropic role model, string content), not a
+  peer-to-peer messenger. Points consumers at `TkxMessageThread` if
+  they need attachments / reactions / threading / real sender
+  identity. No behavioural change.
+
+### Docs
+
+- `docs/ROADMAP.md` v3.19 section adds a named `TkxPeerChat`
+  commitment with the full prop sketch as a promotion target for the
+  v3.18.x `TkxMessageThread` preview.
+
 ## [3.18.1] — 2026-05-28
 
 ### Fixed
@@ -145,9 +191,9 @@ Everything below is non-breaking and opt-in. See
 
 - README rewritten around a single positioning sentence: *"The React
   component library that ships with a threat model."* Component count
-  reconciled to **115 production + 4 experimental** across README,
+  reconciled to **116 production + 4 experimental** across README,
   package.json, landing page, About page.
-- Test badge count corrected to **1,777 passing** (was stale "1,300+" /
+- Test badge count corrected to **1,798 passing** (was stale "1,300+" /
   "1,034").
 - Locale count corrected to **44** (was stale "27"). 9 new locales added: bg, hr, et, fi, lt, lv, sk, sl, no.
 - `WCAG 2.1 AAA` claim softened to **"AAA target (audit-firm engagement
@@ -170,7 +216,7 @@ Everything below is non-breaking and opt-in. See
 - `TkxOrgChart`: smoke → 12+ tests.
 - `TkxTreeView`: smoke → 14+ tests.
 - Security engine: 77 tests, all passing under SHA-256 audit chain.
-- Overall: 1,429 → **1,777** tests (+333 across the slice). **0 todos** —
+- Overall: 1,429 → **1,798** tests (+333 across the slice). **0 todos** —
   first time since v2.x.
 
 ### Tooling

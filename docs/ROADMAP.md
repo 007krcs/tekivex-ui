@@ -91,6 +91,33 @@ the DataGrid feature gaps competitors will count.
 | **(✓ landed)** Cell-level editing with validation | Power-user demand, table stakes for "MUI-Pro killer" claim | 12+ |
 | Tree data / hierarchical rows | Common in enterprise dashboards | 8+ |
 
+### New component — `TkxPeerChat`
+
+A peer-to-peer chat surface. `TkxChat` and `TkxAIChatBubble` only model
+LLM conversations (3-role enum, string-only content). Consumer feedback
+in 2026-05 confirmed this gap. `TkxPeerChat` is the full version of the
+v3.18.x `TkxMessageThread` preview.
+
+| Feature | Definition of done |
+|---|---|
+| Sender identity beyond 3-role enum | `senders: Record<string, PeerSender>` with name / avatar / presence / org-role |
+| Attachments: image / file / audio / video | All four kinds render; upload pipe through `sniffMimeType` magic-byte verification |
+| Reactions | Per-message emoji map; toggle on click; configurable picker |
+| Reply threading | One-level `replyTo` quoted-preview block (nested trees out of scope until v3.22) |
+| Delivery state | sending / sent / delivered / read / failed icons on own messages |
+| Time grouping | "Today" / "Yesterday" / locale-formatted date separators |
+| Edit + soft-delete | Own messages only; "(edited)" suffix; "Message deleted" placeholder |
+| Group consecutive messages | Within 5-minute windows, same sender → collapsed header |
+| Accessibility | `role="log"` + `aria-live="polite"`, per-message `role="article"`, keyboard-navigable actions |
+| Backend-dependent features | Documented as consumer-responsibility, not faked: typing indicators, presence updates, real-time arrival, upload progress |
+| Pre-1.0 stability | Prop API frozen at v3.19 release; later changes go through deprecation cycle |
+| Tests | 25+ unit tests; magic-byte mismatch must abort attachment with inline warning |
+| Docs | Demo page in `/playground/` showing 2-person + group chat patterns; SECURITY note on E2EE explicitly out of scope (it's a UI primitive, not a transport) |
+
+Shipped in v3.18.x as a `TkxMessageThread` preview (~350-450 LOC).
+v3.19 promotes it to `TkxPeerChat`, adds typing-indicator + presence
+hook signatures (consumer wires them), and stabilizes the prop API.
+
 ### Bug-bash window (last week of cycle)
 
 - 1-week dedicated cycle to triage every open issue on GitHub

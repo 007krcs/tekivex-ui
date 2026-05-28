@@ -2,7 +2,7 @@
 
 **To:** `audit@webaim.org` (published on their services page at https://webaim.org/services/audit)
 
-**Subject:** Phased WCAG 2.1 AAA audit quote — open-source React UI library (115 components)
+**Subject:** Phased WCAG 2.1 AAA audit quote — open-source React UI library (116 components)
 
 **mailto:** [Click to open in mail client](mailto:audit@webaim.org?subject=Phased%20WCAG%202.1%20AAA%20audit%20quote%20%E2%80%94%20open-source%20React%20UI%20library%20%28115%20components%29&body=Hi%20WebAIM%20team%2C%0A%0AI%20maintain%20TekiVex%20UI%2C%20an%20open-source%20React%20component%20library%20with%20115%20production%20components%2C%20and%20we%27re%20scoping%20a%20third-party%20AAA%20audit%20before%20public%20launch.%20We%27re%20getting%20quotes%20from%20Deque%20and%20TPGi%20but%20want%20to%20consider%20firms%20that%20can%20move%20faster%20or%20scope%20down%20to%20fit%20a%20%245%E2%80%9310k%20v1%20audit.%0A%0AFull%20context%20follows%20%E2%80%94%20happy%20to%20jump%20on%20a%20call%20if%20easier.)
 
@@ -16,7 +16,7 @@
 
 Hi WebAIM team,
 
-I maintain TekiVex UI — an MIT-licensed open-source React component library with 115 production components — and we're scoping a third-party WCAG 2.1 AAA audit before public launch. We're getting quotes from Deque and TPGi but want to consider firms that can move faster, scope down to a phased engagement, or work with our open-source / pre-revenue context.
+I maintain TekiVex UI — an MIT-licensed open-source React component library with 116 production components — and we're scoping a third-party WCAG 2.1 AAA audit before public launch. We're getting quotes from Deque and TPGi but want to consider firms that can move faster, scope down to a phased engagement, or work with our open-source / pre-revenue context.
 
 **Why WebAIM specifically:** your reputation in the a11y community is unmatched, and your survey work (the WebAIM Million, the screen-reader user surveys) is the data the rest of the industry quotes. A WebAIM-signed VPAT carries real weight even at smaller dollar figures.
 
@@ -45,7 +45,7 @@ I maintain TekiVex UI — an MIT-licensed open-source React component library wi
 **Existing artifacts we'd share at kickoff:**
 - `docs/a11y-screen-reader-matrix.md` (470 cells self-tested, 88% pass)
 - `docs/SECURITY-THREAT-MODEL.md` (15 STRIDE-mapped threats)
-- axe-core CI pipeline, 1,777 passing tests
+- axe-core CI pipeline, 1,798 passing tests
 - Per-component prop tables and usage examples
 
 **Two questions:**

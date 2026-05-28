@@ -122,7 +122,7 @@ Send these from `partners@tekivex.com`. Reply-to should be a real human (007krcs
 ### Template C — Inbound qualification (use when someone asks "what's TekiVex?")
 
 > Thanks for reaching out! Short version: tekivex-ui is a React component library
-> targeting regulated-industry teams. 115 production components, WCAG 2.1 AAA
+> targeting regulated-industry teams. 116 production components, WCAG 2.1 AAA
 > target, zero runtime deps in core, published threat model.
 >
 > Before I send the docs, two quick questions:

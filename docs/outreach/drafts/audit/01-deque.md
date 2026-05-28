@@ -2,7 +2,7 @@
 
 **To:** Send via web form at `https://www.deque.com/contact/` (Deque does not publish a sales email; the contact form routes to their sales team within 24 hours)
 
-**Subject:** Quote request — WCAG 2.1 AAA audit + VPAT for an MIT React UI library (115 components, open source)
+**Subject:** Quote request — WCAG 2.1 AAA audit + VPAT for an MIT React UI library (116 components, open source)
 
 **mailto:** _N/A — use web form_
 
@@ -16,12 +16,12 @@
 
 Hi,
 
-I maintain TekiVex UI — an MIT-licensed React component library with 115 production components, a published security threat model, and a self-attested WCAG 2.1 AAA target. We're approaching a public launch and we want a third-party Deque audit + VPAT before announcing the AAA claim publicly.
+I maintain TekiVex UI — an MIT-licensed React component library with 116 production components, a published security threat model, and a self-attested WCAG 2.1 AAA target. We're approaching a public launch and we want a third-party Deque audit + VPAT before announcing the AAA claim publicly.
 
 Quick context: the library is open-source, the demo site is live at https://ui.tekivex.com, and we already run axe-core in CI on every PR (passes clean). We're not starting from a hostile baseline — we want the third-party rigor we can't self-attest to.
 
 **Scope:**
-- 115 production React components in the `tekivex-ui` npm package
+- 116 production React components in the `tekivex-ui` npm package
 - Live demo: https://ui.tekivex.com (interactive playground for each component)
 - Theming system (light + dark themes, contrast ratios)
 - Keyboard-navigation patterns across the 7 most complex components (TkxDataGrid, TkxSelect, TkxDatePicker, TkxModal, TkxMenu, TkxCommand, TkxFlowChart)
@@ -46,7 +46,7 @@ Quick context: the library is open-source, the demo site is live at https://ui.t
 Existing accessibility artifacts we can share on request:
 - `docs/a11y-screen-reader-matrix.md` — 470 cells, 88% pass across NVDA / JAWS / VO / iOS / TalkBack (self-tested)
 - `docs/SECURITY-THREAT-MODEL.md` — 15 STRIDE-mapped threats, CWE references
-- 1,777 unit tests, axe-core in CI, ratchet enforced
+- 1,798 unit tests, axe-core in CI, ratchet enforced
 
 Happy to set up a 30-minute scoping call. The earlier we can sign, the sooner we can name your firm on our launch page.
 

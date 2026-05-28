@@ -4,7 +4,7 @@
 const STATS = [
   { value: '115',   label: 'Production components' },
   { value: '13',    label: 'npm packages' },
-  { value: '1,777', label: 'Tests passing' },
+  { value: '1,798', label: 'Tests passing' },
   { value: '44',    label: 'Locales' },
   { value: '0',     label: 'Runtime deps in core' },
   { value: 'MIT',   label: 'License' },

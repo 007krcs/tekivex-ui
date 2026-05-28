@@ -85,7 +85,7 @@
       "version": "3.18.0",
       "bom-ref": "tekivex-ui@3.18.0",
       "author": "007krcs",
-      "description": "Production-grade React component library — 115 components (plus 4 experimental, opt-in), WCAG 2.1 AAA, WAI-ARIA 1.2, built-in security kernel with published threat model, built-in charts, headless primitives, zero-runtime CSS engine, 44-locale i18n, Indian KYC pack, agent runtime (Anthropic/OpenAI/Gemini/Ollama/MCP/A2A), TypeScript-first.",
+      "description": "Production-grade React component library — 116 components (plus 4 experimental, opt-in), WCAG 2.1 AAA, WAI-ARIA 1.2, built-in security kernel with published threat model, built-in charts, headless primitives, zero-runtime CSS engine, 44-locale i18n, Indian KYC pack, agent runtime (Anthropic/OpenAI/Gemini/Ollama/MCP/A2A), TypeScript-first.",
       "licenses": [
         {
           "license": {

@@ -366,6 +366,6 @@ treat any pre-1.0 library:
 - **Expect breaking changes at v4.0** — see [docs/ROADMAP.md](./docs/ROADMAP.md)
 
 The threat model is published, the SBOM is published, the test suite is
-1,777 tests, the audit chain is SHA-256-verifiable, and the supply chain
+1,798 tests, the audit chain is SHA-256-verifiable, and the supply chain
 is reviewable on socket.dev. Pre-1.0 doesn't mean unaudited; it means the
 API surface isn't frozen yet.

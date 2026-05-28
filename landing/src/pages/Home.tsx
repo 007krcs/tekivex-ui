@@ -53,7 +53,7 @@ import { usePageMeta } from '../use-page-meta';
 export function Home() {
   usePageMeta(
     'TekiVex UI — The React component library that ships with a threat model',
-    '115 production components, zero runtime dependencies in core, built-in security kernel with published threat model. MIT-licensed, pre-1.0.',
+    '116 production components, zero runtime dependencies in core, built-in security kernel with published threat model. MIT-licensed, pre-1.0.',
   );
 
   return (

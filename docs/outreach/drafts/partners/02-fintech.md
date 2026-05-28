@@ -22,7 +22,7 @@ I'm building TekiVex UI — a React component library that's trying to be the bo
 - **Tamper-evident SHA-256 hash-chained audit trail** — every component render is loggable, the chain is verifiable, useful for SOC 2 audit evidence.
 - **Trusted Types policy installer** — one call locks down DOM XSS sinks at the browser level.
 - **Zero runtime dependencies in core** — clean SBOM at https://ui.tekivex.com/security/sbom.json. No transitive-deps surprises during vendor review.
-- **MIT licensed**, 115 production components, 1,777 unit tests, WCAG 2.1 AAA target (third-party audit-firm engagement open).
+- **MIT licensed**, 116 production components, 1,798 unit tests, WCAG 2.1 AAA target (third-party audit-firm engagement open).
 
 **The design-partner ask:**
 

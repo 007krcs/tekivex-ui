@@ -12,7 +12,7 @@ across every sub-export that needs them.
 
 | Sub-export | Import path | Raw | **Gzip** | Notes |
 |---|---|---:|---:|---|
-| Core | `tekivex-ui` | 536.2 kB | **145.4 kB** | All 115 production components + theme + engine. The "everything" entry. |
+| Core | `tekivex-ui` | 536.2 kB | **145.4 kB** | All 116 production components + theme + engine. The "everything" entry. |
 | Themes | `tekivex-ui/themes` | 0.4 kB | **0.3 kB** | Re-exports of `quantumDark`, `auroraLight`, `createTheme`. |
 | Headless | `tekivex-ui/headless` | 1.1 kB | **0.6 kB** | `useDisclosure`, `useFormState`, `useListSelection`, etc. — zero-style hooks. |
 | Charts | `tekivex-ui/charts` | 20.4 kB | **6.2 kB** | 7 chart types. **Add `recharts` (~80 kB gz) — declared as optional peer.** |
@@ -52,7 +52,7 @@ Run `npm run bundle:report` to regenerate these numbers.
   you import only `TkxButton + TkxCard + ThemeProvider`, the real shipped
   bundle is closer to **8–12 kB gzip**, not 145 kB. Use
   [bundlephobia.com](https://bundlephobia.com) for per-import sizes.
-- The core (`tekivex-ui`) bundle includes **all 115 production components**.
+- The core (`tekivex-ui`) bundle includes **all 116 production components**.
   This is intentional — most consumers import 30–60 of them across an app,
   and the bundler's tree-shaker drops everything else per-route.
 - **As of the next release, dist no longer emits shared `chunk-*.js`

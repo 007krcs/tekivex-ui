@@ -78,11 +78,11 @@ template paragraph.
 
 **Repo:** https://github.com/007krcs/tekivex-ui (MIT-licensed, public)
 
-**Live demo site:** https://ui.tekivex.com (115 production components,
+**Live demo site:** https://ui.tekivex.com (116 production components,
 interactive playground for each)
 
 **Surface to audit (in-scope):**
-- 115 production React components in the `tekivex-ui` npm package
+- 116 production React components in the `tekivex-ui` npm package
 - All component variants documented at https://ui.tekivex.com/docs
 - Theming system (light + dark themes, contrast ratios)
 - Keyboard-navigation patterns across the 7 most complex components
@@ -124,7 +124,7 @@ interactive playground for each)
 - `docs/SECURITY-THREAT-MODEL.md` (15 STRIDE-mapped threats, CWE references)
 - `scripts/a11y-audit.mjs` (axe-core CI integration — passes clean on every
   PR)
-- Per-component test files at `tests/*.test.tsx` (1,777 tests, ratchet
+- Per-component test files at `tests/*.test.tsx` (1,798 tests, ratchet
   enforced in CI)
 - Screen-reader test transcripts on request
 
@@ -142,7 +142,7 @@ firm-marketing pages.
 
 ### Template A — Deque
 
-**Subject:** Quote request — WCAG 2.1 AAA audit + VPAT for an MIT React UI library (115 components)
+**Subject:** Quote request — WCAG 2.1 AAA audit + VPAT for an MIT React UI library (116 components)
 
 > Hi,
 >
@@ -180,7 +180,7 @@ firm-marketing pages.
 > Hi,
 >
 > I'm reaching out about a third-party WCAG 2.1 AAA conformance audit for
-> TekiVex UI — an MIT-licensed React component library with 115 production
+> TekiVex UI — an MIT-licensed React component library with 116 production
 > components. We're particularly interested in TPGi because we need real
 > JAWS testing (our self-test matrix currently leans heavier on NVDA / VO).
 >

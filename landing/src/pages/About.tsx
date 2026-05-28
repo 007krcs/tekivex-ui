@@ -5,7 +5,7 @@ import { usePageMeta } from '../use-page-meta';
 export const meta = {
   title: 'About TekiVex UI — The React component library that ships with a threat model',
   description:
-    'TekiVex UI is the only mainstream React component library with a published threat model. 115 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core, tamper-evident SHA-256 audit trail. Read why we built it and how we keep it maintained.',
+    'TekiVex UI is the only mainstream React component library with a published threat model. 116 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core, tamper-evident SHA-256 audit trail. Read why we built it and how we keep it maintained.',
 };
 
 export function About() {
@@ -14,7 +14,7 @@ export function About() {
     <PageShell
       title="About TekiVex UI"
       eyebrow="About"
-      subtitle="The React component library that ships with a threat model. 115 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core."
+      subtitle="The React component library that ships with a threat model. 116 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core."
       breadcrumbs={[{ label: 'About' }]}
       updated="2026-05-02"
     >

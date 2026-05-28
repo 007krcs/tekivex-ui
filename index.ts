@@ -96,6 +96,18 @@ export type { TkxRatingProps, RatingSize } from './src/components/TkxRating';
 export { TkxChat, TkxChatBubble, TkxThinkingIndicator } from './src/components/TkxChat';
 export type { TkxChatProps, TkxChatBubbleProps, ChatMessage, MessageRole } from './src/components/TkxChat';
 
+export { TkxMessageThread } from './src/components/TkxMessageThread';
+export type {
+  TkxMessageThreadProps,
+  PeerSender,
+  PeerMessage,
+  PeerAttachment,
+  PeerReaction,
+  PeerPresence,
+  MessageDeliveryState,
+  AttachmentKind,
+} from './src/components/TkxMessageThread';
+
 export { TkxTag, TkxTagInput } from './src/components/TkxTag';
 export type { TkxTagProps, TkxTagInputProps, TagVariant, TagSize, TagColorScheme } from './src/components/TkxTag';
 

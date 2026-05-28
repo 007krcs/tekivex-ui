@@ -36,7 +36,7 @@ interface VerifiableClaim {
 
 const CLAIMS: VerifiableClaim[] = [
   {
-    claim: '115 production components',
+    claim: '116 production components',
     explain:
       'Count the files yourself — every component lives under one directory in the public source tree.',
     how: 'find src/components -name "Tkx*.tsx" | wc -l',
@@ -44,7 +44,7 @@ const CLAIMS: VerifiableClaim[] = [
     cta: 'Browse component source',
   },
   {
-    claim: '1,777 tests passing at v3.18.0',
+    claim: '1,798 tests passing at v3.18.0',
     explain:
       'Clone the repo and run the suite. The pipeline is plain vitest — no hidden CI-only steps.',
     how: 'git clone https://github.com/007krcs/tekivex-ui && cd tekivex-ui && npm i && npm test',

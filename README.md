@@ -4,7 +4,7 @@
 
 **The React component library that ships with a threat model.**
 
-WCAG 2.1 AAA target (third-party audit on roadmap, not yet completed) · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME · Trusted Types) · **115 production components** (+ 4 experimental, opt-in) · Zero runtime dependencies in core
+WCAG 2.1 AAA target (third-party audit on roadmap, not yet completed) · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME · Trusted Types) · **116 production components** (+ 4 experimental, opt-in) · Zero runtime dependencies in core
 
 📄 **[Security Threat Model](./docs/SECURITY-THREAT-MODEL.md)** — the only mainstream React UI library that publishes one. 15 STRIDE-mapped threats with CWE references.
 
@@ -14,7 +14,7 @@ WCAG 2.1 AAA target (third-party audit on roadmap, not yet completed) · WAI-ARI
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18+-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
 [![WCAG 2.1 AAA](https://img.shields.io/badge/WCAG-2.1%20AAA-00c853.svg)](https://www.w3.org/TR/WCAG21/)
-[![Tests](https://img.shields.io/badge/Tests-1777%20passing-00c853.svg)](#testing)
+[![Tests](https://img.shields.io/badge/Tests-1798%20passing-00c853.svg)](#testing)
 [![SecurityCore](https://img.shields.io/badge/SecurityCore-v3.0-f72585.svg)](./docs/SECURITY-THREAT-MODEL.md)
 [![Socket.dev](https://socket.dev/api/badge/npm/package/tekivex-ui)](https://socket.dev/npm/package/tekivex-ui)
 [![SBOM](https://img.shields.io/badge/SBOM-CycloneDX%201.5-7c5cff.svg)](https://ui.tekivex.com/security/sbom.json)
@@ -37,7 +37,7 @@ TekiVex UI is **pre-1.0** and currently maintained by a single developer
 ([007krcs](https://github.com/007krcs)) on `novaai0401@gmail.com`. We
 ship a public [CycloneDX SBOM](https://ui.tekivex.com/security/sbom.json),
 a [security threat model](./docs/SECURITY-THREAT-MODEL.md) (15 STRIDE
-threats with CWE refs), and 1,777 tests at the published version — but
+threats with CWE refs), and 1,798 tests at the published version — but
 none of that substitutes for the human-scale risk of any pre-1.0,
 single-maintainer library.
 
@@ -124,7 +124,7 @@ Portal3D, Avatar3D — 14 primitives at source v0.7).
 | Tamper-evident SHA-256 hash-chained audit trail | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Published threat model | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Full-featured DataGrid — **free** | ✅ | 💰 Pro | Partial | Partial | ❌ |
-| 115 production components — **free** | ✅ | ✅ | ✅ | ✅ | 30 |
+| 116 production components — **free** | ✅ | ✅ | ✅ | ✅ | 30 |
 | Hooks layer (a11y, theme, i18n) | ✅ | ❌ | ❌ | ✅ | ✅ |
 | i18n — 44 locales incl. RTL | ✅ | ✅ | ✅ | Partial | ❌ |
 | Plugin-extensible CSS engine | ✅ | ❌ | ❌ | ❌ | ❌ |
@@ -604,7 +604,7 @@ npm install
 # Build the library
 npm run build
 
-# Run all 1777 tests
+# Run all 1798 tests
 npm test
 
 # Run tests with coverage report
@@ -634,11 +634,11 @@ npm run security:audit
 ## Testing
 
 ```
-90 dedicated component test files · 1777 tests · 0 failures · 1 todo
+90 dedicated component test files · 1798 tests · 0 failures · 1 todo
 Coverage: 64.84% lines · 51.10% functions · 56.77% branches · 61.41% statements (ratchet enforced in CI)
 ```
 
-Coverage includes dedicated unit tests for 88 of 115 production components plus smoke coverage for the rest, 7 chart types, headless hooks (incl. useWebSocket / useSSE / useMediaQuery), the TKX CSS engine, the WCAG engine, the security (Shield) engine, the i18n provider, and Indian KYC validators (Aadhaar Verhoeff, PAN, Voter ID, DL).
+Coverage includes dedicated unit tests for 88 of 116 production components plus smoke coverage for the rest, 7 chart types, headless hooks (incl. useWebSocket / useSSE / useMediaQuery), the TKX CSS engine, the WCAG engine, the security (Shield) engine, the i18n provider, and Indian KYC validators (Aadhaar Verhoeff, PAN, Voter ID, DL).
 
 Coverage thresholds are enforced as a CI ratchet in `vitest.config.ts` — the floor never drops between releases. Path to 90/90/85 is documented in [`docs/test-coverage-roadmap.md`](./docs/test-coverage-roadmap.md).
 

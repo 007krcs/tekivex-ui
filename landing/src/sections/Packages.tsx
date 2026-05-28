@@ -10,7 +10,7 @@ interface Pkg {
 }
 
 const PACKAGES: Pkg[] = [
-  { name: 'tekivex-ui',       version: '3.5.0',  sourceVersion: '3.13.0', desc: '115 components — incl. Spreadsheet, Gantt, Mind Map, Pivot, FormBuilder, Holographic, CommandPalette, FormulaBar.', install: 'npm i tekivex-ui',       isNew: true },
+  { name: 'tekivex-ui',       version: '3.5.0',  sourceVersion: '3.13.0', desc: '116 components — incl. Spreadsheet, Gantt, Mind Map, Pivot, FormBuilder, Holographic, CommandPalette, FormulaBar.', install: 'npm i tekivex-ui',       isNew: true },
   { name: 'tekivex-3d',       version: '0.3.0',  sourceVersion: '0.5.0',  desc: 'WebGL 3D + 360° + AR/VR. Procedural Starfield, Planet, OrbitPath, OrbitControls, Portal3D.',                           install: 'npm i tekivex-3d three', isNew: true },
   { name: 'tekivex-pdf',      version: '0.1.2',  desc: 'React → PDF without Puppeteer.',                                                                       install: 'npm i tekivex-pdf' },
   { name: 'tekivex-templates',version: '0.1.2',  desc: '7 PDF layouts ready to use.',                                                                          install: 'npm i tekivex-templates' },

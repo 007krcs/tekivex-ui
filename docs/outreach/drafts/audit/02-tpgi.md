@@ -16,16 +16,16 @@
 
 Hi,
 
-I'm reaching out about a third-party WCAG 2.1 AAA conformance audit for TekiVex UI — an MIT-licensed React component library with 115 production components. We're particularly interested in TPGi because we need real JAWS testing — our self-test matrix currently leans heavier on NVDA and VoiceOver, and Vispero/TPGi's screen-reader expertise is the differentiator that matters to us.
+I'm reaching out about a third-party WCAG 2.1 AAA conformance audit for TekiVex UI — an MIT-licensed React component library with 116 production components. We're particularly interested in TPGi because we need real JAWS testing — our self-test matrix currently leans heavier on NVDA and VoiceOver, and Vispero/TPGi's screen-reader expertise is the differentiator that matters to us.
 
 **Project:** WCAG 2.1 Level AAA conformance audit of TekiVex UI v3.17.0
 
 **Repo:** https://github.com/007krcs/tekivex-ui (MIT, public)
 
-**Live demo site:** https://ui.tekivex.com (interactive playground for all 115 components)
+**Live demo site:** https://ui.tekivex.com (interactive playground for all 116 components)
 
 **Scope:**
-- 115 production React components
+- 116 production React components
 - Theming system (light + dark, AAA contrast ratios self-attested)
 - The 7 most complex components for deep keyboard / screen-reader testing: TkxDataGrid, TkxSelect, TkxDatePicker, TkxModal, TkxMenu, TkxCommand, TkxFlowChart
 - RTL correctness for ar-SA, he-IL, fa-IR locales
@@ -55,7 +55,7 @@ I'm reaching out about a third-party WCAG 2.1 AAA conformance audit for TekiVex 
 
 Existing artifacts we can share:
 - `docs/a11y-screen-reader-matrix.md` — 470 cells self-tested, 88% pass
-- 1,777 unit tests, axe-core in CI on every PR
+- 1,798 unit tests, axe-core in CI on every PR
 - `docs/SECURITY-THREAT-MODEL.md` (15 STRIDE-mapped threats with CWE refs)
 
 Happy to set up a 30-minute scoping call this week or next.

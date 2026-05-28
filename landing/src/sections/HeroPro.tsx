@@ -100,7 +100,7 @@ export function HeroPro() {
               maxWidth: 560,
             }}
           >
-            115 production components. Published security threat model.
+            116 production components. Published security threat model.
             Tamper-evident SHA-256 audit trail. Zero runtime dependencies in
             core. Open-source, MIT licensed, pre-1.0.
           </p>
@@ -162,7 +162,7 @@ export function HeroPro() {
               lineHeight: 1.6,
             }}
           >
-            MIT licensed · 1,777 tests · 44 locales · SBOM published
+            MIT licensed · 1,798 tests · 44 locales · SBOM published
           </p>
         </div>
 

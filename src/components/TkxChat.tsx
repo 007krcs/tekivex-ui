@@ -16,6 +16,21 @@ import { useReducedMotion } from '../hooks';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
+/**
+ * SCOPE — TkxChat is an **LLM conversation primitive**, not a peer-to-peer
+ * messenger. The role enum (`user | assistant | system`) is from the
+ * OpenAI / Anthropic Chat Completions model. Content is string-only.
+ * There are no attachments, reactions, threading, read receipts, presence,
+ * or per-user identity beyond the 3-role distinction.
+ *
+ * If you need any of those — and especially if you're building consumer
+ * peer-to-peer chat with media — use `TkxMessageThread` instead. It models
+ * a `Record<senderId, PeerSender>` lookup, image/file/audio/video
+ * attachments (with magic-byte verification), reactions, replyTo
+ * threading, edit/delete actions, and delivery-state icons.
+ *
+ * The two components do not share types and are not interchangeable.
+ */
 export type MessageRole = 'user' | 'assistant' | 'system';
 
 export interface ChatMessage {
@@ -27,6 +42,10 @@ export interface ChatMessage {
   error?: boolean;
 }
 
+/**
+ * Props for the LLM-conversation chat surface. See the SCOPE block above
+ * `MessageRole` if you're not sure this is the component you want.
+ */
 export interface TkxChatProps {
   messages: ChatMessage[];
   onSend?: (message: string) => void;

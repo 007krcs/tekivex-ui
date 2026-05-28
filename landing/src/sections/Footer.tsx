@@ -38,7 +38,7 @@ export function Footer() {
             <span className="tk-gradient-text">TekiVex UI</span>
           </div>
           <p style={{ color: 'var(--tk-fg-muted)', fontSize: 13, margin: 0, maxWidth: 280, lineHeight: 1.65 }}>
-            Production-grade React. WCAG 2.1 AAA. Real WebGL 3D. 115 components across 13
+            Production-grade React. WCAG 2.1 AAA. Real WebGL 3D. 116 components across 13
             packages. MIT.
           </p>
         </div>

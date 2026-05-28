@@ -161,7 +161,7 @@ export function Hero() {
             pointerEvents: 'none',
           }}
         >
-          115 production components. WCAG 2.1 AAA target (audit-firm engagement open). Zero runtime dependencies in core.
+          116 production components. WCAG 2.1 AAA target (audit-firm engagement open). Zero runtime dependencies in core.
           Tamper-evident SHA-256 audit trail. <strong>SecurityCore:</strong> XSS sanitization,
           Trojan Source defense, magic-byte MIME verification, CSP builder, Trusted Types,
           PII redaction with Luhn-validated credit cards. The threat model is published —

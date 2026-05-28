@@ -21,6 +21,7 @@ export * from './TkxToast';
 export * from './TkxAccordion';
 export * from './TkxDrawer';
 export * from './TkxChat';
+export * from './TkxMessageThread';
 export * from './TkxTag';
 export * from './TkxTimeline';
 export * from './TkxDatePicker';
