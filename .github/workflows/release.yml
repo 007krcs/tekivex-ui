@@ -1,0 +1,141 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# release.yml — publish tekivex-ui to npm whenever a v*.*.* tag is pushed.
+#
+# Future-release workflow (no tokens in chat, ever):
+#
+#   1. Bump version in package.json + finalize CHANGELOG
+#   2. git commit -am "release: vX.Y.Z — …"
+#   3. git tag vX.Y.Z
+#   4. git push origin master && git push origin vX.Y.Z
+#
+# This workflow then:
+#   - Runs typecheck + the full test suite (gate — no green build, no publish)
+#   - Builds the library (multi-entry vite + tsc + d.ts shims)
+#   - Publishes to npm with **provenance attestation** (signed by GitHub OIDC,
+#     verifiable on npmjs.com and Socket.dev)
+#   - Creates a GitHub release with the matching CHANGELOG section as the body
+#
+# One-time setup required:
+#
+#   1. Generate an npm Automation Token:
+#      https://www.npmjs.com/settings/<user>/tokens → Generate New Token
+#      → Granular Access Token → publish scope on tekivex-ui
+#   2. Add it as a repo secret:
+#      https://github.com/007krcs/tekivex-ui/settings/secrets/actions
+#      → New repository secret → name: NPM_TOKEN, value: <the token>
+#
+# The token never appears in chat, never appears in git, and can be rotated
+# without changing any code.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+# Required for npm provenance — GitHub mints the OIDC token that npm verifies.
+# Required for GitHub release creation.
+permissions:
+  contents: write          # create the GitHub release
+  id-token: write          # mint OIDC token for npm provenance
+
+jobs:
+  release:
+    name: Build, test, publish, release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out at the tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # need full history for CHANGELOG extraction
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: Verify tag matches package.json version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          PKG=$(node -p "require('./package.json').version")
+          if [ "$TAG" != "$PKG" ]; then
+            echo "::error::Tag v$TAG does not match package.json version $PKG"
+            echo "Bump the version in package.json before tagging, or use a matching tag."
+            exit 1
+          fi
+          echo "✓ tag v$TAG matches package.json version $PKG"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify dist artifacts
+        run: |
+          # The chunk-format fix from v3.18 — no chunk files should ever ship.
+          if ls dist/chunk-*.js dist/chunk-*.cjs 2>/dev/null | grep -q .; then
+            echo "::error::dist/ contains chunk-*.js or chunk-*.cjs files."
+            echo "The build pipeline should emit single-file-per-entry bundles."
+            echo "See scripts/build-all-entries.mjs and vite.config.ts."
+            exit 1
+          fi
+          # All 8 subpath .d.ts shims must be present (see emit-dts-shims.mjs).
+          for entry in themes charts headless i18n quantum realtime agent experimental; do
+            if [ ! -f "dist/$entry.d.ts" ]; then
+              echo "::error::dist/$entry.d.ts missing — emit-dts-shims.mjs should have created it"
+              exit 1
+            fi
+          done
+          echo "✓ dist artifacts look correct"
+
+      - name: Publish to npm (with provenance)
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Extract this version's CHANGELOG section
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          # Pull the block between "## [VERSION]" and the next "## [" header.
+          awk -v ver="$VERSION" '
+            BEGIN { found=0 }
+            /^## \[/ {
+              if (found) exit
+              if ($0 ~ "^## \\[" ver "\\]") { found=1; next }
+            }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::warning::No CHANGELOG section found for v$VERSION — release body will be empty"
+            echo "Release tag v$VERSION shipped — see CHANGELOG.md for details." > release-notes.md
+          fi
+          echo "✓ release notes extracted ($(wc -l < release-notes.md) lines)"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}   # mark v3.19.0-alpha as prerelease
+
+      - name: Done
+        run: |
+          echo "✓ npm: https://www.npmjs.com/package/tekivex-ui/v/${GITHUB_REF#refs/tags/v}"
+          echo "✓ GitHub release: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
+          echo "✓ Provenance: visible on the npm package page as a green checkmark"
