@@ -13,11 +13,13 @@
  */
 
 const ACCENT = '#00f5d4';
-const BORDER = 'rgba(255,255,255,0.08)';
-const SURFACE = 'rgba(255,255,255,0.02)';
+const BORDER = 'rgba(255,255,255,0.10)';
+const SURFACE = 'rgba(255,255,255,0.04)';
 const TEXT = '#ffffff';
-const TEXT_MUTED = 'rgba(255,255,255,0.65)';
-const TEXT_FAINT = 'rgba(255,255,255,0.5)';
+const TEXT_MUTED = 'rgba(255,255,255,0.78)';
+// Used for the section eyebrow + the legal disclaimer — boosted to AAA
+// (≈ 9.8:1 on #0f1117) because the disclaimer is a legal-ish notice.
+const TEXT_FAINT = 'rgba(255,255,255,0.72)';
 
 interface Framework {
   name: string;
@@ -191,8 +193,8 @@ export function TrustBar() {
 
       <style>{`
         .trust-chip:hover {
-          border-color: rgba(255,255,255,0.16);
-          background: rgba(255,255,255,0.04);
+          border-color: rgba(255,255,255,0.22);
+          background: rgba(255,255,255,0.06);
         }
         @media (prefers-reduced-motion: reduce) {
           .trust-chip { transition: none !important; }

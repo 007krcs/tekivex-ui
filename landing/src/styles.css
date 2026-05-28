@@ -41,8 +41,8 @@
    3D / cosmic sections still render their own dark canvases regardless;
    this only changes the page chrome around them. */
 [data-theme="dark"] {
-  --tk-bg: #0c0d1a;
-  --tk-bg-deep: #0a0b15;
+  --tk-bg: #0f1117;
+  --tk-bg-deep: #0b0d14;
   --tk-fg: #e8e8f4;
   --tk-fg-muted: #b8b8d4;
   --tk-accent: #00f5d4;
@@ -105,9 +105,9 @@ button { font-family: inherit; }
 }
 [data-theme="dark"] .tk-aurora {
   background:
-    radial-gradient(ellipse at 18% 8%,   rgba(123,142,255,0.22) 0%, transparent 55%),
-    radial-gradient(ellipse at 82% 22%,  rgba(196,168,255,0.16) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 95%,  rgba(0,245,212,0.10)  0%, transparent 55%),
+    radial-gradient(ellipse at 18% 8%,   rgba(123,142,255,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 22%,  rgba(196,168,255,0.13) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 95%,  rgba(0,245,212,0.08)  0%, transparent 55%),
     radial-gradient(ellipse at 50% 50%,  rgba(20,22,45,0.0)    0%, var(--tk-bg-deep) 80%);
 }
 
@@ -174,7 +174,7 @@ button { font-family: inherit; }
 }
 [data-theme="dark"] .tk-vignette {
   background:
-    radial-gradient(ellipse at center, transparent 30%, rgba(10,11,21,0.55) 75%, rgba(10,11,21,0.85) 100%);
+    radial-gradient(ellipse at center, transparent 30%, rgba(15,17,23,0.55) 75%, rgba(15,17,23,0.85) 100%);
 }
 
 .tk-gradient-text {
@@ -295,10 +295,10 @@ button { font-family: inherit; }
 .tk-home--dark {
   /* Re-bind the design tokens to their original dark values for everything
      inside this wrapper. */
-  --tk-bg: #0c0d1a;
-  --tk-bg-deep: #0a0b15;
-  --tk-fg: #e8e8f4;
-  --tk-fg-muted: #b8b8d4;
+  --tk-bg: #0f1117;
+  --tk-bg-deep: #0b0d14;
+  --tk-fg: #f1f2f7;
+  --tk-fg-muted: #c8c9d6;
   --tk-accent: #00f5d4;
   --tk-accent-2: #7b8eff;
   --tk-accent-3: #c4a8ff;
@@ -314,12 +314,12 @@ button { font-family: inherit; }
   --tk-prose-pre-bg: rgba(8, 10, 25, 0.8);
   --tk-prose-pre-border: rgba(196,168,255,0.18);
   --tk-prose-pre-fg: #dcdce8;
-  --tk-prose-blockquote: #b8b8d4;
+  --tk-prose-blockquote: #c8c9d6;
   --tk-prose-th: #c4a8ff;
   --tk-prose-border: rgba(255,255,255,0.1);
 
-  background: #0c0d1a;
-  color: #e8e8f4;
+  background: #0f1117;
+  color: #f1f2f7;
   position: relative;
   z-index: 1;
   isolation: isolate;
@@ -332,10 +332,10 @@ button { font-family: inherit; }
    section starts). */
 body:has(.tk-home--dark) .tk-aurora {
   background:
-    radial-gradient(ellipse at 18% 8%,   rgba(123,142,255,0.22) 0%, transparent 55%),
-    radial-gradient(ellipse at 82% 22%,  rgba(196,168,255,0.16) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 95%,  rgba(0,245,212,0.10)  0%, transparent 55%),
-    radial-gradient(ellipse at 50% 50%,  rgba(20,22,45,0.0)    0%, #0a0b15 80%);
+    radial-gradient(ellipse at 18% 8%,   rgba(123,142,255,0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 22%,  rgba(196,168,255,0.13) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 95%,  rgba(0,245,212,0.08)  0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%,  rgba(20,22,45,0.0)    0%, #0b0d14 80%);
 }
 body:has(.tk-home--dark) .tk-grid-bg {
   background-image:
@@ -344,8 +344,8 @@ body:has(.tk-home--dark) .tk-grid-bg {
 }
 body:has(.tk-home--dark) .tk-vignette {
   background:
-    radial-gradient(ellipse at center, transparent 30%, rgba(10,11,21,0.55) 75%, rgba(10,11,21,0.85) 100%);
+    radial-gradient(ellipse at center, transparent 30%, rgba(15,17,23,0.55) 75%, rgba(15,17,23,0.85) 100%);
 }
 body:has(.tk-home--dark) {
-  background: #0c0d1a;
+  background: #0f1117;
 }

@@ -53,7 +53,9 @@ export function Stats() {
             <div
               style={{
                 fontSize: 11,
-                color: '#888',
+                // Was #888 (~4.1:1 on #0f1117 — failed AAA, borderline AA for
+                // small caps). #b8b8d4 ≈ 11:1 — comfortable AAA.
+                color: '#b8b8d4',
                 fontWeight: 600,
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',

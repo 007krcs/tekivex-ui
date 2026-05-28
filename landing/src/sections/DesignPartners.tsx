@@ -77,15 +77,16 @@ const cardBase: React.CSSProperties = {
 
 const placeholderCardStyle: React.CSSProperties = {
   ...cardBase,
-  background: 'rgba(255,255,255,0.02)',
-  border: '1px dashed rgba(255,255,255,0.12)',
-  color: 'rgba(255,255,255,0.55)',
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px dashed rgba(255,255,255,0.18)',
+  // Bumped from 0.55 → 0.78 to clear AAA on the brightened #0f1117 bg.
+  color: 'rgba(255,255,255,0.78)',
 };
 
 const partnerCardStyle: React.CSSProperties = {
   ...cardBase,
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'rgba(255,255,255,0.05)',
+  border: '1px solid rgba(255,255,255,0.10)',
 };
 
 export function DesignPartners() {
@@ -139,7 +140,7 @@ export function DesignPartners() {
         <p
           style={{
             fontSize: 15,
-            color: 'rgba(255,255,255,0.65)',
+            color: 'rgba(255,255,255,0.78)',
             maxWidth: 640,
             margin: '0 auto',
             lineHeight: 1.7,
@@ -187,7 +188,7 @@ export function DesignPartners() {
                   {slot.vertical.toUpperCase()}
                 </div>
                 <div style={{ fontSize: 14, fontWeight: 500 }}>{slot.label}</div>
-                <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>Slot reserved</div>
+                <div style={{ fontSize: 12, opacity: 0.9, marginTop: 4 }}>Slot reserved</div>
               </div>
             );
           }
@@ -246,7 +247,7 @@ export function DesignPartners() {
             style={{
               marginTop: 16,
               fontSize: 14,
-              color: 'rgba(255,255,255,0.65)',
+              color: 'rgba(255,255,255,0.78)',
             }}
           >
             — <strong style={{ color: 'rgba(255,255,255,0.9)' }}>{PARTNERS[0].quote.author}</strong>,{' '}

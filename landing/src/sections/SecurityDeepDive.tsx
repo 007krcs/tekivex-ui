@@ -13,22 +13,25 @@
  */
 
 const ACCENT = '#00f5d4';
-const BORDER = 'rgba(255,255,255,0.08)';
-const SURFACE = 'rgba(255,255,255,0.03)';
+const BORDER = 'rgba(255,255,255,0.10)';
+const SURFACE = 'rgba(255,255,255,0.04)';
 const TEXT = '#ffffff';
-const TEXT_MUTED = 'rgba(255,255,255,0.65)';
-const TEXT_FAINT = 'rgba(255,255,255,0.5)';
+const TEXT_MUTED = 'rgba(255,255,255,0.78)';
+const TEXT_FAINT = 'rgba(255,255,255,0.72)';
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
+// Code-block tokens — verified against the lightened code-block background
+// (rgba(255,255,255,0.04) over #0f1117 — effective ≈ #14161D). All values
+// meet WCAG 2.1 AAA (≥ 7:1) for 12.5px monospace.
 const TOK = {
-  keyword: '#c4a8ff',
-  string: '#a3e9b3',
-  fn: '#ffd166',
-  attr: '#7dd3fc',
-  number: '#ffb38a',
-  punct: 'rgba(255,255,255,0.55)',
-  text: '#e6e8ef',
-  comment: 'rgba(255,255,255,0.42)',
+  keyword: '#d4bfff',
+  string: '#b6f0c4',
+  fn: '#ffd97a',
+  attr: '#9cdcfe',
+  number: '#ffc89a',
+  punct: 'rgba(255,255,255,0.72)',
+  text: '#eef0f6',
+  comment: 'rgba(255,255,255,0.65)',
 };
 
 interface CodeLine {
@@ -39,7 +42,9 @@ interface CodeLine {
 const codeBlockStyle: React.CSSProperties = {
   margin: 0,
   padding: '16px 18px',
-  background: 'rgba(0,0,0,0.40)',
+  // Use a subtle light inset instead of a darker pit — keeps the syntax
+  // tokens above AAA contrast and matches Linear / Vercel-style code cards.
+  background: 'rgba(255,255,255,0.04)',
   border: `1px solid ${BORDER}`,
   borderRadius: 8,
   fontFamily: MONO,

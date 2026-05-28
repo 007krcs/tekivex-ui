@@ -15,23 +15,25 @@
  */
 
 const ACCENT = '#00f5d4';
-const BORDER = 'rgba(255,255,255,0.08)';
-const BORDER_STRONG = 'rgba(255,255,255,0.12)';
-const SURFACE = 'rgba(255,255,255,0.03)';
+const BORDER = 'rgba(255,255,255,0.10)';
+const BORDER_STRONG = 'rgba(255,255,255,0.18)';
+const SURFACE = 'rgba(255,255,255,0.04)';
 const TEXT = '#ffffff';
-const TEXT_MUTED = 'rgba(255,255,255,0.65)';
-const TEXT_FAINT = 'rgba(255,255,255,0.45)';
+const TEXT_MUTED = 'rgba(255,255,255,0.78)';
+const TEXT_FAINT = 'rgba(255,255,255,0.72)';
 const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
 // ── Syntax tokens — plain <span> colouring, no third-party highlighter ───────
+// All token colours verified ≥ 7:1 contrast against the code-card SURFACE
+// (rgba(255,255,255,0.04) over #0f1117 — effective bg ≈ #14161D).
 const TOK = {
-  keyword: '#c4a8ff',
-  string: '#a3e9b3',
-  comp: '#ffd166',
-  attr: '#7dd3fc',
-  punct: 'rgba(255,255,255,0.55)',
-  text: '#e6e8ef',
-  comment: 'rgba(255,255,255,0.40)',
+  keyword: '#d4bfff',
+  string: '#b6f0c4',
+  comp: '#ffd97a',
+  attr: '#9cdcfe',
+  punct: 'rgba(255,255,255,0.72)',
+  text: '#eef0f6',
+  comment: 'rgba(255,255,255,0.65)',
 };
 
 export function HeroPro() {
@@ -281,8 +283,8 @@ export function HeroPro() {
           box-shadow: 0 8px 24px rgba(0,245,212,0.25);
         }
         .hero-pro-cta-secondary:hover {
-          border-color: rgba(255,255,255,0.25);
-          background: rgba(255,255,255,0.03);
+          border-color: rgba(255,255,255,0.32);
+          background: rgba(255,255,255,0.05);
         }
         @media (prefers-reduced-motion: reduce) {
           .hero-pro-cta-primary, .hero-pro-cta-secondary { transition: none !important; }
