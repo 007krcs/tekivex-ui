@@ -5,6 +5,34 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.1] — 2026-05-28
+
+### Fixed
+
+- **Subpath type declarations missing from the tarball** ([reported by
+  consumer](https://github.com/007krcs/tekivex-ui/issues/), thank you).
+  `package.json` `exports` declared `types` fields for 8 subpaths
+  (`./themes`, `./charts`, `./headless`, `./i18n`, `./quantum`,
+  `./realtime`, `./agent`, `./experimental`) pointing at `./dist/*.d.ts`,
+  but only `dist/index.d.ts` actually shipped. TypeScript consumers
+  importing from any subpath got `TS2307: Cannot find module
+  'tekivex-ui/<subpath>'` — runtime worked, types broke.
+
+  Root cause: shim `.d.ts` files were created manually before publish
+  during v3.18.0 prep, but `prepublishOnly` re-ran `npm run build`
+  immediately before the tarball went up and wiped them.
+
+  Fix: new `scripts/emit-dts-shims.mjs` runs as the final step of
+  `npm run build`. It writes one `dist/<entry>.d.ts` per subpath that
+  re-exports from `./src/<entry>/index` (where `tsc` actually emits the
+  full declarations). The script exits non-zero if any backing
+  declaration is missing, so a broken tarball can't accidentally ship
+  again.
+
+  Verified with the exact repro from the consumer's issue:
+  `npx tsc --noEmit` on `import { TkxLineChart } from 'tekivex-ui/charts'`
+  + agent + themes now exits 0.
+
 ## [3.18.0] — 2026-05-28
 
 The **Next.js compatibility + consumer-feedback** release. Pulls forward

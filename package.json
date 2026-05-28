@@ -1,6 +1,6 @@
 {
   "name": "tekivex-ui",
-  "version": "3.18.0",
+  "version": "3.18.1",
   "description": "Production-grade React component library — 115 components (plus 4 experimental, opt-in), WCAG 2.1 AAA, WAI-ARIA 1.2, built-in security kernel with published threat model, built-in charts, headless primitives, zero-runtime CSS engine, 44-locale i18n, Indian KYC pack, agent runtime (Anthropic/OpenAI/Gemini/Ollama/MCP/A2A), TypeScript-first.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -64,7 +64,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "node scripts/build-all-entries.mjs && tsc --emitDeclarationOnly",
+    "build": "node scripts/build-all-entries.mjs && tsc --emitDeclarationOnly && node scripts/emit-dts-shims.mjs",
     "dev": "vite",
     "test": "vitest run",
     "test:watch": "vitest",
