@@ -121,11 +121,12 @@ export function CodeShowcase() {
             fontWeight: 800,
             letterSpacing: '-0.03em',
             margin: '0 0 12px',
+            color: '#0a0a0f',
           }}
         >
           Five recipes, <span className="tk-gradient-text">copy-paste</span>
         </h2>
-        <p style={{ color: '#888', maxWidth: 600, margin: '0 auto', fontSize: 16 }}>
+        <p style={{ color: '#4b5563', maxWidth: 600, margin: '0 auto', fontSize: 16 }}>
           Realistic code that runs as-is. No "configure your bundler first" footnotes.
         </p>
       </header>
@@ -135,10 +136,9 @@ export function CodeShowcase() {
           display: 'flex',
           gap: 4,
           padding: 4,
-          background: 'rgba(18,18,26,0.65)',
-          backdropFilter: 'blur(12px)',
+          background: '#ffffff',
           borderRadius: 12,
-          border: '1px solid rgba(255,255,255,0.06)',
+          border: '1px solid #e5e7eb',
           marginBottom: 16,
           overflowX: 'auto',
         }}
@@ -152,8 +152,8 @@ export function CodeShowcase() {
               padding: '8px 16px',
               border: 'none',
               borderRadius: 8,
-              background: tab === t.id ? 'rgba(0,245,212,0.15)' : 'transparent',
-              color: tab === t.id ? '#00f5d4' : '#aaa',
+              background: tab === t.id ? '#f0fdfa' : 'transparent',
+              color: tab === t.id ? '#0f766e' : '#4b5563',
               fontWeight: 700,
               fontSize: 13,
               cursor: 'pointer',
@@ -169,13 +169,13 @@ export function CodeShowcase() {
 
       <div
         style={{
-          background: '#06060a',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: '#fafbfc',
+          border: '1px solid #e5e7eb',
           borderRadius: 12,
           padding: '20px 24px',
           fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           fontSize: 13,
-          color: '#e8e8f4',
+          color: '#1f2937',
           overflowX: 'auto',
           position: 'relative',
           whiteSpace: 'pre',
@@ -194,9 +194,9 @@ export function CodeShowcase() {
             top: 12,
             right: 12,
             padding: '4px 12px',
-            background: copied ? '#00f5d4' : 'rgba(255,255,255,0.08)',
-            color: copied ? '#0a0a0f' : '#aaa',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: copied ? '#0d9488' : '#ffffff',
+            color: copied ? '#ffffff' : '#4b5563',
+            border: '1px solid #e5e7eb',
             borderRadius: 6,
             fontSize: 11,
             fontWeight: 700,

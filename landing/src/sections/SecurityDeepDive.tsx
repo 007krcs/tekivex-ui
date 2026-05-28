@@ -12,26 +12,31 @@
  * dependency is added.
  */
 
-const ACCENT = '#00f5d4';
-const BORDER = 'rgba(255,255,255,0.10)';
-const SURFACE = 'rgba(255,255,255,0.04)';
-const TEXT = '#ffffff';
-const TEXT_MUTED = 'rgba(255,255,255,0.78)';
-const TEXT_FAINT = 'rgba(255,255,255,0.72)';
-const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+// Light-mode palette — see HeroPro.tsx for rationale + contrast notes.
+const ACCENT        = '#0d9488';        // teal-600
+const ACCENT_DARK   = '#0f766e';        // teal-700
+const ACCENT_BG     = '#f0fdfa';        // teal-50
+const ACCENT_BORDER = '#99f6e4';        // teal-200
+const BORDER        = '#e5e7eb';        // gray-200
+const SURFACE       = '#ffffff';        // card bg
+const CODE_BG       = '#fafbfc';        // code block bg
+const TEXT          = '#0a0a0f';
+const TEXT_BODY     = '#1f2937';
+const TEXT_MUTED    = '#4b5563';
+const TEXT_FAINT    = '#6b7280';
+const SHADOW_SM     = '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)';
+const MONO          = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
-// Code-block tokens — verified against the lightened code-block background
-// (rgba(255,255,255,0.04) over #0f1117 — effective ≈ #14161D). All values
-// meet WCAG 2.1 AAA (≥ 7:1) for 12.5px monospace.
+// Syntax tokens — all ≥ 7:1 contrast against #fafbfc.
 const TOK = {
-  keyword: '#d4bfff',
-  string: '#b6f0c4',
-  fn: '#ffd97a',
-  attr: '#9cdcfe',
-  number: '#ffc89a',
-  punct: 'rgba(255,255,255,0.72)',
-  text: '#eef0f6',
-  comment: 'rgba(255,255,255,0.65)',
+  keyword: '#7c3aed',  // violet-600
+  string:  '#0d9488',  // teal-600
+  fn:      '#b45309',  // amber-700
+  attr:    '#0369a1',  // sky-700
+  number:  '#c2410c',  // orange-700
+  punct:   '#4b5563',  // gray-600
+  text:    '#1f2937',  // gray-800
+  comment: '#6b7280',  // gray-500
 };
 
 interface CodeLine {
@@ -42,9 +47,7 @@ interface CodeLine {
 const codeBlockStyle: React.CSSProperties = {
   margin: 0,
   padding: '16px 18px',
-  // Use a subtle light inset instead of a darker pit — keeps the syntax
-  // tokens above AAA contrast and matches Linear / Vercel-style code cards.
-  background: 'rgba(255,255,255,0.04)',
+  background: CODE_BG,
   border: `1px solid ${BORDER}`,
   borderRadius: 8,
   fontFamily: MONO,
@@ -353,9 +356,9 @@ export function SecurityDeepDive() {
             display: 'inline-block',
             padding: '4px 12px',
             borderRadius: 999,
-            background: 'rgba(0, 245, 212, 0.08)',
-            border: `1px solid ${ACCENT}33`,
-            color: ACCENT,
+            background: ACCENT_BG,
+            border: `1px solid ${ACCENT_BORDER}`,
+            color: ACCENT_DARK,
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: '0.1em',
@@ -382,7 +385,7 @@ export function SecurityDeepDive() {
           style={{
             fontSize: 15,
             lineHeight: 1.65,
-            color: TEXT_MUTED,
+            color: TEXT_BODY,
             maxWidth: 640,
             margin: '0 auto',
           }}
@@ -408,6 +411,7 @@ export function SecurityDeepDive() {
               border: `1px solid ${BORDER}`,
               borderRadius: 12,
               background: SURFACE,
+              boxShadow: SHADOW_SM,
               padding: 24,
               display: 'grid',
               gridTemplateColumns: '1fr',
@@ -432,7 +436,7 @@ export function SecurityDeepDive() {
                 style={{
                   fontSize: 14,
                   lineHeight: 1.6,
-                  color: TEXT_MUTED,
+                  color: TEXT_BODY,
                   margin: 0,
                   maxWidth: 640,
                 }}
@@ -452,14 +456,14 @@ export function SecurityDeepDive() {
                     style={{
                       fontSize: 11.5,
                       fontFamily: MONO,
-                      color: TEXT_FAINT,
+                      color: TEXT_BODY,
                       padding: '8px 10px',
-                      border: `1px solid ${BORDER}`,
+                      border: `1px solid #fecaca`,    // red-200
                       borderRadius: 6,
-                      background: 'rgba(255, 80, 80, 0.04)',
+                      background: '#fef2f2',          // red-50
                     }}
                   >
-                    <strong style={{ color: '#ff8c8c' }}>before</strong>
+                    <strong style={{ color: '#b91c1c' /* red-700 */ }}>before</strong>
                     {'  '}
                     {p.beforeAfter.before}
                   </div>
@@ -467,14 +471,14 @@ export function SecurityDeepDive() {
                     style={{
                       fontSize: 11.5,
                       fontFamily: MONO,
-                      color: TEXT_FAINT,
+                      color: TEXT_BODY,
                       padding: '8px 10px',
-                      border: `1px solid ${BORDER}`,
+                      border: `1px solid ${ACCENT_BORDER}`,
                       borderRadius: 6,
-                      background: 'rgba(0, 245, 212, 0.04)',
+                      background: ACCENT_BG,
                     }}
                   >
-                    <strong style={{ color: ACCENT }}>after</strong>
+                    <strong style={{ color: ACCENT_DARK }}>after</strong>
                     {'   '}
                     {p.beforeAfter.after}
                   </div>
@@ -493,13 +497,14 @@ export function SecurityDeepDive() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 6,
-            color: ACCENT,
+            color: ACCENT_DARK,
             fontSize: 14,
             fontWeight: 600,
             textDecoration: 'none',
             padding: '10px 16px',
             borderRadius: 8,
-            border: `1px solid ${ACCENT}33`,
+            border: `1px solid ${ACCENT_BORDER}`,
+            background: ACCENT_BG,
             transition: 'background 200ms ease-out',
           }}
           className="security-cta"
@@ -516,7 +521,7 @@ export function SecurityDeepDive() {
             align-items: start;
           }
         }
-        .security-cta:hover { background: rgba(0, 245, 212, 0.08); }
+        .security-cta:hover { background: #ccfbf1; /* teal-100 */ }
         @media (prefers-reduced-motion: reduce) {
           .security-cta { transition: none !important; }
         }

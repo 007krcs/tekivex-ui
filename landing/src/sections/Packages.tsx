@@ -38,21 +38,22 @@ export function Packages() {
             fontWeight: 800,
             letterSpacing: '-0.03em',
             margin: '0 0 12px',
+            color: '#0a0a0f',
           }}
         >
           12 packages on <span className="tk-gradient-text">npm</span>
         </h2>
-        <p style={{ color: '#b8b8d4', maxWidth: 660, margin: '0 auto', fontSize: 16, lineHeight: 1.6 }}>
-          All unscoped, all under <code style={{ color: '#00f5d4' }}>tekivex-*</code>, all live
+        <p style={{ color: '#1f2937', maxWidth: 660, margin: '0 auto', fontSize: 16, lineHeight: 1.6 }}>
+          All unscoped, all under <code style={{ color: '#0f766e' }}>tekivex-*</code>, all live
           today. Click through to npm for full API + version history.
           <br />
-          <span style={{ fontSize: 13, color: '#888', fontStyle: 'italic' }}>
+          <span style={{ fontSize: 13, color: '#6b7280', fontStyle: 'italic' }}>
             New components ship to source first; npm versions advance when there's actual demand —{' '}
             <a
               href="https://github.com/007krcs/tekivex-ui/issues/new"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#c4a8ff' }}
+              style={{ color: '#4338ca' }}
             >
               file a request
             </a>{' '}
@@ -77,21 +78,23 @@ export function Packages() {
             style={{
               padding: '20px 22px',
               borderRadius: 14,
-              border: '1px solid rgba(255,255,255,0.06)',
-              background: 'rgba(18,18,26,0.6)',
-              backdropFilter: 'blur(8px)',
+              border: '1px solid #e5e7eb',
+              background: '#ffffff',
+              boxShadow:
+                '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)',
               transition: 'all 0.2s',
               display: 'block',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#00f5d4';
+              e.currentTarget.style.borderColor = '#99f6e4';
               e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 245, 212, 0.12)';
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(13, 148, 136, 0.12)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+              e.currentTarget.style.borderColor = '#e5e7eb';
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.boxShadow =
+                '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)';
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
@@ -99,17 +102,17 @@ export function Packages() {
                 style={{
                   fontSize: 14,
                   fontWeight: 700,
-                  color: '#00f5d4',
+                  color: '#0f766e',
                   fontFamily: 'monospace',
                 }}
               >
                 {p.name}
               </code>
-              <span style={{ color: '#888', fontSize: 11, fontFamily: 'monospace' }}>
+              <span style={{ color: '#6b7280', fontSize: 11, fontFamily: 'monospace' }}>
                 {p.version}
                 {p.sourceVersion && p.sourceVersion !== p.version && (
                   <span
-                    style={{ color: '#c4a8ff', marginLeft: 6 }}
+                    style={{ color: '#4338ca', marginLeft: 6 }}
                     title="Source is ahead of npm — releases are demand-driven"
                   >
                     · src {p.sourceVersion}
@@ -120,8 +123,8 @@ export function Packages() {
                 <span
                   style={{
                     padding: '2px 8px',
-                    background: 'rgba(0, 245, 212, 0.15)',
-                    color: '#00f5d4',
+                    background: '#f0fdfa',
+                    color: '#0f766e',
                     fontSize: 10,
                     fontWeight: 700,
                     borderRadius: 999,
@@ -133,16 +136,17 @@ export function Packages() {
                 </span>
               )}
             </div>
-            <p style={{ color: '#bbb', fontSize: 13, margin: '0 0 12px', lineHeight: 1.5 }}>
+            <p style={{ color: '#1f2937', fontSize: 13, margin: '0 0 12px', lineHeight: 1.5 }}>
               {p.desc}
             </p>
             <div
               style={{
                 fontFamily: 'monospace',
                 fontSize: 12,
-                color: '#666',
+                color: '#4b5563',
                 padding: '6px 10px',
-                background: 'rgba(0,0,0,0.3)',
+                background: '#fafbfc',
+                border: '1px solid #f1f3f5',
                 borderRadius: 6,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',

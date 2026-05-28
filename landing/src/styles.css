@@ -178,6 +178,14 @@ button { font-family: inherit; }
 }
 
 .tk-gradient-text {
+  /* Light-theme accent gradient. Anchor with teal-700 so single-token use
+     reads ≥ 5:1 against white; indigo + violet keep the brand spectrum. */
+  background: linear-gradient(135deg, #0f766e 0%, #4f46e5 55%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+[data-theme="dark"] .tk-gradient-text {
   background: linear-gradient(135deg, #00f5d4 0%, #7b8eff 50%, #c4a8ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

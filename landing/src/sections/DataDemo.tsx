@@ -99,10 +99,10 @@ export function DataDemo() {
           style={{
             display: 'inline-block',
             padding: '4px 12px',
-            background: 'rgba(0,245,212,0.1)',
-            border: '1px solid rgba(0,245,212,0.3)',
+            background: '#f0fdfa',
+            border: '1px solid #99f6e4',
             borderRadius: 999,
-            color: '#00f5d4',
+            color: '#0f766e',
             fontSize: 12,
             fontWeight: 700,
             letterSpacing: '0.06em',
@@ -117,18 +117,17 @@ export function DataDemo() {
             margin: '0 0 12px',
             fontSize: 'clamp(1.8rem, 4vw, 3rem)',
             letterSpacing: '-0.03em',
-            background: 'linear-gradient(135deg, #00f5d4, #7b8eff, #c4a8ff)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            color: '#0a0a0f',
+            fontWeight: 800,
           }}
         >
-          Spreadsheet ↔ chart, two-way
+          Spreadsheet ↔ chart, <span className="tk-gradient-text">two-way</span>
         </h2>
         <p
           style={{
             margin: '0 auto',
             maxWidth: 660,
-            color: '#b8b8d4',
+            color: '#1f2937',
             fontSize: 'clamp(14px, 1.3vw, 17px)',
             lineHeight: 1.65,
           }}
@@ -139,9 +138,9 @@ export function DataDemo() {
           <code style={code}>=B2-C2</code> in the <em>profit</em> column shows
           up as a real number.
         </p>
-        <p style={{ margin: '12px auto 0', color: '#888', fontSize: 12 }}>
-          Currently rendering <strong style={{ color: '#c4a8ff' }}>{records.length}</strong> row
-          {records.length === 1 ? '' : 's'} across <strong style={{ color: '#c4a8ff' }}>{cols}</strong> column{cols === 1 ? '' : 's'}.
+        <p style={{ margin: '12px auto 0', color: '#6b7280', fontSize: 12 }}>
+          Currently rendering <strong style={{ color: '#0f766e' }}>{records.length}</strong> row
+          {records.length === 1 ? '' : 's'} across <strong style={{ color: '#0f766e' }}>{cols}</strong> column{cols === 1 ? '' : 's'}.
         </p>
       </div>
 
@@ -160,7 +159,8 @@ export function DataDemo() {
               maxHeight: 480,
               overflow: 'auto',
               borderRadius: 8,
-              background: 'rgba(8,10,25,0.4)',
+              background: '#fafbfc',
+              border: '1px solid #e5e7eb',
             }}
           >
             <TkxSpreadsheet
@@ -194,7 +194,7 @@ export function DataDemo() {
         style={{
           marginTop: 24,
           textAlign: 'center',
-          color: '#888',
+          color: '#6b7280',
           fontSize: 12,
           fontStyle: 'italic',
         }}
@@ -220,9 +220,10 @@ function Pane({ label, children }: { label: string; children: React.ReactNode })
         position: 'relative',
         padding: 16,
         borderRadius: 14,
-        background: 'rgba(13, 13, 20, 0.7)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(8px)',
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
+        boxShadow:
+          '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)',
         minWidth: 0, // critical so the inner table can shrink
       }}
     >
@@ -232,7 +233,7 @@ function Pane({ label, children }: { label: string; children: React.ReactNode })
           fontWeight: 700,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          color: '#00f5d4',
+          color: '#0f766e',
           marginBottom: 12,
         }}
       >
@@ -248,6 +249,6 @@ const code: React.CSSProperties = {
   fontSize: '0.85em',
   padding: '1px 6px',
   borderRadius: 4,
-  background: 'rgba(0,245,212,0.1)',
-  color: '#00f5d4',
+  background: '#f0fdfa',
+  color: '#0f766e',
 };

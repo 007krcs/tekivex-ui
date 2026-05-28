@@ -4,7 +4,7 @@
 
 **The React component library that ships with a threat model.**
 
-WCAG 2.1 AAA (audit-firm engagement open) · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME · Trusted Types) · **115 production components** (+ 4 experimental, opt-in) · Zero runtime dependencies in core
+WCAG 2.1 AAA target (third-party audit on roadmap, not yet completed) · WAI-ARIA 1.2 · **SecurityCore** (XSS · clickjacking · Trojan Source · CSP · PII · magic-byte MIME · Trusted Types) · **115 production components** (+ 4 experimental, opt-in) · Zero runtime dependencies in core
 
 📄 **[Security Threat Model](./docs/SECURITY-THREAT-MODEL.md)** — the only mainstream React UI library that publishes one. 15 STRIDE-mapped threats with CWE references.
 
@@ -35,12 +35,17 @@ npm install tekivex-ui
 
 TekiVex UI is **pre-1.0** and currently maintained by a single developer
 ([007krcs](https://github.com/007krcs)) on `novaai0401@gmail.com`. We
-publish to npm with [provenance attestations](https://docs.npmjs.com/generating-provenance-statements),
 ship a public [CycloneDX SBOM](https://ui.tekivex.com/security/sbom.json),
 a [security threat model](./docs/SECURITY-THREAT-MODEL.md) (15 STRIDE
 threats with CWE refs), and 1,777 tests at the published version — but
 none of that substitutes for the human-scale risk of any pre-1.0,
 single-maintainer library.
+
+When published from CI, releases carry npm
+[provenance attestations](https://docs.npmjs.com/generating-provenance-statements).
+Local releases (currently the norm during pre-1.0) do not — verify
+provenance status with `npm view tekivex-ui --json | jq '.dist.attestations'`
+if it matters to your supply-chain policy.
 
 **Honest guidance:**
 
@@ -49,7 +54,7 @@ single-maintainer library.
 - **Audit the SBOM** at [`ui.tekivex.com/security/sbom.json`](https://ui.tekivex.com/security/sbom.json) — verifies zero runtime deps
 - **Verify the package** with `npm view tekivex-ui` before installing if you're concerned about typosquats (the legitimate name is exactly `tekivex-ui`)
 - **Check Socket.dev** [![Socket.dev](https://socket.dev/api/badge/npm/package/tekivex-ui)](https://socket.dev/npm/package/tekivex-ui) for supply-chain risk score
-- **For regulated-industry teams**: the [design-partner program](./docs/design-partners/README.md) gets a direct Slack channel + priority response + custom-components on demand. Free.
+- **For regulated-industry teams**: we're open to design-partner collaborations with regulated-industry teams — see [`docs/design-partners/README.md`](./docs/design-partners/README.md) for the playbook. No reserved slots, no formal program in place yet; reach out if it fits your situation.
 
 **Expect breaking changes at v4.0** — see [docs/ROADMAP.md](./docs/ROADMAP.md).
 Until then, the API surface marked stable will not break in minor or
@@ -106,7 +111,7 @@ Portal3D, Avatar3D — 14 primitives at source v0.7).
 
 | Feature | TekiVex UI | MUI | Ant Design | Mantine | shadcn/ui |
 |---|:---:|:---:|:---:|:---:|:---:|
-| WCAG **AAA** target (third-party audit-firm engagement open) | ✅ | ❌ | ❌ | ❌ | ❌ |
+| WCAG **AAA** target (third-party audit on roadmap, not yet completed) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **XSS** — string props sanitised by default across all text components | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Clickjacking** — `isFramed()` detection + `frame-ancestors` CSP | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Trojan Source** — bidi/zero-width stripped from text inputs | ✅ | ❌ | ❌ | ❌ | ❌ |
@@ -518,17 +523,17 @@ const aaa   = meetsAAA('#00f5d4', '#0a0a1a');       // → true  (≥ 7:1)
 ```
 
 **What's unique:**
-- 🛡️ **Automatic sanitisation** — no opt-in needed, every prop is safe by default
-- 📋 **Immutable audit trail** — append-only log of all security events for compliance / SIEM
+- 🛡️ **String-prop sanitisation by default** — `sanitizeString` runs on string props across components without opt-in
+- 📋 **Tamper-evident audit trail** — SHA-256 hash-chained append-only log for compliance / SIEM
 - 🎨 **Built-in WCAG checker** — `contrastRatio()`, `meetsAA()`, `meetsAAA()` available anywhere
 
 ---
 
 ## Accessibility
 
-Every component meets **WCAG 2.1 AAA** — the highest accessibility standard:
+We target **WCAG 2.1 AAA** — the highest accessibility standard. Self-tested against the criteria below; **a third-party audit is on the roadmap and has not been completed.** Treat this section as our internal compliance target, not a certification.
 
-- ✅ Contrast ratio ≥ **7:1** for all text (AAA, not just AA's 4.5:1)
+- ✅ Contrast ratio ≥ **7:1** for all text (AAA, not just AA's 4.5:1) — verified via internal `meetsAAA()` helper
 - ✅ Full **keyboard navigation** — Tab, Enter, Space, Arrow keys, Escape
 - ✅ Correct **ARIA roles, states & properties** (WAI-ARIA 1.2)
 - ✅ **Focus management** — focus trap in modals, visible focus rings

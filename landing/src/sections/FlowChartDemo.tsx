@@ -44,9 +44,9 @@ export function FlowChartDemo() {
             display: 'inline-block',
             padding: '4px 14px',
             borderRadius: 999,
-            background: 'rgba(123,142,255,0.12)',
-            border: '1px solid rgba(123,142,255,0.3)',
-            color: '#7b8eff',
+            background: '#eef2ff',          // indigo-50
+            border: '1px solid #c7d2fe',    // indigo-200
+            color: '#4338ca',               // indigo-700
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: '0.1em',
@@ -63,6 +63,7 @@ export function FlowChartDemo() {
             letterSpacing: '-0.03em',
             lineHeight: 1.05,
             fontWeight: 800,
+            color: '#0a0a0f',
           }}
         >
           <span className="tk-gradient-text">Flow chart</span> editor
@@ -71,7 +72,7 @@ export function FlowChartDemo() {
           style={{
             margin: '0 auto',
             maxWidth: 680,
-            color: '#b8b8d4',
+            color: '#1f2937',
             fontSize: 'clamp(15px, 1.3vw, 17px)',
             lineHeight: 1.65,
           }}
@@ -91,12 +92,11 @@ export function FlowChartDemo() {
             cursor: 'pointer',
             padding: '12px 16px',
             borderRadius: 10,
-            background: 'rgba(18, 20, 38, 0.55)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            color: '#7b8eff',
+            background: '#ffffff',
+            border: '1px solid #e5e7eb',
+            color: '#4338ca',
             fontWeight: 600,
             fontSize: 13,
-            backdropFilter: 'blur(8px)',
             listStyle: 'none',
           }}
         >
@@ -106,10 +106,10 @@ export function FlowChartDemo() {
           style={{
             marginTop: 12,
             padding: 20,
-            background: 'rgba(8, 10, 25, 0.85)',
-            border: '1px solid rgba(123,142,255,0.18)',
+            background: '#fafbfc',
+            border: '1px solid #e5e7eb',
             borderRadius: 10,
-            color: '#dcdce8',
+            color: '#1f2937',
             fontSize: 13,
             fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
             lineHeight: 1.55,
@@ -128,6 +128,6 @@ const code: React.CSSProperties = {
   fontSize: '0.85em',
   padding: '1px 6px',
   borderRadius: 4,
-  background: 'rgba(123,142,255,0.12)',
-  color: '#7b8eff',
+  background: '#eef2ff',
+  color: '#4338ca',
 };

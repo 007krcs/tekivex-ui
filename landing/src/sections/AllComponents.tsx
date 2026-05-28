@@ -306,15 +306,15 @@ export function AllComponents() {
         >
           Browse all <span className="tk-gradient-text">{TOTAL}</span> components
         </h2>
-        <p style={{ color: '#b8b8d4', maxWidth: 660, margin: '0 auto', fontSize: 16, lineHeight: 1.65 }}>
+        <p style={{ color: '#1f2937', maxWidth: 660, margin: '0 auto', fontSize: 16, lineHeight: 1.65 }}>
           Click any component below to request access — we publish the latest
           source to npm on demand and email setup instructions back. Browse the
           full live catalog at{' '}
-          <a href="/playground/" style={{ color: '#00f5d4', fontWeight: 600 }}>
+          <a href="/playground/" style={{ color: '#0f766e', fontWeight: 600 }}>
             /playground/
           </a>{' '}
           or storybook-style controls at{' '}
-          <a href="/book/" style={{ color: '#00f5d4', fontWeight: 600 }}>
+          <a href="/book/" style={{ color: '#0f766e', fontWeight: 600 }}>
             /book/
           </a>
           .
@@ -334,9 +334,10 @@ export function AllComponents() {
             style={{
               padding: 22,
               borderRadius: 14,
-              border: '1px solid rgba(255,255,255,0.06)',
-              background: 'rgba(18,18,26,0.55)',
-              backdropFilter: 'blur(8px)',
+              border: '1px solid #e5e7eb',
+              background: '#ffffff',
+              boxShadow:
+                '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)',
             }}
           >
             <header
@@ -355,7 +356,7 @@ export function AllComponents() {
                   margin: 0,
                   fontSize: 16,
                   fontWeight: 700,
-                  color: '#fff',
+                  color: '#0a0a0f',
                   letterSpacing: '-0.01em',
                 }}
               >
@@ -364,7 +365,7 @@ export function AllComponents() {
               <span
                 style={{
                   marginLeft: 'auto',
-                  color: '#666',
+                  color: '#6b7280',
                   fontSize: 12,
                   fontFamily: 'monospace',
                 }}
@@ -372,7 +373,7 @@ export function AllComponents() {
                 {g.components.length}
               </span>
             </header>
-            <p style={{ color: '#888', fontSize: 12, margin: '0 0 14px' }}>{g.desc}</p>
+            <p style={{ color: '#4b5563', fontSize: 12, margin: '0 0 14px' }}>{g.desc}</p>
 
             <ul
               style={{
@@ -401,9 +402,9 @@ export function AllComponents() {
                       gap: 4,
                       padding: '4px 10px',
                       borderRadius: 6,
-                      background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      color: '#dcdce8',
+                      background: '#fafbfc',
+                      border: '1px solid #e5e7eb',
+                      color: '#1f2937',
                       fontSize: 12,
                       fontWeight: 500,
                       transition: 'all 0.15s',
@@ -411,12 +412,14 @@ export function AllComponents() {
                       fontFamily: 'inherit',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#00f5d4';
-                      e.currentTarget.style.borderColor = 'rgba(0, 245, 212, 0.4)';
+                      e.currentTarget.style.color = '#0f766e';
+                      e.currentTarget.style.borderColor = '#99f6e4';
+                      e.currentTarget.style.background = '#f0fdfa';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#dcdce8';
-                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                      e.currentTarget.style.color = '#1f2937';
+                      e.currentTarget.style.borderColor = '#e5e7eb';
+                      e.currentTarget.style.background = '#fafbfc';
                     }}
                   >
                     {c.name}
@@ -424,7 +427,7 @@ export function AllComponents() {
                       <span
                         style={{
                           fontSize: 9,
-                          color: '#00f5d4',
+                          color: '#0f766e',
                           fontWeight: 700,
                           letterSpacing: '0.05em',
                         }}
@@ -454,8 +457,8 @@ export function AllComponents() {
           href="/playground/"
           style={{
             padding: '12px 24px',
-            background: 'linear-gradient(135deg, #00f5d4, #3a86ff)',
-            color: '#0a0a0f',
+            background: '#0d9488',
+            color: '#ffffff',
             fontWeight: 700,
             borderRadius: 999,
             fontSize: 14,
@@ -471,9 +474,9 @@ export function AllComponents() {
           href="/book/"
           style={{
             padding: '12px 24px',
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            color: '#fff',
+            background: '#ffffff',
+            border: '1px solid #e5e7eb',
+            color: '#1f2937',
             fontWeight: 700,
             borderRadius: 999,
             fontSize: 14,

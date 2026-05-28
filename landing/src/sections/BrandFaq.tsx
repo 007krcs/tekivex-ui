@@ -75,9 +75,9 @@ export function BrandFaq() {
             display: 'inline-block',
             padding: '4px 12px',
             borderRadius: 999,
-            background: 'rgba(0, 245, 212, 0.1)',
-            border: '1px solid rgba(0, 245, 212, 0.3)',
-            color: '#00f5d4',
+            background: '#f0fdfa',
+            border: '1px solid #99f6e4',
+            color: '#0f766e',
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: '0.1em',
@@ -93,14 +93,14 @@ export function BrandFaq() {
             fontSize: 'clamp(2rem, 4.5vw, 3rem)',
             fontWeight: 800,
             letterSpacing: '-0.03em',
-            color: '#fff',
+            color: '#0a0a0f',
           }}
         >
           What is <span className="tk-gradient-text">Tekivex</span>?
         </h2>
         <p
           style={{
-            color: '#b8b8d4',
+            color: '#1f2937',
             fontSize: 'clamp(15px, 1.3vw, 18px)',
             lineHeight: 1.6,
             maxWidth: 720,
@@ -111,7 +111,7 @@ export function BrandFaq() {
           family of npm packages — <code>tekivex-ui</code>, <code>tekivex-3d</code>, and{' '}
           <code>tekivex-pdf</code> — gives React developers a single, MIT-licensed
           source for accessible primitives, real WebGL 3D, holographic surfaces, and
-          browser-native PDF. 115 components, WCAG 2.1 AAA, zero runtime dependencies.
+          browser-native PDF. 115 components, zero runtime dependencies.
         </p>
       </header>
 
@@ -121,14 +121,16 @@ export function BrandFaq() {
       <div
         className="tk-prose"
         style={{
-          background: 'rgba(18, 20, 38, 0.45)',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: '#ffffff',
+          border: '1px solid #e5e7eb',
           borderRadius: 16,
           padding: 'clamp(20px, 3vw, 32px)',
           marginBottom: 48,
-          color: '#dcdce8',
+          color: '#1f2937',
           fontSize: 15,
           lineHeight: 1.75,
+          boxShadow:
+            '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)',
         }}
       >
         <p style={{ margin: 0 }}>
@@ -155,7 +157,7 @@ export function BrandFaq() {
           margin: '0 0 24px',
           fontSize: 'clamp(1.4rem, 2.5vw, 1.8rem)',
           fontWeight: 800,
-          color: '#fff',
+          color: '#0a0a0f',
           letterSpacing: '-0.02em',
         }}
       >
@@ -169,11 +171,13 @@ export function BrandFaq() {
             <div
               key={f.question}
               style={{
-                background: 'rgba(18, 20, 38, 0.55)',
-                border: `1px solid ${open ? 'rgba(0, 245, 212, 0.4)' : 'rgba(255,255,255,0.08)'}`,
+                background: '#ffffff',
+                border: `1px solid ${open ? '#99f6e4' : '#e5e7eb'}`,
                 borderRadius: 12,
                 overflow: 'hidden',
                 transition: 'border-color 0.2s',
+                boxShadow:
+                  '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)',
               }}
             >
               <button
@@ -185,7 +189,7 @@ export function BrandFaq() {
                   padding: '16px 20px',
                   background: 'transparent',
                   border: 'none',
-                  color: '#fff',
+                  color: '#0a0a0f',
                   fontSize: 15,
                   fontWeight: 700,
                   textAlign: 'left',
@@ -197,13 +201,13 @@ export function BrandFaq() {
                 }}
               >
                 <span>{f.question}</span>
-                <span style={{ color: '#00f5d4', fontSize: 18 }}>{open ? '−' : '+'}</span>
+                <span style={{ color: '#0f766e', fontSize: 18 }}>{open ? '−' : '+'}</span>
               </button>
               {open && (
                 <div
                   style={{
                     padding: '0 20px 18px',
-                    color: '#b8b8d4',
+                    color: '#1f2937',
                     fontSize: 14.5,
                     lineHeight: 1.7,
                   }}

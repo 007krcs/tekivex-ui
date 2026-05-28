@@ -106,10 +106,10 @@ const ITEMS: RoadmapItem[] = [
 ];
 
 const STATUS_STYLE: Record<RoadmapItem['status'], { bg: string; color: string; label: string }> = {
-  shipped:       { bg: 'rgba(0, 245, 212, 0.14)',   color: '#00f5d4', label: 'shipped' },
-  preview:       { bg: 'rgba(255, 190, 11, 0.14)',  color: '#ffbe0b', label: 'preview' },
-  'in progress': { bg: 'rgba(123, 142, 255, 0.18)', color: '#7b8eff', label: 'in progress' },
-  planned:       { bg: 'rgba(196, 168, 255, 0.14)', color: '#c4a8ff', label: 'planned' },
+  shipped:       { bg: '#f0fdfa', color: '#0f766e', label: 'shipped' },      // teal
+  preview:       { bg: '#fffbeb', color: '#b45309', label: 'preview' },      // amber
+  'in progress': { bg: '#eef2ff', color: '#4338ca', label: 'in progress' }, // indigo
+  planned:       { bg: '#faf5ff', color: '#6d28d9', label: 'planned' },     // violet
 };
 
 // Custom release ordering: shipped releases ascending, then future releases
@@ -146,9 +146,9 @@ export function Roadmap() {
             display: 'inline-block',
             padding: '4px 14px',
             borderRadius: 999,
-            background: 'rgba(0,245,212,0.1)',
-            border: '1px solid rgba(0,245,212,0.3)',
-            color: '#00f5d4',
+            background: '#f0fdfa',
+            border: '1px solid #99f6e4',
+            color: '#0f766e',
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: '0.1em',
@@ -165,12 +165,13 @@ export function Roadmap() {
             letterSpacing: '-0.03em',
             margin: '0 0 14px',
             lineHeight: 1.05,
+            color: '#0a0a0f',
           }}
         >
           {shippedCount} shipped this quarter,{' '}
           <span className="tk-gradient-text">{upcomingCount} more on the way</span>
         </h2>
-        <p style={{ color: '#b8b8d4', maxWidth: 660, margin: '0 auto', fontSize: 16, lineHeight: 1.65 }}>
+        <p style={{ color: '#1f2937', maxWidth: 660, margin: '0 auto', fontSize: 16, lineHeight: 1.65 }}>
           Concrete items only. Every line is scoped enough that a contributor could
           pick it up and ship it. Four honest statuses — <em>shipped</em>,{' '}
           <em>in progress</em>, <em>preview</em>, <em>planned</em> — no "TBD" or "future work".
@@ -187,7 +188,7 @@ export function Roadmap() {
                 gap: 12,
                 marginBottom: 16,
                 paddingBottom: 12,
-                borderBottom: '1px solid rgba(255,255,255,0.08)',
+                borderBottom: '1px solid #e5e7eb',
               }}
             >
               <h3
@@ -197,12 +198,12 @@ export function Roadmap() {
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: '#c4a8ff',
+                  color: '#6d28d9',
                 }}
               >
                 {rel}
               </h3>
-              <span style={{ color: '#888', fontSize: 12 }}>
+              <span style={{ color: '#6b7280', fontSize: 12 }}>
                 {groupedByRelease[rel].length} item{groupedByRelease[rel].length === 1 ? '' : 's'}
               </span>
             </div>
@@ -221,9 +222,10 @@ export function Roadmap() {
                 const baseStyle: React.CSSProperties = {
                   padding: 18,
                   borderRadius: 12,
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'rgba(18, 20, 38, 0.55)',
-                  backdropFilter: 'blur(12px)',
+                  border: '1px solid #e5e7eb',
+                  background: '#ffffff',
+                  boxShadow:
+                    '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)',
                   textAlign: 'left',
                   width: '100%',
                   fontFamily: 'inherit',
@@ -246,7 +248,7 @@ export function Roadmap() {
                         style={{
                           fontSize: 14,
                           fontWeight: 700,
-                          color: '#fff',
+                          color: '#0a0a0f',
                           fontFamily: 'ui-monospace, SFMono-Regular, monospace',
                         }}
                       >
@@ -270,7 +272,7 @@ export function Roadmap() {
                     </header>
                     <p
                       style={{
-                        color: '#b8b8d4',
+                        color: '#1f2937',
                         fontSize: 13,
                         margin: '0 0 10px',
                         lineHeight: 1.55,
@@ -284,15 +286,15 @@ export function Roadmap() {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         fontSize: 11,
-                        color: '#888',
+                        color: '#6b7280',
                         fontFamily: 'ui-monospace, monospace',
                       }}
                     >
                       <span>
-                        ships in <span style={{ color: '#00f5d4' }}>{item.pkg}</span>
+                        ships in <span style={{ color: '#0f766e' }}>{item.pkg}</span>
                       </span>
                       {clickable && (
-                        <span style={{ color: '#c4a8ff', fontWeight: 700 }}>
+                        <span style={{ color: '#6d28d9', fontWeight: 700 }}>
                           live preview →
                         </span>
                       )}
@@ -313,11 +315,11 @@ export function Roadmap() {
                         })
                       }
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(196,168,255,0.45)';
+                        e.currentTarget.style.borderColor = '#c4b5fd';
                         e.currentTarget.style.transform = 'translateY(-1px)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                        e.currentTarget.style.borderColor = '#e5e7eb';
                         e.currentTarget.style.transform = 'translateY(0)';
                       }}
                       style={baseStyle}
@@ -340,7 +342,7 @@ export function Roadmap() {
       <p
         style={{
           textAlign: 'center',
-          color: '#888',
+          color: '#6b7280',
           fontSize: 13,
           marginTop: 36,
           fontStyle: 'italic',
@@ -351,7 +353,7 @@ export function Roadmap() {
           href="https://github.com/007krcs/tekivex-ui/issues/new"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: '#00f5d4', fontWeight: 600 }}
+          style={{ color: '#0f766e', fontWeight: 600 }}
         >
           File a request →
         </a>
