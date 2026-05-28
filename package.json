@@ -94,9 +94,9 @@
     "test:nextjs": "node scripts/test-nextjs-rsc.mjs"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
+  "//publishConfig-note": "Provenance attestation is enabled at publish time via `npm publish --provenance` from CI (GitHub Actions OIDC). Setting `provenance: true` here unconditionally blocks local publishes because npm cannot generate the attestation without a supported provider. See .github/workflows/release.yml.",
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
