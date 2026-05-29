@@ -4,7 +4,7 @@
   Source:  https://github.com/007krcs/tekivex-ui
 
 /* SITE */
-  Last update: 2026-05-05
+  Last update: 2026-05-29
   Standards: HTML5, CSS3, ES2022, WCAG 2.1 AAA
   Components: React 19, three.js, recharts
   Components count: 113

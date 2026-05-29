@@ -75,9 +75,27 @@ html, body, #root {
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   line-height: 1.6;
   scroll-behavior: smooth;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* ── Horizontal-clip without creating nested scroll containers ──────────────
+   Why this is split out from the rule above:
+   Per the CSS Overflow spec, when overflow-x is non-visible and overflow-y is
+   left as `visible`, the spec promotes overflow-y to `auto` — silently turning
+   the element into a scroll container. Applying that to html, body, AND #root
+   simultaneously stacks three independent vertical scroll contexts inside one
+   another, which is what produced the "scrollbar inside scrollbar / footer
+   moves separately" distortion users were reporting.
+
+   Fix: use `overflow-x: clip` on body only. `clip` is the modern equivalent
+   of `hidden` that does NOT establish a scroll container (CSS Overflow Module
+   Level 3). Supported in Chrome 90+, Firefox 81+, Safari 16+. Older browsers
+   fall back to the `hidden` declaration above.
+   ──────────────────────────────────────────────────────────────────────── */
+body {
+  overflow-x: hidden;  /* fallback for very old browsers */
+  overflow-x: clip;    /* modern: clips without creating a scroll container */
 }
 
 a { color: inherit; text-decoration: none; }

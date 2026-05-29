@@ -341,7 +341,11 @@ function injectResponsiveStyles() {
   style.id = 'tkx-demo-responsive';
   style.textContent = `
     * { box-sizing: border-box; }
-    body { overflow-x: hidden; }
+    /* Use 'clip' not 'hidden' — hidden silently makes overflow-y 'auto' per
+       the CSS Overflow spec, creating a second scroll container that fights
+       with the document scroll and causes the nested-scrollbar / "footer
+       moves separately" distortion. */
+    body { overflow-x: hidden; overflow-x: clip; }
     @media (max-width: 767px) {
       /* Doc page outer wrapper — reduce horizontal padding */
       #main-content > div {
@@ -466,13 +470,17 @@ function AppInner({ isDark, onToggleTheme }: { isDark: boolean; onToggleTheme: (
   };
 
   const contentStyle: CSSProperties = {
-    // Single scroll container is the document body. Removing overflowY:auto here
-    // prevents the "scroll up makes screen jump down" jitter caused by two
-    // competing scroll contexts (body + inner main).
+    // Single scroll container is the document body. We intentionally do NOT
+    // set overflowY here — and we also do NOT set overflowX: 'hidden' — because
+    // per the CSS Overflow spec, setting one axis to a non-visible value
+    // promotes the other axis from `visible` to `auto`, silently turning this
+    // element into a scroll container that fights with the document scroll
+    // (symptom: scrollbar inside scrollbar, header/footer drift). Horizontal
+    // overflow is already clipped at body level via `overflow-x: clip`.
     flex: 1,
-    overflowX: 'hidden',
     padding: '0',
     backgroundColor: theme.bg,
+    minWidth: 0,
   };
 
   return (
