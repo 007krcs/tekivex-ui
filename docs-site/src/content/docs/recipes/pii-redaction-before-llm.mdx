@@ -1,0 +1,219 @@
+---
+title: PII redaction before sending to an LLM
+description: Strip SSN, Luhn-validated credit cards, email, phone, and API keys from text before it crosses the boundary to OpenAI, Anthropic, or any third-party service. Regex + mod-10 — no false positives on 13-digit order IDs.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+You're about to ship a feature that puts user-supplied text into a prompt
+and sends it to a third-party model. Compliance is going to ask: "How do
+you keep PII out of OpenAI's logs?" This page is the one-line answer —
+`scrubPII()` from `tekivex-ui/headless`, plus the small amount of glue
+you need to wire it in.
+
+## The problem
+
+A few real scenarios where raw text leaks PII across a trust boundary:
+
+- A **customer-support agent** pastes a transcript into a "summarize this
+  ticket" prompt — the transcript contains a full credit-card number from
+  a refund conversation.
+- An **internal RAG indexer** ingests audit logs that include user emails
+  and phone numbers. Those emails end up in vector embeddings stored at a
+  third-party model provider.
+- An **analytics pipeline** ships raw event payloads to a model for
+  enrichment. Every event includes `sk-...` API keys from auth payloads.
+
+The naive fix — "just regex out anything that looks like a credit card" —
+falls over on contact with prod. A pattern like `\d{13,19}` matches order
+IDs, USPS tracking numbers, Unix-millisecond timestamps, and concatenated
+session tokens. False positives erode trust until somebody disables the
+redactor. Luhn (mod-10) validation eliminates that whole class of false
+positive: a 13-digit order ID will not pass Luhn, so it stays in the
+text.
+
+## The recipe
+
+### Single-call usage
+
+```tsx
+import { scrubPII } from 'tekivex-ui/headless';
+
+const transcript = `
+  Customer: Hi, my SSN is 123-45-6789 and you can reach me at
+  jane.doe@example.com or 415-555-0143. My card 4111-1111-1111-1111
+  was charged twice for order #1234567890123. Here's the API key
+  from the integration: sk-abcd1234EFGH5678ijkl9012MNOP.
+`;
+
+const safe = scrubPII(transcript);
+
+// safe is now:
+//   Customer: Hi, my SSN is [redacted-ssn] and you can reach me at
+//   [redacted-email] or [redacted-phone]. My card [redacted-card]
+//   was charged twice for order #1234567890123. Here's the API key
+//   from the integration: [redacted-key].
+
+await openai.chat.completions.create({
+  model: 'gpt-4o-mini',
+  messages: [{ role: 'user', content: `Summarize this ticket: ${safe}` }],
+});
+```
+
+Note that `order #1234567890123` survives — it's a 13-digit run, but it
+fails Luhn, so the credit-card pattern leaves it alone. That's the whole
+point.
+
+### As a middleware before fetch()
+
+Wrap your provider call so redaction is impossible to forget:
+
+```ts
+import { scrubPII } from 'tekivex-ui/headless';
+
+export async function safeLLM(prompt: string, opts?: RequestInit) {
+  const scrubbed = scrubPII(prompt);
+  return fetch('https://api.openai.com/v1/chat/completions', {
+    ...opts,
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      ...opts?.headers,
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: scrubbed }],
+    }),
+  });
+}
+```
+
+Every caller in your app goes through `safeLLM`. Code review for the LLM
+boundary becomes "does this file import `fetch` directly?" — a grep-level
+check.
+
+### Why Luhn matters — concrete demo
+
+```ts
+import { scrubPII } from 'tekivex-ui/headless';
+
+scrubPII('Customer card: 4111-1111-1111-1111');
+// → 'Customer card: [redacted-card]'   ← valid Visa test number, redacted
+
+scrubPII('Order #1234567890123');
+// → 'Order #1234567890123'             ← 13-digit number, fails Luhn, KEPT
+
+scrubPII('Tracking number 9400111202555842761521');
+// → 'Tracking number 9400111202555842761521'   ← USPS tracking, fails Luhn, KEPT
+```
+
+Without the Luhn check, the second and third examples would have been
+redacted as `[redacted-card]` — and the redactor would get disabled the
+first time a support engineer noticed every order number in the logs
+turning into `[redacted-card]`. The point of `scrubPII` is to be useful
+enough to keep enabled in prod, not so aggressive it trips on every
+numeric string.
+
+## What's redacted
+
+| Pattern | What it matches | Replacement |
+|---|---|---|
+| SSN | `\b\d{3}-\d{2}-\d{4}\b` | `[redacted-ssn]` |
+| Credit card | `\b(?:\d[ -]?){13,19}\b`, then mod-10 (Luhn) validated | `[redacted-card]` |
+| Email | `\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b` (case-insensitive) | `[redacted-email]` |
+| Phone | `\b(\+?\d{1,3}[ -])?\(?\d{3}\)?[ -]?\d{3}[ -]?\d{4}\b` | `[redacted-phone]` |
+| API keys | `\b(sk\|pk\|rk)-[A-Za-z0-9]{20,}\b` | `[redacted-key]` |
+
+Patterns are applied in declared order: SSN → credit card → email →
+phone → API key. Source is in
+[`src/engine/security.ts`](https://github.com/007krcs/tekivex-ui/blob/master/src/engine/security.ts)
+under `PII_PATTERNS`.
+
+## What it does NOT redact
+
+Honest list — these are the things `scrubPII` will quietly leak:
+
+- **Names.** There is no regex for "Jane Doe" that doesn't also match
+  half the English language. Real PII redaction of names needs an NER
+  model.
+- **Street addresses.** Same problem — too unstructured for regex.
+- **IP addresses.** Whether IPs count as PII depends on jurisdiction
+  (GDPR yes, US generally no), so the default doesn't touch them.
+- **IBANs.** Different regex per country; not yet shipped.
+- **Dates of birth in unusual formats.** `01/02/1990` is indistinguishable
+  from an invoice line item.
+- **Non-US government IDs.** No Aadhaar, NIN, NRIC, etc. See the
+  [Indian KYC pack](/getting-started/#indian-kyc-pack) for separate
+  validators you can wire in.
+- **Credit cards in unusual formats.** `4111 4111 4111 4111` works,
+  `4111.4111.4111.4111` does not — dots aren't in the separator class.
+  Spelled-out digits ("forty-one eleven...") obviously don't match.
+- **Free-form natural language describing PII.** "His card ended in
+  triple ones" stays put.
+
+<Aside type="caution" title="Defense in depth">
+Don't rely on `scrubPII` as your only PII control. Layer it with: a
+prompt-injection-aware system prompt, model-provider zero-retention
+agreements where available, and an [audit trail](/recipes/audit-trail/)
+so you can prove what crossed the boundary.
+</Aside>
+
+## Locale-aware extension
+
+`scrubPII` is intentionally US-defaults. Extend it for your locale by
+wrapping it — patterns run after the defaults, so a tracking number that
+survived the credit-card check will still be available for your own
+matcher:
+
+```ts
+import { scrubPII } from 'tekivex-ui/headless';
+
+function scrubExtended(text: string): string {
+  let s = scrubPII(text);
+  // Indian Aadhaar: 12 digits, usually shown in 4-4-4 groups.
+  s = s.replace(/\b\d{4}-\d{4}-\d{4}\b/g, '[redacted-aadhaar]');
+  // Indian PAN: AAAAA9999A
+  s = s.replace(/\b[A-Z]{5}\d{4}[A-Z]\b/g, '[redacted-pan]');
+  return s;
+}
+```
+
+For Aadhaar specifically, use the Verhoeff-validated `validateAadhaar()`
+from `tekivex-ui` to avoid the same false-positive problem the Luhn check
+solves for credit cards — any 12-digit run will match the regex above,
+but only ~1 in 10 will pass Verhoeff.
+
+## Gotchas
+
+- **Order in `PII_PATTERNS` matters.** The library applies patterns in
+  declared order: SSN, then credit card, then email, then phone, then
+  API key. If you reorder them, the email's local-part (which can
+  contain digits) may mask later patterns. The shipped order has been
+  tested; the reverse hasn't.
+- **The credit-card regex matches pure digit runs too.** A 16-digit
+  string with no separators (`4111111111111111`) matches the same
+  `\b(?:\d[ -]?){13,19}\b` pattern, then Luhn-validates. Verify by
+  reading the regex if you're unsure what your input looks like.
+- **API-key prefixes are limited to `sk-`, `pk-`, `rk-`.** That covers
+  OpenAI, Stripe live/test, RevenueCat. Anthropic's `sk-ant-...` matches
+  via the broader `sk-` prefix. Google's `AIza...` and AWS access keys
+  (`AKIA...`) do **not** match — add your own regex if you need them.
+- **`scrubPII` operates on the string representation.** If you pass a
+  JSON string, both keys and values get scrubbed. Usually fine, but if
+  you have a field name like `"sk-foo"` (don't do this), it'll get
+  redacted too.
+- **Redaction is lossy. Don't use it for storage.** `[redacted-ssn]`
+  can't be unredacted. Use `scrubPII` on data crossing a trust boundary
+  (LLM, third-party API, log aggregator, analytics pipeline) — not on
+  data flowing into your own database.
+
+## Related
+
+- [Audit trail recipe](/recipes/audit-trail/) — log every redactor
+  invocation so you can prove no PII left your perimeter.
+- [Security threat model](https://github.com/007krcs/tekivex-ui/blob/master/docs/SECURITY-THREAT-MODEL.md)
+  — full inventory of what `tekivex-ui/headless` defends against.
+- For India-specific PII (Aadhaar, PAN, Voter ID): use the validators
+  from `tekivex-ui` directly. They're not yet integrated into
+  `scrubPII`'s default pattern set.

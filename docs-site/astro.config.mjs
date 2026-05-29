@@ -73,6 +73,16 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Recipes',
+          items: [
+            { label: 'Secure file upload', link: '/recipes/secure-file-upload/' },
+            { label: 'Tamper-evident audit trail', link: '/recipes/audit-trail/' },
+            { label: 'PII redaction before LLM', link: '/recipes/pii-redaction-before-llm/' },
+            { label: 'Peer chat with media', link: '/recipes/peer-chat-with-media/' },
+            { label: 'DataGrid with tree data', link: '/recipes/data-grid-with-tree-data/' },
+          ],
+        },
+        {
           label: 'Components',
           autogenerate: { directory: 'components' },
           collapsed: true,

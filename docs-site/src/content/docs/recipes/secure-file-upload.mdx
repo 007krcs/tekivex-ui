@@ -1,0 +1,231 @@
+---
+title: Secure file upload with magic-byte verification
+description: Verify file uploads against their real signature bytes, not their Content-Type header. Defends against polyglots, Content-Type spoofing, and double-extension tricks.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The browser file picker reports whatever MIME type the OS guesses from the
+file extension. An attacker who renames `payload.exe` to `invoice.pdf` and
+sets `Content-Type: application/pdf` will sail through every check that
+trusts `file.type`. The fix is to read the first dozen bytes of the file
+and match them against known signatures — `sniffMimeType` does exactly
+that, and `TkxFileUpload` runs it automatically on every accepted file.
+
+## The problem
+
+Picture a support portal that accepts PDF attachments. The naive
+implementation:
+
+```tsx
+<input
+  type="file"
+  accept="application/pdf"
+  onChange={(e) => upload(e.target.files![0])}
+/>
+```
+
+Three things this doesn't catch:
+
+1. **Content-Type spoofing.** The `accept` attribute is a hint to the
+   picker — it doesn't enforce anything. A scripted upload (or a user
+   editing the request) can send any MIME string.
+2. **Double extensions.** `invoice.pdf.exe` reads as `.exe` on Windows
+   but the displayed truncated name says `invoice.pdf`.
+3. **Polyglots.** A file can be a syntactically valid PDF and also a
+   valid HTML page or ZIP archive, depending on which parser reads it.
+   Without checking the first bytes you're trusting whoever sent the
+   file to be honest about which interpretation matters.
+
+The header is metadata. The bytes are evidence.
+
+## The recipe
+
+### Frontend — TkxFileUpload runs the check automatically
+
+`TkxFileUpload` calls `sniffMimeType` on every accepted file in the
+background. If the sniffed type's top-level category doesn't match the
+claimed `file.type` (e.g. claimed `image/png`, sniffed `application/zip`),
+the file is flagged with an error and `onError` fires.
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { TkxFileUpload } from 'tekivex-ui';
+
+export function InvoiceUploader() {
+  const [accepted, setAccepted] = useState<File[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
+
+  return (
+    <TkxFileUpload
+      label="Upload invoice (PDF only)"
+      hint="Max 10 MB. Files are verified by signature, not extension."
+      accept="application/pdf"
+      maxSize={10 * 1024 * 1024}
+      maxFiles={5}
+      multiple
+      preview={false}
+      variant="dropzone"
+      onChange={(files) => {
+        setAccepted(files);
+        setErrors([]);
+      }}
+      onError={(msg) => setErrors((prev) => [...prev, msg])}
+    />
+  );
+}
+```
+
+The component pipeline runs in this order for every dropped or picked
+file:
+
+1. **Size check** — rejects if larger than `maxSize`.
+2. **Filename check** — rejects control chars, null bytes, and `../`
+   path-traversal sequences.
+3. **Extension/MIME match** — checks against the `accept` pattern.
+4. **Magic-byte verification** — `sniffMimeType` reads the first 12
+   bytes and compares the top-level type (`image/*`, `application/*`,
+   `text/*`) against `file.type`. Mismatch becomes a per-file error and
+   the file is removed from the `onChange` valid-files array.
+
+The `onChange` callback only ever receives files that passed all four
+gates. The `onError` callback receives a human-readable string per
+rejected file.
+
+### Backend — re-verify on receipt
+
+Client-side verification is a UX layer. It tells the user immediately
+that their file is wrong, before a multi-megabyte upload starts. The
+security boundary is the server. Re-run the same primitive:
+
+```ts
+// server.ts — Node 18+
+import { sniffMimeType } from 'tekivex-ui/headless';
+
+export async function handleUpload(req: Request): Promise<Response> {
+  const form = await req.formData();
+  const file = form.get('invoice');
+  if (!(file instanceof File)) return new Response('bad request', { status: 400 });
+
+  const realType = await sniffMimeType(file);
+  if (realType !== 'application/pdf') {
+    return new Response('file is not a PDF', { status: 415 });
+  }
+
+  // Safe to persist — bytes are what they claim to be.
+  await storage.save(file);
+  return new Response('ok');
+}
+```
+
+Same function, same magic bytes, same answer. The client tells the user
+"this won't work"; the server enforces that it doesn't.
+
+<Aside type="caution">
+Never trust the client's verification result. If you wire the frontend
+to send a "verified: true" flag, the server should ignore it. Re-sniff
+on receipt — always.
+</Aside>
+
+## What this defends against
+
+| Attack | How it's blocked |
+|---|---|
+| Content-Type spoofing | Magic bytes are read from the file body, not from `file.type` or the `Content-Type` header. |
+| Double extension (`invoice.pdf.exe`) | The displayed name is irrelevant — only the binary signature is matched. The filename also gets rejected separately if it contains control chars or `../`. |
+| Polyglot files (valid PNG header with appended payload) | The first 12 bytes determine the type. The rest is treated as that type by downstream tools; anything else is the rendering engine's problem, not the upload validator's. |
+| Forged MIME from `<input>` | The browser file picker reports a client-controlled MIME; we sniff independently and compare. |
+| Path traversal in filename | Rejected by the filename validator before sniffing even runs. |
+
+## What it does NOT defend against
+
+Magic-byte sniffing is one layer. It's not a complete file-upload
+defense. The following attacks need separate controls:
+
+- **Zip bombs / decompression bombs.** A `.zip` whose magic bytes are
+  legitimate but whose contents expand to terabytes. You need a size
+  cap on extracted output and a recursion depth limit, not a header
+  check.
+- **Malicious content inside a valid file.** A genuine PDF that
+  contains an embedded JavaScript payload is still a genuine PDF as
+  far as `sniffMimeType` is concerned. Defense lives in the PDF
+  rendering pipeline (sandboxed viewer, JS disabled) or in a
+  server-side scanner.
+- **Virus signatures.** Use ClamAV or a commercial scanner. Magic-byte
+  sniffing identifies what kind of file it is, not whether it's
+  malicious.
+- **DLP / sensitive content.** Detecting that a user uploaded a
+  spreadsheet of customer SSNs is a different problem. Pair file
+  upload with `scrubPII` on extracted text if you're processing
+  contents downstream.
+- **Steganography.** Hidden payloads in the low bits of an image are
+  invisible to header checks and to most antivirus.
+
+If your threat model includes any of these, layer the appropriate tool
+on top. `sniffMimeType` is the foundation, not the whole stack.
+
+## Gotchas
+
+**The known signatures are a fixed list.** From the source:
+
+| Magic bytes (hex) | Returned MIME |
+|---|---|
+| `89 50 4E 47` | `image/png` |
+| `FF D8 FF` | `image/jpeg` |
+| `47 49 46 38` | `image/gif` |
+| `42 4D` | `image/bmp` |
+| `52 49 46 46 .. .. .. .. 57 45 42 50` | `image/webp` |
+| `25 50 44 46` | `application/pdf` |
+| `50 4B 03 04` | `application/zip` (also Office `.docx`, `.xlsx`, `.pptx`, `.jar`) |
+| Starts with `{` or `[` | `application/json` |
+| No NUL bytes in first 12 | `text/plain` (heuristic) |
+
+If you need a type that isn't here — `audio/wav`, `video/mp4`, `.psd` —
+the function returns `null`, the comparison can't be made, and
+`TkxFileUpload` will let the file through based on filename and
+`accept` alone. Either widen `sniffMimeType` (PR welcome) or layer a
+typed parser server-side.
+
+**Office documents look like ZIPs.** `.docx`, `.xlsx`, and `.pptx` are
+ZIP containers, so they sniff as `application/zip`. The top-level-type
+comparison (`application/*` vs `application/*`) passes, which is what
+you want. If you specifically need to confirm "real Office doc, not
+arbitrary ZIP," inspect the container structure server-side.
+
+**The JSON and `text/plain` checks are heuristics, not guarantees.**
+"Starts with `{` or `[`" catches almost everything you'd want to call
+JSON, but it doesn't validate the document. Pair with `sanitizeJSON`
+before parsing. Similarly, "no NUL in the first 12 bytes" is enough to
+distinguish "probably text" from "definitely binary" but won't catch
+malformed UTF-8 deeper in the file.
+
+**Performance is constant per file.** Only `file.slice(0, 12)` is read,
+so a 4 GB upload is verified in the same time as a 4 KB one. You can
+sniff thousands of files in parallel without measurable cost.
+
+**Client-side verification is advisory.** It's there so users don't
+waste bandwidth uploading a file the server will reject. It is not the
+security boundary. Re-sniff on the server with the actual received
+bytes, every time, no exceptions.
+
+## Accessibility
+
+`TkxFileUpload` is keyboard-operable (Enter and Space open the picker),
+the dropzone has `role="button"` and an accessible name from `label`,
+the uploaded-files list uses `aria-live="polite"` so screen readers
+announce additions and errors, and the per-file remove button has an
+explicit `aria-label`. Self-tested against AAA contrast on the default
+theme; consumer themes need their own check via `meetsAAA` from
+`tekivex-ui/headless`.
+
+## Related
+
+- [`TkxFileUpload` component reference](/components/file-upload/)
+- [Audit trail recipe](/recipes/audit-trail/) — log every accepted
+  upload with a tamper-evident hash chain
+- [Security threat model](https://github.com/007krcs/tekivex-ui/blob/master/docs/SECURITY-THREAT-MODEL.md) —
+  full STRIDE coverage for the library's security primitives
+- [Quick reference: security primitives](/quick-reference/#security-primitives) —
+  the other 10 functions in `tekivex-ui/headless`

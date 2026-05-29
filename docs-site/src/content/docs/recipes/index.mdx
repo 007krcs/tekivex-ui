@@ -1,0 +1,48 @@
+---
+title: Recipes — concrete, copy-pasteable
+description: Outcome-driven walk-throughs that combine multiple tekivex-ui primitives to ship a real thing.
+---
+
+Each recipe shows one production-shaped pattern, end to end, using the real
+APIs the library ships. Code is copy-pasteable. Honest about what each
+primitive defends against AND what it does not.
+
+## What's here today
+
+| Recipe | What you ship | Primitives |
+|---|---|---|
+| [Secure file upload](/recipes/secure-file-upload/) | A file-input that verifies real magic bytes, not the Content-Type header — defends against polyglots and double-extension tricks | `TkxFileUpload` + `sniffMimeType` |
+| [Tamper-evident audit trail](/recipes/audit-trail/) | SHA-256 hash-chained event log for SOC 2 / HIPAA / 21 CFR Part 11. Mutation is detectable in O(n). | `audit()` + `verifyAuditIntegrity()` + `getAuditLog()` |
+| [PII redaction before LLM](/recipes/pii-redaction-before-llm/) | Strip SSN, Luhn-validated cards, email, phone, API keys before crossing the boundary to OpenAI / Anthropic / analytics | `scrubPII()` |
+| [Peer chat with media](/recipes/peer-chat-with-media/) | Real-people messaging with attachments, reactions, replies, edit/delete, delivery states, typing indicator | `TkxPeerChat` + `sniffMimeType` |
+| [DataGrid with tree data](/recipes/data-grid-with-tree-data/) | Org chart, file browser, or chart of accounts as a sortable, editable grid with disclosure carets | `TkxDataGrid` with `childRowsKey` |
+
+## What's coming
+
+The recipe set grows when we see a real pattern people are hand-rolling
+that the library covers. If you've hand-rolled something for a non-obvious
+case, open an issue at
+[github.com/007krcs/tekivex-ui/issues](https://github.com/007krcs/tekivex-ui/issues)
+and we'll write the recipe.
+
+Candidate recipes already on the v3.20 wishlist:
+
+- Building a HIPAA-aligned patient intake form (multi-step, signature pad,
+  audit trail per field change)
+- RSC-friendly state management for an admin dashboard
+- Async field validation with debounced server checks
+- AAA-targeting dark mode that survives SSR + FOUC
+- Standing up a working dashboard in 20 minutes from a Postgres schema
+
+## How to read a recipe
+
+Each page has the same structure:
+
+1. **The problem** — what real-world scenario this addresses
+2. **The recipe** — full working code, often with a minimal version and a realistic version
+3. **What it defends against** OR **what's built-in** — the wins
+4. **What it does NOT defend against** OR **what's NOT built-in** — honest gaps
+5. **Gotchas** — real edge cases sourced from the implementation
+6. **Related** — links to component reference docs and other recipes
+
+If a recipe overpromises, it's a bug — open an issue.

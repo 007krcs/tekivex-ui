@@ -1,0 +1,314 @@
+---
+title: Tamper-evident audit trail
+description: Append-only SHA-256 hash-chained log of application events. Any mutation breaks the chain — verifiable in O(n).
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+You need an audit log. The naive version is a Postgres table that anything
+with write access can rewrite — including the breach you're trying to
+investigate. The `audit()` primitive in `tekivex-ui/headless` is a
+hash-chained, append-only log: every entry contains the SHA-256 of the
+previous entry's chain hash, so a single edit anywhere downstream of an
+entry invalidates everything after it. This recipe shows how to wire it
+into a real application without lying to yourself about what it does and
+doesn't protect.
+
+## The problem
+
+Audit trails come up the moment someone asks "who did what when":
+
+- **SOC 2 CC7.2** — evidence of security event logging that the org
+  actually reviews
+- **HIPAA § 164.312(b)** — audit controls for systems that touch PHI
+- **21 CFR Part 11 § 11.10(e)** — secure, computer-generated, time-stamped
+  audit trails for FDA-regulated electronic records
+- **PCI DSS 10.x** — daily review of logs covering authentication and
+  privileged actions
+- **Internal IR** — when the post-mortem asks "did this user actually see
+  the customer's address?", you need an answer you trust
+
+The naive approach is to append events to a Postgres table. The problem is
+the trust model: any account with `UPDATE` on the audit table can rewrite
+history, and that includes a compromised service account, a malicious DBA,
+or anyone with `pg_dump | sed | pg_restore`. Once an attacker has touched
+the table, you can no longer tell which rows are real. You don't even know
+**that** rows were touched.
+
+A hash chain doesn't stop tampering — it makes tampering detectable.
+
+## The recipe
+
+```tsx
+import { audit, getAuditLog, verifyAuditIntegrity } from 'tekivex-ui/headless';
+
+// ── On user login ────────────────────────────────────────────────────────
+function onLoginSuccess(userId: string, mfaUsed: boolean) {
+  audit('user.login', 'AuthService', {
+    userId,
+    mfaUsed,
+    method: 'password',
+  });
+}
+
+// ── On a sensitive financial action ──────────────────────────────────────
+function refundOrder(orderId: string, amountCents: number, actorId: string) {
+  // Do the refund work first; only audit on success.
+  const result = stripe.refunds.create({ orderId, amount: amountCents });
+
+  audit('billing.refund', 'BillingService', {
+    orderId,
+    amountCents,
+    actorId,
+    refundId: result.id,
+  });
+
+  return result;
+}
+
+// ── On PHI / sensitive record access ─────────────────────────────────────
+function viewPatientRecord(patientId: string, viewerId: string) {
+  audit('document.access', 'EHRViewer', {
+    patientId,        // ID, not contents
+    viewerId,
+    reason: 'patient-care',
+  });
+  return loadRecord(patientId);
+}
+
+// ── Querying the log ─────────────────────────────────────────────────────
+// All refunds, newest first
+const refunds = getAuditLog({ action: 'billing.refund' });
+
+// Last 100 events from the billing service
+const recent = getAuditLog({ component: 'BillingService', limit: 100 });
+
+// Everything (use sparingly — the log is in-memory)
+const all = getAuditLog();
+
+// ── Verifying integrity ──────────────────────────────────────────────────
+// Returns true if every chainHash matches its recomputed expected value,
+// false if any entry has been mutated, inserted, deleted, or reordered.
+const intact = verifyAuditIntegrity();
+
+if (!intact) {
+  // Treat this as a high-severity incident: the in-memory log was
+  // tampered with, or your persistence layer rehydrated it incorrectly.
+  alertSecurityTeam();
+}
+```
+
+Every `audit()` call returns the frozen `AuditEntry` it just appended, so
+you can also stream the entry directly to your persistence layer:
+
+```ts
+const entry = audit('user.login', 'AuthService', { userId, mfaUsed });
+await fetch('/internal/audit', {
+  method: 'POST',
+  body: JSON.stringify(entry),
+});
+```
+
+## How the chain works
+
+Each entry in the trail looks like this:
+
+```ts
+interface AuditEntry {
+  readonly timestamp: number;   // Date.now() at audit() time
+  readonly component: string;   // e.g. 'BillingService'
+  readonly action: string;      // e.g. 'billing.refund'
+  readonly propsHash: string;   // SHA-256 of JSON.stringify(meta ?? {})
+  readonly chainHash: string;   // SHA-256 of prevChainHash + propsHash + component + action
+}
+```
+
+The chain hash is what makes the log tamper-evident:
+
+```
+                                          ┌──────────────────┐
+genesis (64 zeros)                        │                  │
+        │                                 ▼                  │
+        ├──► propsHash₀ ─┐         sha256(prev + props +    │
+        │               ├──► chainHash₀                     │
+        │  component₀ ──┤                                   │
+        │  action₀ ─────┘                                   │
+        │                                                   │
+        └──► chainHash₀ ───┐                                │
+                           ├──► chainHash₁ ─────────────────┘
+             propsHash₁ ───┤
+             component₁ ───┤
+             action₁ ──────┘
+```
+
+Three things follow from this construction:
+
+1. **Mutating an entry's payload** changes its `propsHash`, which changes
+   the inputs to its `chainHash`, which means the recomputed expected
+   chain hash no longer matches. `verifyAuditIntegrity()` returns `false`.
+2. **Mutating an entry's `chainHash` directly** doesn't help the attacker
+   either: the **next** entry's chain hash was computed from the original
+   value, so the next entry's verification fails.
+3. **Inserting, deleting, or reordering** any entry shifts the chain
+   inputs from that point onward; everything downstream becomes invalid.
+
+Verification is O(n) over the trail length — it walks the chain once,
+recomputing each `chainHash` from the previous one plus the stored
+`propsHash`, `component`, and `action`. The same `sha256Hex` (FIPS 180-4)
+that builds the chain is used to verify it, and it's exported from
+`tekivex-ui/headless` if you need it elsewhere.
+
+## What this defends against
+
+| Attack | How it's caught |
+|---|---|
+| Inserting a fake "user agreed to terms" event after the fact | The injected entry's `chainHash` won't be the value the **next** entry was originally built against, so the next entry's recomputed expected hash mismatches |
+| Mutating an existing event's payload (e.g. changing a refund's `amountCents` from 5000 to 50) | The mutated `meta` produces a new `propsHash` → the stored `chainHash` no longer matches the recomputed one |
+| Deleting an event entirely | Removing entry N means entry N+1's `chainHash` was computed from a `prevChainHash` that no longer exists in the trail; verification fails at N+1 |
+| Reordering events | The chain depends on position. Any reorder changes what `prevChainHash` is fed in, so every entry from the swap onward fails verification |
+| Silent mutation by a compromised admin with table-write access (assuming the persisted log is verified against an offline copy of any single later `chainHash`) | One known-good chain hash from any point is enough to prove every prior entry is unchanged |
+
+## What it does NOT defend against
+
+Tamper-evidence is a narrow guarantee. Be honest with stakeholders about
+what the chain doesn't do:
+
+- **A compromised process that calls `audit()` with false events.** The
+  chain logs whatever you tell it. If your app is RCE'd and the attacker
+  calls `audit('user.consent', 'ToS', { ... })`, the entry is
+  cryptographically valid — it just isn't true. You need separate
+  controls (code signing, runtime attestation) to defend the caller.
+- **Replacing the entire log.** If an attacker can overwrite your
+  persisted log file with one they generated themselves, every entry in
+  the replacement chain will verify. You need write-once storage,
+  append-only S3 buckets with object lock, or periodic offsite snapshots
+  with their final `chainHash` published to a separate trust anchor.
+- **Compromise before `audit()` returns.** If the attacker has read access
+  to your process memory, the unhashed `meta` payload is briefly in scope
+  before it's hashed. The chain doesn't encrypt, it authenticates.
+- **Non-repudiation.** This is tamper-**evidence**, not a cryptographic
+  signature. Anyone with the source code can produce a valid-looking
+  chain starting from genesis. Upgrading to HMAC-SHA256 with a
+  server-held secret (or per-entry signing with an asymmetric key) gives
+  you non-repudiation, but that's not what v3.x ships.
+- **In-memory wipe at process restart.** The default trail lives in a
+  module-scoped `let`. You are responsible for persistence — see below.
+
+## Real-world wiring
+
+Three patterns that show up repeatedly:
+
+**1. Audit at the boundary, not at every render.** Put `audit()` calls
+inside server actions, route handlers, and security-relevant component
+callbacks (e.g. `onCellEdit` in a `TkxDataGrid` over a financial ledger).
+Don't log every render — the log is for "what happened in the business
+domain", not for telemetry.
+
+```tsx
+<TkxDataGrid
+  rows={ledgerRows}
+  columns={ledgerColumns}
+  onCellEdit={(rowId, field, oldValue, newValue) => {
+    audit('ledger.edit', 'TkxDataGrid', {
+      rowId,
+      field,
+      from: oldValue,
+      to: newValue,
+      actorId: currentUser.id,
+    });
+    return persistEdit(rowId, field, newValue);
+  }}
+/>
+```
+
+**2. Persist `getAuditLog()` to your backend on a timer or on flush.**
+The trail is in-memory by default. A common pattern is to drain it every
+N seconds or every K entries to a write-once log store, then keep
+verifying the in-memory chain so you catch tampering before it gets
+persisted:
+
+```ts
+setInterval(async () => {
+  if (!verifyAuditIntegrity()) {
+    alertSecurityTeam('audit chain broken in-memory before drain');
+    return;
+  }
+  const batch = getAuditLog();
+  await postToImmutableStore(batch);
+}, 30_000);
+```
+
+**3. Stream entries to a SIEM.** The frozen `AuditEntry` returned from
+`audit()` is plain JSON-serializable — five fields, no functions, no
+prototype chain. Pipe it straight to Splunk, Datadog, or CloudWatch.
+
+```ts
+const entry = audit('user.login', 'AuthService', { userId, mfaUsed });
+siemClient.send({ source: 'tekivex-ui', ...entry });
+```
+
+**4. Verify before reporting.** When compliance asks for an audit
+extract, run `verifyAuditIntegrity()` first and attach the result to the
+report. If it returns `false`, you're handing the auditor evidence of
+tampering — which is exactly what the chain is designed to surface — and
+the report itself should note the discontinuity rather than paper over
+it.
+
+```ts
+function buildComplianceExport(window: { from: number; to: number }) {
+  const intact = verifyAuditIntegrity();
+  const entries = getAuditLog().filter(
+    (e) => e.timestamp >= window.from && e.timestamp <= window.to,
+  );
+  return {
+    integrity: intact ? 'verified' : 'BROKEN — investigate',
+    generatedAt: Date.now(),
+    entries,
+  };
+}
+```
+
+## Gotchas
+
+- **The audit log is in-memory.** A process restart wipes it. You are
+  responsible for persistence and for verifying integrity at the
+  persistence boundary, not just in-memory.
+- **`propsHash` is `sha256(JSON.stringify(meta ?? {}))`.** V8 and JSC
+  preserve insertion order for non-numeric string keys, so object
+  literals hash deterministically in practice — but `Map`, `Set`, and
+  custom `toJSON` implementations don't. If you put a `Map` in `meta`,
+  serialize it yourself first.
+- **Don't put secrets in `meta`.** The chain is recomputable from the
+  payload, so a leaked log lets an attacker correlate events by content
+  and time. Log IDs that reference your database (`userId`, `orderId`,
+  `documentId`), not the underlying values (`email`, `cardLast4`,
+  `recordContents`). If you need PII in a debug context, run it through
+  `scrubPII()` first.
+- **`verifyAuditIntegrity()` walks the whole chain.** For a million-entry
+  log this is fine on a developer laptop and slow inside a hot request
+  handler. Verify on a schedule (or during incident triage), not on every
+  request. Persist intermediate `chainHash` values as checkpoints if you
+  need to verify suffixes only.
+- **The chain starts from a constant genesis hash** (64 zeros). Two
+  processes starting fresh produce identical chains for identical event
+  sequences — useful for replay testing, but it means two production
+  instances of the same app have **different** legitimate chains. Don't
+  compare chains across instances; persist each instance's chain
+  separately and verify each on its own.
+
+<Aside type="caution" title="If verifyAuditIntegrity() ever returns false">
+  Treat it as a Sev-1 incident, not a bug report. Either someone modified
+  the `auditTrail` in memory (which requires running code in your
+  process), or your persistence layer rehydrated entries incorrectly.
+  Both deserve a security investigation, not a retry.
+</Aside>
+
+## Related
+
+- [Security threat model](https://github.com/007krcs/tekivex-ui/blob/master/docs/SECURITY-THREAT-MODEL.md) —
+  the full set of attacker assumptions the library defends against
+- [`scrubPII()`](/security/#scrubpii) — redact PII before you put it
+  anywhere a log can see it
+- `sha256Hex()` is exported from `tekivex-ui/headless` if you need the
+  same FIPS 180-4 hash for adjacent work (content-addressed caches,
+  integrity headers, etc.)

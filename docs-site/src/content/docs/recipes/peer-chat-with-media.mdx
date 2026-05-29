@@ -1,0 +1,487 @@
+---
+title: Peer-to-peer chat with media, reactions, and typing indicators
+description: Real-people messaging — not LLM conversations. TkxPeerChat with image / file / audio / video attachments (magic-byte verified), one-level reply threading, edit/delete, delivery states, and consumer-wired typing indicator.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+There's a recurring confusion in the issue tracker: "I tried to build a
+support-agent chat with `TkxChat` and got stuck — there's no name on the
+bubble." That's because `TkxChat` was never the right primitive for it.
+`TkxChat` models the LLM API shape (`user | assistant | system`). For real
+people sending real messages to each other, the primitive you want is
+`TkxPeerChat` — and this recipe is the full wiring guide.
+
+<Aside type="note" title="Use TkxChat for LLMs, TkxPeerChat for people">
+  `TkxChat` and `TkxAIChatBubble` model the OpenAI/Anthropic 3-role pattern (user/assistant/system) with string content. If you need named senders, attachments, reactions, or threading — anything that looks like Slack/Discord/Signal — use `TkxPeerChat`.
+</Aside>
+
+## The problem
+
+You're building one of these:
+
+- **Customer support thread** — operator + customer, both with names and
+  avatars, customer can attach a screenshot of the broken page.
+- **In-product team messaging** — teammates chatting inside your app
+  without leaving for Slack.
+- **Patient ↔ clinician messaging** — named identity, file attachments
+  for lab results, audit-grade edit/delete trail.
+- **Real-estate agent ↔ buyer** — photos of the property inline, voice
+  notes about the viewing, threaded replies on specific listings.
+
+What each of these actually needs: **named identity beyond user/assistant**,
+**image / file / video / audio attachments**, **reactions**, **replies**,
+**edit/delete with an "edited" flag**, **delivery states** (sending →
+sent → delivered → read), and a **typing indicator**.
+
+None of which `TkxChat` models. Its role enum is `user | assistant |
+system` — directly from the LLM API. There is no `senderId`, no
+`attachments[]`, no `reactions[]`, no `replyTo`. Trying to retrofit them
+fights the type system. Reach for `TkxPeerChat` instead.
+
+## The recipe
+
+### Minimal — 2-person chat
+
+The smallest useful setup: two senders, a handful of messages, local
+state for the composer. Everything else is built in.
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { TkxPeerChat, type PeerMessage, type PeerSender } from 'tekivex-ui';
+
+const senders: Record<string, PeerSender> = {
+  alice: {
+    id: 'alice',
+    name: 'Alice Chen',
+    role: 'Support',
+    presence: 'online',
+    avatar: 'https://i.pravatar.cc/64?img=47',
+  },
+  bob: {
+    id: 'bob',
+    name: 'Bob Patel',
+    role: 'Customer',
+    presence: 'online',
+  },
+};
+
+const seed: PeerMessage[] = [
+  {
+    id: 'm1',
+    senderId: 'bob',
+    text: "Hi — the export button on the dashboard isn't doing anything.",
+    timestamp: new Date(Date.now() - 1000 * 60 * 12),
+    delivery: 'read',
+  },
+  {
+    id: 'm2',
+    senderId: 'alice',
+    text: "Hey Bob! Can you tell me which browser you're on?",
+    timestamp: new Date(Date.now() - 1000 * 60 * 10),
+    delivery: 'read',
+    reactions: [{ emoji: '👍', by: ['bob'] }],
+  },
+  {
+    id: 'm3',
+    senderId: 'bob',
+    text: 'Chrome 131 on macOS.',
+    timestamp: new Date(Date.now() - 1000 * 60 * 9),
+    delivery: 'read',
+  },
+  {
+    id: 'm4',
+    senderId: 'alice',
+    text: 'Got it — looking now. One sec.',
+    replyTo: 'm1',
+    timestamp: new Date(Date.now() - 1000 * 60 * 8),
+    delivery: 'delivered',
+  },
+];
+
+export function SupportChat() {
+  const [messages, setMessages] = useState<PeerMessage[]>(seed);
+
+  return (
+    <TkxPeerChat
+      senders={senders}
+      messages={messages}
+      currentUserId="alice"
+      height={560}
+      onSend={(text, replyTo) => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: crypto.randomUUID(),
+            senderId: 'alice',
+            text,
+            replyTo,
+            timestamp: new Date(),
+            delivery: 'sending',
+          },
+        ]);
+      }}
+      onReact={(messageId, emoji) => {
+        setMessages((prev) =>
+          prev.map((m) => {
+            if (m.id !== messageId) return m;
+            const existing = m.reactions?.find((r) => r.emoji === emoji);
+            const mine = existing?.by.includes('alice');
+            const reactions = existing
+              ? m.reactions!.map((r) =>
+                  r.emoji === emoji
+                    ? {
+                        ...r,
+                        by: mine
+                          ? r.by.filter((id) => id !== 'alice')
+                          : [...r.by, 'alice'],
+                      }
+                    : r,
+                ).filter((r) => r.by.length > 0)
+              : [...(m.reactions ?? []), { emoji, by: ['alice'] }];
+            return { ...m, reactions };
+          }),
+        );
+      }}
+      onEdit={(id, newText) =>
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === id ? { ...m, text: newText, editedAt: new Date() } : m,
+          ),
+        )
+      }
+      onDelete={(id) =>
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === id ? { ...m, deletedAt: new Date() } : m,
+          ),
+        )
+      }
+    />
+  );
+}
+```
+
+That's a complete working chat. Reactions, reply threading, inline edit,
+soft-delete, and consecutive-sender grouping all work without further
+wiring.
+
+### Full wiring — backend-driven
+
+In production, messages arrive from the network, delivery state flips
+from server ACKs, and the typing channel is a separate broadcast. Here's
+the round-trip with a generic `subscribe()` hook (substitute Pusher,
+Ably, Socket.io, or your own WebSocket).
+
+```tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import {
+  TkxPeerChat,
+  type PeerMessage,
+  type PeerSender,
+} from 'tekivex-ui';
+import { useThreadChannel } from '@/lib/realtime'; // your hook
+
+export function ThreadView({ threadId, me }: { threadId: string; me: string }) {
+  const [messages, setMessages] = useState<PeerMessage[]>([]);
+  const [senders, setSenders] = useState<Record<string, PeerSender>>({});
+  const [typingUserIds, setTypingUserIds] = useState<string[]>([]);
+
+  const ch = useThreadChannel(threadId);
+
+  // ── 1. Inbound messages
+  useEffect(() => {
+    return ch.on('message:new', (m: PeerMessage) =>
+      setMessages((prev) => [...prev, m]),
+    );
+  }, [ch]);
+
+  // ── 2. Delivery ACKs flip message.delivery
+  useEffect(() => {
+    return ch.on(
+      'message:ack',
+      ({ id, state }: { id: string; state: PeerMessage['delivery'] }) =>
+        setMessages((prev) =>
+          prev.map((m) => (m.id === id ? { ...m, delivery: state } : m)),
+        ),
+    );
+  }, [ch]);
+
+  // ── 3. Presence updates flow into senders[].presence
+  useEffect(() => {
+    return ch.on(
+      'presence:update',
+      ({ userId, presence }: { userId: string; presence: PeerSender['presence'] }) =>
+        setSenders((prev) =>
+          prev[userId] ? { ...prev, [userId]: { ...prev[userId], presence } } : prev,
+        ),
+    );
+  }, [ch]);
+
+  // ── 4. Inbound typing events drive the indicator
+  useEffect(() => {
+    return ch.on('typing:update', (ids: string[]) =>
+      setTypingUserIds(ids.filter((id) => id !== me)),
+    );
+  }, [ch, me]);
+
+  return (
+    <TkxPeerChat
+      senders={senders}
+      messages={messages}
+      currentUserId={me}
+      typingUserIds={typingUserIds}
+      onSend={(text, replyTo) => ch.send({ text, replyTo })}
+      onReact={(messageId, emoji) => ch.react({ messageId, emoji })}
+      onEdit={(messageId, newText) => ch.edit({ messageId, newText })}
+      onDelete={(messageId) => ch.softDelete({ messageId })}
+      onAttach={(files) => ch.upload(files)}
+      // ── 5. Outbound typing → broadcast on the channel
+      onTypingStart={() => ch.broadcastTyping(true)}
+      onTypingStop={() => ch.broadcastTyping(false)}
+    />
+  );
+}
+```
+
+That's the full responsibility map. The component owns the UI; your
+channel hook owns transport, persistence, fan-out, and ACK semantics.
+
+### Attachments — image / file / audio / video
+
+`PeerAttachment.kind` is a tagged union: `'image' | 'file' | 'audio' |
+'video'`. Each kind renders differently — images are lazy-loaded with a
+260px max box, audio uses the native `<audio controls>`, video uses
+`<video controls>` with optional `thumbnail` as poster, and `file` shows
+a download chip with MIME + size.
+
+```tsx
+const showcase: PeerMessage[] = [
+  {
+    id: 'a1',
+    senderId: 'alice',
+    text: 'Here is the floorplan photo from the listing.',
+    timestamp: new Date(Date.now() - 1000 * 60 * 30),
+    delivery: 'read',
+    attachments: [
+      {
+        id: 'att-1',
+        kind: 'image',
+        name: 'floorplan.jpg',
+        url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400',
+        mimeType: 'image/jpeg',
+        width: 400,
+        height: 300,
+      },
+    ],
+  },
+  {
+    id: 'a2',
+    senderId: 'bob',
+    text: 'Thanks. Walkthrough I recorded yesterday:',
+    timestamp: new Date(Date.now() - 1000 * 60 * 20),
+    delivery: 'read',
+    attachments: [
+      {
+        id: 'att-2',
+        kind: 'video',
+        name: 'walkthrough.mp4',
+        url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        mimeType: 'video/mp4',
+        duration: 596,
+      },
+    ],
+  },
+  {
+    id: 'a3',
+    senderId: 'alice',
+    text: 'Audio note about parking:',
+    timestamp: new Date(Date.now() - 1000 * 60 * 12),
+    delivery: 'read',
+    attachments: [
+      {
+        id: 'att-3',
+        kind: 'audio',
+        name: 'parking-note.mp3',
+        url: 'https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3',
+        mimeType: 'audio/mpeg',
+        duration: 240,
+      },
+    ],
+  },
+  {
+    id: 'a4',
+    senderId: 'bob',
+    text: 'Signed offer attached:',
+    timestamp: new Date(Date.now() - 1000 * 60 * 4),
+    delivery: 'delivered',
+    attachments: [
+      {
+        id: 'att-4',
+        kind: 'file',
+        name: 'offer-signed.pdf',
+        url: 'https://example.com/offer-signed.pdf',
+        mimeType: 'application/pdf',
+        size: 184_320,
+      },
+    ],
+  },
+];
+```
+
+Drop those into the same `<TkxPeerChat />` setup as the minimal recipe.
+Each attachment renders with the layout for its `kind`.
+
+### Typing indicator wiring
+
+This is the part that's easy to get wrong. The component handles **only**
+the local-user keystroke detection and the remote-user indicator
+rendering. Everything in between is your transport.
+
+```text
+┌──────────────────────┐                              ┌──────────────────────┐
+│  Alice's browser     │                              │  Bob's browser       │
+│  ──────────────────  │                              │  ──────────────────  │
+│  user types "h"      │                              │                      │
+│  TkxPeerChat fires   │                              │                      │
+│    onTypingStart()   │                              │                      │
+│       │              │                              │                      │
+│       ▼              │                              │                      │
+│  ch.broadcastTyping  │ ───── WebSocket ─────────►   │                      │
+│         (true)       │                              │                      │
+│                      │                              │  ch.on('typing')     │
+│                      │                              │    fires             │
+│                      │                              │       │              │
+│                      │                              │       ▼              │
+│                      │                              │  setTypingUserIds    │
+│                      │                              │   (['alice'])        │
+│                      │                              │       │              │
+│                      │                              │       ▼              │
+│                      │                              │  TkxPeerChat shows   │
+│                      │                              │  "Alice is typing…"  │
+│                      │                              │                      │
+│  alice stops for 3s  │                              │                      │
+│  onTypingStop()      │                              │                      │
+│       │              │                              │                      │
+│       ▼              │                              │                      │
+│  ch.broadcastTyping  │ ───── WebSocket ─────────►   │  setTypingUserIds    │
+│         (false)      │                              │   ([])               │
+└──────────────────────┘                              └──────────────────────┘
+```
+
+A few v3.19 implementation details you should know:
+
+- **`onTypingStart` fires on the FIRST keystroke** of a new typing
+  session, not on every keystroke. This avoids fan-out spam on your
+  broadcast channel without you needing to debounce in the consumer.
+- **`onTypingStop` fires after 3 seconds of keyboard idle**, or on
+  composer blur, or on send. The component manages the timer; you just
+  react to the call.
+- **Clearing the composer also triggers `onTypingStop`** immediately —
+  no need to wait for the idle timer.
+- **The indicator string is localized for cardinality**: one typer
+  shows `"Alice is typing"`, two shows `"Alice and Bob are typing"`,
+  three or more shows `"Several people are typing"`.
+- **Unknown sender IDs in `typingUserIds` fall back to `"Unknown"`** —
+  the raw ID never leaks to the UI even if your channel sends a stale
+  user.
+
+### Magic-byte verification on uploads
+
+When the user picks files via the attach button, every file is run
+through `sniffMimeType()` before your `onAttach` handler ever sees it.
+If the file's declared MIME type doesn't match its actual magic bytes
+(e.g. a `.jpg` that's actually a renamed `.exe`), it's excluded from
+the batch and an inline warning shows in the composer naming the
+rejected files. Files that pass the sniff still flow through, so a
+mixed-batch upload isn't a total fail.
+
+This is the same `sniffMimeType` engine that powers `TkxFileUpload`;
+see [Secure file upload](/recipes/secure-file-upload/) for the full
+threat model.
+
+## What's built-in
+
+| Feature | Where |
+|---|---|
+| Image / file / audio / video attachment render | Built-in, 4 layouts |
+| Magic-byte MIME verification on upload | `sniffMimeType` inside `onAttach` handler |
+| Reactions chip + emoji picker | Built-in; pass `emojiPickerOptions` or use default 👍❤️😂🎉😢👀 |
+| One-level reply threading (quoted preview + cancellable composer chip) | Built-in |
+| Inline edit (own messages) | Built-in, replaces bubble with textarea |
+| Soft-delete with "Message deleted" placeholder | Built-in |
+| 5 delivery-state icons on own messages | Built-in, driven by `message.delivery` |
+| Time grouping ("Today" / "Yesterday" / locale date) | Built-in, locale-formatted |
+| 5-minute consecutive-sender grouping | Built-in (toggle with `groupConsecutive`) |
+| Typing indicator render below message list | Built-in (v3.19+) |
+| Reduced-motion fallback for typing dots and scroll | Built-in (respects `prefers-reduced-motion`) |
+| XSS sanitization of all rendered text | Built-in, `sanitizeString` on every text path |
+
+## What's NOT built-in — your job
+
+The component owns the rendering surface. Everything that touches the
+network is yours:
+
+- **Real-time message arrival** — consumer pushes new messages via the
+  `messages` prop. There is no internal subscription.
+- **Delivery-state transitions** — consumer updates `message.delivery`
+  from server ACKs. The component just renders the icon for whatever
+  state it sees.
+- **Presence updates** — consumer updates `senders[].presence` from a
+  presence service. The avatar layer reads it; the component doesn't
+  fetch it.
+- **Typing-indicator broadcast** — consumer reacts to `onTypingStart` /
+  `onTypingStop` and pushes those events to other clients via your
+  channel. The component handles only the local keystroke detection and
+  the remote-user rendering.
+- **Attachment upload progress** — `onAttach` returns a `Promise` but
+  no per-file progress is surfaced. If you need a progress bar per
+  file, surface it in your own UI alongside the chat.
+- **End-to-end encryption** — explicitly out of scope. This is a UI
+  primitive; it doesn't own the transport.
+- **Message search** — separate concern; pair with `TkxInput` + filter
+  logic over the `messages` array.
+- **Threading depth > 1** — only one level of `replyTo` renders. Nested
+  threads would need a real tree view.
+
+## Gotchas
+
+- **Don't put PII in sender names.** The typing indicator string ("Alice
+  Chen is typing…") is announced by screen readers via `aria-live`. Use
+  display names, not legal names with middle initials and DOB suffixes.
+- **`currentUserId` must match a key in `senders`.** Otherwise own-vs-peer
+  alignment breaks (right-aligned bubble vs left-aligned). If a typed
+  sender ID is missing from the map, the component falls back to a
+  `"Unknown"` placeholder rather than crashing — but you'll see the
+  wrong alignment.
+- **Attachments use native `<img>` / `<audio>` / `<video>` tags.** No
+  lightbox, no PWA-style file picker, no scrubber UI beyond the
+  browser's. If you need a richer media viewer, wrap the
+  `TkxPeerChat` in a layout that opens a `TkxModal` when the attachment
+  is clicked, and pre-route clicks through your own handler.
+- **Edit history isn't shipped.** When a message is edited, the
+  `editedAt` flag flips and the visible text is replaced, but the
+  previous text is gone from the UI. If you need an audit trail of
+  edits (HIPAA, SOX, etc.), preserve the prior versions server-side
+  and pair with `audit()` from `tekivex-ui/headless` for a
+  hash-chained log.
+- **The typing indicator's name fallback is intentional.** If a sender
+  ID arrives in `typingUserIds` that isn't in your `senders` map (stale
+  presence, cross-tenant bug, etc.), the indicator renders `"Unknown is
+  typing"`, not the raw ID. This is by design — raw IDs are an
+  implementation detail you don't want leaking to end users.
+
+## Related
+
+- [`TkxChat`](/components/chat/) — the LLM-conversation primitive (NOT
+  for peer chat)
+- `TkxAgentMessage` from `tekivex-ui/agent` — for rendering individual
+  agent turns with tool calls
+- [Secure file upload recipe](/recipes/secure-file-upload/) — the
+  `sniffMimeType` magic-byte engine used by attachments
+- [Live playground demo](/playground/components/message-thread) — the
+  recipe rendered with state you can poke at

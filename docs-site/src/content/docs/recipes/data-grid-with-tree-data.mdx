@@ -1,0 +1,363 @@
+---
+title: DataGrid with hierarchical (tree) rows
+description: Render an org chart, file-system view, or accounts hierarchy as a sortable, editable grid with disclosure carets and indented children. v3.19 — treegrid ARIA built-in.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+You have data that's tree-shaped — a reporting structure, a chart of
+accounts, a folder hierarchy — but you also need columns, sort, filter,
+and cell editing on the same surface. `TkxTreeView` gives you the
+hierarchy but not the columns. `TkxDataGrid` gives you the columns but
+historically not the hierarchy. As of v3.19, the grid does both: pass
+`childRowsKey` and one column with `tree: true`, and the grid does
+depth-first traversal, indent math, disclosure carets, and `treegrid`
+ARIA — without you writing the recursion.
+
+## The problem
+
+Real cases where you want **grid-of-things WITH hierarchy**:
+
+- **HR org chart** — each person also has a salary band, tenure, last
+  1:1 date, and direct-report count. Too columnar for a tree view, too
+  tree-shaped for a flat grid.
+- **File browser** — every node has size, modified date, owner, and
+  permissions; folders contain files.
+- **Chart of accounts** (accounting) — parent account totals must equal
+  the sum of children, and the auditor wants to expand any line.
+- **Project task list** — subtasks live under their parent task,
+  alongside columns for assignee, due date, status, and estimate.
+
+You need: hierarchical disclosure **plus** sortable columns **plus**
+filtering **plus** cell editing **plus** correct `treegrid` ARIA.
+Building that on top of a flat grid means writing your own tree-state,
+indent CSS, depth-first flattening, `aria-level`, `aria-expanded`,
+`aria-setsize`, and `aria-posinset` — and most teams skip the ARIA bits
+because the spec is dense. The library now ships all of it.
+
+## The recipe
+
+### Minimal — one expansion level
+
+```tsx
+import { TkxDataGrid, type DataGridColumn } from 'tekivex-ui';
+
+interface TeamRow {
+  id: string;
+  name: string;
+  role: string;
+  headcount: number;
+  children?: TeamRow[];
+}
+
+const data: TeamRow[] = [
+  {
+    id: 'eng',
+    name: 'Engineering',
+    role: 'Department',
+    headcount: 42,
+    children: [
+      { id: 'eng-platform', name: 'Platform', role: 'Team', headcount: 12 },
+      { id: 'eng-product', name: 'Product Eng', role: 'Team', headcount: 18 },
+      { id: 'eng-infra', name: 'Infra', role: 'Team', headcount: 12 },
+    ],
+  },
+  {
+    id: 'design',
+    name: 'Design',
+    role: 'Department',
+    headcount: 9,
+    children: [
+      { id: 'design-product', name: 'Product Design', role: 'Team', headcount: 5 },
+      { id: 'design-brand', name: 'Brand', role: 'Team', headcount: 4 },
+    ],
+  },
+  {
+    id: 'sales',
+    name: 'Sales',
+    role: 'Department',
+    headcount: 24,
+    children: [
+      { id: 'sales-amer', name: 'AMER', role: 'Region', headcount: 14 },
+      { id: 'sales-emea', name: 'EMEA', role: 'Region', headcount: 10 },
+    ],
+  },
+];
+
+const columns: DataGridColumn<TeamRow>[] = [
+  { key: 'name', header: 'Name', tree: true, sortable: true },
+  { key: 'role', header: 'Kind' },
+  { key: 'headcount', header: 'Headcount', align: 'right', sortable: true },
+];
+
+export function OrgGrid() {
+  return (
+    <TkxDataGrid
+      columns={columns}
+      data={data}
+      rowKey="id"
+      childRowsKey="children"
+      defaultExpandedRows="all"
+      onRowExpand={(id, expanded) =>
+        console.log(`row ${id} → ${expanded ? 'open' : 'closed'}`)
+      }
+      sortable
+      bordered
+    />
+  );
+}
+```
+
+What that gets you: a disclosure caret on the `name` column, indented
+children by depth, sort that keeps children attached to their parent,
+and the full `treegrid` ARIA surface described below.
+
+### Realistic — org chart with deep nesting
+
+```tsx
+import { TkxDataGrid, type DataGridColumn } from 'tekivex-ui';
+
+interface Employee {
+  id: string;
+  name: string;
+  title: string;
+  level: string;        // 'E', 'M3', 'M4', 'D', 'VP', 'C'
+  reports: number;
+  last1on1: string;     // ISO date
+  reportsList?: Employee[];
+}
+
+const org: Employee[] = [
+  {
+    id: 'ceo-1',
+    name: 'Asha Rao',
+    title: 'CEO',
+    level: 'C',
+    reports: 4,
+    last1on1: '2026-05-22',
+    reportsList: [
+      {
+        id: 'vp-eng',
+        name: 'Mateo Silva',
+        title: 'VP Engineering',
+        level: 'VP',
+        reports: 3,
+        last1on1: '2026-05-25',
+        reportsList: [
+          {
+            id: 'dir-platform',
+            name: 'Priya Iyer',
+            title: 'Director, Platform',
+            level: 'D',
+            reports: 2,
+            last1on1: '2026-05-27',
+            reportsList: [
+              {
+                id: 'em-runtime',
+                name: 'Jonas Berg',
+                title: 'EM, Runtime',
+                level: 'M3',
+                reports: 5,
+                last1on1: '2026-05-28',
+                reportsList: [
+                  { id: 'ic-runtime-1', name: 'Leah Park', title: 'Staff Engineer', level: 'E6', reports: 0, last1on1: '2026-05-28' },
+                  { id: 'ic-runtime-2', name: 'Tomás Vega', title: 'Senior Engineer', level: 'E5', reports: 0, last1on1: '2026-05-20' },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'dir-product-eng',
+            name: 'Hiroshi Tanaka',
+            title: 'Director, Product Eng',
+            level: 'D',
+            reports: 1,
+            last1on1: '2026-05-19',
+            reportsList: [
+              { id: 'em-growth', name: 'Maya Klein', title: 'EM, Growth', level: 'M3', reports: 0, last1on1: '2026-05-26' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'vp-design',
+        name: 'Nadia Haddad',
+        title: 'VP Design',
+        level: 'VP',
+        reports: 0,
+        last1on1: '2026-05-21',
+      },
+      {
+        id: 'vp-sales',
+        name: 'Daniel Okafor',
+        title: 'VP Sales',
+        level: 'VP',
+        reports: 0,
+        last1on1: '2026-05-15',
+      },
+    ],
+  },
+];
+
+const columns: DataGridColumn<Employee>[] = [
+  { key: 'name',     header: 'Name',      tree: true, sortable: true, width: 280 },
+  { key: 'title',    header: 'Title',     sortable: true },
+  { key: 'level',    header: 'Level',     align: 'center', width: 90 },
+  { key: 'reports',  header: 'Reports',   align: 'right', sortable: true, width: 100 },
+  { key: 'last1on1', header: 'Last 1:1',  align: 'right', sortable: true, width: 130 },
+];
+
+export function OrgChart() {
+  return (
+    <TkxDataGrid
+      columns={columns}
+      data={org}
+      rowKey="id"
+      childRowsKey="reportsList"
+      defaultExpandedRows={['ceo-1', 'vp-eng']}
+      indentSize={28}
+      sortable
+      showFilters
+      stickyHeader
+      maxHeight={520}
+      bordered
+    />
+  );
+}
+```
+
+`defaultExpandedRows={['ceo-1', 'vp-eng']}` shows the CEO row open with
+the VP Eng branch expanded, and everything else collapsed — the typical
+"first paint" for an org-chart drill-down. `indentSize={28}` widens the
+indent step from the default 24px so deep nesting reads clearly.
+
+### Cell editing on tree rows
+
+Tree mode and cell editing compose without ceremony — mark the column
+`editable: true` and it works at any depth.
+
+```tsx
+const columns: DataGridColumn<Employee>[] = [
+  { key: 'name',  header: 'Name',  tree: true, sortable: true },
+  { key: 'title', header: 'Title', editable: true },
+  {
+    key: 'level',
+    header: 'Level',
+    editable: true,
+    editor: 'select',
+    editorOptions: {
+      options: [
+        { value: 'E5', label: 'E5' },
+        { value: 'E6', label: 'E6' },
+        { value: 'M3', label: 'M3' },
+        { value: 'M4', label: 'M4' },
+        { value: 'D',  label: 'D'  },
+        { value: 'VP', label: 'VP' },
+        { value: 'C',  label: 'C'  },
+      ],
+    },
+  },
+];
+
+<TkxDataGrid
+  columns={columns}
+  data={org}
+  rowKey="id"
+  childRowsKey="reportsList"
+  defaultExpandedRows="all"
+  onCellEdit={async ({ rowId, columnKey, newValue }) => {
+    await api.patchEmployee(rowId, { [columnKey]: newValue });
+  }}
+/>
+```
+
+A leaf at depth 4 is editable the same way a root row is. The grid
+preserves the editing-cell focus across re-renders triggered by your
+async commit.
+
+### Tree-data vs row-grouping — which to use
+
+| You have… | Use |
+|---|---|
+| Each row carries its own children in a known field on the data shape | `childRowsKey` (tree-data) |
+| Rows are flat but you want to bucket by a column value (status, region, category) | `groupBy` (row-grouping) |
+| Both set on the same grid | `groupBy` wins; `childRowsKey` is ignored and a dev warning fires once |
+
+The mental rule: if the hierarchy is **already in your data shape**,
+use tree-data. If you're **deriving** the grouping from a column at
+render time, use `groupBy`.
+
+## ARIA — what the component handles
+
+When `childRowsKey` is set and a column is marked `tree: true`:
+
+- The container `role` switches from `grid` to `treegrid`.
+- Every row gets `aria-level={depth + 1}` (1-based per the WAI-ARIA spec).
+- Parent rows get `aria-expanded={true | false}`.
+- Every row gets `aria-setsize={siblingCount}` and `aria-posinset={index + 1}`.
+- The disclosure caret button gets `aria-label="Expand {row name}"` or
+  `"Collapse {row name}"` derived from the disclosure column's value.
+- Leaf rows render a transparent placeholder the same width as the
+  caret, so columns stay aligned across depths.
+
+<Aside type="caution" title="Honest disclosure">
+Arrow-key roving focus across tree rows (per the full `treegrid`
+keyboard spec — Left collapses, Right expands, Up/Down move between
+visible rows) is **not** implemented in v3.19. The disclosure button
+is keyboard-reachable via Tab and toggles on Enter/Space, and cell
+editing is keyboard-driven, but row-level arrow-key navigation is
+flagged for the v3.20 a11y pass. If you ship a public-facing
+treegrid today and your AT users rely on arrow-key navigation,
+that's the gap to plan around.
+</Aside>
+
+## Gotchas
+
+- **Tree mode requires a stable `rowKey`.** If `getRowId(row)` returns
+  empty/`'undefined'`/`'null'`, that row is skipped and a dev warning
+  fires once per grid. Don't pass `rowKey={(r) => r.name}` on data with
+  duplicate names — use a real identifier.
+- **Recursion is capped at 32 levels.** A guard against circular
+  references in your data (the same employee under two managers, a
+  symlink loop in a file tree). Hit the cap and `console.warn` fires
+  once; rows past 32 deep are dropped from the flatten.
+- **CSV export currently exports root rows only.** The `Export CSV`
+  toolbar walks the top-level data array, not the flattened tree. If
+  you need depth-aware export with an indent column, that's on the
+  v3.20 roadmap; for now, flatten your own data and call the export
+  yourself.
+- **Pagination operates on the flat visible-row list.** If `pageSize=20`
+  and a page boundary falls between a parent at index 19 and its first
+  child at index 20, the parent will end the page with no children
+  showing. Consider a "continued" affordance, or just don't paginate
+  inside a tree-data grid unless your dataset really needs it.
+- **`onRowExpand` fires synchronously — no built-in lazy loading.**
+  There's no `loadChildren?: (row) => Promise<T[]>` prop in v3.19. To
+  stream children on first expand, listen on `onRowExpand`, fetch the
+  children yourself, and push them into the `data` array — React
+  re-renders and the new children appear under the expanded parent.
+  First-class lazy loading is on the v3.20 wishlist.
+- **`childRowsKey` is ignored when `groupBy` is set.** `groupBy` wins
+  and a dev warning is logged once. Pick one mode per grid.
+
+## What you get for free vs hand-rolling
+
+| Concern | Hand-rolled on flat grid | With `childRowsKey` |
+|---|---|---|
+| `treegrid` ARIA (role, level, expanded, setsize, posinset) | Easy to get wrong without spec reading | Built in |
+| Indent math with leaf placeholders so columns align | ~20 LOC of CSS | Built in |
+| Recursive expand state keyed by stable rowId | Custom hook | Built in |
+| Sort that respects per-depth boundaries (children stay attached) | Manual depth-first flatten + sort | Built in |
+| Cycle/depth guard (32-level cap with one-time warn) | Usually skipped, then crashes prod | Built in |
+| Pagination/virtualization on flat visible-row list | Recompute on every toggle | Built in |
+
+If you only need a static tree without sortable columns, filters, or
+cell editing, `TkxTreeView` is the lighter pick. The tipping point is
+"I need columns **and** hierarchy on the same surface" — that's where
+`TkxDataGrid` with `childRowsKey` is the right call.
+
+## Related
+
+- [`TkxDataGrid` reference](/components/data-grid/) — full prop surface
+- [`TkxTreeView`](/components/tree-view/) — when you don't need columns
+- [Quick reference](/quick-reference/) — use-case index across all 116 components
