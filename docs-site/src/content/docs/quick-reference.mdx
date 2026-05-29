@@ -1,0 +1,238 @@
+---
+title: Quick reference — when to reach for which component
+description: Use-case indexed catalog. If you're about to hand-roll a div for an alert, banner, or form, check here first.
+---
+
+You already adopted some of the library. The risk is reaching for raw HTML
+the next time a need comes up that another `Tkx*` component already covers.
+
+This page is the **use-case index**: skim by what you're trying to build,
+not by component name. Each row is **one line, one trigger phrase, one
+component** — designed to be readable in under 60 seconds.
+
+If you find yourself hand-rolling something that's not here, that's a real
+signal — open an issue at
+[github.com/007krcs/tekivex-ui/issues](https://github.com/007krcs/tekivex-ui/issues)
+and we'll add a row (or a component).
+
+---
+
+## Alerts, banners, callouts
+
+| You want to show… | Use | Notes |
+|---|---|---|
+| Inline success/error/warning/info banner with icon + dismiss | [`TkxAlert`](/components/alert/) | 4 variants. Has `title` + `children` slots. Built-in icons. `aria-live="polite"`. |
+| Transient feedback after an action ("Saved", "Copied") | [`TkxSnackbar`](/components/snackbar/) | Auto-dismiss timer, slide-in animation, anchor positioning. |
+| Toast-style stacked notifications | [`TkxToastProvider`](/components/toast-provider/) + `useToast()` | Imperative API. Queues, dedupes, respects reduced motion. |
+| Empty-state placeholder ("No results", "Nothing here yet") | [`TkxEmpty`](/components/empty/) | Icon + heading + description + optional CTA slot. |
+| Full-page result screen (success / error / 404 / 403 / 500) | [`TkxResult`](/components/result/) | For routing-level outcomes. Wraps content with a centered icon + heading. |
+
+**Most common miss:** writing a hand-rolled emerald `<div>` for a success
+banner instead of `<TkxAlert variant="success">`. That's losing the
+sanitized title, the aria-live announce, and the dismiss button for zero
+gain.
+
+---
+
+## Forms & inputs
+
+| You want to capture… | Use |
+|---|---|
+| Text, with label + error + hint | [`TkxInput`](/components/input/) |
+| Numbers (currency, percent, integer, ranges) | [`TkxNumberInput`](/components/number-input/) |
+| Single choice from a small list | [`TkxRadio`](/components/radio/) |
+| Single choice from a long list | [`TkxSelect`](/components/select/) |
+| Multiple choices | [`TkxCheckbox`](/components/checkbox/) |
+| Toggle on/off | [`TkxToggle`](/components/toggle/) |
+| Slider / range | [`TkxSlider`](/components/slider/) |
+| Date | [`TkxDatePicker`](/components/date-picker/) |
+| Time | (use TkxDatePicker with `showTime`) |
+| Color | [`TkxColorPicker`](/components/color-picker/) |
+| File (single or multi) | [`TkxFileUpload`](/components/file-upload/) — magic-byte verified |
+| OTP / verification code | [`TkxOTP`](/components/otp/) |
+| Phone number with country picker | [`TkxPhoneInput`](/components/phone-input/) |
+| Search with suggestions | [`TkxAutocomplete`](/components/autocomplete/) |
+| Hierarchical select (region → country → state) | [`TkxCascader`](/components/cascader/) |
+| @mention / # tag in textarea | [`TkxMentions`](/components/mentions/) |
+| Submit button with loading + disabled states | [`TkxButton`](/components/button/) |
+| 2 / 3 / N option segmented control | [`TkxSegmented`](/components/segmented/) |
+| Move items between two lists | [`TkxTransferList`](/components/transfer-list/) |
+| Multi-step wizard | [`TkxStepper`](/components/stepper/) |
+| Build the whole form declaratively | [`TkxFormBuilder`](/components/form-builder/) |
+
+For the validation layer (Zod / Valibot / React Hook Form), see
+[`tekivex-ui/headless`](/getting-started/#headless) — `useFormWithZod`,
+`useFormWithValibot`, and `createRHFBindings`.
+
+---
+
+## Data display
+
+| You want to render… | Use |
+|---|---|
+| Simple table with sort/filter/paginate | [`TkxDataGrid`](/components/data-grid/) — also: column pinning, row grouping, cell editing, tree data |
+| Pivot / cross-tab | [`TkxPivotTable`](/components/pivot-table/) |
+| Spreadsheet-style editing | [`TkxSpreadsheet`](/components/spreadsheet/) |
+| Hierarchical tree of nodes | [`TkxTreeView`](/components/tree-view/) — or `TkxDataGrid` with `childRowsKey` |
+| Org chart | [`TkxOrgChart`](/components/org-chart/) |
+| Mind map | [`TkxMindMap`](/components/mind-map/) |
+| Gantt chart | [`TkxGantt`](/components/gantt/) |
+| Kanban board | [`TkxKanban`](/components/kanban/) |
+| Flowchart / node graph | [`TkxFlowChart`](/components/flow-chart/) |
+| KPI tile | [`TkxStatistic`](/components/statistic/) |
+| Card grid for list items | [`TkxCard`](/components/card/) |
+| Avatar (image + initials fallback + presence dot) | [`TkxAvatar`](/components/avatar/) |
+| Status / category pill | [`TkxBadge`](/components/badge/) or [`TkxTag`](/components/tag/) |
+| Timeline of events | [`TkxTimeline`](/components/timeline/) |
+| Lazy image with skeleton + lightbox | [`TkxImage`](/components/image/) |
+
+---
+
+## Charts
+
+```ts
+import { ... } from 'tekivex-ui/charts';
+```
+
+| You want to show… | Use |
+|---|---|
+| Line / area / bar / pie / donut / scatter / radar | The full Recharts-backed set |
+| Inline trend strip (no axes) | `TkxSparkline` — own-SVG, zero deps |
+| Speedometer / arc gauge | `TkxGauge` — own-SVG |
+| Matrix / cohort / correlation heatmap | `TkxHeatmap` — own-SVG |
+| Conversion funnel with drop-off % | `TkxFunnelChart` — own-SVG |
+| Treemap | `TkxTreemap` — squarified, own-SVG |
+
+The 5 own-SVG primitives (Sparkline, Gauge, Heatmap, Funnel, Treemap) don't
+need Recharts at all. They're under 1 kB each gzip.
+
+---
+
+## Communication & chat
+
+| You want… | Use |
+|---|---|
+| LLM conversation surface (user / assistant / system, string content) | [`TkxChat`](/components/chat/) |
+| Peer-to-peer chat with media, reactions, threading, edit/delete, delivery states, typing indicator | `TkxPeerChat` ([demo](/playground/components/message-thread)) — **new in v3.19** |
+| One AI chat bubble in a custom layout | `TkxAIChatBubble` (experimental subpath) |
+| Render a single agent turn (text + tool_use + tool_result) | `TkxAgentMessage` from `tekivex-ui/agent` |
+
+**Most common mistake:** using `TkxChat` for peer-to-peer messaging. The
+3-role enum (`user | assistant | system`) is from OpenAI's Chat
+Completions API — it doesn't model real people. Use `TkxPeerChat` for that.
+
+---
+
+## Layout & navigation
+
+| You want… | Use |
+|---|---|
+| Full app shell (header + sidebar + content + footer) | [`TkxLayout`](/components/layout/) |
+| Sticky top nav | [`TkxAppBar`](/components/app-bar/) |
+| Mobile bottom tab bar | [`TkxBottomNav`](/components/bottom-nav/) |
+| Tabs | [`TkxTabs`](/components/tabs/) |
+| Breadcrumbs | [`TkxBreadcrumb`](/components/breadcrumb/) |
+| Dropdown menu (with submenus, separators, checks) | [`TkxMenu`](/components/menu/) |
+| Single dropdown button | [`TkxDropdown`](/components/dropdown/) |
+| Command palette (⌘K) | [`TkxCommand`](/components/command/) or [`TkxCommandPalette`](/components/command-palette/) |
+| Scroll-spy anchor list | [`TkxAnchor`](/components/anchor/) |
+| Sticky element on scroll | [`TkxAffix`](/components/affix/) |
+| Pagination controls | [`TkxPagination`](/components/pagination/) |
+| Action toolbar | [`TkxToolbar`](/components/toolbar/) |
+| Floating action button with quick actions | [`TkxSpeedDial`](/components/speed-dial/) |
+
+---
+
+## Overlays & feedback
+
+| You want… | Use |
+|---|---|
+| Modal dialog | [`TkxModal`](/components/modal/) — focus trap, scroll lock, 4 sizes |
+| Side sheet | [`TkxDrawer`](/components/drawer/) — top/right/bottom/left |
+| Hover tooltip | [`TkxTooltip`](/components/tooltip/) |
+| Click popover | [`TkxPopover`](/components/popover/) |
+| Loading spinner | [`TkxSpin`](/components/spin/) |
+| Progress bar (linear or circular) | [`TkxProgress`](/components/progress/) |
+| Loading skeleton placeholder | [`TkxSkeleton`](/components/skeleton/) |
+| Guided product tour | [`TkxTour`](/components/tour/) |
+
+---
+
+## Security primitives
+
+`import { ... } from 'tekivex-ui/headless'` — zero UI, just the engines:
+
+| You want to… | Use |
+|---|---|
+| Strip XSS from a user-supplied string | `sanitizeString(input)` |
+| Strip bidi/zero-width Trojan-Source chars from text input | `sanitizeUnicode(input)` |
+| Safely parse JSON without prototype pollution | `sanitizeJSON(input)` |
+| Verify a file's real type by reading magic bytes (not Content-Type) | `sniffMimeType(arrayBuffer)` |
+| Redact PII before sending text to an LLM or logs | `scrubPII(text)` — regex + Luhn-validated CC |
+| Build a strict CSP policy in one line | `buildTkxCSP({...})` |
+| Install a Trusted Types policy | `installTrustedTypes()` |
+| Append-only SHA-256 hash-chained audit log | `audit()` / `verifyAuditIntegrity()` / `getAuditLog()` |
+| Detect iframe embedding | `isFramed()` |
+| Per-token-bucket client-side rate limit | `createRateLimiter(n, intervalMs)` |
+| Check WCAG contrast | `contrastRatio(fg, bg)`, `meetsAA(fg, bg)`, `meetsAAA(fg, bg)` |
+
+These are the things that make consumer reviews say "wait, this just
+ships?". They do.
+
+---
+
+## Indian KYC pack
+
+```ts
+import { TkxAadhaarInput, TkxKycInputs, ... } from 'tekivex-ui';
+```
+
+Aadhaar (with Verhoeff checksum), PAN, Voter ID, Driving License, INR
+currency formatting (lakh / crore), India Post PIN lookup, Tithi /
+Nakshatra / Hijri / Hebrew / Buddhist lunar calendars. Used by any product
+selling into India that doesn't want to roll its own validators.
+
+---
+
+## i18n
+
+```ts
+import { I18nProvider, useLocale } from 'tekivex-ui/i18n';
+```
+
+44 locales including RTL (`ar-SA`, `he-IL`, `fa-IR`). Tree-shakeable
+per-locale.
+
+Also at `tekivex-ui/i18n`: `getPluralCategory(locale, n)` and
+`pluralize(locale, n, forms)` for CLDR plural rules.
+
+---
+
+## Companion packages (not in `tekivex-ui`)
+
+| You want… | Install |
+|---|---|
+| Real WebGL 3D / 360° / WebXR / holographic | `npm install tekivex-3d three` |
+| Browser-only PDF rendering (no Puppeteer) | `npm install tekivex-pdf` |
+| PDF templates (invoice, certificate, resume, etc.) | `npm install tekivex-templates` |
+| Standalone security kernel (framework-agnostic) | `npm install tekivex-security-core` |
+| Tokens for Figma | `npm install tekivex-figma-kit` |
+
+---
+
+## If something's missing from this page
+
+Three possibilities:
+
+1. **The use case is real but no component exists yet.** Open an issue.
+   Your specific case might be on the roadmap, or it might be a real gap.
+2. **The component exists but isn't on this page.** Open an issue, we'll
+   add the row. (See `scripts/generate-component-mdx.mjs` — keeping this
+   page in sync is a known follow-up.)
+3. **You can't tell which of two components to use.** Open an issue with
+   the trade-off you're weighing. The decision criteria belong on this
+   page if they aren't already.
+
+The library has 116 production components and most consumers use 15-25 of
+them. The discoverability gap is real. This page is the first attempt to
+close it — feedback welcome.

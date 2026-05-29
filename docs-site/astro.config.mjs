@@ -69,6 +69,7 @@ export default defineConfig({
             { label: 'Bundlers — Vite, Webpack, Next.js', link: '/bundlers/' },
             { label: 'Theme & dark mode', link: '/themes/' },
             { label: 'RSC compatibility', link: '/rsc/' },
+            { label: 'Quick reference — by use case', link: '/quick-reference/' },
           ],
         },
         {

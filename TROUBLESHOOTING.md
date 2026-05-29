@@ -20,6 +20,7 @@ Last updated: 2026-05-28 (v3.17.x).
 | `Updating a style property during rerender (background)` | Internal animation conflict, pre-v3.18 | Upgrade to v3.18+ |
 | `Module not found: 'three'` | Optional peer not installed | `npm install three` only if you use `tekivex-3d` or `TkxHolographic*` |
 | Stale chunks in Next.js dev | `.next/` cache + service worker | Clear `.next/`, unregister service workers in DevTools → Application |
+| About to hand-roll a div for a banner / form / placeholder | Discoverability gap — the library probably already covers it | Skim [`/quick-reference/`](https://ui.tekivex.com/quick-reference/) first |
 
 ---
 
@@ -236,6 +237,41 @@ unpredictable.
 
 Upgrade to v3.18+. The offending utility now uses only longhand
 properties (`backgroundColor` + `backgroundImage` + `backgroundPosition`).
+
+---
+
+## 4½. "I hand-rolled a div for something the library probably ships"
+
+### Symptom
+
+You're already using 15-25 `Tkx*` components from the library, but you
+reach for raw `<div>` / `<input>` / `<button>` HTML for a "small one-off"
+that the library actually covers. Common cases reported by consumers:
+
+- Hand-rolled emerald banner for a success notification → `TkxAlert variant="success"` with `title` + `children` slots
+- Raw `<input>` + `<button>` on auth pages → `TkxInput` + `TkxButton`
+- Custom error-state card → `TkxCard variant="elevated"` wrapping `TkxAlert variant="danger"`
+- "No results yet" placeholder → `TkxEmpty`
+- Recharts directly → `tekivex-ui/charts` subpath (built-in + 5 own-SVG primitives)
+
+### Root cause
+
+Discoverability gap. With 116 production components, even teams who've
+adopted 20+ of them can't always remember what else is shipping. The
+component-index pages are alphabetical, not use-case-indexed, so "I need
+a success banner" doesn't map to "look under A for Alert."
+
+### Fix
+
+Skim **[`/quick-reference/`](https://ui.tekivex.com/quick-reference/)**
+before hand-rolling. It's a 60-second use-case index — "you want to show
+a success/error banner → TkxAlert" — grouped by what you're trying to
+build, not by component name. Most consumers find 3-5 components they
+should have been using when they read it.
+
+If something's missing from the quick reference, open an issue. The fact
+that a real use case sits between "I hand-rolled this" and "the right
+component" is exactly the signal we want.
 
 ---
 
