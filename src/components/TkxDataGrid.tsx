@@ -83,6 +83,13 @@ export interface DataGridColumn<T = any> {
    * a small inline message and `aria-describedby` on the editor.
    */
   validateCell?: (value: any, row: T) => string | null;
+  /**
+   * When `childRowsKey` is set on the grid, mark exactly one column with
+   * `tree: true`. That column renders the disclosure caret (▶ / ▼) and
+   * indents content by depth. If multiple columns set `tree: true`, the
+   * FIRST one in column order wins.
+   */
+  tree?: boolean;
 }
 
 export interface TkxDataGridProps<T = any> {
@@ -165,6 +172,27 @@ export interface TkxDataGridProps<T = any> {
     columnKey: string;
     row: T;
   }) => void;
+  /**
+   * Enable tree-data / hierarchical rows. Pass the name of the field on
+   * each row that holds its child rows (e.g. `'children'`). The grid then
+   * does a depth-first traversal honouring per-row expansion state, marks
+   * exactly one column with `tree: true` as the disclosure column, and
+   * switches the table role to `treegrid`.
+   *
+   * Tree-data is IGNORED when `groupBy` is set (groupBy wins; a dev
+   * warning is logged once).
+   */
+  childRowsKey?: string;
+  /**
+   * Which rows start expanded. `'all'` recursively expands every parent,
+   * `'none'` collapses everything (default), or pass an explicit array of
+   * row IDs to expand.
+   */
+  defaultExpandedRows?: 'all' | 'none' | (string | number)[];
+  /** Fired when a tree-data row is toggled. */
+  onRowExpand?: (rowId: string | number, expanded: boolean) => void;
+  /** Pixels of indent per depth level for tree-data rows. Default: 24 */
+  indentSize?: number;
 }
 
 // ── Sort icon ─────────────────────────────────────────────────────────────────
@@ -202,6 +230,28 @@ function GroupCaret({ expanded }: { expanded: boolean }) {
       style={{
         display: 'inline-block',
         marginRight: 6,
+        transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+        transition: 'transform 120ms ease',
+      }}
+    >
+      <path d="M2 1l6 4-6 4z" fill="currentColor" />
+    </svg>
+  );
+}
+
+// ── Tree caret ────────────────────────────────────────────────────────────────
+
+const TREE_CARET_BOX = 16; // px — matches caret + spacing so leaf placeholders align
+
+function TreeCaret({ expanded }: { expanded: boolean }) {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      aria-hidden="true"
+      style={{
+        display: 'inline-block',
         transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
         transition: 'transform 120ms ease',
       }}
@@ -719,6 +769,10 @@ export function TkxDataGrid<T = any>({
   onCellEdit,
   onCellEditStart,
   onCellEditCancel,
+  childRowsKey,
+  defaultExpandedRows = 'none',
+  onRowExpand,
+  indentSize = 24,
 }: TkxDataGridProps<T>) {
   const theme = useTheme();
   const t = useLocale();
@@ -874,12 +928,187 @@ export function TkxDataGrid<T = any>({
     return items;
   }, [validGroupBy, filteredData, groups, expanded]);
 
+  // ── Tree data ───────────────────────────────────────────────────────────
+  // Tree-data is mutually exclusive with groupBy. groupBy WINS (logged once).
+  const treeGroupConflictWarnedRef = useRef(false);
+  const treeMissingKeyWarnedRef = useRef(false);
+  const treeCycleWarnedRef = useRef(false);
+
+  const isTreeMode = useMemo(() => {
+    if (!childRowsKey) return false;
+    if (validGroupBy) {
+      if (!treeGroupConflictWarnedRef.current) {
+        treeGroupConflictWarnedRef.current = true;
+        // eslint-disable-next-line no-console
+        console.warn(
+          '[TkxDataGrid] childRowsKey is ignored when groupBy is set — groupBy wins.',
+        );
+      }
+      return false;
+    }
+    return true;
+  }, [childRowsKey, validGroupBy]);
+
+  // First column with `tree: true` is the disclosure column.
+  const treeColumnKey = useMemo<string | undefined>(() => {
+    if (!isTreeMode) return undefined;
+    const col = columns.find(c => c.tree);
+    return col?.key;
+  }, [columns, isTreeMode]);
+
+  // Recursively collect all parent IDs (used for defaultExpandedRows: 'all').
+  const collectAllParentIds = useCallback(
+    (rows: T[], depth: number, out: Set<string>) => {
+      if (depth > 32) return; // cycle guard
+      for (const row of rows) {
+        const kids = (row as Record<string, unknown>)[childRowsKey ?? ''];
+        if (Array.isArray(kids) && kids.length > 0) {
+          const id = getRowId(row, rowKey);
+          if (id && id !== 'undefined' && id !== 'null') out.add(id);
+          collectAllParentIds(kids as T[], depth + 1, out);
+        }
+      }
+    },
+    [childRowsKey, rowKey],
+  );
+
+  const initialExpandedRows = useMemo<Set<string>>(() => {
+    if (!isTreeMode) return new Set();
+    if (defaultExpandedRows === 'none') return new Set();
+    if (defaultExpandedRows === 'all') {
+      const s = new Set<string>();
+      collectAllParentIds(data, 0, s);
+      return s;
+    }
+    return new Set(defaultExpandedRows.map(String));
+  }, [isTreeMode, defaultExpandedRows, data, collectAllParentIds]);
+
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(initialExpandedRows);
+
+  // Re-seed expansion when switching between tree/non-tree modes, or when
+  // data identity changes under 'all' mode (new parents appear). User
+  // toggles are otherwise preserved.
+  const seenTreeDataRef = useRef<T[] | null>(null);
+  useEffect(() => {
+    if (!isTreeMode) return;
+    if (defaultExpandedRows !== 'all') return;
+    if (seenTreeDataRef.current === data) return;
+    seenTreeDataRef.current = data;
+    const next = new Set<string>();
+    collectAllParentIds(data, 0, next);
+    setExpandedRows(prev => {
+      // Union: keep existing user-toggled state, add any new parents.
+      const merged = new Set(prev);
+      for (const id of next) merged.add(id);
+      return merged;
+    });
+  }, [isTreeMode, defaultExpandedRows, data, collectAllParentIds]);
+
+  const toggleRowExpand = useCallback(
+    (id: string) => {
+      setExpandedRows(prev => {
+        const next = new Set(prev);
+        const willExpand = !next.has(id);
+        if (willExpand) next.add(id);
+        else next.delete(id);
+        onRowExpand?.(id, willExpand);
+        return next;
+      });
+    },
+    [onRowExpand],
+  );
+
+  // Flatten tree → linear list of { row, depth, hasChildren, isExpanded,
+  // siblingCount, siblingIndex }. Respects collapsed state recursively.
+  // Sorts within each depth level: top-level rows are already sorted via
+  // `filteredData`; child rows are sorted in-place per parent.
+  interface TreeRowEntry {
+    row: T;
+    depth: number;
+    hasChildren: boolean;
+    isExpanded: boolean;
+    siblingCount: number;
+    siblingIndex: number;
+    id: string;
+  }
+
+  const visibleTreeRows = useMemo<TreeRowEntry[]>(() => {
+    if (!isTreeMode || !childRowsKey) return [];
+    const out: TreeRowEntry[] = [];
+    let cycle = false;
+
+    // Resolve any rowId issue once per render. If rowKey is missing or
+    // produces unstable IDs, disable tree mode (return []).
+    let anyMissingId = false;
+
+    const sortChildren = (rows: T[]): T[] => {
+      // Only re-sort if user has an active sort key. Children stay
+      // attached to their parent regardless.
+      if (onSort || !sortKey) return rows;
+      return [...rows].sort((a, b) => {
+        const aVal = getCellValue(a, sortKey);
+        const bVal = getCellValue(b, sortKey);
+        const cmp = compareValues(aVal, bVal);
+        return sortDir === 'asc' ? cmp : -cmp;
+      });
+    };
+
+    const walk = (rows: T[], depth: number) => {
+      if (depth > 32) {
+        cycle = true;
+        return;
+      }
+      const ordered = depth === 0 ? rows : sortChildren(rows);
+      for (let i = 0; i < ordered.length; i++) {
+        const row = ordered[i];
+        const id = getRowId(row, rowKey);
+        if (!id || id === 'undefined' || id === 'null') {
+          anyMissingId = true;
+          continue;
+        }
+        const kidsRaw = (row as Record<string, unknown>)[childRowsKey];
+        const kids = Array.isArray(kidsRaw) ? (kidsRaw as T[]) : [];
+        const hasChildren = kids.length > 0;
+        const isExpanded = hasChildren && expandedRows.has(id);
+        out.push({
+          row,
+          depth,
+          hasChildren,
+          isExpanded,
+          siblingCount: ordered.length,
+          siblingIndex: i,
+          id,
+        });
+        if (isExpanded) walk(kids, depth + 1);
+      }
+    };
+
+    walk(filteredData, 0);
+
+    if (anyMissingId && !treeMissingKeyWarnedRef.current) {
+      treeMissingKeyWarnedRef.current = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[TkxDataGrid] Tree mode requires a stable rowKey for every row. Rows without one are skipped.',
+      );
+    }
+    if (cycle && !treeCycleWarnedRef.current) {
+      treeCycleWarnedRef.current = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[TkxDataGrid] Tree depth exceeded 32 — possible circular reference. Truncated.',
+      );
+    }
+    return out;
+  }, [isTreeMode, childRowsKey, filteredData, expandedRows, rowKey, sortKey, sortDir, onSort]);
+
   // ── Pagination ──────────────────────────────────────────────────────────
   const [page, setPage] = useState(1);
   const isPaginated = pageSize > 0;
   // Pagination is applied to the FLAT post-grouping row list so a single
-  // group can span multiple pages.
-  const totalRows = rowItems.length;
+  // group can span multiple pages. In tree mode, pagination applies to
+  // the flat visible-row list (collapsed children do NOT count).
+  const totalRows = isTreeMode ? visibleTreeRows.length : rowItems.length;
   const totalPages = isPaginated ? Math.max(1, Math.ceil(totalRows / pageSize)) : 1;
 
   // Reset to page 1 when filters/sort change
@@ -894,13 +1123,20 @@ export function TkxDataGrid<T = any>({
     return rowItems.slice((page - 1) * pageSize, page * pageSize);
   }, [rowItems, isPaginated, page, pageSize]);
 
+  const pagedTreeRows = useMemo<TreeRowEntry[]>(() => {
+    if (!isTreeMode) return [];
+    if (!isPaginated) return visibleTreeRows;
+    return visibleTreeRows.slice((page - 1) * pageSize, page * pageSize);
+  }, [isTreeMode, visibleTreeRows, isPaginated, page, pageSize]);
+
   const pagedData = useMemo<T[]>(() => {
-    // Used by the virtual-scroll branch (which only fires when grouping is
-    // off — see render path) so it stays the flat T[] it always was.
-    if (validGroupBy) return [];
+    // Used by the virtual-scroll branch (which only fires when grouping
+    // and tree-mode are off — see render path) so it stays the flat T[]
+    // it always was.
+    if (validGroupBy || isTreeMode) return [];
     if (!isPaginated) return filteredData;
     return filteredData.slice((page - 1) * pageSize, page * pageSize);
-  }, [filteredData, isPaginated, page, pageSize, validGroupBy]);
+  }, [filteredData, isPaginated, page, pageSize, validGroupBy, isTreeMode]);
 
   // ── Virtual scroll ─────────────────────────────────────────────────────
   const OVERSCAN = 10;
@@ -926,14 +1162,18 @@ export function TkxDataGrid<T = any>({
     return () => ro.disconnect();
   }, [isVirtual]);
 
-  const totalHeight = pagedData.length * rowHeight;
+  const virtualSource = isTreeMode ? pagedTreeRows : pagedData;
+  const totalHeight = virtualSource.length * rowHeight;
   const startIndex = isVirtual
     ? Math.max(0, Math.floor(scrollTop / rowHeight) - OVERSCAN)
     : 0;
   const endIndex = isVirtual
-    ? Math.min(pagedData.length, Math.ceil((scrollTop + containerHeight) / rowHeight) + OVERSCAN)
-    : pagedData.length;
+    ? Math.min(virtualSource.length, Math.ceil((scrollTop + containerHeight) / rowHeight) + OVERSCAN)
+    : virtualSource.length;
   const visibleData = isVirtual ? pagedData.slice(startIndex, endIndex) : pagedData;
+  const visibleTreeSlice = isTreeMode
+    ? (isVirtual ? pagedTreeRows.slice(startIndex, endIndex) : pagedTreeRows)
+    : [];
   const offsetY = startIndex * rowHeight;
 
   // ── Infinite scroll ─────────────────────────────────────────────────────
@@ -1281,7 +1521,7 @@ export function TkxDataGrid<T = any>({
 
   return (
     <div
-      role="grid"
+      role={isTreeMode ? 'treegrid' : 'grid'}
       aria-label="Data grid" /* a11y label not yet localised — pending broader sweep */
       aria-rowcount={totalRows}
       id={gridId}
@@ -1489,13 +1729,214 @@ export function TkxDataGrid<T = any>({
           {/* ── Body ──────────────────────────────────────────────── */}
           {!loading && (
             <tbody>
-              {pagedItems.length === 0 ? (
+              {(isTreeMode ? visibleTreeRows.length === 0 : pagedItems.length === 0) ? (
                 <tr>
                   <td colSpan={totalCols} className={tkx('text-center py-10')}
                     style={{ color: theme.textMuted }}>
                     {safeEmpty}
                   </td>
                 </tr>
+              ) : isTreeMode ? (
+                <>
+                  {visibleTreeSlice.map((entry) => {
+                    const { row, depth, hasChildren, isExpanded, siblingCount, siblingIndex, id } = entry;
+                    const isSelected = selectedSet.has(id);
+                    const isStriped = striped && siblingIndex % 2 === 1;
+                    let rowBg = 'transparent';
+                    if (isSelected) rowBg = `${theme.primary}22`;
+                    else if (isStriped) rowBg = theme.surfaceAlt;
+                    return (
+                      <tr
+                        key={id}
+                        role="row"
+                        data-tree-row=""
+                        data-tree-depth={depth}
+                        aria-level={depth + 1}
+                        aria-setsize={siblingCount}
+                        aria-posinset={siblingIndex + 1}
+                        aria-expanded={hasChildren ? isExpanded : undefined}
+                        aria-selected={selectable ? isSelected : undefined}
+                        onClick={onRowClick ? () => onRowClick(row) : undefined}
+                        onKeyDown={onRowClick ? e => {
+                          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRowClick(row); }
+                        } : undefined}
+                        tabIndex={onRowClick ? 0 : undefined}
+                        className={tkx(onRowClick ? 'cursor-pointer' : '')}
+                        style={{
+                          backgroundColor: rowBg,
+                          transition: reduced ? 'none' : 'background-color 120ms ease',
+                        }}
+                      >
+                        {selectable && (
+                          <td
+                            role="gridcell"
+                            style={{
+                              borderBottom: `1px solid ${theme.border}`,
+                              borderRight,
+                              padding: `${py} ${px}`,
+                              textAlign: 'center',
+                              width: 40,
+                              ...(hasPinned
+                                ? { position: 'sticky', left: 0, zIndex: 2, backgroundColor: theme.surface }
+                                : {}),
+                            }}
+                          >
+                            <label
+                              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', margin: '0 auto', width: 16 }}
+                              onClick={e => e.stopPropagation()}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggleRow(id)}
+                                aria-label={isSelected ? `Deselect row ${id}` : `Select row ${id}`}
+                                style={{ position: 'absolute', opacity: 0, width: 16, height: 16, cursor: 'pointer', margin: 0 }}
+                              />
+                              <CheckboxIcon checked={isSelected} />
+                            </label>
+                          </td>
+                        )}
+                        {columns.map(col => {
+                          const value = getCellValue(row, col.key);
+                          const cellContent = col.renderCell
+                            ? col.renderCell(value, row)
+                            : typeof value === 'string'
+                              ? sanitizeString(value)
+                              : String(value ?? '');
+                          const pinnedCellStyle = getPinnedStyle(col, false);
+                          const editableHere = isColumnEditable(col, row);
+                          const isEditing =
+                            editing?.rowId === id && editing.columnKey === col.key;
+                          const isSaving =
+                            savingCell?.rowId === id &&
+                            savingCell.columnKey === col.key;
+                          const cellKey = `${id}::${col.key}`;
+                          const isTreeCol = col.key === treeColumnKey;
+                          const caretLabelBase =
+                            typeof value === 'string' && value
+                              ? value
+                              : String(id);
+                          return (
+                            <td
+                              key={col.key}
+                              role="gridcell"
+                              data-pinned={pinnedOffsets[col.key]?.side}
+                              data-tree-cell={isTreeCol ? '' : undefined}
+                              data-editing={isEditing ? '' : undefined}
+                              data-saving={isSaving ? '' : undefined}
+                              aria-readonly={editableHere ? 'false' : undefined}
+                              tabIndex={editableHere ? 0 : undefined}
+                              ref={el => {
+                                if (el) cellRefs.current.set(cellKey, el);
+                                else cellRefs.current.delete(cellKey);
+                              }}
+                              onDoubleClick={
+                                editableHere && !isEditing
+                                  ? e => {
+                                      e.stopPropagation();
+                                      enterEdit(id, col, row);
+                                    }
+                                  : undefined
+                              }
+                              onKeyDown={
+                                editableHere && !isEditing
+                                  ? e => {
+                                      if (e.key === 'Enter' || e.key === 'F2') {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        enterEdit(id, col, row);
+                                      }
+                                    }
+                                  : undefined
+                              }
+                              className={tkx('text-sm')}
+                              style={{
+                                ...getColStyle(col),
+                                borderBottom: `1px solid ${theme.border}`,
+                                borderRight,
+                                color: theme.text,
+                                overflow: isEditing ? 'visible' : 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: isEditing ? 'normal' : 'nowrap',
+                                opacity: isSaving ? 0.6 : 1,
+                                cursor: editableHere && !isEditing ? 'text' : undefined,
+                                ...pinnedCellStyle,
+                              }}
+                            >
+                              {isEditing ? (
+                                <CellEditor
+                                  col={col}
+                                  row={row}
+                                  initialValue={value}
+                                  onCommit={v => handleCellCommit(row, col, v)}
+                                  onCancel={() => handleCellCancel(row, col)}
+                                />
+                              ) : isTreeCol ? (
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 0 }}>
+                                  <span
+                                    aria-hidden="true"
+                                    style={{ display: 'inline-block', width: depth * indentSize, flexShrink: 0 }}
+                                  />
+                                  {hasChildren ? (
+                                    <button
+                                      type="button"
+                                      data-tree-caret=""
+                                      aria-label={isExpanded
+                                        ? `Collapse ${caretLabelBase}`
+                                        : `Expand ${caretLabelBase}`}
+                                      onClick={e => {
+                                        e.stopPropagation();
+                                        toggleRowExpand(id);
+                                      }}
+                                      onKeyDown={e => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          toggleRowExpand(id);
+                                        }
+                                      }}
+                                      style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: TREE_CARET_BOX,
+                                        height: TREE_CARET_BOX,
+                                        marginRight: 6,
+                                        padding: 0,
+                                        border: 'none',
+                                        background: 'transparent',
+                                        color: theme.text,
+                                        cursor: 'pointer',
+                                        flexShrink: 0,
+                                      }}
+                                    >
+                                      <TreeCaret expanded={isExpanded} />
+                                    </button>
+                                  ) : (
+                                    <span
+                                      data-tree-leaf=""
+                                      aria-hidden="true"
+                                      style={{
+                                        display: 'inline-block',
+                                        width: TREE_CARET_BOX,
+                                        height: TREE_CARET_BOX,
+                                        marginRight: 6,
+                                        flexShrink: 0,
+                                      }}
+                                    />
+                                  )}
+                                  <span>{cellContent}</span>
+                                </span>
+                              ) : (
+                                cellContent
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </>
               ) : validGroupBy ? (
                 <>
                   {pagedItems.map((item, i) => {

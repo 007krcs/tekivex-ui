@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, within, act } from '@testing-library/react';
 import { TkxMessageThread } from '../src/components/TkxMessageThread';
+import { TkxPeerChat, TkxMessageThread as TkxMessageThreadFromRoot } from '../index';
 import { ThemeProvider, quantumDark } from '../src/themes';
 import type { PeerMessage, PeerSender } from '../src/components/TkxMessageThread';
 
@@ -24,6 +25,9 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 const senders: Record<string, PeerSender> = {
   me: { id: 'me', name: 'Me' },
   alice: { id: 'alice', name: 'Alice', role: 'Clinician' },
+  priya: { id: 'priya', name: 'Priya' },
+  marcus: { id: 'marcus', name: 'Marcus' },
+  jin: { id: 'jin', name: 'Jin' },
 };
 
 function ts(offsetMin: number): Date {
@@ -358,5 +362,186 @@ describe('TkxMessageThread', () => {
     expect(screen.getByText(/Replying to/)).toBeInTheDocument();
     fireEvent.click(screen.getByLabelText('Cancel reply'));
     expect(screen.queryByText(/Replying to/)).toBeNull();
+  });
+});
+
+// ── v3.19: TkxPeerChat promotion + typing indicator ─────────────────────────
+
+describe('TkxPeerChat (v3.19 rename)', () => {
+  it('TkxPeerChat is the v3.19 name — same component, two exported names', () => {
+    // Both names should resolve to the literal same function reference.
+    expect(TkxPeerChat).toBe(TkxMessageThreadFromRoot);
+    expect(TkxPeerChat).toBe(TkxMessageThread);
+  });
+});
+
+describe('TkxMessageThread / TkxPeerChat — typing indicator', () => {
+  it('renders nothing when typingUserIds is empty', () => {
+    render(
+      <TkxMessageThread
+        messages={[]}
+        senders={senders}
+        currentUserId="me"
+        typingUserIds={[]}
+      />,
+      { wrapper: Wrapper },
+    );
+    expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.queryByText(/is typing/)).toBeNull();
+    expect(screen.queryByText(/Several people are typing/)).toBeNull();
+  });
+
+  it('renders nothing when typingUserIds is undefined', () => {
+    render(
+      <TkxMessageThread messages={[]} senders={senders} currentUserId="me" />,
+      { wrapper: Wrapper },
+    );
+    expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('renders "Priya is typing" with role=status / aria-live=polite for a single typer', () => {
+    render(
+      <TkxMessageThread
+        messages={[]}
+        senders={senders}
+        currentUserId="me"
+        typingUserIds={['priya']}
+      />,
+      { wrapper: Wrapper },
+    );
+    const status = screen.getByRole('status');
+    expect(status).toBeInTheDocument();
+    expect(status.getAttribute('aria-live')).toBe('polite');
+    expect(status.textContent).toMatch(/Priya is typing/);
+  });
+
+  it('renders "Priya and Marcus are typing" for two typers', () => {
+    render(
+      <TkxMessageThread
+        messages={[]}
+        senders={senders}
+        currentUserId="me"
+        typingUserIds={['priya', 'marcus']}
+      />,
+      { wrapper: Wrapper },
+    );
+    const status = screen.getByRole('status');
+    expect(status.textContent).toMatch(/Priya and Marcus are typing/);
+  });
+
+  it('renders "Several people are typing" for 3+ typers', () => {
+    render(
+      <TkxMessageThread
+        messages={[]}
+        senders={senders}
+        currentUserId="me"
+        typingUserIds={['priya', 'marcus', 'jin']}
+      />,
+      { wrapper: Wrapper },
+    );
+    const status = screen.getByRole('status');
+    expect(status.textContent).toMatch(/Several people are typing/);
+    expect(status.textContent).not.toMatch(/Priya/);
+  });
+
+  it('onTypingStart fires on the first keystroke', () => {
+    const onTypingStart = vi.fn();
+    render(
+      <TkxMessageThread
+        messages={[]}
+        senders={senders}
+        currentUserId="me"
+        onTypingStart={onTypingStart}
+      />,
+      { wrapper: Wrapper },
+    );
+    const input = screen.getByLabelText('Message input') as HTMLTextAreaElement;
+    fireEvent.change(input, { target: { value: 'h' } });
+    expect(onTypingStart).toHaveBeenCalledTimes(1);
+    // Subsequent keystrokes within the typing session should NOT re-fire it
+    fireEvent.change(input, { target: { value: 'hi' } });
+    fireEvent.change(input, { target: { value: 'hi ' } });
+    expect(onTypingStart).toHaveBeenCalledTimes(1);
+  });
+
+  describe('with fake timers', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('onTypingStop fires after 3 seconds of idle', () => {
+      const onTypingStart = vi.fn();
+      const onTypingStop = vi.fn();
+      render(
+        <TkxMessageThread
+          messages={[]}
+          senders={senders}
+          currentUserId="me"
+          onTypingStart={onTypingStart}
+          onTypingStop={onTypingStop}
+        />,
+        { wrapper: Wrapper },
+      );
+      const input = screen.getByLabelText('Message input') as HTMLTextAreaElement;
+      fireEvent.change(input, { target: { value: 'hi' } });
+      expect(onTypingStart).toHaveBeenCalledTimes(1);
+      expect(onTypingStop).not.toHaveBeenCalled();
+      // Just under 3s — still idle, no stop yet
+      act(() => {
+        vi.advanceTimersByTime(2999);
+      });
+      expect(onTypingStop).not.toHaveBeenCalled();
+      // Cross the threshold
+      act(() => {
+        vi.advanceTimersByTime(2);
+      });
+      expect(onTypingStop).toHaveBeenCalledTimes(1);
+    });
+
+    it('onTypingStop fires immediately on send (not after idle)', () => {
+      const onSend = vi.fn();
+      const onTypingStop = vi.fn();
+      render(
+        <TkxMessageThread
+          messages={[]}
+          senders={senders}
+          currentUserId="me"
+          onSend={onSend}
+          onTypingStop={onTypingStop}
+        />,
+        { wrapper: Wrapper },
+      );
+      const input = screen.getByLabelText('Message input') as HTMLTextAreaElement;
+      fireEvent.change(input, { target: { value: 'hello' } });
+      // Send before the 3s idle timer fires
+      fireEvent.keyDown(input, { key: 'Enter', shiftKey: false });
+      expect(onSend).toHaveBeenCalledTimes(1);
+      expect(onTypingStop).toHaveBeenCalledTimes(1);
+      // Advancing past the idle threshold should NOT double-fire stop
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(onTypingStop).toHaveBeenCalledTimes(1);
+    });
+
+    it('onTypingStop fires on textarea blur', () => {
+      const onTypingStop = vi.fn();
+      render(
+        <TkxMessageThread
+          messages={[]}
+          senders={senders}
+          currentUserId="me"
+          onTypingStop={onTypingStop}
+        />,
+        { wrapper: Wrapper },
+      );
+      const input = screen.getByLabelText('Message input') as HTMLTextAreaElement;
+      fireEvent.change(input, { target: { value: 'hi' } });
+      fireEvent.blur(input);
+      expect(onTypingStop).toHaveBeenCalledTimes(1);
+    });
   });
 });

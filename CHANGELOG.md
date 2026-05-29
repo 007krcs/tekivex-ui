@@ -5,6 +5,92 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.19.0] — 2026-05-29
+
+The **stabilization + scope-cleanup** release. Closes the v3.19 named
+roadmap items: `TkxPeerChat` promotion, DataGrid tree data, and a
+documentation honesty sweep. Net non-breaking; `TkxMessageThread`
+preserved as a deprecated alias for one minor cycle.
+
+### Added — peer chat
+
+- **`TkxPeerChat`** — the v3.18.x `TkxMessageThread` preview is now the
+  stable v3.19 name. Same component, same props, same source file. The
+  prop API is frozen for the v3.x cycle.
+- **Typing indicator** on `TkxPeerChat`. New `typingUserIds`,
+  `onTypingStart`, `onTypingStop` props. Component renders the indicator
+  below the message list — "Priya is typing…" (1), "Priya and Marcus are
+  typing…" (2), "Several people are typing…" (3+). Unknown sender IDs
+  fall back to "Unknown" so raw IDs never leak. Animated three-dot
+  ellipsis under `prefers-reduced-motion: no-preference`, static `…`
+  otherwise. `role="status"` + `aria-live="polite"`. Consumer drives
+  `typingUserIds` from their presence channel; consumer reacts to
+  `onTypingStart` / `onTypingStop` to broadcast their own typing state
+  (`onTypingStart` fires on first keystroke of a session; `onTypingStop`
+  fires on 3s idle, blur, or send).
+
+### Added — data grid
+
+- **Tree data / hierarchical rows** on `TkxDataGrid`. New `childRowsKey`
+  prop + `defaultExpandedRows` + `onRowExpand` + `indentSize` + per-column
+  `tree: boolean`. Parent rows render with a disclosure caret; children
+  indent by depth; table role becomes `treegrid` with proper
+  `aria-level` / `aria-expanded` / `aria-setsize` / `aria-posinset`.
+  Leaf rows render a space-reserving placeholder so columns stay aligned.
+  Tree-data + cell editing, selection, sorting (per-depth), and
+  pagination (flat visible row list) all interoperate; tree-data is
+  ignored when `groupBy` is set (groupBy wins, dev warning logged).
+  Recursion is capped at 32 levels to defend against circular references.
+  11 new tests; 81 total on `TkxDataGrid`.
+
+### Added — playground demo
+
+- **`/playground/components/message-thread`** — live demo of the new
+  `TkxPeerChat`. Includes a 2-person code-review chat, a 4-person
+  incident-response group with reply threading + edited message +
+  soft-delete + failed-delivery state, and an attachment showcase using
+  real public URLs for image / audio / video / file. v3.18.2 shipped the
+  component but had no live preview; this fixes that.
+
+### Changed
+
+- **`TkxMessageThread` deprecated as an alias for `TkxPeerChat`.** Same
+  function reference (verified by reference-equality smoke test); zero
+  bundle impact (tree-shakers drop whichever name the consumer doesn't
+  import). Will be removed in v3.20. Update consumer imports at your
+  leisure.
+
+### Docs — honesty sweep
+
+- **Documentation overclaim sweep**: 59 edits across 54 files. Hard
+  claims of "WCAG 2.1 AAA compliant" / "fully accessible — AAA
+  compliant" replaced with "self-tested against WCAG 2.1 AAA criteria
+  via the internal `meetsAAA()` helper. Third-party audit on roadmap,
+  not completed." Hit:
+  - 48 component MDX files under `docs-site/`
+  - `docs-site/src/content/docs/index.mdx` — also stripped a fabricated
+    "Trusted by — 940 weekly downloads on npm" claim with no backing
+    logos. Replaced with neutral install-footprint copy.
+  - `docs-site/src/content/docs/components/index.mdx` and
+    `typography.mdx`
+  - `docs-site/src/content/docs/components/experimental/quantum-form.mdx`
+  - `docs-site/astro.config.mjs` (site description)
+  - `landing/src/pages/About.tsx` (page meta + body)
+  - `landing/src/sections/Hero.tsx` (the old 3D hero, now at
+    `/examples/3d`, still had "audit-firm engagement open" copy)
+  - `demo/docs/ChatPage.tsx` (two "AAA compliant" demo strings)
+  - `scripts/generate-component-mdx.mjs` (the template that would have
+    re-introduced the overclaim on next regeneration)
+
+### Coverage
+
+- 1,798 → **1,819 tests** (+21: 11 DataGrid tree-data + 10 typing
+  indicator). 125 test files, 0 todos, 0 failures, typecheck clean.
+
+### Bumped
+
+- `package.json` version: 3.18.2 → 3.19.0.
+
 ## [3.18.2] — 2026-05-28
 
 The **honest scope** release. Consumer feedback caught that none of

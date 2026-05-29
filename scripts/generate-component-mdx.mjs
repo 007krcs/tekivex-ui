@@ -187,8 +187,9 @@ description: ${description}
 import { ${componentName} } from 'tekivex-ui';
 \`\`\`
 
-${title} is part of the 78-component tekivex-ui library. Every component is
-WCAG 2.1 AAA compliant, fully typed, and tree-shakeable.
+${title} is part of the tekivex-ui library. Every component is self-tested
+against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
+AAA audit is on the roadmap, not completed.
 
 ## Props
 

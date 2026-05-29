@@ -120,6 +120,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Masonry', route: '/components/masonry' },
       { label: 'Mentions', route: '/components/mentions' },
       { label: 'Menu', route: '/components/menu' },
+      { label: 'Message Thread ✨', route: '/components/message-thread' },
       { label: 'Modal', route: '/components/modal' },
       { label: 'Number Input', route: '/components/number-input' },
       { label: 'Org Chart ✨', route: '/components/org-chart' },

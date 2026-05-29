@@ -1437,6 +1437,248 @@ describe('TkxDataGrid', () => {
     });
   });
 
+  // ── Tree data ──────────────────────────────────────────────────────────────
+
+  describe('tree data', () => {
+    interface TRow {
+      id: string;
+      name: string;
+      size: number;
+      children?: TRow[];
+    }
+    const tData: TRow[] = [
+      {
+        id: 'root-1',
+        name: 'docs',
+        size: 0,
+        children: [
+          { id: 'leaf-1', name: 'README.md', size: 12 },
+          {
+            id: 'sub-1',
+            name: 'guides',
+            size: 0,
+            children: [
+              { id: 'leaf-2', name: 'intro.md', size: 8 },
+              { id: 'leaf-3', name: 'advanced.md', size: 15 },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'root-2',
+        name: 'src',
+        size: 0,
+        children: [{ id: 'leaf-4', name: 'index.ts', size: 5 }],
+      },
+    ];
+    const tCols: DataGridColumn<TRow>[] = [
+      { key: 'name', header: 'Name', tree: true },
+      { key: 'size', header: 'Size' },
+    ];
+
+    function getTreeRows(): HTMLElement[] {
+      return Array.from(document.querySelectorAll('[data-tree-row]')) as HTMLElement[];
+    }
+    function getCarets(): HTMLElement[] {
+      return Array.from(document.querySelectorAll('[data-tree-caret]')) as HTMLElement[];
+    }
+    function getLeafPlaceholders(): HTMLElement[] {
+      return Array.from(document.querySelectorAll('[data-tree-leaf]')) as HTMLElement[];
+    }
+
+    it('parent rows render a disclosure caret', () => {
+      render(
+        <TkxDataGrid columns={tCols} data={tData} rowKey="id" childRowsKey="children" />,
+        { wrapper: Wrapper },
+      );
+      // Initially collapsed → only top-level rows shown. Both top-level
+      // rows have children, so 2 carets visible.
+      expect(getCarets().length).toBe(2);
+    });
+
+    it('leaf rows render a space-reserving placeholder (no caret)', () => {
+      render(
+        <TkxDataGrid
+          columns={tCols}
+          data={tData}
+          rowKey="id"
+          childRowsKey="children"
+          defaultExpandedRows="all"
+        />,
+        { wrapper: Wrapper },
+      );
+      // 3 leaves shown when fully expanded: README.md, intro.md, advanced.md, index.ts
+      // = 4 leaves; carets = 3 parents (docs, guides, src)
+      expect(getCarets().length).toBe(3);
+      expect(getLeafPlaceholders().length).toBe(4);
+    });
+
+    it('clicking caret expands children with aria-level=2', () => {
+      render(
+        <TkxDataGrid columns={tCols} data={tData} rowKey="id" childRowsKey="children" />,
+        { wrapper: Wrapper },
+      );
+      // initially 2 top-level rows
+      expect(getTreeRows().length).toBe(2);
+      // expand "docs" (first caret)
+      fireEvent.click(getCarets()[0]);
+      // Now docs + its 2 children + src = 4 rows
+      const rows = getTreeRows();
+      expect(rows.length).toBe(4);
+      // README.md sits at depth 1 → aria-level=2
+      const readme = rows.find(r => (r.textContent || '').includes('README.md'))!;
+      expect(readme.getAttribute('aria-level')).toBe('2');
+    });
+
+    it('clicking caret again collapses children', () => {
+      render(
+        <TkxDataGrid columns={tCols} data={tData} rowKey="id" childRowsKey="children" />,
+        { wrapper: Wrapper },
+      );
+      const caret = getCarets()[0];
+      fireEvent.click(caret); // expand
+      expect(getTreeRows().length).toBe(4);
+      fireEvent.click(getCarets()[0]); // collapse again
+      expect(getTreeRows().length).toBe(2);
+    });
+
+    it('defaultExpandedRows="all" expands every parent recursively', () => {
+      render(
+        <TkxDataGrid
+          columns={tCols}
+          data={tData}
+          rowKey="id"
+          childRowsKey="children"
+          defaultExpandedRows="all"
+        />,
+        { wrapper: Wrapper },
+      );
+      // 2 roots + 2 first-level children of docs (one is the "guides" parent)
+      // + 2 leaves under guides + 1 leaf under src = 7 rows
+      expect(getTreeRows().length).toBe(7);
+      expect(screen.getByText('advanced.md')).toBeInTheDocument();
+    });
+
+    it('defaultExpandedRows=[id] only expands the listed parent', () => {
+      render(
+        <TkxDataGrid
+          columns={tCols}
+          data={tData}
+          rowKey="id"
+          childRowsKey="children"
+          defaultExpandedRows={['root-2']}
+        />,
+        { wrapper: Wrapper },
+      );
+      // root-1 collapsed, root-2 expanded → 2 roots + 1 leaf under src = 3 rows
+      expect(getTreeRows().length).toBe(3);
+      expect(screen.getByText('index.ts')).toBeInTheDocument();
+      expect(screen.queryByText('README.md')).not.toBeInTheDocument();
+    });
+
+    it('onRowExpand fires with correct (rowId, expanded) args', () => {
+      const onRowExpand = vi.fn();
+      render(
+        <TkxDataGrid
+          columns={tCols}
+          data={tData}
+          rowKey="id"
+          childRowsKey="children"
+          onRowExpand={onRowExpand}
+        />,
+        { wrapper: Wrapper },
+      );
+      fireEvent.click(getCarets()[0]); // expand root-1
+      expect(onRowExpand).toHaveBeenLastCalledWith('root-1', true);
+      fireEvent.click(getCarets()[0]); // collapse root-1
+      expect(onRowExpand).toHaveBeenLastCalledWith('root-1', false);
+    });
+
+    it('deep nesting (3 levels) renders with correct aria-level + indent', () => {
+      render(
+        <TkxDataGrid
+          columns={tCols}
+          data={tData}
+          rowKey="id"
+          childRowsKey="children"
+          defaultExpandedRows="all"
+          indentSize={20}
+        />,
+        { wrapper: Wrapper },
+      );
+      const rows = getTreeRows();
+      const advanced = rows.find(r => (r.textContent || '').includes('advanced.md'))!;
+      // advanced.md is at depth 2 (root → guides → advanced.md) → aria-level=3
+      expect(advanced.getAttribute('aria-level')).toBe('3');
+      expect(advanced.getAttribute('data-tree-depth')).toBe('2');
+    });
+
+    it('table role becomes treegrid when childRowsKey is set', () => {
+      render(
+        <TkxDataGrid columns={tCols} data={tData} rowKey="id" childRowsKey="children" />,
+        { wrapper: Wrapper },
+      );
+      expect(screen.getByRole('treegrid')).toBeInTheDocument();
+      expect(screen.queryByRole('grid')).not.toBeInTheDocument();
+    });
+
+    it('cell editing works on a child row', () => {
+      const onCellEdit = vi.fn();
+      const editCols: DataGridColumn<TRow>[] = [
+        { key: 'name', header: 'Name', tree: true, editable: true },
+        { key: 'size', header: 'Size' },
+      ];
+      render(
+        <TkxDataGrid
+          columns={editCols}
+          data={tData}
+          rowKey="id"
+          childRowsKey="children"
+          defaultExpandedRows="all"
+          onCellEdit={onCellEdit}
+        />,
+        { wrapper: Wrapper },
+      );
+      // README.md is a child row at depth 1
+      const readmeCell = screen.getByText('README.md').closest('td')!;
+      fireEvent.doubleClick(readmeCell);
+      const input = screen.getByLabelText('Edit Name') as HTMLInputElement;
+      fireEvent.change(input, { target: { value: 'README-v2.md' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(onCellEdit).toHaveBeenCalledWith(
+        expect.objectContaining({ rowId: 'leaf-1', newValue: 'README-v2.md' }),
+      );
+    });
+
+    it('groupBy wins when both groupBy and childRowsKey are set (tree ignored, warning logged)', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const flatData: TRow[] = [
+        { id: '1', name: 'A', size: 1, children: [{ id: '1a', name: 'A1', size: 2 }] },
+        { id: '2', name: 'B', size: 3, children: [{ id: '2a', name: 'B1', size: 4 }] },
+      ];
+      render(
+        <TkxDataGrid
+          columns={tCols}
+          data={flatData}
+          rowKey="id"
+          childRowsKey="children"
+          groupBy="name"
+        />,
+        { wrapper: Wrapper },
+      );
+      // grid role (not treegrid) → groupBy won
+      expect(screen.queryByRole('treegrid')).not.toBeInTheDocument();
+      expect(screen.getByRole('grid')).toBeInTheDocument();
+      // No tree carets present
+      expect(getCarets().length).toBe(0);
+      // Warning logged
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('childRowsKey is ignored when groupBy is set'),
+      );
+      warn.mockRestore();
+    });
+  });
+
   // ── Edge cases ─────────────────────────────────────────────────────────────
 
   describe('edge cases', () => {

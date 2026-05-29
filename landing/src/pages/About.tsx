@@ -5,7 +5,7 @@ import { usePageMeta } from '../use-page-meta';
 export const meta = {
   title: 'About TekiVex UI — The React component library that ships with a threat model',
   description:
-    'TekiVex UI is the only mainstream React component library with a published threat model. 116 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core, tamper-evident SHA-256 audit trail. Read why we built it and how we keep it maintained.',
+    'TekiVex UI is a React component library that ships with a published threat model. 116 components, WCAG 2.1 AAA target (third-party audit on roadmap, not completed), zero runtime dependencies in core, tamper-evident SHA-256 audit trail. Read why we built it and how we keep it maintained.',
 };
 
 export function About() {
@@ -14,7 +14,7 @@ export function About() {
     <PageShell
       title="About TekiVex UI"
       eyebrow="About"
-      subtitle="The React component library that ships with a threat model. 116 production components, WCAG 2.1 AAA target (audit-firm engagement open), zero runtime dependencies in core."
+      subtitle="The React component library that ships with a threat model. 116 components, WCAG 2.1 AAA target (third-party audit on roadmap, not completed), zero runtime dependencies in core."
       breadcrumbs={[{ label: 'About' }]}
       updated="2026-05-02"
     >
@@ -66,10 +66,11 @@ export function About() {
 
       <h3>Accessibility is not a stretch goal</h3>
       <p>
-        Every component is tested against WCAG 2.1 AAA before it ships — 7:1 contrast, 44×44
-        touch targets, full keyboard navigation, screen-reader announcements verified across
-        NVDA, JAWS, VoiceOver, and TalkBack. We publish the audit results in the test suite,
-        not just in the README.
+        Every component is self-tested against WCAG 2.1 AAA criteria before it ships — 7:1
+        contrast (verified by an internal <code>meetsAAA()</code> helper), 44×44 touch targets,
+        full keyboard navigation, screen-reader announcements walked across NVDA, JAWS,
+        VoiceOver, and TalkBack. A third-party AAA audit is on the roadmap, not completed —
+        we publish what we test in the test suite, not in the README.
       </p>
 
       <h3>Real WebGL, not CSS imitation</h3>

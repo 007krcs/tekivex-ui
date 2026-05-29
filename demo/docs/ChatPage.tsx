@@ -67,7 +67,7 @@ const INITIAL_MESSAGES: ChatMessage[] = [
   {
     id: '3',
     role: 'assistant',
-    content: 'TkxButton supports 4 variants (solid, outline, ghost, link), 5 color schemes, 4 sizes, loading states with aria-busy, left/right icon slots, a glow effect, and full-width layout. All variants are WCAG AAA compliant with automatic foreground color calculation.',
+    content: 'TkxButton supports 4 variants (solid, outline, ghost, link), 5 color schemes, 4 sizes, loading states with aria-busy, left/right icon slots, a glow effect, and full-width layout. All variants self-test against WCAG 2.1 AAA contrast via meetsAAA() with automatic foreground color calculation.',
     timestamp: new Date(Date.now() - 3 * 60 * 1000),
     status: 'sent',
   },
@@ -271,7 +271,7 @@ const [thinking, setThinking] = useState(false);
             showTimestamp
           />
           <TkxChatBubble
-            message={{ id: 'demo-3', role: 'assistant', content: 'Over 40 fully accessible components including buttons, inputs, selects, modals, drawers, chat, data tables, and more — all WCAG 2.1 AAA compliant.', timestamp: new Date(Date.now() - 1 * 60 * 1000) }}
+            message={{ id: 'demo-3', role: 'assistant', content: '116 production components including buttons, inputs, selects, modals, drawers, chat, data tables, and more — all self-tested against WCAG 2.1 AAA criteria via meetsAAA() (third-party audit on roadmap).', timestamp: new Date(Date.now() - 1 * 60 * 1000) }}
             showTimestamp
           />
           <TkxChatBubble

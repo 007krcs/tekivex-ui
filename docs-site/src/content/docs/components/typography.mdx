@@ -1,6 +1,6 @@
 ---
 title: TkxTypography
-description: Semantic typography primitives — Heading, Text, Code, Kbd. WCAG AAA contrast, fluid scale, RTL-aware.
+description: Semantic typography primitives — Heading, Text, Code, Kbd. Self-tested against WCAG 2.1 AAA contrast, fluid scale, RTL-aware.
 ---
 
 ```tsx
@@ -21,7 +21,9 @@ import {
 ```
 
 Semantic typography primitives that share the theme tokens, scale
-predictably, and meet WCAG 2.1 AAA contrast at every size.
+predictably, and self-test against WCAG 2.1 AAA contrast at every size
+via the internal `meetsAAA()` helper. Third-party AAA audit is on the
+roadmap, not completed.
 
 ## Components
 
@@ -71,8 +73,9 @@ like a small caption (`<TkxHeading level={2} size="xs">`).
 ## Accessibility
 
 - Heading levels are real `<h1>`–`<h6>` — never use `<div role="heading">`
-- Color tokens guarantee WCAG 2.1 **AAA** (7:1) for body text and
-  **AA Large** (4.5:1) for headings against every theme background
+- Color tokens target WCAG 2.1 **AAA** (7:1) for body text and
+  **AA Large** (4.5:1) for headings against every theme background,
+  verified via the internal `meetsAAA()` helper
 - `truncate` and `clamp` keep `aria-label` set to the full text — screen
   readers hear the whole sentence even when sighted users see "..."
 - RTL-aware — `align="left"` flips when the document direction is RTL

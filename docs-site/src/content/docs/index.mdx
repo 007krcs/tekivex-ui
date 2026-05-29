@@ -1,9 +1,9 @@
 ---
 title: TekiVex UI — Accessible React Component Library
-description: 99 components, WCAG 2.1 AAA, built-in security kernel, 1034 passing tests, RSC-ready. npm install tekivex-ui.
+description: 116 components, self-tested against WCAG 2.1 AAA (third-party audit on roadmap), built-in security kernel, 1,798 tests, RSC-ready. npm install tekivex-ui.
 template: splash
 hero:
-  tagline: 99 components. WCAG 2.1 AAA. Zero-trust security baked into every prop. 1034 passing tests. MIT licensed.
+  tagline: 116 components. WCAG 2.1 AAA target (third-party audit on roadmap, not completed). Zero-trust security primitives. 1,798 tests. MIT licensed.
   actions:
     - text: Get started
       link: /getting-started/
@@ -24,9 +24,11 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
     DatePicker, RichText, Carousel) to AI-native (ConfidenceBar, ChatBubble)
     to fintech (Subscription, PaymentButton, CurrencyInput).
   </Card>
-  <Card title="WCAG 2.1 AAA" icon="approve-check-circle">
+  <Card title="WCAG 2.1 AAA target" icon="approve-check-circle">
+    Self-tested against AAA criteria via an internal `meetsAAA()` helper —
     7:1 contrast ratios, 44×44 touch targets, full keyboard nav, screen-reader
-    landmarks, prefers-reduced-motion respected.
+    landmarks, prefers-reduced-motion respected. Third-party audit is on the
+    roadmap, not completed.
   </Card>
   <Card title="Zero-trust security" icon="seti:lock">
     SecurityCore kernel sanitises every URL, scrubs PII, defeats Unicode
@@ -89,7 +91,8 @@ sign-up, just click and explore.
   </Card>
 </CardGrid>
 
-## Trusted by
+## Install footprint
 
-940 weekly downloads on [npm](https://www.npmjs.com/package/tekivex-ui),
-production-deployed across React 18 and React 19 apps.
+Published on [npm](https://www.npmjs.com/package/tekivex-ui) — MIT
+licensed, zero runtime dependencies in the core package, compatible with
+React 18 and React 19.

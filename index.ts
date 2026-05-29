@@ -96,9 +96,10 @@ export type { TkxRatingProps, RatingSize } from './src/components/TkxRating';
 export { TkxChat, TkxChatBubble, TkxThinkingIndicator } from './src/components/TkxChat';
 export type { TkxChatProps, TkxChatBubbleProps, ChatMessage, MessageRole } from './src/components/TkxChat';
 
-export { TkxMessageThread } from './src/components/TkxMessageThread';
+// ── Peer-to-peer chat (stable in v3.19; was TkxMessageThread preview in v3.18.x) ──
+export { TkxMessageThread as TkxPeerChat } from './src/components/TkxMessageThread';
 export type {
-  TkxMessageThreadProps,
+  TkxMessageThreadProps as TkxPeerChatProps,
   PeerSender,
   PeerMessage,
   PeerAttachment,
@@ -107,6 +108,16 @@ export type {
   MessageDeliveryState,
   AttachmentKind,
 } from './src/components/TkxMessageThread';
+
+/**
+ * @deprecated Renamed to `TkxPeerChat` in v3.19. The original
+ * `TkxMessageThread` name shipped as a preview in v3.18.x and is
+ * preserved here as a re-export for backward compatibility. Will be
+ * removed in v3.20. Update consumer imports at your leisure.
+ */
+export { TkxMessageThread } from './src/components/TkxMessageThread';
+/** @deprecated Use `TkxPeerChatProps` from v3.19. */
+export type { TkxMessageThreadProps } from './src/components/TkxMessageThread';
 
 export { TkxTag, TkxTagInput } from './src/components/TkxTag';
 export type { TkxTagProps, TkxTagInputProps, TagVariant, TagSize, TagColorScheme } from './src/components/TkxTag';

@@ -113,6 +113,7 @@ const ImagePage = lazy(() => import('./docs/ImagePage').then(m => ({ default: m.
 const FileUploadPage = lazy(() => import('./docs/FileUploadPage').then(m => ({ default: m.FileUploadPage })));
 const RatingPage = lazy(() => import('./docs/RatingPage').then(m => ({ default: m.RatingPage })));
 const ChatPage = lazy(() => import('./docs/ChatPage').then(m => ({ default: m.ChatPage })));
+const MessageThreadPage = lazy(() => import('./docs/MessageThreadPage').then(m => ({ default: m.MessageThreadPage })));
 const TagPage = lazy(() => import('./docs/TagPage').then(m => ({ default: m.TagPage })));
 const TimelinePage = lazy(() => import('./docs/TimelinePage').then(m => ({ default: m.TimelinePage })));
 const MenuPage = lazy(() => import('./docs/MenuPage').then(m => ({ default: m.MenuPage })));
@@ -232,6 +233,7 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/file-upload': FileUploadPage,
   '/components/rating': RatingPage,
   '/components/chat': ChatPage,
+  '/components/message-thread': MessageThreadPage,
   '/components/tag': TagPage,
   '/components/timeline': TimelinePage,
   '/components/menu': MenuPage,

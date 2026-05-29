@@ -77,6 +77,30 @@ export interface TkxMessageThreadProps {
   emojiPickerOptions?: string[];
   className?: string;
   style?: CSSProperties;
+
+  /**
+   * Sender IDs currently typing. The component renders a typing indicator
+   * below the message list ("Priya is typing…" / "Priya and Marcus are
+   * typing…" / "Several people are typing…"). Consumer drives this from a
+   * presence/typing channel (Pusher, Socket.io, Ably, custom WebSocket).
+   */
+  typingUserIds?: string[];
+
+  /**
+   * Called when the local user starts typing in the composer. Note: the
+   * v3.19 implementation is simpler than the originally-sketched 500ms
+   * debounce — it fires once on the FIRST keystroke of a new typing
+   * session, then is suppressed until the idle timer (`onTypingStop`)
+   * fires. This avoids fan-out spam on the consumer's broadcast channel
+   * without the extra timer state a debounce would need.
+   */
+  onTypingStart?: () => void;
+
+  /**
+   * Called when the local user has been idle for 3+ seconds since the
+   * last keystroke. Also called on blur and on send.
+   */
+  onTypingStop?: () => void;
 }
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
@@ -252,6 +276,9 @@ export function TkxMessageThread({
   emojiPickerOptions = DEFAULT_EMOJIS,
   className,
   style,
+  typingUserIds,
+  onTypingStart,
+  onTypingStop,
 }: TkxMessageThreadProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
@@ -264,6 +291,52 @@ export function TkxMessageThread({
   const listRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // ── Typing state machine ──────────────────────────────────────────────────
+  // Simpler than a debounce: fire onTypingStart on the FIRST keystroke of a
+  // new typing session; every subsequent keystroke just resets the 3s idle
+  // timer. When the timer fires (or blur/send happens) → onTypingStop,
+  // and the session ends so the next keystroke fires onTypingStart again.
+  const typingActiveRef = useRef(false);
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const stopTyping = useCallback(() => {
+    if (typingTimerRef.current != null) {
+      clearTimeout(typingTimerRef.current);
+      typingTimerRef.current = null;
+    }
+    if (typingActiveRef.current) {
+      typingActiveRef.current = false;
+      onTypingStop?.();
+    }
+  }, [onTypingStop]);
+
+  const bumpTyping = useCallback(() => {
+    if (!typingActiveRef.current) {
+      typingActiveRef.current = true;
+      onTypingStart?.();
+    }
+    if (typingTimerRef.current != null) {
+      clearTimeout(typingTimerRef.current);
+    }
+    typingTimerRef.current = setTimeout(() => {
+      typingTimerRef.current = null;
+      if (typingActiveRef.current) {
+        typingActiveRef.current = false;
+        onTypingStop?.();
+      }
+    }, 3000);
+  }, [onTypingStart, onTypingStop]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (typingTimerRef.current != null) {
+        clearTimeout(typingTimerRef.current);
+        typingTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const el = listRef.current;
@@ -284,7 +357,8 @@ export function TkxMessageThread({
     setDraft('');
     setReplyTo(null);
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
-  }, [draft, onSend, replyTo]);
+    stopTyping();
+  }, [draft, onSend, replyTo, stopTyping]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -294,14 +368,26 @@ export function TkxMessageThread({
   }, [handleSend]);
 
   const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
-    setDraft(e.target.value);
+    const next = e.target.value;
+    setDraft(next);
     const ta = textareaRef.current;
     if (ta) {
       ta.style.height = 'auto';
       const max = 24 * 6 + 16;
       ta.style.height = `${Math.min(ta.scrollHeight, max)}px`;
     }
-  }, []);
+    // If the user cleared the composer, treat it as "stopped typing" now
+    // rather than waiting for the idle timer.
+    if (next.length === 0) {
+      stopTyping();
+    } else {
+      bumpTyping();
+    }
+  }, [bumpTyping, stopTyping]);
+
+  const handleComposerBlur = useCallback(() => {
+    stopTyping();
+  }, [stopTyping]);
 
   const handleFilesChosen = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     const picked = Array.from(e.target.files ?? []);
@@ -359,6 +445,22 @@ export function TkxMessageThread({
   const heightVal = typeof height === 'number' ? `${height}px` : height;
   const replyPreview = replyTo ? messageById[replyTo] : null;
   const replyPreviewSender = replyPreview ? senders[replyPreview.senderId] : null;
+
+  // ── Typing-indicator label ─────────────────────────────────────────────────
+  // 1 typer → "Priya is typing…"
+  // 2 typers → "Priya and Marcus are typing…"
+  // 3+ typers → "Several people are typing…"
+  // Unknown sender IDs fall back to "Unknown" rather than the raw id so the
+  // user-visible string is never a leaking implementation detail.
+  const typingLabel = useMemo(() => {
+    if (!typingUserIds || typingUserIds.length === 0) return null;
+    const names = typingUserIds.map((id) =>
+      sanitizeString(senders[id]?.name ?? 'Unknown'),
+    );
+    if (names.length === 1) return `${names[0]} is typing`;
+    if (names.length === 2) return `${names[0]} and ${names[1]} are typing`;
+    return 'Several people are typing';
+  }, [typingUserIds, senders]);
 
   // ── Render rows with grouping + day separators ──────────────────────────────
   const rows: Array<
@@ -624,6 +726,68 @@ export function TkxMessageThread({
         })}
       </div>
 
+      {/* Typing indicator (above composer, below message list) */}
+      {typingLabel && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={tkx('px-4 py-1 flex items-center gap-1')}
+          style={{
+            color: theme.textMuted,
+            fontSize: 12,
+            fontStyle: 'italic',
+            borderTop: `1px solid ${theme.border}`,
+            backgroundColor: theme.bg,
+          }}
+        >
+          <span>{typingLabel}</span>
+          {reducedMotion ? (
+            <span aria-hidden="true">…</span>
+          ) : (
+            <span
+              aria-hidden="true"
+              className={tkx('inline-flex items-end gap-0.5')}
+              style={{ marginLeft: 2 }}
+            >
+              <span
+                style={{
+                  width: 3,
+                  height: 3,
+                  borderRadius: '50%',
+                  backgroundColor: 'currentColor',
+                  animation: 'tkx-typing-dot 1.2s infinite ease-in-out',
+                  animationDelay: '0s',
+                  display: 'inline-block',
+                }}
+              />
+              <span
+                style={{
+                  width: 3,
+                  height: 3,
+                  borderRadius: '50%',
+                  backgroundColor: 'currentColor',
+                  animation: 'tkx-typing-dot 1.2s infinite ease-in-out',
+                  animationDelay: '0.15s',
+                  display: 'inline-block',
+                }}
+              />
+              <span
+                style={{
+                  width: 3,
+                  height: 3,
+                  borderRadius: '50%',
+                  backgroundColor: 'currentColor',
+                  animation: 'tkx-typing-dot 1.2s infinite ease-in-out',
+                  animationDelay: '0.3s',
+                  display: 'inline-block',
+                }}
+              />
+              <style>{`@keyframes tkx-typing-dot { 0%, 60%, 100% { opacity: 0.25; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-2px); } } @media (prefers-reduced-motion: reduce) { @keyframes tkx-typing-dot { 0%, 100% { opacity: 1; transform: none; } } }`}</style>
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Composer */}
       <div
         className={tkx('flex flex-col gap-1 p-3')}
@@ -696,6 +860,7 @@ export function TkxMessageThread({
             value={draft}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
+            onBlur={handleComposerBlur}
             placeholder={sanitizeString(placeholder)}
             aria-label="Message input"
             aria-multiline="true"
@@ -723,20 +888,25 @@ export function TkxMessageThread({
   );
 }
 
-// ── Backend-dependent features intentionally NOT implemented in v1 ─────────
-// These need integration that a component alone cannot provide. Documented
-// here so consumers know what's missing and what's expected of them:
+// ── Backend-dependent features ─────────────────────────────────────────────
+// What this component CAN'T do on its own (consumer responsibilities):
 //
-//   - typing indicators       — needs presence WebSocket; consumer surfaces via prop
 //   - real-time message arrival — consumer pushes new messages via the `messages` prop
 //   - delivery-state transitions — consumer updates `message.delivery` from server ACKs
 //   - presence updates         — consumer updates `senders[].presence` from a presence service
+//   - attachment upload progress — onAttach returns a Promise but no per-file
+//                                  progress is surfaced; consumer's responsibility
+//
+// What v3.19 added — typing indicators are now consumer-wirable:
+//   - `typingUserIds` (display)       — drive from your presence channel
+//   - `onTypingStart` / `onTypingStop` — fire your own broadcast events
+//
+// Still explicitly out of scope:
 //   - message search           — separate concern; pair with TkxInput + filter logic
 //   - threading depth > 1      — only one level of replyTo is rendered; nested
 //                                threads would need a real tree view
-//   - attachment upload progress — onAttach returns a Promise but no per-file
-//                                  progress is surfaced; consumer's responsibility
-//   - end-to-end encryption    — explicitly out of scope; this is a UI primitive
+//   - end-to-end encryption    — this is a UI primitive
 //
-// Pre-1.0: API may change in v3.19+. Track the prop sketch at
-// docs/ROADMAP.md → v3.19 → TkxPeerChat for the planned superset.
+// As of v3.19 the public name is `TkxPeerChat` (this file's `TkxMessageThread`
+// export is the same component re-exported under both names; the original
+// name is preserved as a deprecated alias and will be removed in v3.20).

@@ -571,6 +571,7 @@ import { TkxDataGrid } from 'tekivex-ui';
 | Column filtering | ✅ | 💰 Pro | ✅ |
 | Column pinning (left/right) | ✅ | 💰 Pro | ✅ |
 | Row grouping + aggregations | ✅ | 💰 Pro | 💰 Enterprise |
+| Tree data / hierarchical rows | ✅ | 💰 Pro | 💰 Enterprise |
 | Pagination | ✅ | ✅ | ✅ |
 | Row selection | ✅ | ✅ | ✅ |
 | CSV export | ✅ | 💰 Pro | 💰 Enterprise |
