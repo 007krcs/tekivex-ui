@@ -29,7 +29,46 @@ export type { FormInstance, ValidationRule } from '../components/TkxForm';
 export { extractAtomicCSS, resetAtomicCSS, cx, tkxPlugin, tkxRemovePlugin, tkxListPlugins } from '../engine/tkx';
 export { extractCSS, resetStyles, injectStyles, cssVar } from '../engine/css';
 export { meetsAA, meetsAAA, contrastRatio } from '../engine/wcag';
-export { sanitizeString, sanitizeProps } from '../engine/security';
+
+// ── Security kernel ──────────────────────────────────────────────────────────
+// Behavior-only security primitives. Same implementations the components use
+// internally — exposed here so server-side consumers, Node/Edge runtimes, and
+// custom-UI builders can reach them without pulling in the full component
+// bundle. See: /recipes/secure-file-upload, /recipes/audit-trail,
+// /recipes/pii-redaction-before-llm.
+export {
+  // Input sanitization
+  sanitizeString,
+  sanitizeProps,
+  sanitizeUnicode,
+  sanitizeJSON,
+  // File type verification (real magic bytes, not Content-Type)
+  sniffMimeType,
+  // PII redaction (regex + Luhn-validated card numbers)
+  scrubPII,
+  // Tamper-evident audit log (SHA-256 hash-chained)
+  audit,
+  getAuditLog,
+  verifyAuditIntegrity,
+  sha256Hex,
+  // CSP + Trusted Types
+  buildTkxCSP,
+  installTrustedTypes,
+  // Environment checks
+  isFramed,
+  // Client-side rate limiting
+  createRateLimiter,
+} from '../engine/security';
+export type {
+  AuditEntry,
+  AuditFilter,
+  CSPDirectives,
+  TkxCSPOptions,
+  RateLimiter,
+  PropSchema,
+  ValidationResult,
+  ComponentPermissions,
+} from '../engine/security';
 
 // ── Interaction hooks ────────────────────────────────────────────────────────
 // Additional behavior primitives beyond the base hook set.

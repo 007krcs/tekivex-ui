@@ -5,6 +5,48 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.19.1] — 2026-05-29
+
+The **`/headless` security re-exports** patch. Pure additive — no API
+breaks, no behavior changes, no bundle-size impact for existing consumers.
+
+### Added — `tekivex-ui/headless` now re-exports the full security kernel
+
+The security primitives that the components use internally are now reachable
+from the headless subpath directly. Previously the recipes documented
+imports from `tekivex-ui` (the main entry), which pulls in component types
+even for server-side / Node / Edge consumers who only want the engine.
+
+New re-exports from `tekivex-ui/headless`:
+
+- **Input sanitization** — `sanitizeUnicode`, `sanitizeJSON` (joining
+  `sanitizeString`, `sanitizeProps` which were already there)
+- **Magic-byte file type verification** — `sniffMimeType`
+- **PII redaction (Luhn-validated)** — `scrubPII`
+- **Tamper-evident audit log** — `audit`, `getAuditLog`,
+  `verifyAuditIntegrity`, `sha256Hex`
+- **CSP + Trusted Types** — `buildTkxCSP`, `installTrustedTypes`
+- **Environment checks** — `isFramed`
+- **Client-side rate limiting** — `createRateLimiter`
+
+Plus the supporting types: `AuditEntry`, `AuditFilter`, `CSPDirectives`,
+`TkxCSPOptions`, `RateLimiter`, `PropSchema`, `ValidationResult`,
+`ComponentPermissions`.
+
+Same implementations the components use internally — exposed here so
+server-side consumers, Node/Edge runtimes, and custom-UI builders can
+reach them without pulling in the full component bundle. The recipes at
+`/recipes/secure-file-upload`, `/recipes/audit-trail`, and
+`/recipes/pii-redaction-before-llm` will be updated to prefer the
+`tekivex-ui/headless` import path in a docs follow-up.
+
+### Why
+
+Server-side consumers (Next.js Route Handlers, Remix loaders, RSC, Edge
+functions) writing audit entries or scrubbing PII before logs shouldn't
+need the React component types in scope. The `/headless` subpath is the
+right home for behavior-only primitives. This patch closes the gap.
+
 ## [3.19.0] — 2026-05-29
 
 The **stabilization + scope-cleanup** release. Closes the v3.19 named
