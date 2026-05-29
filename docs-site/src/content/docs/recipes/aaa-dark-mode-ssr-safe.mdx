@@ -1,0 +1,294 @@
+---
+title: AAA-targeting dark mode that survives SSR
+description: Theme toggling that works in Next.js / Remix without hydration mismatch, with no flash of unstyled content, and with verified ≥7:1 contrast on both modes.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Most dark-mode implementations fail at one of three things: they crash React 18
+hydration the moment `prefers-color-scheme` disagrees with the server, they
+flash the wrong palette for ~50ms before settling, or they pass a contrast
+audit on light mode and quietly fail it on dark. `ThemeProvider`,
+`themeInitScript()`, and the WCAG helpers in this library are the four moving
+parts that together fix all three — but only if you wire them up in the right
+order.
+
+## The problem
+
+Three failure modes most teams hit when they ship dark mode:
+
+1. **Hydration mismatch.** `ThemeProvider mode="auto"` has to read
+   `prefers-color-scheme` to decide which palette wins, but `window.matchMedia`
+   does not exist on the server. The naive implementation renders light on the
+   server, then renders dark on the client, and React 18 throws
+   "Hydration failed because the server rendered HTML didn't match the client."
+2. **FOUC.** Even after you fix hydration by deferring the resolution until
+   `useEffect`, the first paint uses whichever palette the server picked.
+   For a dark-default app the page flashes LIGHT for one frame before the
+   effect runs and applies dark. It looks janky and gives away your stack.
+3. **Lying about AAA.** Light mode passes contrast because you tested it.
+   Dark mode? You tweaked colors until "it looked good." The built-in
+   `meetsAAA()` helper can verify both — but most consumers never run it on
+   their dark palette, and `createTheme` only warns in the console, it
+   does not fail the build.
+
+This recipe shows the small fix for each.
+
+## The recipe
+
+### 1. SSR-safe `ThemeProvider` — the deterministic-auto pattern
+
+`ThemeProvider mode="auto"` is SSR-safe in v3.18+. The server and the very
+first client render BOTH emit a deterministic default (controlled by
+`defaultMode`, which defaults to `'light'`). The real
+`prefers-color-scheme` is resolved inside a `useEffect` after mount, so
+server HTML matches client HTML byte-for-byte at hydration time.
+
+```tsx
+// app/providers.tsx
+'use client';
+
+import { ThemeProvider } from 'tekivex-ui';
+import 'tekivex-ui/styles';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    // mode="auto" + defaultMode="dark":
+    //   SSR + first client render → dark (deterministic, no matchMedia call)
+    //   After mount → switches to the user's real prefers-color-scheme
+    <ThemeProvider mode="auto" defaultMode="dark">
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+This is enough to eliminate the hydration warning. It is NOT enough to
+eliminate FOUC — a user whose system prefers light still sees a one-frame
+dark flash before the effect resolves. That's what step 2 fixes.
+
+<Aside type="tip">
+If your app pins to a single palette and you don't want a system-pref
+toggle at all, skip `mode="auto"` and use `mode="dark"` or `mode="light"`.
+Those branches render their palette synchronously on the first paint
+with no mount tick required.
+</Aside>
+
+### 2. Eliminate FOUC with `themeInitScript()`
+
+`themeInitScript()` returns the body of an IIFE that runs synchronously in
+`<head>` BEFORE React hydrates. It reads `localStorage` first, falls back
+to `prefers-color-scheme`, then to `defaultMode`, and sets
+`document.documentElement.dataset.theme` plus `data-tkx-scheme` so your
+page's CSS is correct on the very first paint.
+
+```tsx
+// app/layout.tsx
+import { themeInitScript } from 'tekivex-ui';
+import { Providers } from './providers';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <script
+          // Runs synchronously before React. No closures, no XSS surface —
+          // options are JSON.stringify'd into the IIFE body.
+          dangerouslySetInnerHTML={{
+            __html: themeInitScript({
+              defaultMode: 'dark',
+              storageKey: 'tkx-theme',
+            }),
+          }}
+        />
+      </head>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+The script writes to `dataset.theme` and `data-tkx-scheme`. Style any
+selector you want off these attributes — for example
+`html[data-tkx-scheme="dark"] body { background: #0a0a0f }` — and the
+correct palette paints on frame 0.
+
+### 3. AAA verification — both palettes, in CI
+
+The library ships `meetsAA`, `meetsAAA`, and `contrastRatio` as plain
+functions. They live in `tekivex-ui/headless` (and are also re-exported
+from the package root) so you can call them from a test file without
+pulling in React.
+
+```ts
+// tests/theme-contrast.test.ts
+import { describe, it, expect } from 'vitest';
+import { meetsAAA, contrastRatio } from 'tekivex-ui/headless';
+import { auroraLight, quantumDark, type ThemeTokens } from 'tekivex-ui';
+
+// Every (foreground, background) pair you actually render in production.
+// Update this list as your design system grows — the test fails if you forget.
+const pairs: Array<[keyof ThemeTokens, keyof ThemeTokens, string]> = [
+  ['text',      'bg',         'body text on page background'],
+  ['text',      'surface',    'body text on card surface'],
+  ['text',      'surfaceAlt', 'body text on subdued surface'],
+  ['textMuted', 'bg',         'muted text on page background'],
+  ['primary',   'bg',         'primary accent on page background'],
+  ['danger',    'bg',         'danger color on page background'],
+];
+
+describe.each([
+  ['auroraLight', auroraLight],
+  ['quantumDark', quantumDark],
+])('theme %s passes WCAG AAA on every advertised pair', (_name, theme) => {
+  it.each(pairs)('%s vs %s — %s', (fg, bg, _label) => {
+    const ratio = contrastRatio(theme[fg], theme[bg]);
+    expect(meetsAAA(theme[fg], theme[bg]), `${theme[fg]} on ${theme[bg]} → ${ratio.toFixed(2)}:1`).toBe(true);
+  });
+});
+```
+
+Wire that file into your CI. The moment someone tweaks `primary` from
+`#0d7c5f` to a slightly-prettier `#0e9871` and drops the ratio below 7:1,
+the build fails with the exact offending pair. The `createTheme` factory
+already prints a `console.warn` for AA/AAA failures at runtime — this
+test promotes the warning to a CI-blocking error.
+
+### 4. The strategy choice
+
+| Approach | Use when | Trade-off |
+|---|---|---|
+| `mode="dark"` or `mode="light"` (pinned) | You don't want a toggle at all | Simplest. No user choice, no system-pref detection. Zero flash. |
+| `mode="auto"` only | You want OS-pref detection but you accept a one-frame flash | Server renders `defaultMode`; switches on mount. ~16-50ms wrong-palette flash. |
+| `mode="auto"` + `themeInitScript()` | You want OS-pref detection AND zero flash | Best UX. Requires injecting the IIFE into `<head>`. The recommended path. |
+| `suppressHydrationWarning` opt-in | You hit a hydration edge case no other layer fixes (rare) | Slowest first paint — provider wrapper emits no theme styles until after mount. Use as a last resort. |
+
+### Full Next.js layout — copy-paste ready
+
+The two files together:
+
+```tsx
+// app/providers.tsx
+'use client';
+
+import { ThemeProvider } from 'tekivex-ui';
+import 'tekivex-ui/styles';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider mode="auto" defaultMode="dark">
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+```tsx
+// app/layout.tsx
+import { themeInitScript } from 'tekivex-ui';
+import { Providers } from './providers';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: themeInitScript({ defaultMode: 'dark', storageKey: 'tkx-theme' }),
+          }}
+        />
+      </head>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+For the longer technical writeup — including the
+`Cannot read properties of undefined (reading 'call')` chunk-shape
+issue that bit pre-v3.18 — see [`TROUBLESHOOTING.md` § 2 (Hydration mismatch)](https://github.com/007krcs/tekivex-ui/blob/master/TROUBLESHOOTING.md).
+
+## What's built-in
+
+| Concern | How |
+|---|---|
+| Deterministic, SSR-stable initial render | `mode="auto"` resolves to `defaultMode` for SSR + first client render in v3.18+ |
+| FOUC-free first paint | `themeInitScript()` — a ~20-line IIFE you paste into `<head>` |
+| Last-resort opt-in mount-gate | `<ThemeProvider suppressHydrationWarning>` — wrapper emits no theme styles until mount |
+| Programmatic contrast check | `meetsAAA(fg, bg)`, `meetsAA(fg, bg)`, `contrastRatio(fg, bg)` from `tekivex-ui/headless` |
+| Configurable storage key | `themeInitScript({ storageKey: '...' })` — defaults to `'tkx-theme'` |
+| Configurable default mode | `themeInitScript({ defaultMode: 'dark' })` AND `<ThemeProvider defaultMode="dark">` — must agree |
+| Hostile-input safety in the IIFE | Options are `JSON.stringify`'d into the body — no script-injection surface |
+| Live system-pref tracking | `usePrefersColorScheme()` — subscribes to `matchMedia` change events |
+| `data-tkx-scheme` attribute on `<html>` | Both the init script AND the provider write it; style anything off `[data-tkx-scheme="dark"]` |
+| Built-in AA/AAA console warnings | `createTheme()` warns on contrast failures at theme-creation time |
+
+## What's NOT built-in — your job
+
+- **Persisting the user's choice.** `themeInitScript()` READS `localStorage`
+  but does not write it. When the user clicks your theme toggle, you call
+  `localStorage.setItem('tkx-theme', 'dark')` yourself.
+- **The toggle UI itself.** The library gives you the provider and the
+  init script. The visible switch — sun/moon icon, accessible button label,
+  keyboard shortcut — is yours to build. `TkxToggle` works as the primitive.
+- **Server-side theme rendering for cached pages.** If your Next.js routes
+  use `force-static` and you want the cached HTML to ship with the right
+  palette per user, you need an edge function reading a theme cookie and
+  branching the rendered output. The init script handles dynamic routes;
+  it can't reach into pre-rendered HTML.
+- **Per-user / multi-tenant theming.** Supported but you wire it: pass a
+  different `theme={...}` object to `ThemeProvider` per session. The
+  `theme` prop wins over `mode`.
+- **Running `meetsAAA` against YOUR custom palette.** The helper exists.
+  The discipline to call it on every pair you ship is yours.
+- **CI enforcement.** `createTheme` warns to the console; it does not fail
+  the build. The vitest snippet in step 3 is the missing piece — bake it
+  into your test suite.
+
+## Gotchas
+
+**`mode="auto"` reads `localStorage` first, then `prefers-color-scheme`, then
+`defaultMode`.** A stale `"dark"` in `localStorage` from a previous design
+overrides everything else, even if the user's OS pref is light. Version
+your storage key (`tkx-theme-v2`) when you redesign so the old preference
+is dropped.
+
+**Keep `themeInitScript`'s `defaultMode` and `ThemeProvider`'s `defaultMode`
+identical.** The init script writes `data-tkx-scheme` to the DOM before
+React renders; the provider picks a palette based on its own
+`defaultMode`. If those disagree, the first paint uses one theme via CSS
+attribute selectors and the React tree renders the other — visible
+mismatch on frame 0.
+
+**`themeInitScript()` wraps its `localStorage` read in `try/catch`.** Some
+browsers (Safari private mode, sandboxed iframes, embedded contexts) throw
+`SecurityError` on `localStorage.getItem`. If your minifier strips
+"unnecessary" `try/catch` blocks, configure it to leave this one alone or
+the script crashes silently and you ship light theme to everyone.
+
+**AAA uses sRGB luminance per WCAG 2.1.** The helper computes
+`(L1 + 0.05) / (L2 + 0.05)`. WCAG 3.0 (still draft) uses APCA, which gives
+different numbers — sometimes 10-20% different. If your design system
+already tracks APCA scores, the library's `meetsAAA` will disagree with
+your design tokens.
+
+**`meetsAAA(fg, bg)` threshold is 7:1 for normal text and 4.5:1 for large
+text.** Pass `largeText: true` as the third argument for headlines ≥18pt
+or ≥14pt bold — otherwise the helper applies the stricter normal-text
+threshold and your hero typography flags as failing for no good reason.
+
+**The default `defaultMode` is `'light'`.** If your visual identity is dark,
+you must pass `defaultMode="dark"` to BOTH `ThemeProvider` AND
+`themeInitScript()`. Otherwise users get a one-frame light flash on every
+cold load even with the init script wired up.
+
+## Related
+
+- [`TROUBLESHOOTING.md` § 2 — Hydration mismatch](https://github.com/007krcs/tekivex-ui/blob/master/TROUBLESHOOTING.md) — the longer technical writeup, including the pre-v3.18 chunk-shape root cause
+- [`secure-file-upload`](/recipes/secure-file-upload/) — pairs naturally; both follow the "library gives the primitive, you wire CI enforcement" pattern
+- [`pii-redaction-before-llm`](/recipes/pii-redaction-before-llm/) — same headless-export pattern for `tekivex-ui/headless` consumers
+- Combine with `prefersReducedMotion()` (also in `tekivex-ui/headless`) for the full accessibility-first dark-mode story — palette + motion + contrast verified together

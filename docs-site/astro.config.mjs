@@ -75,11 +75,21 @@ export default defineConfig({
         {
           label: 'Recipes',
           items: [
+            { label: 'Index', link: '/recipes/' },
             { label: 'Secure file upload', link: '/recipes/secure-file-upload/' },
             { label: 'Tamper-evident audit trail', link: '/recipes/audit-trail/' },
             { label: 'PII redaction before LLM', link: '/recipes/pii-redaction-before-llm/' },
             { label: 'Peer chat with media', link: '/recipes/peer-chat-with-media/' },
             { label: 'DataGrid with tree data', link: '/recipes/data-grid-with-tree-data/' },
+            { label: 'Async field validation', link: '/recipes/async-field-validation/' },
+            { label: 'AAA dark mode (SSR-safe)', link: '/recipes/aaa-dark-mode-ssr-safe/' },
+          ],
+        },
+        {
+          label: 'Industry blueprints',
+          items: [
+            { label: 'Index', link: '/blueprints/' },
+            { label: 'Healthtech — patient intake form', link: '/blueprints/healthtech-patient-intake/' },
           ],
         },
         {

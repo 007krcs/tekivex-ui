@@ -102,7 +102,7 @@ security boundary is the server. Re-run the same primitive:
 
 ```ts
 // server.ts — Node 18+
-import { sniffMimeType } from 'tekivex-ui/headless';
+import { sniffMimeType } from 'tekivex-ui';
 
 export async function handleUpload(req: Request): Promise<Response> {
   const form = await req.formData();

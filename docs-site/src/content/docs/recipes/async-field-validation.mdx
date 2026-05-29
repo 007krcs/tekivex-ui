@@ -1,0 +1,357 @@
+---
+title: Async field validation with debounced server checks
+description: "Is this username available?" / "Does this email already have an account?" — without rate-limiting your auth API, without race conditions, without leaking the in-flight state.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Naive async validation fires a `fetch` on every keystroke, hammers your auth
+API, races itself, and ends up showing the user a stale result that
+contradicts what they just typed. `useFormState` ships `validateAsync`,
+`debounceMs`, and a per-field `validating` flag so the safe version is the
+default version.
+
+## The problem
+
+Picture a signup form. The username field needs to answer "is this taken?"
+before the user gets to the submit button. The naive implementation:
+
+```tsx
+onChange={async (e) => {
+  const res = await fetch(`/api/check-username?u=${e.target.value}`);
+  setError(res.taken ? 'Taken' : null);
+}}
+```
+
+Four things this gets wrong:
+
+1. **Request storm.** Typing "alexander" fires nine requests. Your
+   auth-API rate-limiter sees the same client hammering a check
+   endpoint and starts returning 429s. The user, who was just typing
+   their name, sees nothing.
+2. **Race conditions.** The user types "tak", the request leaves. They
+   type "taken", a second request leaves. The first request returns
+   first ("tak is available"). The UI flashes available. Then "taken"
+   returns and overwrites. The user only saw the wrong answer for
+   200ms — but if they clicked submit during that window, you took the
+   wrong action.
+3. **No "checking" state.** Loading is conflated with valid. An empty
+   error doesn't mean the field is good; it might mean the request is
+   still in flight.
+4. **Layering with sync rules.** You also want a Zod schema for
+   format. Now you have two error sources that need merging, and the
+   merge order matters: a server-side "taken" should beat a stale sync
+   "invalid format" the moment the format becomes valid.
+
+What you actually want: debounce, latest-value-wins cancellation, a
+separate `validating` flag, and clean composition with whatever sync
+validator you already have.
+
+## The recipe
+
+### Minimal — single field
+
+```tsx
+'use client';
+
+import { useFormState } from 'tekivex-ui/headless';
+
+async function checkUsername(value: string): Promise<string | null> {
+  if (!value) return null;
+  const res = await fetch(`/api/check-username?u=${encodeURIComponent(value)}`);
+  if (!res.ok) return null; // network failure → don't block the user
+  const { available } = (await res.json()) as { available: boolean };
+  return available ? null : 'Username already taken';
+}
+
+export function SignupForm() {
+  const form = useFormState({
+    initialValues: { username: '' },
+    validateAsync: {
+      username: (value) => checkUsername(String(value ?? '')),
+    },
+    debounceMs: 300,
+  });
+
+  const { username } = form.values;
+  const checking = form.validating.username === true;
+  const error = form.errors.username;
+
+  return (
+    <label>
+      Username
+      <input {...form.getFieldProps('username')} />
+      {checking && <span aria-live="polite">Checking…</span>}
+      {!checking && error && (
+        <span id="username-error" role="alert">{error}</span>
+      )}
+      {!checking && !error && username && (
+        <span aria-live="polite">Available</span>
+      )}
+    </label>
+  );
+}
+```
+
+`validating.username` is `true` from the moment the debounced call
+fires until the result lands. `errors.username` only holds the
+resolved error. The two never overlap — render them mutually
+exclusive.
+
+### With Zod for sync + async layered
+
+Sync format check runs on every keystroke; async existence check runs
+debounced. Errors merge into a single `errors` object, with async
+winning when both fire on the same field.
+
+```tsx
+'use client';
+
+import { z } from 'zod';
+import { useFormState, zodResolver } from 'tekivex-ui/headless';
+
+const schema = z.object({
+  email: z.string().email('Enter a valid email'),
+  password: z.string().min(8, 'Min 8 characters'),
+});
+
+async function checkEmailRegistered(value: string): Promise<string | null> {
+  if (!value) return null;
+  const res = await fetch(`/api/check-email?e=${encodeURIComponent(value)}`);
+  if (!res.ok) return null;
+  const { registered } = (await res.json()) as { registered: boolean };
+  return registered ? 'An account with this email already exists' : null;
+}
+
+export function SignupForm() {
+  const form = useFormState({
+    initialValues: { email: '', password: '' },
+    validate: zodResolver(schema),
+    validateAsync: {
+      email: (value) => checkEmailRegistered(String(value ?? '')),
+    },
+    debounceMs: 400,
+  });
+
+  const checking = form.validating.email === true;
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!form.validate()) return;
+        if (checking || Object.keys(form.validating).length > 0) return;
+        // submit…
+      }}
+    >
+      <input {...form.getFieldProps('email')} placeholder="Email" />
+      {checking
+        ? <span aria-live="polite">Checking…</span>
+        : form.errors.email && <span role="alert">{form.errors.email}</span>}
+
+      <input
+        {...form.getFieldProps('password')}
+        type="password"
+        placeholder="Password"
+      />
+      {form.errors.password && <span role="alert">{form.errors.password}</span>}
+
+      <button
+        type="submit"
+        disabled={Object.keys(form.validating).length > 0}
+      >
+        Create account
+      </button>
+    </form>
+  );
+}
+```
+
+How the layers compose:
+
+1. Sync validation runs every render against `values`; the merged
+   `errors` object always reflects the latest schema result for
+   untouched async fields.
+2. Async validation fires `debounceMs` after the last `setValue` on
+   that field, independent of sync. If sync says "invalid format" and
+   async says "taken," the merged `errors.email` shows "taken"
+   (`asyncErrors` is spread after `syncErrors`).
+3. `validating.email` is the loading flag — separate from `errors` so
+   you can render "Checking…" without nuking the previous error.
+
+<Aside type="tip">
+There's no built-in `isValidating` aggregate. Use
+`Object.keys(form.validating).length > 0` to gate a submit button or
+spinner across all fields.
+</Aside>
+
+### Real-world wiring — racing requests
+
+The library handles cancellation. Source comment from
+`useFormState.ts`:
+
+> If the value changes again before the validator resolves, the
+> in-flight call is cancelled (its result is ignored — no state
+> update).
+
+Mechanism: every `setValue` bumps a per-field token. When the
+validator's promise eventually resolves, it compares its captured
+token against the current token. Mismatch → the result is dropped
+silently, no state mutation, no flicker.
+
+You don't need to do anything in your validator. No `AbortController`
+plumbing, no manual cleanup. Just return a Promise.
+
+```tsx
+validateAsync: {
+  username: async (value) => {
+    // No need to check "is this still the current value" —
+    // the hook will discard our result if it isn't.
+    const res = await fetch(`/api/check-username?u=${value}`);
+    const { available } = await res.json();
+    return available ? null : 'Taken';
+  },
+},
+```
+
+This is covered by the test `cancelled async validators do not update
+state` in `tests/useFormState-async.test.tsx`: a first call's resolved
+"STALE" result is dropped because a second `setValue` bumped the
+token, and `asyncErrors.name` stays `undefined`.
+
+If you want to cancel the network request itself (not just discard
+its result), wire your own `AbortController` — the hook only manages
+state, not your fetch:
+
+```tsx
+validateAsync: {
+  username: async (value, _values) => {
+    const ctl = new AbortController();
+    // Note: there's no library-provided cancel signal. If you need
+    // to actually abort the fetch (vs just ignore its result),
+    // track the controller in a ref and abort on the next call.
+    const res = await fetch(`/api/check-username?u=${value}`, {
+      signal: ctl.signal,
+    });
+    return (await res.json()).available ? null : 'Taken';
+  },
+},
+```
+
+### Server-side endpoint
+
+The recommended response shape — small, cacheable, easy to log:
+
+```ts
+// app/api/check-username/route.ts (Next.js) or any handler
+export async function GET(req: Request): Promise<Response> {
+  const u = new URL(req.url).searchParams.get('u') ?? '';
+  if (u.length < 3) {
+    return Response.json({ available: false, reason: 'too-short' });
+  }
+
+  const taken = await db.users.exists({ username: u });
+  return Response.json(
+    { available: !taken },
+    {
+      headers: {
+        // Don't let proxies cache identity-check answers.
+        'Cache-Control': 'no-store',
+        // Your rate limiter; the client can read these to back off.
+        'X-RateLimit-Remaining': String(remaining),
+      },
+    },
+  );
+}
+```
+
+The client doesn't need `reason` for the happy path, but logging it
+on the server side gives you visibility into which checks are
+hitting which guard.
+
+## What's built-in
+
+| Concern | How |
+|---|---|
+| Debounce | `debounceMs` prop, default 300 ms |
+| Race-condition cancellation | Per-field monotonic token; stale results dropped before `setState` |
+| Loading state per field | `validating[field]: boolean` (only set while in flight; deleted on resolve) |
+| Errors separated from sync errors | `asyncErrors[field]` plus merged `errors[field]` (async wins on overlap) |
+| Cross-field / form-level errors | Sync `validate` returns `{ _root: '…' }` → exposed as `rootError` |
+| Cleanup on unmount / reset | Pending timers cleared, tokens bumped — no zombie state updates |
+
+## What's NOT built-in — your job
+
+- **Rate limiting on the server.** Debounce reduces request rate from
+  the legitimate UI, but a script can still hit your endpoint
+  directly. Rate-limit per IP and per account at the edge.
+- **Caching successful checks.** Validating `"myusername"` three
+  times in 60s should not hit your DB three times. Cache server-side
+  with a short TTL, keyed on the value.
+- **Visual treatment of `validating`.** The flag is exposed; the
+  spinner placement, "Checking…" copy, ARIA live region — those are
+  yours.
+- **Submit-button disabling.** The hook does not gate submits. Wire
+  your button's `disabled` to
+  `Object.keys(form.validating).length > 0` (and your own
+  `isSubmitting` state if you have one).
+- **`AbortController` for the fetch itself.** The hook ignores stale
+  results, but the in-flight HTTP request still completes and still
+  counts against quota. If you need true cancellation, manage the
+  controller in your validator.
+- **Cross-field async validation.** "Confirm-password matches
+  password" with a server round-trip — you express that inside your
+  validator using the second `values` argument; the library just
+  runs the callback.
+- **Telling the user the cached result is stale.** If they paused
+  for four minutes, the last "available" answer might no longer be
+  true. Re-check on submit if it matters.
+
+## Gotchas
+
+**Sync and async run independently, not in sequence.** A common
+expectation is "skip the async check if sync already failed." That's
+not what happens. Every `setValue` schedules the async validator
+regardless of the sync result. If you want to skip the round-trip on
+invalid input, guard inside the validator:
+
+```tsx
+validateAsync: {
+  email: async (value, values) => {
+    if (!String(value).includes('@')) return null; // sync will flag it
+    return checkEmailRegistered(String(value));
+  },
+},
+```
+
+**The debounce timer resets on every keystroke.** If the user types
+one character per second with a 300ms debounce, the async check
+never fires. This is correct behavior but counterintuitive —
+consider a lower `debounceMs` (150–200) for fields where users type
+deliberately.
+
+**Cancelled in-flight calls don't surface their error.** If the
+validator throws or rejects after its token was invalidated, the
+`.catch` block exits silently — no console warning, no error to
+sentry. If you need to log network failures, do it inside the
+validator before returning.
+
+**The validator closure reads live values.** The hook stores the
+latest `values` in a ref and reads it when the debounced timer
+fires, so the validator always sees the freshest input even if it
+was scheduled five keystrokes ago. Don't memo-capture `values` from
+outside; trust the function arguments.
+
+**Submit doesn't auto-block on `validating`.** Neither `useFormState`
+nor `useFormWithZod`'s `handleSubmit` checks the `validating` map
+before running. Your submit handler is responsible for
+short-circuiting if `Object.keys(form.validating).length > 0`.
+
+## Related
+
+- [`useFormState` reference](/) — the underlying primitive
+- [`useFormWithZod`](/) — Zod resolver that composes with this
+- [`createRHFBindings`](/) — React Hook Form adapter (RHF has its own
+  async validation; use that if you're already on RHF)
+- [HIPAA patient intake blueprint](/blueprints/healthtech-patient-intake/) —
+  uses async validation for insurance member ID lookups

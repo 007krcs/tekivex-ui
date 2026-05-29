@@ -1,0 +1,54 @@
+---
+title: Industry blueprints — production-shaped patterns for regulated verticals
+description: Outcome-driven walkthroughs scoped to a specific industry's compliance and workflow shape. Honest about scope — these blueprints show how the primitives compose, not that the library is certified.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="What blueprints are and aren't">
+  Industry blueprints show how tekivex-ui primitives help an application
+  address specific technical requirements in regulated verticals. They do
+  NOT make your application compliant with any framework — HIPAA, PCI-DSS,
+  SOC 2, FedRAMP, or any other. Compliance attaches to **organizations
+  and their processes**, not to npm packages. Each blueprint includes a
+  large "what this does NOT cover" section naming the responsibilities
+  your organization still owns. Read those sections.
+</Aside>
+
+## What's here today
+
+| Blueprint | Industry | Frameworks addressed |
+|---|---|---|
+| [Healthtech — patient intake form](/blueprints/healthtech-patient-intake/) | Clinical / EHR | 45 CFR § 164.312 (HIPAA technical safeguards) — partial coverage at the React UI layer |
+
+## What's coming (v3.20 wishlist)
+
+The next blueprints we'll write — in roughly this order — are:
+
+- **Fintech — checkout with PCI-DSS-aligned card handling.** Single-page card capture that never touches PAN data in the React app (delegates to your provider's iframe SDK), with audit trail of every customer-facing state change.
+- **Govtech — Section 508 / EAA-aligned form flow.** Multi-step form pattern with explicit keyboard nav, screen-reader walkthrough, and reduced-motion fallbacks. Maps to the WCAG 2.1 AA / AAA criteria your VPAT will require.
+- **EdTech — FERPA-aligned student record viewer.** Audit-logged access to student records, role-based field visibility, parental-consent flow.
+- **Insurance — claims intake with document upload.** File upload with magic-byte verification, OCR handoff (consumer-driven), claim audit trail.
+
+Open an issue if you want to vote on the order, or if your vertical isn't
+on the list and you'd partner on writing one.
+
+## How to read a blueprint
+
+Each page follows the same structure:
+
+1. **The scenario** — what real-world workflow this addresses
+2. **Framework mapping** — which specific regulatory subparts the primitives help satisfy (with citations)
+3. **The blueprint** — full working code, typically multiple steps
+4. **What's built-in** — the wins
+5. **What this does NOT cover** — the larger compliance perimeter your organization still owns. Always large. Always specific.
+6. **Gotchas** — real edge cases from the implementation
+7. **References** — the actual statutes / regulations / standards cited
+
+## Difference from recipes
+
+[Recipes](/recipes/) are primitive-shaped — one focused pattern using one
+to three library APIs. Industry blueprints are larger and compose more
+primitives, with explicit framework citations. If you're trying to ship
+*a feature*, look at a recipe. If you're trying to ship *a production
+shape for a regulated industry*, look at a blueprint.

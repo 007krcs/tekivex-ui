@@ -40,7 +40,7 @@ A hash chain doesn't stop tampering — it makes tampering detectable.
 ## The recipe
 
 ```tsx
-import { audit, getAuditLog, verifyAuditIntegrity } from 'tekivex-ui/headless';
+import { audit, getAuditLog, verifyAuditIntegrity } from 'tekivex-ui';
 
 // ── On user login ────────────────────────────────────────────────────────
 function onLoginSuccess(userId: string, mfaUsed: boolean) {

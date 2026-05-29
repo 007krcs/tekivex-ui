@@ -1,0 +1,677 @@
+---
+title: HIPAA-aligned patient intake form
+description: A multi-step React intake form that addresses several 45 CFR § 164.312 technical safeguards — audit controls, integrity, and transmission security at the UI layer. Honest about what this covers and what your organization is still responsible for.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="What this page is and isn't">
+  This blueprint shows how tekivex-ui primitives help a React application
+  satisfy the **technical safeguards** clause of HIPAA (45 CFR § 164.312).
+  It does NOT make your application HIPAA-compliant. Compliance attaches to
+  **covered entities and business associates** as defined in 45 CFR § 160.103,
+  not to npm packages. The perimeter your organization is responsible for —
+  a BAA with your cloud provider, encryption at rest in your database,
+  access controls in your identity provider, audit-log persistence and
+  retention, breach notification, workforce training, and risk analysis —
+  is described at the bottom of this page and is much larger than the UI
+  layer. tekivex-ui is a React component library. It is not a Business
+  Associate, it does not sign BAAs, and HHS does not certify component
+  libraries as HIPAA-compliant.
+</Aside>
+
+## The scenario
+
+A new patient is sitting in the lobby of a small clinic with a tablet. The
+intake form they're filling in collects:
+
+- Legal name and date of birth
+- Phone, email, mailing address
+- Insurance carrier, member ID, group number
+- A photo of the front and back of the insurance card
+- Current medications (free text)
+- Known allergies (free text)
+- Reason for today's visit (free text, 500-char cap)
+- A signed consent-to-treat acknowledgement
+
+Every field change and the final submission must be recorded in an audit
+trail that the clinic's compliance officer can later prove is unmodified.
+The signature must be tamper-evident — if anyone alters the captured
+image after the fact, the change has to be detectable. The free-text
+medication and reason-for-visit fields contain PHI that must never be
+logged in cleartext.
+
+This blueprint shows how to wire that up with tekivex-ui primitives, and
+it is honest about which parts of HIPAA the UI layer cannot help with.
+
+## What the primitives address
+
+The following table maps individual tekivex-ui primitives to specific
+subparts of 45 CFR § 164.312 (Technical safeguards). Read this carefully —
+the rows that are **not** in the table matter as much as the rows that
+are.
+
+| 45 CFR § 164.312 requirement | tekivex-ui primitive | What it does at the UI layer |
+|---|---|---|
+| (b) Audit controls — "Implement hardware, software, and/or procedural mechanisms that record and examine activity in information systems that contain or use electronic protected health information." | `audit()` + `getAuditLog()` + `verifyAuditIntegrity()` | Records a hash-chained event for every PHI-touching interaction at the React layer. Each entry is content-addressed by SHA-256 and chained to the previous entry, so any post-hoc edit is detectable. |
+| (c)(1) Integrity — "Implement policies and procedures to protect electronic protected health information from improper alteration or destruction." | `sanitizeUnicode()` + `sanitizeString()` + `sniffMimeType()` | Strips zero-width and bidirectional control characters (Trojan Source class), HTML-escapes free-text input before it ever reaches a render path, and verifies that uploaded files are actually the type they claim to be. |
+| (c)(2) Mechanism to authenticate electronic protected health information — "Implement electronic mechanisms to corroborate that electronic protected health information has not been altered or destroyed in an unauthorized manner." | `sha256Hex()` + `verifyAuditIntegrity()` | Audit entries embed the SHA-256 of the previous chain hash plus the current event payload. A one-bit change anywhere downstream breaks the chain in O(n). |
+| (e)(1) Transmission security — "Implement technical security measures to guard against unauthorized access to electronic protected health information that is being transmitted over an electronic communications network." | `scrubPII()` before outbound calls + `sniffMimeType()` on inbound files | Redacts SSN, Luhn-valid card numbers, email, phone, and `sk-`/`pk-`/`rk-` API keys from any string before it leaves the browser for a log sink or third-party service. Magic-byte verification rejects polyglot or Content-Type-spoofed uploads at the UI boundary. |
+
+The rows that are **not** in the table:
+
+- **(a)(1) Access control — "Implement technical policies and procedures
+  for electronic information systems that maintain electronic protected
+  health information to allow access only to those persons or software
+  programs that have been granted access rights."** This is your identity
+  provider (Okta, Auth0, Clerk, Cognito, your own auth server). The UI
+  library does not authenticate users. It does not know who is allowed
+  to see what.
+- **(a)(2)(i) Unique user identification.** Same — your auth system
+  assigns and tracks user IDs.
+- **(a)(2)(ii) Emergency access procedure.** Your operational runbook,
+  not a React component.
+- **(a)(2)(iii) Automatic logoff.** Your session manager handles this.
+  A component library cannot enforce session expiry.
+- **(a)(2)(iv) Encryption and decryption** (addressable). Transit
+  encryption is your TLS termination (reverse proxy, load balancer,
+  CDN). At-rest encryption is your database. The UI layer can't enforce
+  either.
+- **(d) Person or entity authentication.** Auth system again.
+
+If you are looking at this table and counting how many subparts of
+§ 164.312 the UI library does not address, that is the correct reaction.
+The technical safeguards rule is mostly about the server and the
+identity layer.
+
+## The blueprint
+
+### Step 1 — Form structure with Zod validation
+
+`useFormWithZod` is the zero-runtime-dep adapter shipped in
+`tekivex-ui/headless`. It takes a Zod schema you've installed yourself
+and returns the same shape as `useFormState` plus a `handleSubmit`
+helper.
+
+```tsx
+'use client';
+
+import { z } from 'zod';
+import { useFormWithZod } from 'tekivex-ui/headless';
+import {
+  audit,
+  scrubPII,
+  sanitizeUnicode,
+  sha256Hex,
+} from 'tekivex-ui';
+import { TkxFileUpload, TkxSignaturePad } from 'tekivex-ui';
+import { useRef, useState } from 'react';
+import type { TkxSignaturePadHandle } from 'tekivex-ui';
+
+// ── Schema ────────────────────────────────────────────────────────────
+// Field-level validation only. The signature and insurance card uploads
+// are validated by the components themselves and checked again in the
+// submit handler.
+const intakeSchema = z.object({
+  fullName: z.string().min(1, 'Required').max(120),
+  dob: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Use YYYY-MM-DD')
+    .refine((s) => {
+      const t = Date.parse(s);
+      if (Number.isNaN(t)) return false;
+      const y = new Date(t).getUTCFullYear();
+      return y >= 1900 && y <= new Date().getUTCFullYear();
+    }, 'Date out of range'),
+  email: z.string().email('Invalid email'),
+  phone: z
+    .string()
+    .regex(/^\+?[\d\s().-]{7,20}$/, 'Invalid phone number'),
+  addressLine: z.string().min(1).max(200),
+  insuranceCarrier: z.string().min(1).max(120),
+  insuranceMemberId: z.string().min(1).max(60),
+  insuranceGroup: z.string().max(60).optional().default(''),
+  medications: z.string().max(2000).optional().default(''),
+  allergies: z.string().max(2000).optional().default(''),
+  reasonForVisit: z.string().min(1).max(500),
+  consentAck: z.literal(true, {
+    errorMap: () => ({ message: 'You must acknowledge the consent' }),
+  }),
+});
+
+type IntakeValues = z.infer<typeof intakeSchema>;
+
+const initialValues: IntakeValues = {
+  fullName: '',
+  dob: '',
+  email: '',
+  phone: '',
+  addressLine: '',
+  insuranceCarrier: '',
+  insuranceMemberId: '',
+  insuranceGroup: '',
+  medications: '',
+  allergies: '',
+  reasonForVisit: '',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  consentAck: false as any,
+};
+```
+
+A few things worth calling out before the next step:
+
+- The Zod schema does not validate the signature or the uploaded
+  insurance card photos. Those are not strings — the signature is a
+  data URL produced by `TkxSignaturePad`, and the uploads are `File`
+  objects produced by `TkxFileUpload`. We carry those alongside the
+  form state and validate them in `handleSubmit`.
+- `dob` is a string in ISO format, not a `Date`. `useFormState` accepts
+  `string | number | boolean | string[] | null | undefined` for field
+  values, so dates round-trip as ISO strings and the Zod refinement
+  bounds-checks them.
+
+### Step 2 — Inline PII redaction before logging
+
+Every field blur should record an audit event so the clinic can later
+prove the patient entered each value at a specific time. But the audit
+log must not contain the cleartext PHI — that would defeat the point of
+having an audit trail at all (a leaked log would become a leaked PHI
+dump).
+
+The pattern is: log the **shape** of what changed, not the value. Run
+the metadata through `scrubPII()` as a defense-in-depth second layer so
+that even if a developer forgets and accidentally drops a value into
+`meta`, the structured PII patterns (SSN, Luhn-valid cards, email,
+phone, `sk-`/`pk-`/`rk-` keys) get redacted before the chain hash is
+computed.
+
+```tsx
+function logFieldChange(field: keyof IntakeValues, value: string) {
+  // 1. Never include the raw value. Log length + a stable category.
+  // 2. Still run anything else through scrubPII before it's hashed.
+  const safeNote = scrubPII(`field=${field} len=${value.length}`);
+  audit('intake.field.change', 'PatientIntake', {
+    field,
+    valueLength: value.length,
+    note: safeNote,
+  });
+}
+```
+
+When you wire this into `getFieldProps` you wrap `onBlur`:
+
+```tsx
+const form = useFormWithZod<IntakeValues>({
+  schema: intakeSchema,
+  initialValues,
+});
+
+const fieldProps = (name: keyof IntakeValues) => {
+  const base = form.getFieldProps(name);
+  return {
+    ...base,
+    onBlur: () => {
+      base.onBlur();
+      logFieldChange(name, String(form.values[name] ?? ''));
+    },
+  };
+};
+```
+
+The `chainHash` of every audit entry now depends on the (scrubbed,
+length-only) metadata. If anyone later edits the in-memory log to
+pretend a field had a different value, the chain breaks at that entry
+and `verifyAuditIntegrity()` returns `false`.
+
+<Aside type="note" title="scrubPII is a backstop, not a substitute for discipline">
+  Read the "Gotchas" section before you treat `scrubPII()` as a license
+  to log freely. It catches SSN, Luhn-valid card numbers, email, phone,
+  and `sk-`/`pk-`/`rk-` API keys. It does **not** catch names, mailing
+  addresses, dates of birth, medical record numbers (MRNs), diagnosis
+  codes, drug names, or free-text symptom descriptions. The pattern
+  above — log length, not value — is what keeps PHI out of the log. The
+  scrubber is a second line in case you slip.
+</Aside>
+
+### Step 3 — Insurance card upload with magic-byte verification
+
+`TkxFileUpload` accepts a fixed `accept` list and runs `sniffMimeType()`
+against the first 12 bytes of every accepted file. A `.exe` renamed to
+`card-front.jpg` with `Content-Type: image/jpeg` fails the magic-byte
+check, gets flagged with a per-file error, and is removed from the
+valid-files array that `onChange` emits.
+
+```tsx
+const [cardFront, setCardFront] = useState<File | null>(null);
+const [cardBack, setCardBack] = useState<File | null>(null);
+
+async function onCardFront(files: File[]) {
+  const file = files[0] ?? null;
+  setCardFront(file);
+  if (file) {
+    // Bind the upload to the audit chain by hashing the file bytes.
+    const buf = new Uint8Array(await file.arrayBuffer());
+    // sha256Hex accepts a string — use a hex-encoded body summary for
+    // long files, or hash the entire content for small uploads.
+    const bodyHash = sha256Hex(
+      Array.from(buf.slice(0, 65536))
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join(''),
+    );
+    audit('intake.insurance.upload', 'PatientIntake', {
+      side: 'front',
+      bytes: file.size,
+      mime: file.type,
+      bodyHashPrefix: bodyHash.slice(0, 16),
+    });
+  }
+}
+
+// ... same for cardBack with side: 'back'
+
+<TkxFileUpload
+  label="Insurance card — front"
+  hint="JPEG, PNG, or PDF. Max 10 MB. Bytes are verified against the file signature."
+  accept="image/jpeg,image/png,application/pdf"
+  maxSize={10 * 1024 * 1024}
+  maxFiles={1}
+  preview
+  variant="dropzone"
+  onChange={onCardFront}
+  onError={(msg) =>
+    audit('intake.insurance.upload.reject', 'PatientIntake', { reason: msg })
+  }
+/>
+```
+
+The component runs four gates internally before `onChange` fires —
+size, filename (rejects control chars, NUL, and `../` path-traversal),
+extension/MIME match against `accept`, and magic-byte verification via
+`sniffMimeType()`. Files that fail any gate never appear in the
+valid-files array. See the [secure-file-upload recipe](/recipes/secure-file-upload/)
+for the full magic-byte signature table and what each gate catches.
+
+The audit entry records a 64KB-prefix hash of the file body, not the
+bytes themselves. That's enough to make tampering with the stored
+upload detectable: re-hash the prefix at any point and compare against
+the chain entry.
+
+### Step 4 — Tamper-evident signature
+
+`TkxSignaturePad` exposes an imperative handle (`clear`, `undo`,
+`isEmpty`, `toDataURL`, `toBlob`). On submit we read the signature as a
+PNG data URL, hash it, and record the hash in the audit chain.
+
+```tsx
+const padRef = useRef<TkxSignaturePadHandle>(null);
+
+<TkxSignaturePad
+  ref={padRef}
+  label="Patient signature — consent to treat"
+  height={180}
+  strokeWidth={2}
+  onChange={() => {
+    // Fires on every pointer-up. Record only that a stroke landed,
+    // never the image bytes.
+    audit('intake.signature.stroke', 'PatientIntake', {
+      empty: padRef.current?.isEmpty() ?? true,
+    });
+  }}
+/>
+```
+
+When the patient hits Submit:
+
+```tsx
+async function captureSignature(): Promise<{
+  dataUrl: string;
+  hash: string;
+} | null> {
+  const pad = padRef.current;
+  if (!pad || pad.isEmpty()) return null;
+  const dataUrl = pad.toDataURL('image/png');
+  const hash = sha256Hex(dataUrl);
+  audit('intake.signature.commit', 'PatientIntake', {
+    bytes: dataUrl.length,
+    hashPrefix: hash.slice(0, 16),
+  });
+  return { dataUrl, hash };
+}
+```
+
+The signature pad produces a **drawn** signature — pixels on a canvas.
+It is not a digital signature with PKI. The tamper-evidence comes from
+the audit chain: the SHA-256 of the data URL is in an entry whose
+`chainHash` cascades into every subsequent entry. If anyone later
+replaces the stored signature image with a different one, re-hashing
+it and comparing to the audit entry surfaces the change.
+
+If your threat model requires legal-weight e-signatures under the
+ESIGN Act or UETA, you need a separate provider (DocuSign, Adobe Sign,
+HelloSign). `TkxSignaturePad` does not produce ESIGN-conformant
+signatures and does not pretend to.
+
+### Step 5 — Submission with full audit chain
+
+The submit handler runs Zod validation, captures the signature, ensures
+both card photos are present, and only then posts to the backend. Every
+step is audited.
+
+```tsx
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+
+  // 1. Zod validation. If this fails the audit entry records "rejected".
+  const ok = form.validate();
+  if (!ok) {
+    audit('intake.submit.rejected', 'PatientIntake', {
+      reason: 'zod-validation-failed',
+      errorFields: Object.keys(form.errors),
+    });
+    return;
+  }
+
+  // 2. Component-level validation (signature + uploads).
+  if (!cardFront || !cardBack) {
+    audit('intake.submit.rejected', 'PatientIntake', {
+      reason: 'missing-insurance-card',
+      hasFront: !!cardFront,
+      hasBack: !!cardBack,
+    });
+    return;
+  }
+  const sig = await captureSignature();
+  if (!sig) {
+    audit('intake.submit.rejected', 'PatientIntake', {
+      reason: 'signature-empty',
+    });
+    return;
+  }
+
+  // 3. Strip control characters from any free-text field before
+  //    transmission. sanitizeUnicode catches Trojan Source bidi
+  //    overrides; the form's render path already uses sanitizeString.
+  const safeMedications = sanitizeUnicode(form.values.medications);
+  const safeAllergies = sanitizeUnicode(form.values.allergies);
+  const safeReason = sanitizeUnicode(form.values.reasonForVisit);
+
+  // 4. The submission audit entry records the shape of the submission,
+  //    never the PHI itself. The chain hash anchors the submission to
+  //    the field-change events that preceded it.
+  audit('intake.submit', 'PatientIntake', {
+    fieldCount: Object.keys(form.values).length,
+    signatureHashPrefix: sig.hash.slice(0, 16),
+    cardFrontBytes: cardFront.size,
+    cardBackBytes: cardBack.size,
+    reasonLength: safeReason.length,
+    medicationsLength: safeMedications.length,
+    allergiesLength: safeAllergies.length,
+  });
+
+  // 5. Hand off to your backend. TLS is your reverse proxy's job.
+  const body = new FormData();
+  body.set('payload', JSON.stringify({
+    ...form.values,
+    medications: safeMedications,
+    allergies: safeAllergies,
+    reasonForVisit: safeReason,
+    signatureDataUrl: sig.dataUrl,
+    signatureHash: sig.hash,
+  }));
+  body.set('cardFront', cardFront);
+  body.set('cardBack', cardBack);
+
+  await fetch('/api/intake', { method: 'POST', body });
+}
+```
+
+On the server side you should:
+
+1. Re-run `sniffMimeType()` against the uploaded card photos. The
+   client check is advisory; the security boundary is the server.
+2. Re-hash the submitted signature data URL and compare to
+   `signatureHash`.
+3. Persist the in-memory audit chain — `getAuditLog()` returned from
+   the React app on submit, or streamed entry-by-entry as `audit()`
+   returns each frozen `AuditEntry` — to an append-only store. Verify
+   chain integrity before persisting.
+
+A minimal server-side verification (Node 18+):
+
+```ts
+import { sha256Hex, sniffMimeType } from 'tekivex-ui';
+
+export async function POST(req: Request) {
+  const form = await req.formData();
+  const cardFront = form.get('cardFront');
+  const cardBack = form.get('cardBack');
+  const payloadRaw = form.get('payload');
+
+  if (!(cardFront instanceof File) || !(cardBack instanceof File)) {
+    return new Response('missing uploads', { status: 400 });
+  }
+  for (const [name, f] of [['front', cardFront], ['back', cardBack]] as const) {
+    const sniffed = await sniffMimeType(f);
+    if (sniffed === null || !['image/jpeg', 'image/png', 'application/pdf'].includes(sniffed)) {
+      return new Response(`${name} is not a permitted file type`, { status: 415 });
+    }
+  }
+
+  const payload = JSON.parse(String(payloadRaw));
+  const recomputed = sha256Hex(payload.signatureDataUrl);
+  if (recomputed !== payload.signatureHash) {
+    return new Response('signature hash mismatch', { status: 400 });
+  }
+
+  // Persist payload + uploads + audit chain to your write-once store.
+  return new Response('ok');
+}
+```
+
+## What this does NOT cover — your organization's responsibility
+
+This is the load-bearing section of the page. The UI library handles
+the React-layer pieces listed in the table above. It does not and
+cannot handle the rest of HIPAA. Your organization is responsible for
+all of the following — and "all" means all.
+
+### Administrative safeguards (45 CFR § 164.308)
+
+The administrative-safeguards rule is a separate section of the HIPAA
+Security Rule from § 164.312, and tekivex-ui addresses **none** of it:
+
+- **§ 164.308(a)(1) Security management process.** Risk analysis, risk
+  management, sanction policy, periodic review of system activity.
+  This is a documented organizational process, not a piece of code.
+- **§ 164.308(a)(2) Assigned security responsibility.** You designate a
+  Security Official. A library cannot do that for you.
+- **§ 164.308(a)(3) Workforce security.** Authorization and supervision,
+  workforce clearance, termination procedures.
+- **§ 164.308(a)(4) Information access management.** Access
+  authorization, access establishment and modification.
+- **§ 164.308(a)(5) Security awareness and training.**
+- **§ 164.308(a)(6) Security incident procedures.** Reporting and
+  response.
+- **§ 164.308(a)(7) Contingency plan.** Data backup plan, disaster
+  recovery plan, emergency mode operation, testing and revision,
+  applications and data criticality analysis.
+- **§ 164.308(a)(8) Evaluation.** Periodic technical and non-technical
+  evaluation against the security rule.
+- **§ 164.308(b) Business Associate contracts.** Includes your cloud
+  provider. AWS, GCP, and Azure all offer BAAs, but **only for
+  specific services on specific tiers**. Hosting PHI on a service not
+  covered by your BAA is non-compliant regardless of what your React
+  code does.
+
+### Physical safeguards (45 CFR § 164.310)
+
+- **§ 164.310(a) Facility access controls.** Locked server rooms,
+  contingency operations, facility security plan, access control and
+  validation, maintenance records.
+- **§ 164.310(b) Workstation use.** Policies for which workstations
+  can access PHI and how.
+- **§ 164.310(c) Workstation security.** Physical safeguards for those
+  workstations.
+- **§ 164.310(d) Device and media controls.** Disposal of old drives,
+  media reuse policy, accountability, data backup and storage. This
+  includes **encryption at rest** in your database — tekivex-ui does
+  not encrypt anything on disk because there is no disk in the
+  browser.
+
+### Other technical safeguards (§ 164.312) we don't cover
+
+- **§ 164.312(a)(1) Access control** — your IdP (Okta, Auth0, Clerk,
+  Cognito, your own).
+- **§ 164.312(a)(2)(i) Unique user identification** — your auth.
+- **§ 164.312(a)(2)(ii) Emergency access procedure** — your runbook.
+- **§ 164.312(a)(2)(iii) Automatic logoff** — your session manager.
+- **§ 164.312(a)(2)(iv) Encryption and decryption** (addressable) —
+  TLS in transit is your reverse proxy / load balancer / CDN. At rest
+  is your database. The browser cannot enforce either.
+- **§ 164.312(d) Person or entity authentication** — your auth system.
+
+### Other regulatory pieces we do not touch
+
+- **Breach notification rule (45 CFR § 164.400–414).** When PHI is
+  exposed, you have 60 days to notify affected individuals and HHS,
+  and possibly the media. Your organization owns that process,
+  including counsel coordination.
+- **Patient rights (45 CFR § 164.520–528).** Notice of Privacy
+  Practices, right of access, amendment, accounting of disclosures,
+  restriction, confidential communications. These are application
+  business logic, not UI primitives.
+- **Privacy Rule (45 CFR Part 164 Subpart E)** more broadly — minimum
+  necessary, uses and disclosures, marketing, fundraising,
+  authorizations.
+
+### Specific NOT-claims, stated plainly
+
+- **tekivex-ui is not a Business Associate.** We do not sign Business
+  Associate Agreements. We do not have access to your PHI — we are an
+  npm package that runs entirely in your bundle. There is no provider
+  to BAA with.
+- **tekivex-ui is not HIPAA-certified.** No npm package is
+  HIPAA-certified, because **HHS does not certify products as
+  HIPAA-compliant**. From the HHS guidance: HHS does not endorse,
+  recommend, or certify any product, technology, or service as HIPAA
+  compliant. Anyone marketing a "HIPAA-certified component library"
+  is being misleading.
+- **The audit log is not legally admissible on its own.** A hash chain
+  is tamper-evidence, not chain-of-custody. Admissibility requires
+  your organization's controls around persistence, retention, access,
+  and provenance. The chain helps; it does not substitute.
+- **The signature pad does not produce ESIGN-conformant signatures.**
+  It produces a drawn image with a content-addressed hash. That is
+  enough for an internal consent-to-treat acknowledgement when paired
+  with strong audit. It is **not** enough for a contract that needs
+  to survive a court challenge under the ESIGN Act or UETA — use a
+  dedicated e-signature provider for that.
+- **Installing tekivex-ui does not make your application
+  HIPAA-compliant.** Compliance is a property of the organization
+  (the covered entity and its business associates) operating the
+  system, not a property of any library inside it.
+
+## Gotchas
+
+- **The audit log is in-memory by default.** `auditTrail` lives in a
+  module-scoped `let` in `src/engine/security.ts`. A page reload
+  wipes it. § 164.312(b) requires you to **record and examine
+  activity** in systems that contain or use ePHI. Recording into
+  RAM that vanishes on refresh does not satisfy "record." You must
+  persist `getAuditLog()` output (or stream entries as they're
+  returned from `audit()`) to a write-once, append-only store with
+  a retention policy long enough to satisfy your jurisdiction
+  (HIPAA's six-year retention floor under § 164.316(b)(2) is a
+  common floor; state law or your contracts may demand more).
+
+- **`scrubPII()` catches a narrow set of patterns.** From the source
+  in `src/engine/security.ts`: US SSN (`\d{3}-\d{2}-\d{4}`),
+  Luhn-validated 13-19 digit card numbers, email addresses, phone
+  numbers, and API keys prefixed with `sk-`, `pk-`, or `rk-`. It
+  does **not** catch:
+  - Patient names
+  - Mailing addresses
+  - Dates of birth
+  - Medical record numbers (MRNs)
+  - Diagnosis codes (ICD-10, CPT)
+  - Drug names in the medications field
+  - Free-text descriptions of symptoms or conditions
+  - Insurance member IDs and group numbers
+
+  If your intake form has a "current medications" or "reason for
+  visit" free-text field, the words in it **are PHI** and
+  `scrubPII` will not see them. The discipline is: do not log the
+  value, log its length and a stable category label. The scrubber
+  is a second line of defense for when you slip.
+
+- **The hash chain anchors content to an entry, but the bytes
+  still exist somewhere.** `audit()` hashes whatever you pass in
+  `meta`. The cleartext is in your render path, your form state,
+  your network request body, your server logs (unless you scrub
+  those), and your database. Tamper-evidence at the React layer
+  does not protect PHI in any of those other locations. Encrypt at
+  rest. Scrub server logs. Use TLS for transit. Control access.
+
+- **TLS is your job, not the library's.** tekivex-ui cannot enforce
+  HTTPS — that decision lives in your reverse proxy (NGINX,
+  Caddy), your load balancer (ALB, ELB, GCLB), or your CDN
+  (CloudFront, Cloudflare). The browser will happily send PHI in
+  cleartext over HTTP if you let it. Configure HSTS, redirect HTTP
+  to HTTPS, and use the `buildTkxCSP()` helper if you want a
+  reasonable CSP including `upgrade-insecure-requests`.
+
+- **Magic-byte verification stops Content-Type spoofing, not
+  malicious content inside valid files.** A perfectly-valid JPEG
+  whose pixels encode a steganographic payload sniffs as
+  `image/jpeg` and passes every gate. For DLP, virus scanning, or
+  embedded-script detection in PDFs, integrate a separate scanning
+  service (ClamAV, a commercial DLP vendor, or your cloud
+  provider's offering).
+
+- **The audit chain genesis is a constant.** Every fresh process
+  starts from 64 zeros. Two browser sessions of the same form
+  produce different legitimate chains — do not compare chain hashes
+  across sessions, and do not assume a chain restored from
+  persistence will match in-memory state. Verify each chain on its
+  own.
+
+- **Don't rely on client-side validation for the security
+  boundary.** Re-run `sniffMimeType()` on uploads server-side.
+  Re-hash the signature data URL server-side. Re-verify the audit
+  chain server-side before persisting. The browser is a hostile
+  execution environment — assume any client validation can be
+  bypassed.
+
+- **`useFormState` field values are `string | number | boolean |
+  string[] | null | undefined`.** Complex types (File, Blob, Date
+  objects, Map) live outside the form state — that's why this
+  blueprint keeps `cardFront`, `cardBack`, and the signature
+  handle in separate React state. The Zod schema validates only
+  the simple-typed fields.
+
+## Related primitives
+
+- [Secure file upload recipe](/recipes/secure-file-upload/) — the
+  magic-byte signature table and the four-gate pipeline inside
+  `TkxFileUpload`.
+- [Audit trail recipe](/recipes/audit-trail/) — the chain
+  construction, persistence patterns, and verification semantics
+  in full.
+- [`TkxFileUpload` reference](/components/file-upload/)
+- [Security primitives in `/security/`](/security/) — the full
+  list including `buildTkxCSP`, `installTrustedTypes`,
+  `installFrameBuster`, `createRateLimiter`.
+- [Security threat model](https://github.com/007krcs/tekivex-ui/blob/master/docs/SECURITY-THREAT-MODEL.md) —
+  the STRIDE-shaped attacker assumptions tekivex-ui's security
+  primitives are designed against.
+
+## References
+
+- [45 CFR Part 164 Subpart C — Security Standards for the Protection of Electronic Protected Health Information](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C) (§ 164.302 – § 164.318)
+- [45 CFR Part 164 Subpart D — Notification in the Case of Breach of Unsecured Protected Health Information](https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-D) (§ 164.400 – § 164.414)
+- [HHS — HIPAA Security Rule overview](https://www.hhs.gov/hipaa/for-professionals/security/index.html)
+- [HHS — Business Associate Contracts](https://www.hhs.gov/hipaa/for-professionals/covered-entities/sample-business-associate-agreement-provisions/index.html)
+- HHS's official position: HHS does not endorse, recommend, or
+  certify any product, technology, or service as HIPAA compliant.
+  Any vendor claim of HIPAA certification for a software product
+  should be read with that in mind.

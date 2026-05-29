@@ -37,7 +37,7 @@ text.
 ### Single-call usage
 
 ```tsx
-import { scrubPII } from 'tekivex-ui/headless';
+import { scrubPII } from 'tekivex-ui';
 
 const transcript = `
   Customer: Hi, my SSN is 123-45-6789 and you can reach me at
@@ -69,7 +69,7 @@ point.
 Wrap your provider call so redaction is impossible to forget:
 
 ```ts
-import { scrubPII } from 'tekivex-ui/headless';
+import { scrubPII } from 'tekivex-ui';
 
 export async function safeLLM(prompt: string, opts?: RequestInit) {
   const scrubbed = scrubPII(prompt);
@@ -96,7 +96,7 @@ check.
 ### Why Luhn matters — concrete demo
 
 ```ts
-import { scrubPII } from 'tekivex-ui/headless';
+import { scrubPII } from 'tekivex-ui';
 
 scrubPII('Customer card: 4111-1111-1111-1111');
 // → 'Customer card: [redacted-card]'   ← valid Visa test number, redacted
@@ -167,7 +167,7 @@ survived the credit-card check will still be available for your own
 matcher:
 
 ```ts
-import { scrubPII } from 'tekivex-ui/headless';
+import { scrubPII } from 'tekivex-ui';
 
 function scrubExtended(text: string): string {
   let s = scrubPII(text);
