@@ -1,73 +1,122 @@
 ---
-title: Ecosystem — companion packages
-description: Four companion packages that ship alongside tekivex-ui — tekivex-security-core, tekivex-audit, create-tekivex-app, figma-kit.
+title: Ecosystem — all 14 packages, grouped by when to install
+description: Complete map of every npm package in the tekivex-ui ecosystem. What each does, when to reach for it, what it pairs with. One screen, scannable.
 ---
 
-import { CardGrid, Card } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
-Four packages live alongside `tekivex-ui` in the same repository.
-**Three are live on npm and install today.** The fourth (`figma-kit`)
-is source-only — [open an issue](https://github.com/007krcs/tekivex-ui/issues/new)
-and we'll publish within 48 hours.
+14 packages live under the `novaai0401` npm account. They're not all
+required, they're not all interchangeable, and the names alone don't
+always make the relationships obvious. This page is the single source
+of truth — grouped by **the question that makes you install each one**.
 
-<CardGrid>
-  <Card title="tekivex-security-core" icon="seti:lock">
-    Framework-agnostic security kernel. Same primitives as SecurityCore in
-    `tekivex-ui`, usable in Node/Deno/edge — anywhere JavaScript runs.
+<Aside type="tip" title="Don't install everything">
+  A typical consumer needs 1–3 packages, not 14. `npm install
+  tekivex-ui` is enough for most React UI work. Reach for the other
+  packages only when the specific job below comes up.
+</Aside>
 
-    ```bash
-    npm install tekivex-security-core
-    ```
-    [npm](https://www.npmjs.com/package/tekivex-security-core) ·
-    [Source](https://ui.tekivex.com)
-  </Card>
-  <Card title="tekivex-audit" icon="approve-check-circle">
-    Static-analysis CLI. 15 security + a11y checks with OWASP / CWE / WCAG
-    mappings. CI-shippable.
+## 🟢 Start here
 
-    ```bash
-    npx tekivex-audit .
-    ```
-    [npm](https://www.npmjs.com/package/tekivex-audit) ·
-    [Source](https://ui.tekivex.com)
-  </Card>
-  <Card title="create-tekivex-app" icon="rocket">
-    Project scaffolder. Two templates: "basic" for fast start, "secure"
-    with CSP + Trusted Types + frame-buster preset.
+The packages you reach for first.
 
-    ```bash
-    npm create tekivex-app@latest my-app
-    ```
-    [npm](https://www.npmjs.com/package/create-tekivex-app) ·
-    [Source](https://ui.tekivex.com)
-  </Card>
-  <Card title="figma-kit (source-only)" icon="seti:image">
-    Machine-readable design tokens + 13,103 component variant catalog.
-    Imports into Figma via Tokens Studio. Not yet on npm.
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-ui`](https://www.npmjs.com/package/tekivex-ui) | The main React component library — 116 components, WCAG 2.1 AAA, security kernel, charts, headless primitives, 44 locales | …you're building a React UI |
+| [`create-tekivex-app`](https://www.npmjs.com/package/create-tekivex-app) | Scaffolds a new React + Vite project with `tekivex-ui` pre-wired, CSP headers, dark/light theme, TypeScript, ESLint | …you're starting a fresh app from scratch |
+| [`tekivex-add`](https://www.npmjs.com/package/tekivex-add) | shadcn-style component scaffolder — copies the source of a single `tekivex-ui` component into your project so you can fork-edit it | …you have an existing app and want to own the source of one component, not import it |
 
-    [Source](https://ui.tekivex.com)
-  </Card>
-</CardGrid>
+The choice between `create-tekivex-app` and `tekivex-add`:
+- **`create-tekivex-app`** = build a NEW project, get everything wired
+- **`tekivex-add`** = ADD a component to an EXISTING project, with editable source
 
-## Quick install — all three live packages
+## 🔒 Security & quality
 
-```bash
-# Main library
-npm install tekivex-ui
+Pair with `tekivex-ui` when shipping to a regulated environment.
 
-# Standalone security kernel
-npm install tekivex-security-core
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-security-core`](https://www.npmjs.com/package/tekivex-security-core) | Framework-agnostic security kernel — XSS sanitizer, Unicode Trojan-Source defender, CSP builder, PII redactor, rate limiter, MIME sniffer, clickjacking detector. Pure TypeScript, zero runtime deps. | …you need the same primitives in Node / Deno / edge / Bun, not just React |
+| [`tekivex-audit`](https://www.npmjs.com/package/tekivex-audit) | Static-analysis CLI — scans a React project for security + accessibility regressions. Ships with OWASP / CWE / WCAG mappings, CI-shippable. Works on any React codebase, not just `tekivex-ui`. | …you want a `npm run audit` step in CI |
 
-# CI audit CLI
-npx tekivex-audit .
+`tekivex-security-core` is also bundled inside `tekivex-ui` (re-exported from `tekivex-ui/headless`). Install the standalone package only when you need it outside React.
 
-# Project scaffolder
-npm create tekivex-app@latest my-app
-```
+## 🇮🇳 India vertical
 
-## Naming history
+Two packages, deliberately separate, with different release cadences.
 
-The `@tekivex/*` scope was never registered on npm, so all packages use
-unscoped names. If older docs, blog posts, or AI assistants suggest
-`@tekivex/security-core` or `@tekivex/audit`, those names will return
-404 — use the unscoped names above.
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-india`](https://www.npmjs.com/package/tekivex-india) | India COMPONENT pack — TkxAadhaarInput (Verhoeff-checksummed), TkxPanInput, TkxVoterIdInput, TkxDrivingLicenseInput, INR currency formatting with lakh / crore grouping, Tithi / Nakshatra / Hijri / Hebrew / Buddhist calendars | …your product collects Indian KYC fields |
+| [`tekivex-india-admin`](https://www.npmjs.com/package/tekivex-india-admin) | India ADMIN-DIVISIONS data — a `DivisionsLoader` for `TkxAddressInput`'s cascading dropdowns, bundling all 36 states / UTs + districts + sub-districts with region-correct labels (Taluka / Tehsil / Mandal / Block / Circle). LGD snapshot under GODL-India. | …you need Country → State → District → Sub-district dropdowns in an address form |
+
+The two are deliberately split because:
+- `tekivex-india` ships React COMPONENTS; `tekivex-india-admin` ships DATA + a loader interface
+- `tekivex-india-admin` updates when Indian admin boundaries change (J&K reorganisations, district splits) — those updates shouldn't gate React component releases
+
+## 💰 Finance vertical
+
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-finance`](https://www.npmjs.com/package/tekivex-finance) | Finance-vertical component pack — KYC inputs, currency formatting, OTP flows, subscription / billing UI, statement viewer primitives | …you're building a fintech / banking / wealth product |
+
+## 📝 Content + document vertical
+
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-content`](https://www.npmjs.com/package/tekivex-content) | Content + document-creation pack — TkxMarkdown, TkxRichText, TkxSignature, TkxImageEditor, TkxWatermark, TkxCarousel | …you're building a CMS, blog editor, or document tool |
+
+## 📄 PDF rendering
+
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-pdf`](https://www.npmjs.com/package/tekivex-pdf) | Render React components to pixel-stable PDFs and PNGs without a headless browser. Wraps `@react-pdf/renderer` with the tekivex-ui design system. | …you need to generate PDFs (invoices, receipts, certificates) from inside the browser — no Puppeteer |
+| [`tekivex-templates`](https://www.npmjs.com/package/tekivex-templates) | Pre-built PDF templates — Biodata, Invoice, Certificate, Resume, Ticket, Boarding Pass, Receipt. Built on top of `tekivex-pdf`. Drop in, render, ship. | …you want a finished PDF template, not to build one |
+
+Install both together if you want templates AND custom PDFs.
+`tekivex-templates` depends on `tekivex-pdf`; `tekivex-pdf` is standalone.
+
+## 🎨 Form-only subset
+
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-form`](https://www.npmjs.com/package/tekivex-form) | Form components extracted from `tekivex-ui` — Input, Select, Autocomplete, Checkbox, Radio, Toggle, DatePicker, FileUpload, NumberInput, ColorPicker, OTP, Slider, PhoneInput, AadhaarInput, KYC validators, CurrencyInput, AddressInput, Form + FormField. Tree-shakeable. | …you're integrating into an existing app that already has its own UI library and you ONLY need form primitives, not the full `tekivex-ui` surface |
+
+If you're already on `tekivex-ui`, **you do not need `tekivex-form`** — everything in `tekivex-form` is already in `tekivex-ui`. The subset package exists for consumers who want forms-only without the rest of the library.
+
+## 🧊 3D / WebGL
+
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-3d`](https://www.npmjs.com/package/tekivex-3d) | True WebGL 3D components for `tekivex-ui` — TkxScene, TkxCard3D, TkxLogo3D, TkxModel, TkxOrbitView. Vanilla `three.js` peer dep, no React-three reconciler. Theme-aware lighting + tone mapping. | …you need real 3D / 360° / VR / AR in a React app |
+
+`tekivex-3d` requires `three` as a peer dependency (~500 KB). Don't install it if you're not actually using 3D.
+
+## 🖌 Design handoff
+
+| Package | What it does | Install when… |
+|---|---|---|
+| [`tekivex-figma-kit`](https://www.npmjs.com/package/tekivex-figma-kit) | Figma-importable token exports + component variant catalog for `tekivex-ui`. Designers import `dist/tokens.figma.json`; engineers consume the same source of truth via `tekivex-ui`. | …your design team uses Figma and you want token parity between Figma and code |
+
+## TL;DR — the only-install-this-one matrix
+
+| If you're building… | Install |
+|---|---|
+| A React UI | `tekivex-ui` |
+| A new React app from scratch | `npm create tekivex-app@latest my-app` |
+| A node / edge service that needs the security primitives | `tekivex-security-core` |
+| An Indian KYC form | `tekivex-ui` + `tekivex-india` |
+| An address form with Country → State → District dropdowns | `tekivex-ui` + `tekivex-india-admin` |
+| A fintech product | `tekivex-ui` + `tekivex-finance` |
+| A blog / CMS / editor | `tekivex-ui` + `tekivex-content` |
+| In-browser PDF generation | `tekivex-pdf` (+ `tekivex-templates` for ready-made templates) |
+| 3D / VR / AR React content | `tekivex-ui` + `tekivex-3d` (peer dep: `three`) |
+| To copy-paste one component's source into your existing project | `npx tekivex-add <component>` |
+| To CI-audit a React project for security / a11y | `npx tekivex-audit .` |
+
+## Notes for downstream consumers
+
+- **Versioning:** every package versions independently. `tekivex-ui@3.20.0` does not require any specific `tekivex-india-admin` version. Companion packages declare `tekivex-ui` as an optional peer.
+- **Bundle size:** because the packages are split, you only pay the bundle cost for what you import. Tree-shaking still applies WITHIN each package.
+- **Naming:** all packages currently use unscoped names (`tekivex-*`). A future v4 of the ecosystem may migrate to scoped names (`@tekivex/*`) for cleaner npm presentation. Breaking-change migration will be documented at that point — no migration is required today.
+- **Provenance:** packages published from local machines (current state for several of these) do NOT have npm provenance attestations. The `release.yml` GitHub Actions workflow is being fixed to make tag-triggered automatic provenance the default for future publishes.

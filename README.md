@@ -31,6 +31,39 @@ npm install tekivex-ui
 
 ---
 
+## The 14-package ecosystem at a glance
+
+`tekivex-ui` is the main library, but the ecosystem ships 14 npm
+packages total. **You typically need 1–3 of them, not 14.** Map below
+groups by *the question that makes you install each one*. Full
+reference: [ui.tekivex.com/ecosystem](https://ui.tekivex.com/ecosystem/).
+
+| If you're building… | `npm install` |
+|---|---|
+| A React UI (most people start here) | `tekivex-ui` |
+| A new React app from scratch | `npm create tekivex-app@latest my-app` |
+| A node / edge service that needs the security primitives | `tekivex-security-core` |
+| CI a11y + security audit step | `npx tekivex-audit .` |
+| An Indian KYC form (Aadhaar / PAN / Voter ID / DL / INR / Tithi) | `tekivex-ui tekivex-india` |
+| An address form with Country → State → District dropdowns | `tekivex-ui tekivex-india-admin` |
+| A fintech / banking product | `tekivex-ui tekivex-finance` |
+| A CMS / blog editor / document tool | `tekivex-ui tekivex-content` |
+| In-browser PDF generation (no Puppeteer) | `tekivex-pdf` |
+| Ready-made PDF templates (Invoice / Resume / Certificate / Biodata) | `tekivex-pdf tekivex-templates` |
+| 3D / 360° / VR / AR in React | `tekivex-ui tekivex-3d` (peer dep: `three`) |
+| Figma token + variant catalog for design handoff | `tekivex-figma-kit` |
+| Copy ONE component's source into your existing app (shadcn-style) | `npx tekivex-add <component>` |
+| Form primitives only (without the rest of `tekivex-ui`) | `tekivex-form` (already in `tekivex-ui`; install only if you're NOT using `tekivex-ui`) |
+
+Why so many packages? **Independent versioning, smaller bundles,
+opt-in peer deps.** A consumer wanting `tekivex-pdf` shouldn't have to
+pull `three.js`. A consumer wanting `tekivex-india-admin` shouldn't
+wait for a `tekivex-ui` release when LGD data refreshes. Each package
+versions and ships on its own clock; this README always reflects the
+current install matrix.
+
+---
+
 ## Project status — read before adopting
 
 TekiVex UI is **pre-1.0** and currently maintained by a single developer
