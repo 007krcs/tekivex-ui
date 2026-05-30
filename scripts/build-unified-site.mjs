@@ -2,10 +2,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // build-unified-site.mjs
 //
-// Builds all three deliverables and merges them into a single static
+// Builds all four deliverables and merges them into a single static
 // directory served from one Render service:
 //
-//   docs-site/dist/                 ← Astro Starlight (canonical docs)
+//   docs-site/dist/                 ← landing React app (homepage, /examples/, /blog/, /about/)
+//                                     PLUS Astro Starlight overlay for
+//                                     /recipes/, /blueprints/, /components/,
+//                                     /getting-started/, /quick-reference/,
+//                                     /themes/, /bundlers/, /rsc/, /ecosystem/, /security/
 //   docs-site/dist/playground/      ← demo/ SPA (interactive sandbox)
 //   docs-site/dist/book/            ← packages/tkx-book/ (component catalog)
 //
@@ -30,8 +34,18 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { execSync } from 'node:child_process';
-import { cpSync, existsSync, rmSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import {
+  cpSync,
+  existsSync,
+  rmSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  statSync,
+  copyFileSync,
+} from 'node:fs';
+import { resolve, dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -54,6 +68,42 @@ function copyTree(from, to) {
   mkdirSync(dirname(to), { recursive: true });
   cpSync(from, to, { recursive: true });
   console.log(`  ✓ copied ${from}\n        → ${to}`);
+}
+
+// overlayTreeNoOverwrite — copy `from` into `to` only at paths where the
+// target file does NOT already exist. Used to add Astro's docs pages
+// (/recipes/, /blueprints/, /components/, etc.) on top of the landing
+// React app's output without clobbering landing's homepage, /examples/,
+// /blog/, /about/, /license/, etc. Whichever build wrote first wins for
+// any given path.
+function overlayTreeNoOverwrite(from, to) {
+  if (!existsSync(from)) {
+    throw new Error(`overlayTreeNoOverwrite: source missing — ${from}`);
+  }
+  let added = 0;
+  let skipped = 0;
+  function walk(src, dest) {
+    const entries = readdirSync(src);
+    for (const name of entries) {
+      const s = join(src, name);
+      const d = join(dest, name);
+      const st = statSync(s);
+      if (st.isDirectory()) {
+        if (!existsSync(d)) mkdirSync(d, { recursive: true });
+        walk(s, d);
+      } else if (st.isFile()) {
+        if (existsSync(d)) {
+          skipped++;
+          continue;
+        }
+        mkdirSync(dirname(d), { recursive: true });
+        copyFileSync(s, d);
+        added++;
+      }
+    }
+  }
+  walk(from, to);
+  console.log(`  ✓ overlay ${relative(ROOT, from)} → ${relative(ROOT, to)} (${added} added, ${skipped} skipped due to existing file)`);
 }
 
 // Reads the built index.html and confirms its first <script type="module">
@@ -284,6 +334,62 @@ if (!astroSucceeded) {
   writeFileSync(resolve(DIST, 'index.html'), stub);
   console.log('  ✓ Stub homepage written');
 }
+
+// ── 2.5. Build docs-site (Astro Starlight) and overlay its output INTO
+//         docs-site/dist WITHOUT clobbering the landing pages above.
+//
+// Why this is here and not at step 1: landing/ owns the homepage and the
+// /examples/, /blog/, /about/, /license/ paths. Astro owns /recipes/,
+// /blueprints/, /components/, /getting-started/, /quick-reference/,
+// /themes/, /bundlers/, /rsc/, /ecosystem/, /security/. They don't
+// overlap except at /index.html (both have one) and /license/ (both
+// have one). Overlay-no-overwrite resolves both: landing wins because
+// it copied first, and Astro fills in everything else.
+//
+// Historical note: this block was commented out for ~5 versions after
+// 8 failed deploys on the Starlight 0.36 + Zod 4 incompatibility. The
+// underlying incompatibility was resolved upstream by Starlight 0.36+,
+// and a TkxDatePicker SSR crash that surfaced as a separate blocker
+// was fixed in commit 7827e4e (May 2026). With both gone, the docs
+// build now reliably produces 125+ pages locally. Adding the step
+// back in here so the recipes/blueprints/components docs that have
+// been shipped since v3.18 finally reach ui.tekivex.com.
+//
+// If this step starts failing again, the safe fall-back is to comment
+// out just the run() and the overlay call below — the landing pages
+// and the playground/book/security artifacts stay live regardless.
+console.log('\n══════════════════════════════════════════════════════');
+console.log('Step 2.5 — build docs-site/ (Astro Starlight) → overlay onto /');
+console.log('══════════════════════════════════════════════════════');
+let astroOverlaySucceeded = false;
+try {
+  run('npm install --no-audit --no-fund --legacy-peer-deps', resolve(ROOT, 'docs-site'));
+  // Astro writes to docs-site/dist by default. The landing build above
+  // already populated docs-site/dist, so we redirect Astro's output to
+  // a temp sibling dir and overlay it manually.
+  const ASTRO_OUT = resolve(ROOT, 'docs-site/dist-astro');
+  if (existsSync(ASTRO_OUT)) rmSync(ASTRO_OUT, { recursive: true, force: true });
+  // --outDir tells Astro where to write. Astro accepts both absolute and
+  // relative paths; absolute is unambiguous across runner cwd quirks.
+  run(`npx astro build --outDir "${ASTRO_OUT}"`, resolve(ROOT, 'docs-site'));
+  if (existsSync(ASTRO_OUT)) {
+    overlayTreeNoOverwrite(ASTRO_OUT, DIST);
+    rmSync(ASTRO_OUT, { recursive: true, force: true });
+    astroOverlaySucceeded = true;
+    console.log('  ✓ Astro pages overlaid (landing pages preserved on conflict)');
+  } else {
+    console.warn('  ⚠ Astro build appeared to succeed but produced no output dir — skipping overlay');
+  }
+} catch (err) {
+  console.error(
+    `\n  ✗ Astro overlay step failed (recipes/blueprints/components won't be live this deploy):` +
+      `\n    ${err instanceof Error ? err.message : err}`,
+  );
+  console.error(
+    '    This is non-fatal — landing + playground + book + security artifacts still ship.',
+  );
+}
+console.log(`  Astro overlay step: ${astroOverlaySucceeded ? 'OK' : 'SKIPPED'}`);
 
 // ── 3. Build the demo SPA with /playground/ base, copy into dist/playground/
 //    Pass --base on the CLI directly — npm sometimes strips env vars
