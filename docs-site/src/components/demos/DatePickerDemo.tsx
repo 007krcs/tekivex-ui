@@ -25,11 +25,16 @@ export function DatePickerRange() {
   return (
     <Preview label="Range with built-in presets" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
       <div style={{ minWidth: 320 }}>
+        {/* Range mode uses the separate `rangeValue` / `onRangeChange` props.
+            Passing a tuple to `value` looks right but actually puts the
+            picker into single mode with an array as the date — which the
+            component now defensively coerces to null, but the right thing
+            is to use the correct prop names. */}
         <TkxDatePicker
           label="Trip dates"
           mode="range"
-          value={range}
-          onChange={(v) => setRange(v as [Date | null, Date | null])}
+          rangeValue={range}
+          onRangeChange={(v) => setRange(v)}
           showPresets
         />
         <p style={{ marginTop: 8, fontSize: 12, opacity: 0.7 }}>

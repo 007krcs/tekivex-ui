@@ -661,21 +661,43 @@ export function TkxDatePicker({
   const today = startOfDay(new Date());
 
   // ── State ────────────────────────────────────────────────────────────────────
+  //
+  // Defensive narrowing at the prop boundary. TypeScript enforces the shape
+  // for typed consumers but JavaScript callers — and especially the very
+  // common mistake of passing a [Date, Date] tuple to `value` (which belongs
+  // on `rangeValue`) — would otherwise let a non-Date flow straight into
+  // `selectedDate.getFullYear()` and crash the render. Crash-during-SSR is
+  // the worst version of this because the whole route page fails to
+  // prerender. So we coerce: only an actual Date instance counts; anything
+  // else (array, string, number, plain object) is treated as null.
+
+  const asDate = (v: unknown): Date | null =>
+    v instanceof Date && !Number.isNaN(v.getTime()) ? v : null;
+  const asDateTuple = (
+    v: unknown,
+  ): [Date | null, Date | null] => {
+    if (!Array.isArray(v)) return [null, null];
+    return [asDate(v[0]), asDate(v[1])];
+  };
 
   // Controlled/uncontrolled single
   const isSingleControlled = value !== undefined;
   const [internalDate, setInternalDate] = useState<Date | null>(null);
-  const selectedDate: Date | null = isSingleControlled ? (value ?? null) : internalDate;
+  const selectedDate: Date | null = isSingleControlled ? asDate(value) : internalDate;
 
   // Controlled/uncontrolled range
   const isRangeControlled = rangeValue !== undefined;
   const [internalRange, setInternalRange] = useState<[Date | null, Date | null]>([null, null]);
-  const selectedRange: [Date | null, Date | null] = isRangeControlled ? rangeValue! : internalRange;
+  const selectedRange: [Date | null, Date | null] = isRangeControlled
+    ? asDateTuple(rangeValue)
+    : internalRange;
 
   // Controlled/uncontrolled multi
   const isMultiControlled = multiValue !== undefined;
   const [internalMulti, setInternalMulti] = useState<Date[]>([]);
-  const multiDates: Date[] = isMultiControlled ? multiValue! : internalMulti;
+  const multiDates: Date[] = isMultiControlled
+    ? (multiValue ?? []).filter((d): d is Date => d instanceof Date && !Number.isNaN(d.getTime()))
+    : internalMulti;
 
   // Range picking phase
   const [rangePicking, setRangePicking] = useState<'start' | 'end'>('start');
@@ -686,7 +708,11 @@ export function TkxDatePicker({
   const [pendingDate, setPendingDate] = useState<Date | null>(null);
 
   // Calendar view
-  const initRef = selectedDate ?? selectedRange[0] ?? today;
+  // `initRef` MUST be a Date — `selectedDate`/`selectedRange[0]` are already
+  // narrowed to Date|null by the asDate/asDateTuple guards above, so this is
+  // just type-system glue. `today` is the fallback so the calendar always
+  // opens on a sane month even when nothing's selected yet.
+  const initRef: Date = selectedDate ?? selectedRange[0] ?? today;
   const [viewYear, setViewYear] = useState(initRef.getFullYear());
   const [viewMonth, setViewMonth] = useState(initRef.getMonth());
   const [calView, setCalView] = useState<DatePickerView>('day');

@@ -791,4 +791,63 @@ describe('TkxDatePicker', () => {
       expect(container.querySelector('input')).toBeTruthy();
     });
   });
+
+  // ── Defensive prop coercion / SSR safety ──────────────────────────────────
+  // Regression tests for an SSR crash where the docs-site demo passed a
+  // [Date | null, Date | null] tuple into `value` (which expects Date | null,
+  // not an array). The component silently treated the array as a Date and
+  // crashed on `.getFullYear()`. After the fix, non-Date `value` is coerced
+  // to null and the calendar opens cleanly on today's month.
+  describe('defensive prop coercion (SSR safety)', () => {
+    it('renders cleanly when `value` is an array (consumer misuse — should not crash)', () => {
+      const tuple = [new Date(2026, 3, 10), new Date(2026, 3, 20)] as unknown as Date | null;
+      const { container } = wrap(
+        <TkxDatePicker label="X" value={tuple} onChange={() => {}} />,
+      );
+      expect(container.querySelector('input')).toBeTruthy();
+    });
+
+    it('renders cleanly when `value` is an Invalid Date', () => {
+      const { container } = wrap(
+        <TkxDatePicker label="X" value={new Date('not-a-date')} onChange={() => {}} />,
+      );
+      expect(container.querySelector('input')).toBeTruthy();
+      // Coerced to null, so input is empty rather than "Invalid Date".
+      expect(getInput(container).value).toBe('');
+    });
+
+    it('renders cleanly when `rangeValue[0]` is a string (consumer misuse)', () => {
+      const range = ['2026-04-10', null] as unknown as [Date | null, Date | null];
+      const { container } = wrap(
+        <TkxDatePicker mode="range" label="X" rangeValue={range} onRangeChange={() => {}} />,
+      );
+      expect(container.querySelector('input')).toBeTruthy();
+    });
+
+    it('renders cleanly when `multiValue` contains non-Date entries', () => {
+      const mixed = [
+        new Date(2026, 3, 10),
+        'oops' as unknown as Date,
+        null as unknown as Date,
+        new Date(2026, 3, 15),
+      ];
+      const { container } = wrap(
+        <TkxDatePicker mode="multiple" label="X" multiValue={mixed} onMultiChange={() => {}} />,
+      );
+      expect(container.querySelector('input')).toBeTruthy();
+    });
+
+    it('SSR shape: renderToString does not throw for the docs-site demo misuse', async () => {
+      const { renderToString } = await import('react-dom/server');
+      const tuple = [null, null] as unknown as Date | null;
+      // This is exactly the shape DatePickerDemo was sending before the fix.
+      expect(() =>
+        renderToString(
+          <ThemeProvider>
+            <TkxDatePicker mode="range" label="X" value={tuple} onChange={() => {}} />
+          </ThemeProvider>,
+        ),
+      ).not.toThrow();
+    });
+  });
 });
