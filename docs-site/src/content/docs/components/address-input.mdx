@@ -1,54 +1,219 @@
 ---
 title: TkxAddressInput
-description: Indian address input with PIN-code lookup via India Post — auto-fills city / state / district.
+description: Indian-address input with two complementary pickers — type a 6-digit PIN and India Post auto-fills city / state / country, OR opt into a Country → State → District → Sub-district cascade with region-correct labels (Taluka / Tehsil / Mandal / Block).
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+import { AddressInputPINOnly, AddressInputCascade } from '../../../components/demos/AddressInputDemo';
+
+`TkxAddressInput` is a single component with two complementary input
+modes that can coexist in the same form:
+
+1. **PIN-driven (default)** — user types a 6-digit PIN, the component
+   queries India Post's free public API (`api.postalpincode.in`) and
+   auto-fills city / state / country.
+2. **Divisions-driven (opt-in via `divisionsSource`, new in v3.20)** —
+   render four cascading dropdowns: Country → State / UT → District →
+   per-state-labelled Sub-district. Useful when the user may not know
+   their PIN, when you need stable LGD codes (not just display strings)
+   stored in your DB, or for regions where PIN lookup doesn't apply.
+
+Both modes coexist — passing `divisionsSource` adds the dropdowns; PIN
+lookup keeps working. The component never fights itself.
+
+## PIN-only mode
+
+<AddressInputPINOnly client:load />
+
 ```tsx
-import { TkxAddressInput } from 'tekivex-ui';
+import { useState } from 'react';
+import { TkxAddressInput, type AddressValue } from 'tekivex-ui';
 
-<TkxAddressInput
-  value={address}
-  onChange={setAddress}
-  country="IN"
-/>
-```
-
-A multi-line address field optimised for Indian addresses. When the user
-types a 6-digit PIN code, it queries India Post's open API and auto-fills
-the city, state, and district fields.
-
-## Props
-
-| Prop | Type | Default |
-|---|---|---|
-| `value` | `Address \| null` | `null` |
-| `onChange` | `(addr: Address \| null) => void` | — |
-| `country` | `'IN' \| 'US' \| 'UK'` | `'IN'` |
-| `label` | `string` | `'Address'` |
-| `disabled` | `boolean` | `false` |
-| `required` | `boolean` | `false` |
-
-## Address shape
-
-```ts
-interface Address {
-  line1: string;
-  line2?: string;
-  city: string;
-  state: string;
-  district?: string;   // IN-only
-  pincode: string;
-  country: string;
+export function ShippingAddress() {
+  const [addr, setAddr] = useState<Partial<AddressValue>>({});
+  return <TkxAddressInput value={addr} onChange={setAddr} label="Shipping address" />;
 }
 ```
 
+What you get:
+
+- 6-digit PIN field with `inputMode="numeric"` and `autoComplete="postal-code"`
+- On 6-digit completion, fetch to `api.postalpincode.in`
+- When a PIN resolves to multiple post offices (common — one PIN can map
+  to many), a `role="listbox"` dropdown for the user to pick
+- City / State / Country auto-fill from the picked post office
+- Two address-line fields below for street / apt
+- `aria-busy`, `aria-invalid`, `aria-live` wired up
+
+This is the v3.19 behaviour, preserved byte-for-byte in v3.20.
+
+## Cascading dropdowns (new in v3.20)
+
+<AddressInputCascade client:load />
+
+```sh
+npm install tekivex-ui tekivex-india-admin
+```
+
+```tsx
+import { useState } from 'react';
+import { TkxAddressInput, type AddressValue } from 'tekivex-ui';
+import { lgdSnapshot } from 'tekivex-india-admin';
+
+// Memoise at module scope — a fresh loader on every render would re-fire
+// the initial countries() fetch.
+const divisions = lgdSnapshot();
+
+export function CompleteAddress() {
+  const [addr, setAddr] = useState<Partial<AddressValue>>({});
+  return (
+    <TkxAddressInput
+      value={addr}
+      onChange={setAddr}
+      divisionsSource={divisions}
+    />
+  );
+}
+```
+
+The component now renders a cascading row of four dropdowns above the
+PIN field. The 4th column's label updates per the selected state — pick
+**Maharashtra** and it says "Taluka"; pick **Uttar Pradesh** and it says
+"Tehsil"; pick **Andhra Pradesh** and it says "Mandal". Bring your own
+loader if you don't want the bundled snapshot — see
+[the India-address-form recipe](/recipes/india-address-form/) for the
+full integration including a custom REST-backed loader.
+
+<Aside type="tip" title="Codes vs. display names">
+  When `divisionsSource` is used, the emitted `AddressValue` carries
+  both display names (`city`, `state`, `country`, `subDistrict`) AND
+  stable codes (`countryCode`, `stateCode`, `districtCode`,
+  `subDistrictCode`). Store the codes in your DB; show the names to
+  the user. Codes survive admin reorganisations.
+</Aside>
+
+## AddressValue shape
+
+```ts
+interface AddressValue {
+  // PIN-driven fields
+  pin: string;
+  postOffice?: string;
+  city?: string;        // District / city display name
+  state?: string;       // State / UT display name
+  country?: string;     // Country display name
+
+  // Divisions-driven fields (populated when divisionsSource is used)
+  subDistrict?: string;
+  countryCode?: string;        // ISO 3166-1 alpha-2, e.g. "IN"
+  stateCode?: string;          // ISO 3166-2, e.g. "IN-MH"
+  districtCode?: string;       // LGD code or loader-defined
+  subDistrictCode?: string;    // LGD code or loader-defined
+
+  // User-typed
+  line1?: string;
+  line2?: string;
+}
+```
+
+## Props
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `value` | `Partial<AddressValue>` | ✓ | Current value (controlled). |
+| `onChange` | `(v: AddressValue) => void` | ✓ | Fires on every change. |
+| `lookup` | `(pin: string, signal?: AbortSignal) => Promise<PostOffice[]>` | | Override the India Post default — plug in Smartystreets, Google Places, or your own service. |
+| `divisionsSource` | `DivisionsLoader` | | **New in v3.20.** When supplied, prepends a Country → State → District → Sub-district cascade above the PIN field. See [`DivisionsLoader`](#divisionsloader-interface). |
+| `label` | `string` | | Visible label above the picker. |
+| `showAddressLines` | `boolean` | | Show line1 / line2 fields under the PIN row. Defaults to `true`. |
+| `disabled` | `boolean` | | |
+| `className` | `string` | | Forwarded to the root container. |
+| `style` | `CSSProperties` | | Forwarded to the root container. |
+
+## `DivisionsLoader` interface
+
+```ts
+interface AdminDivision {
+  code: string;        // Stable code (ISO 3166-2 for states, LGD elsewhere)
+  name: string;        // Display name in English / Latin script
+  localName?: string;  // Optional name in regional script
+}
+
+interface DivisionsLoader {
+  countries(signal?: AbortSignal): Promise<AdminDivision[]>;
+  states(countryCode: string, signal?: AbortSignal): Promise<AdminDivision[]>;
+  districts(
+    countryCode: string,
+    stateCode: string,
+    signal?: AbortSignal,
+  ): Promise<AdminDivision[]>;
+  subDistricts(
+    countryCode: string,
+    stateCode: string,
+    districtCode: string,
+    signal?: AbortSignal,
+  ): Promise<AdminDivision[]>;
+  /** Per-state regional label override — returns "Taluka", "Tehsil",
+   *  "Mandal", "Block", "Circle", etc. Falls back to "Sub-district". */
+  subDistrictLabel?(countryCode: string, stateCode: string): string;
+}
+```
+
+Every method receives an `AbortSignal` so in-flight requests get
+cancelled when the user changes a higher level. The interface is
+deliberately small — any object that satisfies this shape is a valid
+loader, whether it reads from a static snapshot, a REST endpoint, or a
+lazy-imported chunk.
+
 ## Accessibility
 
-- All sub-fields are real `<input>` elements with `<label>` association
-- PIN-lookup status announced via `aria-live="polite"` region
+- The PIN input has `inputMode="numeric"`, `autoComplete="postal-code"`,
+  `maxLength={6}`, plus `aria-busy` (lookup in flight) and `aria-invalid`
+  (lookup failed / no results)
+- PIN-lookup status announced via `aria-live="polite"`
+- Each cascade dropdown is a real `<label htmlFor>` + `<select>` pair,
+  fully keyboard navigable and screen-reader announceable
 - Loading state is non-blocking — user can keep typing
 
 ## Testing
 
-PIN lookup uses `https://api.postalpincode.in`. In tests, mock `fetch` to
-return a stub. See `tests/TkxAddressInput.test.tsx`.
+PIN lookup uses `https://api.postalpincode.in`. In tests, mock the
+`lookup` prop to return a stub:
+
+```tsx
+import { TkxAddressInput } from 'tekivex-ui';
+
+const stubLookup = async () => [
+  { Name: 'Bandra', District: 'Mumbai', State: 'Maharashtra', Country: 'India', Pincode: '400050' },
+];
+
+render(<TkxAddressInput value={{}} onChange={() => {}} lookup={stubLookup} />);
+```
+
+For the cascade, the same pattern works — pass a stub `divisionsSource`:
+
+```tsx
+const stubDivisions = {
+  countries: async () => [{ code: 'IN', name: 'India' }],
+  states: async () => [{ code: 'IN-MH', name: 'Maharashtra' }],
+  districts: async () => [{ code: 'MH-PUN', name: 'Pune' }],
+  subDistricts: async () => [{ code: 'PUN-HAV', name: 'Haveli' }],
+  subDistrictLabel: () => 'Taluka',
+};
+
+render(<TkxAddressInput value={{}} onChange={() => {}} divisionsSource={stubDivisions} />);
+```
+
+See `tests/TkxAddressInput.test.tsx` for the full coverage — 13 tests
+including 7 specifically for the cascade path (countries-cascade,
+full-cascade-emit-shape, regional-label-switching, downstream-clear
+on upstream pick).
+
+## See also
+
+- [India address form recipe](/recipes/india-address-form/) — end-to-end
+  walkthrough with a custom REST loader and PIN + cascade together
+- [`tekivex-india-admin` on npm](https://www.npmjs.com/package/tekivex-india-admin) —
+  bundled LGD snapshot loader (all 36 states + UTs)
+- [`TkxPhoneInput`](/components/phone-input/) — the natural companion
+  field for Indian forms (56 countries, length-based validation)
