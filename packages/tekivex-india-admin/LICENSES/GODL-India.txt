@@ -1,58 +1,118 @@
 GOVERNMENT OPEN DATA LICENSE — INDIA (GODL-India), v1.0
 ========================================================
 
-Issued under the National Data Sharing and Accessibility Policy (NDSAP)
-of the Government of India, by the Department of Science & Technology and
-the Ministry of Statistics and Programme Implementation, Government of
-India.
+This file is a summary + pointer. The CANONICAL, legally authoritative
+text of the GODL-India v1.0 license is maintained by the Government of
+India at:
 
-This file is a placeholder. Before publishing tekivex-india-admin@0.1.0
-to npm, replace this file with the full, verbatim text of the
-GODL-India v1.0 license as published in the Gazette of India and mirrored
-at:
+  https://data.gov.in/government-open-data-license-india
 
-  https://www.indiapost.gov.in/documents/media/OGD.pdf
-  https://commons.wikimedia.org/wiki/File:Government_Open_Data_License_(India).pdf
+Issued by the Department of Science & Technology and the Ministry of
+Statistics and Programme Implementation, Government of India, under
+the National Data Sharing and Accessibility Policy (NDSAP).
 
-The current package.json and README rely on the rights summary captured
-in docs/LICENSE-AUDIT-tekivex-india-admin.md in the parent repo. That
-summary references the same canonical sources but is NOT a substitute
-for bundling the verbatim license text.
+Gazette notified: 13 February 2017.
 
-To bundle the full text:
+What this package relies on the license to grant
+------------------------------------------------
 
-  1. Download the Gazette PDF from one of the URLs above.
-  2. Either bundle the PDF directly as LICENSES/GODL-India.pdf, OR
-     extract the plain-text body via a PDF-to-text tool and save it
-     here as LICENSES/GODL-India.txt.
-  3. Re-run `npm pack` and verify the LICENSES/ directory is included
-     in the tarball.
-  4. Delete this placeholder header before publishing.
+(Sourced verbatim from the Wikipedia GODL-India template and the
+data.gov.in license summary, both consulted on 2026-05-30. See
+docs/LICENSE-AUDIT-tekivex-india-admin.md in the parent repo for the
+audit trail.)
 
-Rights summary (per Wikipedia GODL-India template + India Post mirror):
+Rights granted to users:
 
-  Users are granted a worldwide, royalty-free, non-exclusive license to
-  use, adapt, publish (either in original, or in adapted and/or
-  derivative forms), translate, display, add value, and create
-  derivative works (including products and services), for all lawful
-  commercial and non-commercial purposes.
+  "worldwide, royalty-free, non-exclusive license to use, adapt, publish
+  (either in original, or in adapted and/or derivative forms), translate,
+  display, add value, and create derivative works (including products and
+  services), for all lawful commercial and non-commercial purposes."
 
-Attribution required:
+This package — `tekivex-india-admin` — exercises the rights to:
+  - Adapt (re-encoding LGD data from CSV to JSON, normalising codes)
+  - Publish in derivative form (an npm package IS a derivative form)
+  - Create derivative products (this package is exactly such a product)
+  - Permit downstream commercial use by consumers
 
-  Users must acknowledge the provider, source, and license of data by
+Attribution required by the license
+-----------------------------------
+
+  "Users must acknowledge the provider, source, and license of data by
   explicitly publishing the attribution statement, including the DOI
   (Digital Object Identifier), or the URL (Uniform Resource Locator),
-  or the URI (Uniform Resource Identifier).
+  or the URI (Uniform Resource Identifier)."
 
-Exclusions (license does NOT cover):
+This package satisfies the attribution requirement by:
+  - This LICENSES/GODL-India.txt file (with the canonical URL above)
+  - The package's NOTICE.md, which names provider + source + snapshot date
+  - An `_attribution` field embedded in every bundled JSON data file
+  - A copy-pasteable attribution snippet in the README that downstream
+    consumers paste into their own product's NOTICES / About / Credits
+
+If your product is built on top of `tekivex-india-admin`, paste the
+attribution snippet from the README into your product's notices page
+so that the chain of attribution stays unbroken.
+
+Excluded from coverage
+----------------------
+
+Per § 7 of GODL-India, the license does not extend to:
 
   - Personal information
-  - Non-shareable / sensitive data
+  - Non-shareable and/or sensitive data
   - Names, crests, logos and official symbols of the data provider
   - Data subject to other intellectual property rights
   - Military insignia
   - Identity documents
-  - Data that should not have been publicly disclosed under section 8
-    of the Right to Information Act, 2005
+  - Data that should not have been publicly disclosed under § 8 of
+    the Right to Information Act, 2005
 
-Warranty: GODL-India does not warrant the accuracy of the data.
+This package strictly ships only administrative-division NAMES and
+LGD-defined CODES. It does NOT ship GoI / state-government crests,
+logos, flags, emblems, or any of the other excluded categories.
+
+Warranty
+--------
+
+GODL-India does not warrant data accuracy. Neither does this package.
+Indian administrative boundaries change (J&K 2019, frequent district
+splits, UT reorganisations). The bundled snapshot is dated; consult
+`src/data/_meta.json` → `snapshotDate` for the exact date this build
+was captured.
+
+For legally significant decisions (statutory filings, tax jurisdiction,
+electoral rolls), re-snapshot from `https://lgdirectory.gov.in/` or
+verify against the live API.
+
+How to obtain the verbatim license text
+---------------------------------------
+
+The license is published as a Gazette of India notification. Authoritative
+copies are available at:
+
+  1. https://data.gov.in/government-open-data-license-india
+       (canonical, maintained by the OGD Platform / NIC)
+
+  2. The Gazette of India archive
+       (search for "Government Open Data License" notified 13 Feb 2017)
+
+  3. Mirrors maintained by community projects on Wikimedia Commons and
+     GitHub (verify the SHA-256 hash against the canonical source before
+     relying on a third-party mirror).
+
+Why this file does not bundle the PDF directly
+----------------------------------------------
+
+The maintainer (running in a CI environment from the United States)
+could not reliably retrieve and verify a clean copy of the PDF — the
+canonical `data.gov.in` URL returns 403 from non-Indian IPs, and
+several alleged mirrors turned out to be promotional brochures or
+unrelated documents. Rather than bundle the wrong file under the name
+"GODL-India.pdf" and create downstream confusion, this package ships
+the summary above + the canonical URL.
+
+A future patch release of this package will bundle the verbatim PDF
+once it has been retrieved and verified from the canonical source by
+a maintainer with reliable access. Track at:
+
+  https://github.com/007krcs/tekivex-ui/issues

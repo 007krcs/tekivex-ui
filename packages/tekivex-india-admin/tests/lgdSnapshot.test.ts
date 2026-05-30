@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { lgdSnapshot, lgdSnapshotMeta } from '../src/lgdSnapshot';
+import { lgdSnapshot, lgdSnapshotMeta } from '../src/lgdSnapshot.js';
+import type { AdminDivision } from '../src/types.js';
 
 describe('lgdSnapshot()', () => {
   it('returns India as the only country', async () => {
@@ -12,9 +13,9 @@ describe('lgdSnapshot()', () => {
     const loader = lgdSnapshot();
     const states = await loader.states('IN');
     expect(states.length).toBe(36);
-    expect(states.find((s) => s.code === 'IN-MH')?.name).toBe('Maharashtra');
-    expect(states.find((s) => s.code === 'IN-DL')?.name).toBe('Delhi');
-    expect(states.find((s) => s.code === 'IN-LA')?.name).toBe('Ladakh');
+    expect(states.find((s: AdminDivision) => s.code === 'IN-MH')?.name).toBe('Maharashtra');
+    expect(states.find((s: AdminDivision) => s.code === 'IN-DL')?.name).toBe('Delhi');
+    expect(states.find((s: AdminDivision) => s.code === 'IN-LA')?.name).toBe('Ladakh');
   });
 
   it('returns empty array for non-India country codes', async () => {
@@ -27,7 +28,7 @@ describe('lgdSnapshot()', () => {
   it('filters states when onlyStates option is set', async () => {
     const loader = lgdSnapshot({ onlyStates: ['IN-MH', 'IN-KA'] });
     const states = await loader.states('IN');
-    expect(states.map((s) => s.code).sort()).toEqual(['IN-KA', 'IN-MH']);
+    expect(states.map((s: AdminDivision) => s.code).sort()).toEqual(['IN-KA', 'IN-MH']);
   });
 
   it('refuses districts for filtered-out states', async () => {
@@ -41,14 +42,14 @@ describe('lgdSnapshot()', () => {
     const loader = lgdSnapshot();
     const districts = await loader.districts('IN', 'IN-MH');
     expect(districts.length).toBeGreaterThan(0);
-    expect(districts.find((d) => d.code === 'MH-PUN')?.name).toBe('Pune');
+    expect(districts.find((d: AdminDivision) => d.code === 'MH-PUN')?.name).toBe('Pune');
   });
 
   it('returns sub-districts for an exemplar-covered district', async () => {
     const loader = lgdSnapshot();
     const sd = await loader.subDistricts('IN', 'IN-MH', 'MH-PUN');
     expect(sd.length).toBeGreaterThan(0);
-    expect(sd.find((x) => x.code === 'PUN-HAV')?.name).toBe('Haveli');
+    expect(sd.find((x: AdminDivision) => x.code === 'PUN-HAV')?.name).toBe('Haveli');
   });
 
   it('returns empty array for a district not in the v0.1 exemplar set', async () => {

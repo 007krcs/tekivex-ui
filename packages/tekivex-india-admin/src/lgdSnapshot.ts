@@ -22,7 +22,7 @@
 //     v0.1.0 once full LGD coverage is ingested.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { AdminDivision, DivisionsLoader } from './types';
+import type { AdminDivision, DivisionsLoader } from './types.js';
 import statesJson from './data/states.json' with { type: 'json' };
 import districtsJson from './data/districts.json' with { type: 'json' };
 import subDistrictsJson from './data/sub-districts.json' with { type: 'json' };
