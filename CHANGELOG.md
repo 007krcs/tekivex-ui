@@ -5,6 +5,34 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.20.1] — 2026-05-31
+
+Documentation-only patch. No code changes — the dist tarball is
+byte-identical to 3.20.0 except for `README.md` and `CHANGELOG.md`.
+
+### Added — npm page now communicates the 14-package ecosystem
+
+The `tekivex-ui` README now opens with a "14-package ecosystem at a
+glance" install matrix covering every sibling package on npm
+(`create-tekivex-app`, `tekivex-security-core`, `tekivex-audit`,
+`tekivex-india`, `tekivex-india-admin`, `tekivex-finance`,
+`tekivex-content`, `tekivex-pdf`, `tekivex-templates`, `tekivex-3d`,
+`tekivex-figma-kit`, `tekivex-add`, `tekivex-form`). Consumers landing
+on https://www.npmjs.com/package/tekivex-ui can now see in one screen
+which package to install for which job, without having to visit the
+docs site.
+
+Reason for the patch publish: the npm package page only renders the
+README from the most recently published version. The matrix went onto
+master after 3.20.0 shipped, so a tiny patch publish is the only way
+to get it onto the npm page without waiting for the next code release.
+
+### Related — docs
+
+- New full reference at https://ui.tekivex.com/ecosystem/ (grouped by
+  intent, with collision callouts for tekivex-india vs tekivex-india-admin,
+  tekivex-form vs tekivex-ui, tekivex-add vs create-tekivex-app).
+
 ## [3.20.0] — 2026-05-30
 
 The **address-cascade** release. Closes the v3.20 roadmap item for
