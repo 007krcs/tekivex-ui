@@ -1,0 +1,79 @@
+{
+  "_attribution": {
+    "provider": "Ministry of Panchayati Raj, Government of India",
+    "source": "Local Government Directory (LGD)",
+    "sourceUrl": "https://lgdirectory.gov.in/",
+    "license": "GODL-India v1.0",
+    "snapshotDate": "2026-05-30"
+  },
+  "_coverage": "v0.1.0-alpha.1 EXEMPLAR ONLY — ships districts for a representative subset of states (MH, KA, TN, DL, WB, AP, UP, GJ, KL, RJ) so the cascade UI is exercisable end-to-end. v0.1.0 (non-alpha) will ship full district coverage from a fresh LGD download. See https://github.com/007krcs/tekivex-ui/issues/ tagged 'india-admin-data'.",
+  "districtsByState": {
+    "IN-MH": [
+      { "code": "MH-MUM", "name": "Mumbai" },
+      { "code": "MH-MSC", "name": "Mumbai Suburban" },
+      { "code": "MH-PUN", "name": "Pune" },
+      { "code": "MH-NSK", "name": "Nashik" },
+      { "code": "MH-NGP", "name": "Nagpur" },
+      { "code": "MH-THN", "name": "Thane" },
+      { "code": "MH-AUR", "name": "Aurangabad" }
+    ],
+    "IN-KA": [
+      { "code": "KA-BLR-U", "name": "Bangalore Urban" },
+      { "code": "KA-BLR-R", "name": "Bangalore Rural" },
+      { "code": "KA-MYS", "name": "Mysuru" },
+      { "code": "KA-MNG", "name": "Mangaluru (Dakshina Kannada)" },
+      { "code": "KA-BLG", "name": "Belagavi" }
+    ],
+    "IN-TN": [
+      { "code": "TN-CHN", "name": "Chennai" },
+      { "code": "TN-CMB", "name": "Coimbatore" },
+      { "code": "TN-MDU", "name": "Madurai" },
+      { "code": "TN-TJR", "name": "Thanjavur" }
+    ],
+    "IN-DL": [
+      { "code": "DL-CEN", "name": "Central Delhi" },
+      { "code": "DL-NEW", "name": "New Delhi" },
+      { "code": "DL-NOR", "name": "North Delhi" },
+      { "code": "DL-SOU", "name": "South Delhi" },
+      { "code": "DL-EAS", "name": "East Delhi" },
+      { "code": "DL-WES", "name": "West Delhi" }
+    ],
+    "IN-WB": [
+      { "code": "WB-KOL", "name": "Kolkata" },
+      { "code": "WB-HOW", "name": "Howrah" },
+      { "code": "WB-DAR", "name": "Darjeeling" },
+      { "code": "WB-PSC", "name": "Paschim Bardhaman" }
+    ],
+    "IN-AP": [
+      { "code": "AP-VIS", "name": "Visakhapatnam" },
+      { "code": "AP-GNT", "name": "Guntur" },
+      { "code": "AP-KRS", "name": "Krishna" },
+      { "code": "AP-TIR", "name": "Tirupati" }
+    ],
+    "IN-UP": [
+      { "code": "UP-LKO", "name": "Lucknow" },
+      { "code": "UP-KAN", "name": "Kanpur Nagar" },
+      { "code": "UP-VAR", "name": "Varanasi" },
+      { "code": "UP-AGR", "name": "Agra" },
+      { "code": "UP-GBN", "name": "Gautam Buddha Nagar" }
+    ],
+    "IN-GJ": [
+      { "code": "GJ-AHM", "name": "Ahmedabad" },
+      { "code": "GJ-SUR", "name": "Surat" },
+      { "code": "GJ-VDR", "name": "Vadodara" },
+      { "code": "GJ-RAJ", "name": "Rajkot" }
+    ],
+    "IN-KL": [
+      { "code": "KL-EKM", "name": "Ernakulam" },
+      { "code": "KL-TVM", "name": "Thiruvananthapuram" },
+      { "code": "KL-KOZ", "name": "Kozhikode" },
+      { "code": "KL-TSR", "name": "Thrissur" }
+    ],
+    "IN-RJ": [
+      { "code": "RJ-JPR", "name": "Jaipur" },
+      { "code": "RJ-JDP", "name": "Jodhpur" },
+      { "code": "RJ-UDR", "name": "Udaipur" },
+      { "code": "RJ-KOT", "name": "Kota" }
+    ]
+  }
+}

@@ -83,6 +83,7 @@ export default defineConfig({
             { label: 'DataGrid with tree data', link: '/recipes/data-grid-with-tree-data/' },
             { label: 'Async field validation', link: '/recipes/async-field-validation/' },
             { label: 'AAA dark mode (SSR-safe)', link: '/recipes/aaa-dark-mode-ssr-safe/' },
+            { label: 'India address form', link: '/recipes/india-address-form/' },
           ],
         },
         {

@@ -5,6 +5,69 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.20.0] — 2026-05-30
+
+The **address-cascade** release. Closes the v3.20 roadmap item for
+`TkxAddressInput` raised by Indian-market consumers who need explicit
+Country → State → District → Sub-district dropdowns. Net non-breaking;
+existing code paths render byte-for-byte the same UI as v3.19.
+
+### Added — `TkxAddressInput` cascading-divisions support
+
+- **`divisionsSource?: DivisionsLoader` prop** on `TkxAddressInput`.
+  When supplied, the component prepends a cascading row of four
+  dropdowns above the PIN field — Country, State / UT, District, and a
+  per-state-labelled Sub-district. When omitted, the UI is identical to
+  v3.19 (PIN-only).
+- **`DivisionsLoader` interface** — pluggable async data source with
+  four methods (`countries`, `states`, `districts`, `subDistricts`) plus
+  an optional regional-naming hook `subDistrictLabel(country, state)`.
+  Returning `"Taluka"` for Maharashtra, `"Tehsil"` for UP, `"Mandal"`
+  for AP, `"Block"` for West Bengal, etc. — the dropdown label and the
+  helper-text use whatever string the loader returns, falling back to
+  `"Sub-district"`.
+- **`AdminDivision` interface** — `{ code, name, localName? }`. `code`
+  is stable (ISO 3166-1 alpha-2 / ISO 3166-2 / LGD); `localName` is the
+  regional-script display name.
+
+### Added — `AddressValue` schema (additive fields, all optional)
+
+- `subDistrict?: string` — display name of the picked sub-district.
+- `countryCode?: string`, `stateCode?: string`, `districtCode?: string`,
+  `subDistrictCode?: string` — stable codes from the loader. Useful for
+  storing the structured value in a database without normalising on
+  display strings.
+
+No existing field changed shape. `pin`, `postOffice`, `city`, `state`,
+`country`, `line1`, `line2` are all still typed identically.
+
+### Why
+
+Two consumer reports surfaced the same gap: the team needed a form with
+explicit Country → State → District → Taluka dropdowns, but
+`AddressValue` had no sub-district field and `TkxAddressInput` only
+shipped the PIN-lookup path. The right fix was to add a pluggable data
+source so consumers in any region can use any data they want — and ship
+a companion package (`tekivex-india-admin`, v0.1, separate npm) that
+provides the LGD snapshot for India. The companion package is on its
+own release schedule because GoI admin boundaries change (district
+splits, UT reorganisations) and that data updates shouldn't gate
+library versions.
+
+### Tests
+
+13 tests on `TkxAddressInput` total — 6 backward-compat (PIN lookup,
+6-digit gate, dropdown render, error states, address lines) + 7 new
+covering the cascade path (no-source-no-dropdowns, source-renders-4,
+country → states call, full cascade emit shape, regional label
+switching MH↔AP, downstream-clear on upstream pick, PIN-still-works).
+
+### Companion package roadmap
+
+- `tekivex-india-admin` v0.1 — separate npm package, ships
+  `lgdSnapshot()` returning a `DivisionsLoader`. Currently in license
+  audit (GODL-India) before data ingestion. Not blocking v3.20.
+
 ## [3.19.1] — 2026-05-29
 
 The **`/headless` security re-exports** patch. Pure additive — no API

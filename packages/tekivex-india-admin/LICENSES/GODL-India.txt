@@ -1,0 +1,58 @@
+GOVERNMENT OPEN DATA LICENSE — INDIA (GODL-India), v1.0
+========================================================
+
+Issued under the National Data Sharing and Accessibility Policy (NDSAP)
+of the Government of India, by the Department of Science & Technology and
+the Ministry of Statistics and Programme Implementation, Government of
+India.
+
+This file is a placeholder. Before publishing tekivex-india-admin@0.1.0
+to npm, replace this file with the full, verbatim text of the
+GODL-India v1.0 license as published in the Gazette of India and mirrored
+at:
+
+  https://www.indiapost.gov.in/documents/media/OGD.pdf
+  https://commons.wikimedia.org/wiki/File:Government_Open_Data_License_(India).pdf
+
+The current package.json and README rely on the rights summary captured
+in docs/LICENSE-AUDIT-tekivex-india-admin.md in the parent repo. That
+summary references the same canonical sources but is NOT a substitute
+for bundling the verbatim license text.
+
+To bundle the full text:
+
+  1. Download the Gazette PDF from one of the URLs above.
+  2. Either bundle the PDF directly as LICENSES/GODL-India.pdf, OR
+     extract the plain-text body via a PDF-to-text tool and save it
+     here as LICENSES/GODL-India.txt.
+  3. Re-run `npm pack` and verify the LICENSES/ directory is included
+     in the tarball.
+  4. Delete this placeholder header before publishing.
+
+Rights summary (per Wikipedia GODL-India template + India Post mirror):
+
+  Users are granted a worldwide, royalty-free, non-exclusive license to
+  use, adapt, publish (either in original, or in adapted and/or
+  derivative forms), translate, display, add value, and create
+  derivative works (including products and services), for all lawful
+  commercial and non-commercial purposes.
+
+Attribution required:
+
+  Users must acknowledge the provider, source, and license of data by
+  explicitly publishing the attribution statement, including the DOI
+  (Digital Object Identifier), or the URL (Uniform Resource Locator),
+  or the URI (Uniform Resource Identifier).
+
+Exclusions (license does NOT cover):
+
+  - Personal information
+  - Non-shareable / sensitive data
+  - Names, crests, logos and official symbols of the data provider
+  - Data subject to other intellectual property rights
+  - Military insignia
+  - Identity documents
+  - Data that should not have been publicly disclosed under section 8
+    of the Right to Information Act, 2005
+
+Warranty: GODL-India does not warrant the accuracy of the data.

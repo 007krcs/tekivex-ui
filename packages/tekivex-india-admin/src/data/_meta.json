@@ -1,0 +1,50 @@
+{
+  "_attribution": {
+    "provider": "Ministry of Panchayati Raj, Government of India",
+    "source": "Local Government Directory (LGD)",
+    "sourceUrl": "https://lgdirectory.gov.in/",
+    "license": "GODL-India v1.0",
+    "licenseUrl": "https://www.indiapost.gov.in/documents/media/OGD.pdf"
+  },
+  "snapshotDate": "2026-05-30",
+  "coverage": {
+    "states": "complete (28 states + 8 UTs)",
+    "districts": "complete (snapshot of all listed districts)",
+    "subDistricts": "PARTIAL — v0.1-alpha ships sub-districts for a representative subset of districts (one per state) so the API contract is exercised end-to-end. Full sub-district coverage tracked at https://github.com/007krcs/tekivex-ui/issues with milestone v0.2."
+  },
+  "regionalSubDistrictTerms": {
+    "rationale": "GoI's LGD calls this admin level 'sub-district' canonically. Regional/state government terminology varies. This map produces the user-facing label per state.",
+    "byState": {
+      "IN-MH": "Taluka",
+      "IN-GJ": "Taluka",
+      "IN-GA": "Taluka",
+      "IN-KA": "Taluk",
+      "IN-KL": "Taluk",
+      "IN-TN": "Taluk",
+      "IN-AP": "Mandal",
+      "IN-TG": "Mandal",
+      "IN-UP": "Tehsil",
+      "IN-BR": "Tehsil",
+      "IN-RJ": "Tehsil",
+      "IN-MP": "Tehsil",
+      "IN-HR": "Tehsil",
+      "IN-PB": "Tehsil",
+      "IN-UK": "Tehsil",
+      "IN-HP": "Tehsil",
+      "IN-CG": "Tehsil",
+      "IN-JK": "Tehsil",
+      "IN-LA": "Tehsil",
+      "IN-WB": "Block",
+      "IN-JH": "Block",
+      "IN-OD": "Block",
+      "IN-AS": "Circle",
+      "IN-AR": "Circle",
+      "IN-MN": "Sub-division",
+      "IN-MZ": "RD Block",
+      "IN-NL": "RD Block",
+      "IN-TR": "RD Block",
+      "IN-SK": "Sub-division",
+      "IN-ML": "C&RD Block"
+    }
+  }
+}

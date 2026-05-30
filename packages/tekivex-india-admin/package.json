@@ -1,0 +1,69 @@
+{
+  "name": "tekivex-india-admin",
+  "version": "0.1.0-alpha.1",
+  "description": "Pluggable DivisionsLoader for tekivex-ui's TkxAddressInput, bundling a snapshot of the Government of India's Local Government Directory: states / UTs, districts, and sub-districts with region-correct labels (Taluka / Tehsil / Mandal / Block / Circle). Source: lgdirectory.gov.in (Ministry of Panchayati Raj). License: GODL-India v1.0.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./data/*": "./dist/data/*"
+  },
+  "files": [
+    "dist",
+    "LICENSES",
+    "NOTICE.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "tekivex-ui",
+    "india",
+    "address",
+    "kyc",
+    "lgd",
+    "local-government-directory",
+    "states",
+    "districts",
+    "taluka",
+    "tehsil",
+    "mandal",
+    "pincode",
+    "react"
+  ],
+  "peerDependencies": {
+    "tekivex-ui": ">=3.20.0"
+  },
+  "peerDependenciesMeta": {
+    "tekivex-ui": {
+      "optional": true
+    }
+  },
+  "license": "SEE LICENSE IN LICENSES/GODL-India.txt",
+  "author": "007krcs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/007krcs/tekivex-ui.git",
+    "directory": "packages/tekivex-india-admin"
+  },
+  "bugs": {
+    "url": "https://github.com/007krcs/tekivex-ui/issues"
+  },
+  "homepage": "https://ui.tekivex.com/blueprints/india-address-form/",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

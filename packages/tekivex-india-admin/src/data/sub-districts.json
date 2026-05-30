@@ -1,0 +1,68 @@
+{
+  "_attribution": {
+    "provider": "Ministry of Panchayati Raj, Government of India",
+    "source": "Local Government Directory (LGD)",
+    "sourceUrl": "https://lgdirectory.gov.in/",
+    "license": "GODL-India v1.0",
+    "snapshotDate": "2026-05-30"
+  },
+  "_coverage": "v0.1.0-alpha.1 EXEMPLAR ONLY — sub-districts shipped for one district per major state so the cascade UI is demoable end-to-end. v0.1.0 will ship full LGD coverage.",
+  "subDistrictsByDistrict": {
+    "MH-PUN": [
+      { "code": "PUN-HAV", "name": "Haveli" },
+      { "code": "PUN-MAW", "name": "Maval" },
+      { "code": "PUN-MUL", "name": "Mulshi" },
+      { "code": "PUN-KHE", "name": "Khed" },
+      { "code": "PUN-JUN", "name": "Junnar" }
+    ],
+    "MH-MUM": [
+      { "code": "MUM-CIT", "name": "Mumbai City" }
+    ],
+    "KA-BLR-U": [
+      { "code": "BLRU-N", "name": "Bangalore North" },
+      { "code": "BLRU-S", "name": "Bangalore South" },
+      { "code": "BLRU-E", "name": "Bangalore East" },
+      { "code": "BLRU-AN", "name": "Anekal" }
+    ],
+    "TN-CHN": [
+      { "code": "CHN-EGM", "name": "Egmore" },
+      { "code": "CHN-MYL", "name": "Mylapore" },
+      { "code": "CHN-PRY", "name": "Perambur-Purasawalkam" }
+    ],
+    "DL-NEW": [
+      { "code": "DLN-CON", "name": "Connaught Place" },
+      { "code": "DLN-CHA", "name": "Chanakyapuri" },
+      { "code": "DLN-VAS", "name": "Vasant Vihar" }
+    ],
+    "WB-KOL": [
+      { "code": "KOL-AL", "name": "Alipore" },
+      { "code": "KOL-BL", "name": "Ballygunge" },
+      { "code": "KOL-PB", "name": "Park Street" }
+    ],
+    "AP-GNT": [
+      { "code": "GNT-TAD", "name": "Tadepalli" },
+      { "code": "GNT-MAN", "name": "Mangalagiri" },
+      { "code": "GNT-GUN", "name": "Guntur Mandal" }
+    ],
+    "UP-LKO": [
+      { "code": "LKO-SDR", "name": "Sadar" },
+      { "code": "LKO-MAH", "name": "Mahonakhal" },
+      { "code": "LKO-BKT", "name": "Bakshi Ka Talab" }
+    ],
+    "GJ-AHM": [
+      { "code": "AHM-CIT", "name": "Ahmedabad City" },
+      { "code": "AHM-SAN", "name": "Sanand" },
+      { "code": "AHM-DAS", "name": "Daskroi" }
+    ],
+    "KL-EKM": [
+      { "code": "EKM-KAN", "name": "Kanayannur" },
+      { "code": "EKM-KOC", "name": "Kochi" },
+      { "code": "EKM-PRV", "name": "Paravur" }
+    ],
+    "RJ-JPR": [
+      { "code": "JPR-JPC", "name": "Jaipur City" },
+      { "code": "JPR-SAN", "name": "Sanganer" },
+      { "code": "JPR-AMB", "name": "Amber" }
+    ]
+  }
+}

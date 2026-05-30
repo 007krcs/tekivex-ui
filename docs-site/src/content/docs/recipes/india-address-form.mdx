@@ -1,0 +1,290 @@
+---
+title: India address form — Country → State → District → Sub-district → PIN
+description: Cascading address picker for Indian forms, with region-correct sub-district labels (Taluka / Tehsil / Mandal / Block) and India Post PIN lookup. Bring your own data or use the bundled LGD snapshot.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## The problem
+
+You're building a form for an Indian product (KYC, shipping, voter
+registration, scholarship application) and you need the user to pick
+their full administrative address: **Country → State / UT → District →
+Taluka / Tehsil / Mandal / Block → PIN code**.
+
+Three honest sub-problems:
+
+1. **The right naming varies by state.** Maharashtra calls it
+   *taluka*, UP calls it *tehsil*, Andhra Pradesh calls it *mandal*,
+   West Bengal calls it *block*, Assam calls it *circle*. Hardcoding
+   *taluka* into your form mislabels it for 21+ states.
+2. **PIN lookup is one direction; explicit cascading dropdowns are the
+   other.** Some forms need both — type the PIN and auto-fill, OR pick
+   from dropdowns when the user doesn't have the PIN handy.
+3. **The data has to come from somewhere.** `tekivex-ui` ships the UI
+   shell + the India Post PIN-lookup API, but not the state /
+   district / sub-district dataset.
+
+The v3.20 release of `tekivex-ui` plus the new `tekivex-india-admin`
+companion package solves all three.
+
+## The recipe
+
+### Minimal — PIN lookup only (no extra dependencies)
+
+If your users always know their PIN, this is the smallest possible form:
+
+```tsx
+import { useState } from 'react';
+import { TkxAddressInput, type AddressValue } from 'tekivex-ui';
+
+export function ShippingAddress() {
+  const [addr, setAddr] = useState<Partial<AddressValue>>({});
+  return <TkxAddressInput value={addr} onChange={setAddr} label="Shipping address" />;
+}
+```
+
+What you get out of the box:
+
+- A 6-digit PIN field with `inputMode="numeric"` and `autoComplete="postal-code"`
+- On 6-digit completion, a fetch to India Post's free public API
+  (`api.postalpincode.in`)
+- When the PIN resolves to multiple post offices (common — one PIN can
+  have multiple), a `role="listbox"` dropdown the user picks from
+- City / State / Country auto-filled from the picked post office
+- Two address-line fields below for street / apt
+- `aria-busy`, `aria-invalid`, `aria-live` all wired up
+
+This is byte-for-byte the v3.19 behaviour — v3.20 didn't break it.
+
+### Full cascade — Country → State → District → Sub-district → PIN
+
+When you need explicit dropdowns (the user may not know their PIN; or
+you need stable ISO 3166-2 / LGD codes stored in your DB, not just
+display strings):
+
+```sh
+npm install tekivex-ui tekivex-india-admin
+```
+
+```tsx
+import { useState } from 'react';
+import { TkxAddressInput, type AddressValue } from 'tekivex-ui';
+import { lgdSnapshot } from 'tekivex-india-admin';
+
+// Memoize at module level — the loader's identity is what triggers the
+// initial countries fetch inside TkxAddressInput. A fresh call on every
+// render would re-fire the cascade.
+const divisions = lgdSnapshot();
+
+export function CompleteAddress() {
+  const [addr, setAddr] = useState<Partial<AddressValue>>({});
+  return (
+    <TkxAddressInput
+      value={addr}
+      onChange={setAddr}
+      divisionsSource={divisions}
+      label="Address"
+    />
+  );
+}
+```
+
+Now the form renders this stack:
+
+| Row | Fields |
+|---|---|
+| 1 | Country, State / UT |
+| 2 | District, **Taluka** / **Tehsil** / **Mandal** / **Block** (regional label) |
+| 3 | PIN code, City, State (the existing v3.19 row) |
+| 4 | Address line 1 |
+| 5 | Address line 2 |
+
+The 4th column's label updates per the selected state — pick
+Maharashtra and you see "Taluka"; pick Uttar Pradesh and you see
+"Tehsil"; pick Andhra Pradesh and you see "Mandal".
+
+The emitted `AddressValue` carries **both** display names and stable
+codes:
+
+```ts
+{
+  pin: '411001',
+  postOffice: 'Pune City',
+  city: 'Pune',
+  state: 'Maharashtra',
+  country: 'India',
+  subDistrict: 'Haveli',
+  countryCode: 'IN',
+  stateCode: 'IN-MH',
+  districtCode: 'MH-PUN',
+  subDistrictCode: 'PUN-HAV',
+  line1: '123 FC Road',
+  line2: 'Shivajinagar',
+}
+```
+
+Store the `*Code` fields in your DB. Show the display names to the user.
+Codes survive admin reorganisations (when a district splits, the parent
+code is preserved); display names get re-localised by the loader.
+
+### Bring your own data — no companion package needed
+
+`divisionsSource` accepts any object that satisfies the `DivisionsLoader`
+contract. If you already have admin-division data in your own backend,
+plug it in directly:
+
+```tsx
+import { TkxAddressInput, type DivisionsLoader } from 'tekivex-ui';
+
+const myLoader: DivisionsLoader = {
+  countries: async (signal) =>
+    fetch('/api/divisions/countries', { signal }).then((r) => r.json()),
+  states: async (countryCode, signal) =>
+    fetch(`/api/divisions/${countryCode}/states`, { signal }).then((r) => r.json()),
+  districts: async (countryCode, stateCode, signal) =>
+    fetch(`/api/divisions/${countryCode}/${stateCode}/districts`, { signal }).then((r) => r.json()),
+  subDistricts: async (countryCode, stateCode, districtCode, signal) =>
+    fetch(
+      `/api/divisions/${countryCode}/${stateCode}/${districtCode}/sub-districts`,
+      { signal },
+    ).then((r) => r.json()),
+  subDistrictLabel: (countryCode, stateCode) =>
+    REGIONAL_LABELS[`${countryCode}/${stateCode}`] ?? 'Sub-district',
+};
+```
+
+Every method receives an `AbortSignal` so in-flight requests get
+cancelled when the user changes a higher level (pick a new state mid-load
+and the previous state's district fetch is aborted before it can race the
+new one).
+
+## What's built-in
+
+- **The cascade aborts cleanly.** Each level's `useEffect` has an
+  `AbortController`. Reset the country and the in-flight states fetch is
+  cancelled before it can write into a downstream selection.
+- **Display names + stable codes ship together.** Store codes. Show
+  names. Don't normalise.
+- **Region-correct sub-district label.** The loader's
+  `subDistrictLabel(country, state)` returns "Taluka" / "Tehsil" /
+  "Mandal" / "Block" / "Circle" / "RD Block" / "Sub-division" /
+  "C&RD Block" per state. Fallback is "Sub-district".
+- **The PIN path still works.** Pass `divisionsSource` AND let users
+  type a PIN — both routes coexist. The component won't fight you.
+- **Accessibility is preserved.** Every `<select>` has a `<label
+  htmlFor>` association. The PIN field keeps its `aria-busy` /
+  `aria-invalid` / `aria-live` wiring.
+
+## What it does NOT defend against
+
+- **Stale admin boundaries.** Indian district boundaries change
+  (J&K 2019, frequent district splits). `lgdSnapshot()` is a snapshot
+  dated when the package was published. Re-snapshot when the user-facing
+  freshness window matters.
+- **Data accuracy.** GODL-India explicitly does not warrant accuracy.
+  Don't use this for legally-significant decisions (statutory filings,
+  tax jurisdiction) without re-verifying against the live LGD.
+- **PIN lookup outages.** `api.postalpincode.in` is a free public
+  service. If it goes down, the PIN auto-fill stops working — the
+  cascade dropdowns still work. Pass a custom `lookup` prop if you have
+  a backup service.
+- **Non-Indian addresses.** The default loader returns only `IN`. If
+  your product also operates in Indonesia / Pakistan / Bangladesh,
+  write a loader that returns the union.
+- **Village-level granularity.** LGD has ~640,000 villages.
+  `tekivex-india-admin` does not bundle them — that's correctly a
+  backend concern, not a React-app dependency.
+
+## Gotchas
+
+### "The dropdowns flicker / re-fetch on every keystroke"
+
+You probably called `lgdSnapshot()` inside the render function:
+
+```tsx
+// ❌ creates a fresh loader on every render
+export function MyForm() {
+  return <TkxAddressInput divisionsSource={lgdSnapshot()} ... />;
+}
+```
+
+Move it out:
+
+```tsx
+// ✅ stable identity
+const divisions = lgdSnapshot();
+export function MyForm() {
+  return <TkxAddressInput divisionsSource={divisions} ... />;
+}
+```
+
+Or wrap in `useMemo`:
+
+```tsx
+const divisions = useMemo(() => lgdSnapshot({ onlyStates: ['IN-MH'] }), []);
+```
+
+### "The PIN auto-fills the city, but the District dropdown doesn't update"
+
+By design. PIN lookup populates the *display* fields (`city`, `state`,
+`country`). The cascade dropdowns are driven by *code* fields
+(`districtCode`, `stateCode`). India Post doesn't return LGD codes, so
+there's no safe automatic mapping from PIN → district code.
+
+If you need PIN → code resolution, you'll need a second loader on your
+backend that maps PINs to LGD district codes (or use one of the
+community PIN ↔ LGD crosswalk CSVs). Then call the cascade's
+`pickDistrict` handler programmatically after the lookup resolves.
+
+### "My state isn't in the bundled exemplar set"
+
+`v0.1.0-alpha.1` of `tekivex-india-admin` ships an exemplar dataset
+(~50 districts across 10 major states) so the cascade UI is demoable.
+Full LGD coverage lands in `v0.1.0` (non-alpha). In the meantime:
+
+- Use the `onlyStates: ['IN-MH']` option to lock the loader to states
+  with covered data
+- Or write your own `DivisionsLoader` that proxies to your DB
+
+### "I want Taluka labelled differently for our internal users"
+
+`subDistrictLabel` is just a function. Wrap the loader:
+
+```ts
+import { lgdSnapshot } from 'tekivex-india-admin';
+
+const base = lgdSnapshot();
+const divisions = {
+  ...base,
+  subDistrictLabel: () => 'Revenue circle', // override globally
+};
+```
+
+## License & attribution
+
+The `tekivex-india-admin` data is sourced from the **Government of
+India's Local Government Directory** (`lgdirectory.gov.in`), maintained
+by the Ministry of Panchayati Raj, and published under the **Government
+Open Data License — India (GODL-India v1.0)**.
+
+If you ship a product using this data, paste the attribution string from
+the [`tekivex-india-admin` README](https://github.com/007krcs/tekivex-ui/tree/master/packages/tekivex-india-admin#attribution-for-downstream-consumers)
+into your app's NOTICES / About / Credits page.
+
+The companion package strictly excludes GoI / state-government crests,
+logos, and insignia (per GODL § 7).
+
+<Aside type="caution">
+  `tekivex-india-admin` is independent and is NOT endorsed or certified
+  by the Ministry of Panchayati Raj or any Indian government department.
+  It's a GODL-compliant redistribution intended to make Indian admin-
+  division data easy to consume in React apps — that's all.
+</Aside>
+
+## Related
+
+- [`TkxAddressInput`](/components/address-input/) — full component reference
+- [`TkxPhoneInput`](/components/phone-input/) — 56-country phone input with length-based validation (the natural companion field in any Indian form)
+- [`tekivex-india-admin` on npm](https://www.npmjs.com/package/tekivex-india-admin)
+- [Local Government Directory (LGD)](https://lgdirectory.gov.in/) — the canonical upstream
