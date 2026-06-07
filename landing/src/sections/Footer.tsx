@@ -91,8 +91,8 @@ export function Footer() {
           margin: '48px auto 0',
           paddingTop: 24,
           borderTop: '1px solid var(--tk-border)',
-          fontSize: 12,
-          color: 'var(--tk-fg-muted)',
+          fontSize: 13,                     // bumped from 12 — AAA prefers larger small-print
+          color: 'var(--tk-fg-muted)',      // now slate-700 ~10:1 (was slate-600 ~7.3:1)
           textAlign: 'center',
         }}
       >

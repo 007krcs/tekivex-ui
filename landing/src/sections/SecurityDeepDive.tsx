@@ -492,7 +492,7 @@ export function SecurityDeepDive() {
 
       <div style={{ textAlign: 'center' }}>
         <a
-          href="/docs/security-threat-model"
+          href="/security/"
           style={{
             display: 'inline-flex',
             alignItems: 'center',

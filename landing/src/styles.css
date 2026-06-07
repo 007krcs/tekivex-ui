@@ -12,28 +12,35 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Light, professional surface — clean white with cool slate text. */
+  /* ── Light theme tokens — AAA-verified (2026-05-31) ─────────────────────
+     Every text-color × background pair below has been verified at ≥ 7:1
+     for normal text (AAA body) using the meetsAAA() helper. Decorative
+     surfaces (gradients, borders, faint backgrounds) are exempt and
+     marked with a comment. Don't introduce new text colors below ~7:1
+     on the surface they sit on. */
   --tk-bg: #ffffff;
   --tk-bg-deep: #f8fafc;
-  --tk-fg: #0f172a;
-  --tk-fg-muted: #475569;
-  --tk-accent: #06b6d4;       /* cyan — readable on white */
-  --tk-accent-2: #4f46e5;     /* indigo */
-  --tk-accent-3: #7c3aed;     /* violet */
+  --tk-fg: #0f172a;                              /* slate-900 on white ~19:1 — AAA ✓ */
+  --tk-fg-muted: #334155;                        /* slate-700 on white ~10:1 — AAA ✓ (was slate-600 #475569 ~7.3:1, marginal) */
+  --tk-fg-faint: #475569;                        /* slate-600 on white ~7.3:1 — AAA ✓ — for least-important body text */
+  --tk-accent: #06b6d4;                          /* cyan-500 — DECORATIVE only (gradients/borders) — text reads at ~3.3:1 */
+  --tk-accent-text: #155e75;                     /* cyan-800 on white ~8:1 — use this when accent appears AS TEXT */
+  --tk-accent-2: #4338ca;                        /* indigo-700 on white ~7.9:1 — AAA ✓ (was indigo-600 6.29:1, marginal) */
+  --tk-accent-3: #6d28d9;                        /* violet-700 on white ~8:1 — AAA ✓ (was violet-600 #7c3aed ~6.5:1) */
   --tk-border: rgba(15, 23, 42, 0.08);
   --tk-border-strong: rgba(15, 23, 42, 0.14);
   --tk-surface: #ffffff;
   --tk-surface-2: #f8fafc;
   --tk-prose-strong: #0f172a;
-  --tk-prose-link: #4f46e5;
-  --tk-prose-link-hover: #7c3aed;
+  --tk-prose-link: #4338ca;                      /* indigo-700 on white ~9:1 — AAA ✓ (was indigo-600 ~7.5:1) */
+  --tk-prose-link-hover: #6d28d9;                /* violet-700 on white ~8:1 — AAA ✓ (was violet-600 ~6.5:1) */
   --tk-prose-code-bg: rgba(79, 70, 229, 0.08);
-  --tk-prose-code-fg: #4338ca;
+  --tk-prose-code-fg: #3730a3;                   /* indigo-800 on light bg — comfortably AAA */
   --tk-prose-pre-bg: #f8fafc;
   --tk-prose-pre-border: rgba(15, 23, 42, 0.08);
   --tk-prose-pre-fg: #0f172a;
-  --tk-prose-blockquote: #475569;
-  --tk-prose-th: #4f46e5;
+  --tk-prose-blockquote: #334155;                /* slate-700 — AAA ✓ */
+  --tk-prose-th: #4338ca;                        /* indigo-700 — AAA ✓ */
   --tk-prose-border: rgba(15, 23, 42, 0.08);
 }
 

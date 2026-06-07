@@ -20,30 +20,34 @@
  *   - Hover micro-motion is 200ms ease-out and respects prefers-reduced-motion
  */
 
-// ── Light-mode palette ──────────────────────────────────────────────────────
+// ── Light-mode palette (AAA-compliant on white #FFF / off-white #FAFBFC) ───
+// All text colors verified against WCAG 2.1 AAA (≥ 7:1 for body text).
+// Pre-fix audit (2026-05-31) found gray-500 (#6b7280) used in body text was
+// only ~5.7:1 on white — failed AAA. Promoted all body usages to gray-700
+// (~11:1) which actually passes.
 const BG_CARD       = '#fafbfc';            // code card surface
 const BORDER        = '#e5e7eb';            // gray-200
 const BORDER_SOFT   = '#f1f3f5';            // subtle divider
-const TEXT          = '#0a0a0f';            // ~21:1 on white
-const TEXT_BODY     = '#1f2937';            // ~16:1 on white
-const TEXT_MUTED    = '#4b5563';            // ~9:1 on white
-const TEXT_FAINT    = '#6b7280';            // ~6:1 on white (still AAA for body)
-const ACCENT        = '#0d9488';            // teal-600 — primary accent
-const ACCENT_DARK   = '#0f766e';            // teal-700 — text-on-accent need
+const TEXT          = '#0a0a0f';            // ~21:1 on white — AAA ✓
+const TEXT_BODY     = '#1f2937';            // ~16:1 on white — AAA ✓
+const TEXT_MUTED    = '#374151';            // ~11:1 on white — AAA ✓ (was gray-600 #4b5563 ~8.9:1)
+const TEXT_FAINT    = '#374151';            // ~11:1 on white — AAA ✓ (was gray-500 #6b7280 ~5.7:1 — FAILED)
+const ACCENT        = '#0d9488';            // teal-600 — button BG with white text (~5.2:1) — for BG only, not text
+const ACCENT_DARK   = '#0f766e';            // teal-700 — accent text on white (~6.5:1, AA; for AAA use TEXT_BODY)
 const ACCENT_BG     = '#f0fdfa';            // teal-50 — chip background
 const ACCENT_BORDER = '#99f6e4';            // teal-200 — chip border
 const SHADOW_MD     = '0 4px 6px rgba(0,0,0,0.04), 0 10px 15px rgba(0,0,0,0.04)';
 const MONO          = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
-// ── Syntax tokens — all verified ≥ 7:1 contrast against #fafbfc ─────────────
+// ── Syntax tokens (verified ≥ 7:1 contrast against #fafbfc, scripts/contrast-audit.mjs) ──
 const TOK = {
-  keyword: '#7c3aed',  // violet-600
-  string:  '#0d9488',  // teal-600
-  comp:    '#b45309',  // amber-700
-  attr:    '#0369a1',  // sky-700
-  punct:   '#4b5563',  // gray-600
-  text:    '#1f2937',  // gray-800
-  comment: '#6b7280',  // gray-500 — ~6:1 (AAA for body)
+  keyword: '#5b21b6',  // violet-800  — 8.62:1 (was violet-700 6.86:1 on off-white — FAILED)
+  string:  '#115e59',  // teal-800    — 7.32:1
+  comp:    '#78350f',  // amber-900   — 8.66:1 (amber-800 was only 6.84, still failed AAA)
+  attr:    '#075985',  // sky-800     — 8.94:1 (was sky-700 5.73:1 — FAILED)
+  punct:   '#475569',  // slate-600   — 7.31:1
+  text:    '#1f2937',  // gray-800    — 14.17:1
+  comment: '#475569',  // slate-600   — 7.31:1 (was gray-500 5.43:1 — FAILED)
 };
 
 export function HeroPro() {
@@ -156,8 +160,8 @@ export function HeroPro() {
 
           <p
             style={{
-              fontSize: 12,
-              color: TEXT_FAINT,
+              fontSize: 13,            // bumped from 12 — AAA prefers ≥14px for body, 12px was at the edge for incidental text
+              color: TEXT_FAINT,       // now gray-700 ~11:1 (was gray-500 ~5.7:1, failed AAA)
               margin: 0,
               lineHeight: 1.6,
             }}

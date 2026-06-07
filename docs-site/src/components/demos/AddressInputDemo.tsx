@@ -21,7 +21,7 @@ export function AddressInputPINOnly() {
     <Preview label="PIN-only mode (no extra deps)" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
       <div style={{ width: '100%', maxWidth: 600 }}>
         <TkxAddressInput value={addr} onChange={setAddr} label="Try a real PIN: 411001 (Pune) or 400050 (Bandra, Mumbai)" />
-        <pre style={{ marginTop: 12, fontSize: 11, opacity: 0.7, background: 'rgba(127,127,127,0.08)', padding: 8, borderRadius: 6, overflow: 'auto' }}>
+        <pre style={{ marginTop: 12, fontSize: 12, color: 'var(--sl-color-gray-2, #4b5563)', background: 'var(--sl-color-gray-6, rgba(127,127,127,0.08))', padding: 10, borderRadius: 6, overflow: 'auto', lineHeight: 1.5 }}>
 {JSON.stringify(addr, null, 2)}
         </pre>
       </div>
@@ -48,7 +48,7 @@ export function AddressInputCascade() {
           divisionsSource={source}
           label="Pick India → Maharashtra → Pune → Haveli — note the label says 'Taluka'. Switch to Andhra Pradesh and it becomes 'Mandal'."
         />
-        <pre style={{ marginTop: 12, fontSize: 11, opacity: 0.7, background: 'rgba(127,127,127,0.08)', padding: 8, borderRadius: 6, overflow: 'auto' }}>
+        <pre style={{ marginTop: 12, fontSize: 12, color: 'var(--sl-color-gray-2, #4b5563)', background: 'var(--sl-color-gray-6, rgba(127,127,127,0.08))', padding: 10, borderRadius: 6, overflow: 'auto', lineHeight: 1.5 }}>
 {JSON.stringify(addr, null, 2)}
         </pre>
       </div>
