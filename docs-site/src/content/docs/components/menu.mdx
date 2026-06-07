@@ -1,18 +1,34 @@
 ---
 title: TkxMenu
-description: Right-click and trigger-driven menus. Nested submenus, keyboard navigation, separators, and shortcuts.
+description: Trigger-driven menu with nested submenus, keyboard navigation, separators, shortcuts, and danger items.
 ---
 
-```tsx
-import { TkxMenu, TkxMenuItem, TkxMenuSeparator } from 'tekivex-ui';
+import { MenuBasic, MenuWithSubmenu } from '../../../components/demos/MenuDemo';
 
-<TkxMenu trigger={<TkxButton>Actions</TkxButton>}>
-  <TkxMenuItem onSelect={() => copy()}>Copy</TkxMenuItem>
-  <TkxMenuItem onSelect={() => paste()}>Paste</TkxMenuItem>
-  <TkxMenuSeparator />
-  <TkxMenuItem onSelect={() => del()} variant="danger">Delete</TkxMenuItem>
-</TkxMenu>
+```tsx
+import { TkxMenu, TkxButton } from 'tekivex-ui';
 ```
+
+## Basic — interactive
+
+<MenuBasic client:load />
+
+```tsx
+<TkxMenu
+  trigger={<TkxButton variant="outline">Actions ▾</TkxButton>}
+  items={[
+    { type: 'action', id: 'edit',      label: 'Edit',      shortcut: '⌘E', onSelect: () => {} },
+    { type: 'action', id: 'duplicate', label: 'Duplicate', shortcut: '⌘D', onSelect: () => {} },
+    { type: 'action', id: 'archive',   label: 'Archive',                   onSelect: () => {} },
+    { type: 'separator', id: 'sep1' },
+    { type: 'action', id: 'delete',    label: 'Delete',    shortcut: '⌫',  danger: true, onSelect: () => {} },
+  ]}
+/>
+```
+
+## With submenu
+
+<MenuWithSubmenu client:load />
 
 ## With shortcuts
 

@@ -1,15 +1,35 @@
 ---
 title: TkxPopover
-description: Popover — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Click-triggered popover with placement options, arrow indicator, and click-outside-to-close.
 ---
 
+import { PopoverBasic, PopoverPlacements } from '../../../components/demos/PopoverDemo';
+
 ```tsx
-import { TkxPopover } from 'tekivex-ui';
+import { TkxPopover, TkxButton } from 'tekivex-ui';
 ```
 
-Popover is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Basic
+
+<PopoverBasic client:load />
+
+```tsx
+<TkxPopover
+  trigger={<TkxButton variant="outline">More info</TkxButton>}
+  content={<div>About this metric…</div>}
+/>
+```
+
+## Placements
+
+<PopoverPlacements client:load />
+
+```tsx
+<TkxPopover trigger={...} placement="top"    content={...} />
+<TkxPopover trigger={...} placement="bottom" content={...} />
+<TkxPopover trigger={...} placement="left"   content={...} />
+<TkxPopover trigger={...} placement="right"  content={...} />
+```
 
 ## Props
 
@@ -36,6 +56,5 @@ AAA audit is on the roadmap, not completed.
 
 The implementation lives at [`src/components/TkxPopover.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/popover).
+For the full interactive sandbox with every prop tweakable, open
+the [playground](/playground/#/components/popover).

@@ -1,15 +1,48 @@
 ---
 title: TkxDataGrid
-description: DataGrid — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Sortable, selectable, virtually-scrolled data grid with filters, pagination, CSV export, and tree-data support.
 ---
+
+import { DataGridBasic, DataGridSelection } from '../../../components/demos/DataGridDemo';
 
 ```tsx
 import { TkxDataGrid } from 'tekivex-ui';
 ```
 
-DataGrid is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Basic — sortable
+
+<DataGridBasic client:load />
+
+```tsx
+<TkxDataGrid
+  data={users}
+  rowKey="id"
+  sortable
+  bordered
+  columns={[
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'email', label: 'Email' },
+    { key: 'role', label: 'Role', sortable: true },
+  ]}
+/>
+```
+
+## Row selection — controlled
+
+<DataGridSelection client:load />
+
+```tsx
+const [selected, setSelected] = useState<string[]>([]);
+
+<TkxDataGrid
+  data={users}
+  rowKey="id"
+  selectable
+  selectedRows={selected}
+  onSelectionChange={setSelected}
+  columns={[...]}
+/>
+```
 
 ## Props
 
@@ -56,6 +89,6 @@ AAA audit is on the roadmap, not completed.
 
 The implementation lives at [`src/components/TkxDataGrid.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/data-grid).
+For tree-data, column pinning, row grouping, infinite scroll, and the
+full prop matrix, open the [playground](/playground/#/components/data-grid)
+or the [DataGrid recipe](/recipes/data-grid-with-tree-data/).

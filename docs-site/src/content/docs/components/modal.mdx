@@ -4,6 +4,11 @@ description: Accessible modal dialog with focus trap, scrim, escape-to-close, an
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { ModalBasic, ModalSizes } from '../../../components/demos/ModalDemo';
+
+## Live demo
+
+<ModalBasic client:load />
 
 ```tsx
 import { TkxModal, TkxButton } from 'tekivex-ui';
@@ -25,6 +30,10 @@ function Example() {
   );
 }
 ```
+
+## Sizes — interactive
+
+<ModalSizes client:load />
 
 ## Sizes
 

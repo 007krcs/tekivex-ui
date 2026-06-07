@@ -1,14 +1,37 @@
 ---
 title: TkxDropdown
-description: Dropdown — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Searchable dropdown with single + multi-select, grouped items, custom rendering, and portal mounting.
 ---
 
+import { DropdownBasic, DropdownGroups, DropdownSearchable } from '../../../components/demos/DropdownDemo';
+
 ```tsx
-import { TkxDropdown } from 'tekivex-ui';
+import { TkxDropdown, TkxButton } from 'tekivex-ui';
 ```
 
-Dropdown is part of the 78-component tekivex-ui library. Every component is
-self-tested against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party AAA audit is on the roadmap, not completed.
+## Basic — single select
+
+<DropdownBasic client:load />
+
+```tsx
+<TkxDropdown
+  trigger={<TkxButton variant="outline">Pick country ▾</TkxButton>}
+  items={[
+    { key: 'in', label: 'India' },
+    { key: 'us', label: 'United States' },
+    { key: 'uk', label: 'United Kingdom' },
+  ]}
+  onSelect={(key, item) => console.log(item.label)}
+/>
+```
+
+## Grouped items
+
+<DropdownGroups client:load />
+
+## Searchable
+
+<DropdownSearchable client:load />
 
 ## Props
 
@@ -45,6 +68,4 @@ self-tested against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A th
 
 The implementation lives at [`src/components/TkxDropdown.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/dropdown).
+For the full interactive sandbox, open the [playground](/playground/#/components/dropdown).

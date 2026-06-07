@@ -1,15 +1,39 @@
 ---
 title: TkxList
-description: List — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Structured item list with avatars, descriptions, actions, status badges, and a loading state.
 ---
+
+import { ListBasic, ListWithAvatars, ListWithExtra, ListLoading } from '../../../components/demos/ListDemo';
 
 ```tsx
 import { TkxList } from 'tekivex-ui';
 ```
 
-List is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Basic
+
+<ListBasic client:load />
+
+```tsx
+<TkxList
+  bordered
+  items={[
+    { key: '1', title: 'README.md', description: 'Last edited 2 hours ago' },
+    { key: '2', title: 'CHANGELOG.md', description: 'Last edited yesterday' },
+  ]}
+/>
+```
+
+## With avatars + actions
+
+<ListWithAvatars client:load />
+
+## With extra metadata (badges)
+
+<ListWithExtra client:load />
+
+## Loading state
+
+<ListLoading client:load />
 
 ## Props
 
@@ -36,6 +60,4 @@ AAA audit is on the roadmap, not completed.
 
 The implementation lives at [`src/components/TkxList.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/list).
+For the full interactive sandbox, open the [playground](/playground/#/components/list).
