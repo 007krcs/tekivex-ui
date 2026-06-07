@@ -1,50 +1,48 @@
 import { TkxToastProvider, useToast, TkxButton } from 'tekivex-ui';
 import { Preview } from '../Preview';
 
-function Inner() {
-  const toast = useToast();
+// useToast() returns { toast, dismiss, dismissAll }. Each demo wraps
+// its content in TkxToastProvider so toast state is scoped to that
+// section of the page.
+
+function ToastTriggers() {
+  const { toast } = useToast();
   return (
-    <>
-      <TkxButton
-        size="sm"
-        onClick={() => toast({ title: 'Saved', description: 'Your changes are live.', variant: 'success' })}
-      >
+    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+      <TkxButton size="sm" variant="primary" onClick={() =>
+        toast({ title: 'Saved', description: 'Your changes are live.', variant: 'success' })
+      }>
         Success
       </TkxButton>
-      <TkxButton
-        size="sm"
-        onClick={() => toast({ title: 'Disk space low', description: 'Less than 5 GB remaining.', variant: 'warning' })}
-      >
+      <TkxButton size="sm" onClick={() =>
+        toast({ title: 'Heads-up', description: 'Two new replies on your PR.', variant: 'info' })
+      }>
+        Info
+      </TkxButton>
+      <TkxButton size="sm" onClick={() =>
+        toast({ title: 'Almost out of credits', variant: 'warning' })
+      }>
         Warning
       </TkxButton>
-      <TkxButton
-        size="sm"
-        onClick={() => toast({ title: 'Connection lost', description: 'Retrying in 3s…', variant: 'danger' })}
-      >
-        Danger (assertive)
+      <TkxButton size="sm" onClick={() =>
+        toast({ title: 'Upload failed', description: 'Network error — retry?', variant: 'danger' })
+      }>
+        Danger
       </TkxButton>
-      <TkxButton
-        size="sm"
-        onClick={() =>
-          toast({
-            title: 'Item deleted',
-            variant: 'default',
-            action: { label: 'Undo', onClick: () => toast({ title: 'Restored', variant: 'success' }) },
-          })
-        }
-      >
-        With action
-      </TkxButton>
-    </>
+    </div>
   );
 }
 
-export function ToastTrigger() {
+export function ToastBasic() {
   return (
-    <Preview label="Click any button to fire a toast">
+    <Preview label="Click a button to fire a toast (top-right by default)">
       <TkxToastProvider position="top-right">
-        <Inner />
+        <ToastTriggers />
       </TkxToastProvider>
     </Preview>
   );
 }
+
+// Backwards-compat alias so any existing reference to ToastTrigger
+// (old export name) still resolves.
+export const ToastTrigger = ToastBasic;
