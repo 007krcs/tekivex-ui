@@ -1,25 +1,23 @@
 ---
 title: TkxTitle
-description: Title — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxTitle — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { TitleAllLevels,TitleColored } from '../../../components/demos/TitleDemo';
 
 ```tsx
 import { TkxTitle } from 'tekivex-ui';
 ```
 
-Title is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### All Levels
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `level` | `1 \| 2 \| 3 \| 4 \| 5` |  |  |
-| `children` | `ReactNode` | yes |  |
-| `copyable` | `boolean` |  |  |
-| `type` | `TypographyType` |  |  |
-| `style` | `CSSProperties` |  |  |
+<TitleAllLevels client:load />
+
+### Colored
+
+<TitleColored client:load />
 
 ## Accessibility
 
@@ -31,8 +29,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxTypography.tsx`](https://ui.tekivex.com).
+[`src/components/TkxTitle.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/title).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/title).

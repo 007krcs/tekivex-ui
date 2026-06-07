@@ -1,52 +1,31 @@
 ---
 title: TkxSortable
-description: Drag-and-drop reorderable list — keyboard-accessible (Space to grab, ↑↓ to move, Enter to drop).
+description: TkxSortable — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { SortableBasic } from '../../../components/demos/SortableDemo';
 
 ```tsx
 import { TkxSortable } from 'tekivex-ui';
-
-const [items, setItems] = useState(['One', 'Two', 'Three']);
-
-<TkxSortable
-  items={items}
-  onReorder={setItems}
-  renderItem={(item) => <div>{item}</div>}
-/>
 ```
 
-A reorderable list. Mouse/touch users drag; keyboard users press
-**Space** to grab the focused item, **↑/↓** to move it, **Enter** to drop,
-**Escape** to cancel. Built on the native HTML5 Drag and Drop API — no
-external dep.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Notes |
-|---|---|---|
-| `items` | `T[]` | unique-keyed array |
-| `onReorder` | `(next: T[]) => void` | required |
-| `renderItem` | `(item: T, index: number) => ReactElement` | required |
-| `getKey` | `(item: T) => string` | default `String(index)` |
-| `direction` | `'vertical' \| 'horizontal'` | default `'vertical'` |
-| `disabled` | `boolean` | default `false` |
+<SortableBasic client:load />
 
 ## Accessibility
 
-This is one of the few sortable lists that's actually keyboard-usable:
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
 
-| Key | Action |
-|---|---|
-| `Tab` | Focus an item |
-| `Space` | Grab the focused item ("picked up") |
-| `↑` / `↓` | Move it one slot |
-| `Enter` | Drop it at the new position |
-| `Escape` | Cancel — restore original order |
+## Source
 
-Status changes are announced via `aria-live="polite"`:
-"Picked up Item 2 of 5" / "Item 2 moved to position 4 of 5".
+[`src/components/TkxSortable.tsx`](https://ui.tekivex.com)
 
-## Testing
-
-See `tests/TkxSortable.test.tsx` — 7 tests covering keyboard reorder,
-drag, and the cancel path.
+For the full interactive sandbox, open the
+[playground](/playground/#/components/sortable).
