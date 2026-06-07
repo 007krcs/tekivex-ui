@@ -1,98 +1,35 @@
 ---
 title: TkxTimeline
-description: Vertical chronological list of events. RSC-compatible, with custom dots, color-coded states, and alternating layout.
+description: TkxTimeline — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { TimelineBasic,TimelineWithError } from '../../../components/demos/TimelineDemo';
 
 ```tsx
 import { TkxTimeline } from 'tekivex-ui';
-
-<TkxTimeline
-  items={[
-    { id: 1, title: 'Order placed',    description: 'Apr 26, 10:42',  state: 'completed' },
-    { id: 2, title: 'Payment cleared', description: 'Apr 26, 10:43',  state: 'completed' },
-    { id: 3, title: 'Shipped',         description: 'Apr 27, 09:15',  state: 'active' },
-    { id: 4, title: 'Out for delivery',                                state: 'pending' },
-    { id: 5, title: 'Delivered',                                       state: 'pending' },
-  ]}
-/>
 ```
 
-## States
+## Live demo
 
-| State | Visual |
-|---|---|
-| `completed` | Filled dot (success color), slim line |
-| `active` | Pulsing dot (primary color), animated line |
-| `pending` | Outline dot (muted), dashed line |
-| `error` | Filled dot (danger color), red line |
+### Basic
 
-State drives both the dot style and the segment style above each item.
+<TimelineBasic client:load />
 
-## Custom dot
+### With Error
 
-```tsx
-<TkxTimeline
-  items={[
-    {
-      id: 1,
-      title: 'Reviewed',
-      dot: <CheckIcon />,
-    },
-    {
-      id: 2,
-      title: 'Approved',
-      dot: <ThumbsUpIcon />,
-    },
-  ]}
-/>
-```
-
-## Alternating layout
-
-```tsx
-<TkxTimeline
-  alternate
-  items={[
-    { id: 1, title: 'Founded',     date: '2020' },
-    { id: 2, title: 'First hire',  date: '2021' },
-    { id: 3, title: 'Series A',    date: '2023' },
-    { id: 4, title: 'Public launch', date: '2026' },
-  ]}
-/>
-```
-
-Odd-indexed items render on the left of the spine, even-indexed on the
-right. Useful for company timelines or biography-style layouts.
-
-## Reverse order
-
-```tsx
-<TkxTimeline reverse items={items} />
-```
-
-Renders newest-first instead of oldest-first.
-
-## RSC compatible
-
-No hooks, no browser APIs — `TkxTimeline` renders in Next.js Server
-Components without `'use client'`.
+<TimelineWithError client:load />
 
 ## Accessibility
 
-- Container: `<ol>` with semantic ordering
-- Each item: `<li>` with `aria-current="step"` on the active item
-- State conveyed visually AND via `aria-label` on the dot
-- Connecting line is decorative (`aria-hidden`)
-
-## Props
-
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `items` | `TimelineItem[]` | yes | `{ id, title, description?, state?, dot?, date? }`. |
-| `alternate` | `boolean` | | Zigzag left/right layout. |
-| `reverse` | `boolean` | | Reverse item order. |
-| `lineStyle` | `'solid' \| 'dashed'` | | Default segment style. |
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
 
 ## Source
 
 [`src/components/TkxTimeline.tsx`](https://ui.tekivex.com)
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/timeline).

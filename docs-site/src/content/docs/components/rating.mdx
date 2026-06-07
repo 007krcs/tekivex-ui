@@ -1,33 +1,27 @@
 ---
 title: TkxRating
-description: Rating — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxRating — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { RatingBasic,RatingHalfStars,RatingSizes } from '../../../components/demos/RatingDemo';
 
 ```tsx
 import { TkxRating } from 'tekivex-ui';
 ```
 
-Rating is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `value` | `number` |  |  |
-| `defaultValue` | `number` |  |  |
-| `onChange` | `(value: number) => void` |  |  |
-| `max` | `number` |  |  |
-| `precision` | `0.5 \| 1` |  |  |
-| `size` | `RatingSize` |  |  |
-| `isReadOnly` | `boolean` |  |  |
-| `isDisabled` | `boolean` |  |  |
-| `label` | `string` |  |  |
-| `showValue` | `boolean` |  |  |
-| `colorScheme` | `'warning' \| 'primary' \| 'danger'` |  |  |
-| `emptyIcon` | `'star' \| 'heart' \| 'circle'` |  |  |
-| `filledIcon` | `'star' \| 'heart' \| 'circle'` |  |  |
+<RatingBasic client:load />
+
+### Half Stars
+
+<RatingHalfStars client:load />
+
+### Sizes
+
+<RatingSizes client:load />
 
 ## Accessibility
 
@@ -39,8 +33,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxRating.tsx`](https://ui.tekivex.com).
+[`src/components/TkxRating.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/rating).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/rating).

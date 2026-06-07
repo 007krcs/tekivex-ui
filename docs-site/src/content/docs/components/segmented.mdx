@@ -1,25 +1,27 @@
 ---
 title: TkxSegmented
-description: Segmented — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxSegmented — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { SegmentedBasic,SegmentedSizes,SegmentedBlock } from '../../../components/demos/SegmentedDemo';
 
 ```tsx
 import { TkxSegmented } from 'tekivex-ui';
 ```
 
-Segmented is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `options` | `SegmentedOption[]` | yes |  |
-| `value` | `string` |  |  |
-| `onChange` | `(value: string) => void` |  |  |
-| `size` | `'sm' \| 'md' \| 'lg'` |  |  |
-| `block` | `boolean` |  |  |
+<SegmentedBasic client:load />
+
+### Sizes
+
+<SegmentedSizes client:load />
+
+### Block
+
+<SegmentedBlock client:load />
 
 ## Accessibility
 
@@ -31,8 +33,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxSegmented.tsx`](https://ui.tekivex.com).
+[`src/components/TkxSegmented.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/segmented).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/segmented).

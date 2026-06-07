@@ -1,82 +1,35 @@
 ---
 title: TkxColorPicker
-description: HSV / RGB / HEX color selector with palette, alpha channel, eyedropper API, and recently-used swatches.
+description: TkxColorPicker — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { ColorPickerBasic,ColorPickerWithPresets } from '../../../components/demos/ColorPickerDemo';
 
 ```tsx
 import { TkxColorPicker } from 'tekivex-ui';
-
-const [color, setColor] = useState('#00f5d4');
-
-<TkxColorPicker
-  label="Brand color"
-  value={color}
-  onChange={setColor}
-/>
 ```
 
-## Format
+## Live demo
 
-```tsx
-<TkxColorPicker format="hex" />          {/* default */}
-<TkxColorPicker format="rgb" />          {/* rgb(255, 0, 128) */}
-<TkxColorPicker format="hsl" />          {/* hsl(330, 100%, 50%) */}
-<TkxColorPicker format="hex" alpha />    {/* #ff008080 — adds 0–1 slider */}
-```
+### Basic
 
-## Built-in palette
+<ColorPickerBasic client:load />
 
-```tsx
-<TkxColorPicker
-  swatches={[
-    '#00f5d4', '#7b2ff7', '#f72585',
-    '#ffbe0b', '#06d6a0', '#3a86ff',
-  ]}
-/>
-```
+### With Presets
 
-The swatches render below the picker for one-click selection. Pass an
-empty array to hide them.
-
-## Recently used
-
-By default, the picker remembers the last 8 colors the user selected (per
-session, in-memory). Disable with `rememberRecent={false}`.
-
-## Eyedropper (Chrome / Edge only)
-
-```tsx
-<TkxColorPicker showEyedropper />
-```
-
-Adds an eyedropper button that uses the platform `EyeDropper` API to pick
-a color from anywhere on screen. Falls back to hidden on unsupported
-browsers.
+<ColorPickerWithPresets client:load />
 
 ## Accessibility
 
-- Trigger button has localised `aria-label` and shows the current hex as
-  visible text + the color as a swatch
-- Picker dialog uses `role="dialog"` with focus trap
-- HSV gradient panel exposes coordinates via `aria-valuetext`
-  ("Hue 200 degrees, saturation 80 percent, value 60 percent")
-- Alpha slider uses `role="slider"`
-- Keyboard-only operation supported throughout
-
-## Props
-
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `value` | `string` | | Current color (any CSS color format). |
-| `onChange` | `(color: string) => void` | | Color change. |
-| `format` | `'hex' \| 'rgb' \| 'hsl'` | | Defaults to `hex`. |
-| `alpha` | `boolean` | | Show alpha slider. |
-| `swatches` | `string[]` | | Quick-pick palette. |
-| `rememberRecent` | `boolean` | | Defaults to `true`. |
-| `showEyedropper` | `boolean` | | Defaults to `true` (auto-hides when unsupported). |
-| `disabled` | `boolean` | | |
-| `label` | `string` | | |
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
 
 ## Source
 
 [`src/components/TkxColorPicker.tsx`](https://ui.tekivex.com)
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/color-picker).
