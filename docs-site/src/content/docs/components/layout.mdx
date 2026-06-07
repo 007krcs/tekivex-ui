@@ -1,24 +1,19 @@
 ---
 title: TkxLayout
-description: Layout — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxLayout — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { LayoutShell } from '../../../components/demos/LayoutDemo';
 
 ```tsx
 import { TkxLayout } from 'tekivex-ui';
 ```
 
-Layout is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `children` | `ReactNode` | yes |  |
-| `hasSider` | `boolean` |  | When true the layout flows horizontally (used when Sider is present). |
-| `style` | `CSSProperties` |  |  |
-| `className` | `string` |  |  |
+<LayoutShell client:load />
 
 ## Accessibility
 
@@ -30,8 +25,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxLayout.tsx`](https://ui.tekivex.com).
+[`src/components/TkxLayout.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/layout).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/layout).

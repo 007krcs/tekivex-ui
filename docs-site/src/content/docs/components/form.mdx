@@ -1,90 +1,31 @@
 ---
 title: TkxForm
-description: Schema-validated form with field-level errors, async submit, dirty tracking, and zero-trust input sanitisation.
+description: TkxForm — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import { FormBasic } from '../../../components/demos/FormDemo';
 
 ```tsx
-import { TkxForm, TkxInput, TkxButton } from 'tekivex-ui';
-
-const schema = {
-  email: { required: true, type: 'email' },
-  password: { required: true, minLength: 8 },
-};
-
-<TkxForm
-  schema={schema}
-  onSubmit={async (values) => {
-    await fetch('/api/login', { method: 'POST', body: JSON.stringify(values) });
-  }}
->
-  <TkxInput name="email" label="Email" />
-  <TkxInput name="password" label="Password" type="password" />
-  <TkxButton type="submit">Sign in</TkxButton>
-</TkxForm>
+import { TkxForm } from 'tekivex-ui';
 ```
 
-## What's built in
+## Live demo
 
-- **Schema validation** — required, min/max length, regex, email, URL,
-  custom validators
-- **Field-level errors** rendered automatically next to each input
-- **Async submit** with loading state and error display
-- **Dirty tracking** — `isDirty` per field and form-wide
-- **Zero-trust sanitisation** — every value passes through SecurityCore
-  before the `onSubmit` handler sees it
-- **Reset on success** — automatic, opt-out via `resetOnSubmit={false}`
+### Basic
 
-## Async validation
-
-```tsx
-const schema = {
-  username: {
-    required: true,
-    asyncValidate: async (value) => {
-      const res = await fetch(`/api/check-username?u=${value}`);
-      const { available } = await res.json();
-      return available ? null : 'Username already taken';
-    },
-  },
-};
-```
-
-Async validators run on blur, debounced 300ms.
-
-## Submit error handling
-
-```tsx
-<TkxForm
-  schema={schema}
-  onSubmit={async (values) => {
-    const res = await fetch('/api/login', { method: 'POST', body: JSON.stringify(values) });
-    if (!res.ok) {
-      // Throwing — the form catches and renders below the submit button
-      throw new Error('Invalid credentials');
-    }
-  }}
->
-  {/* … */}
-</TkxForm>
-```
-
-<Aside type="caution" title="Server-side validation is still mandatory">
-  Client validation reduces UX friction; it never substitutes server
-  validation. Always re-check every value at the trust boundary.
-</Aside>
+<FormBasic client:load />
 
 ## Accessibility
 
-- `<form>` element renders semantically — assistive tech recognises it.
-- Each field's error connects via `aria-describedby` automatically.
-- `aria-invalid` set on fields with errors.
-- Submit button is `aria-busy` during async submission.
-- Form-level errors get `role="alert"` so screen readers announce them.
-- **Never** rely on `:invalid` CSS pseudo for error styling — that fires
-  before the user has interacted. We track touched/blurred state per field.
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
 
 ## Source
 
 [`src/components/TkxForm.tsx`](https://ui.tekivex.com)
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/form).
