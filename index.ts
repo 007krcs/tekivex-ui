@@ -189,6 +189,14 @@ export * from './src/components/TkxAnchor';
 export * from './src/components/TkxCascader';
 export * from './src/components/TkxList';
 
+// Icon + Logo — were missing from the root entry but available via
+// src/components/index.ts. Added 2026-06-07 so consumers can do
+// `import { TkxIcon, TkxLogo } from 'tekivex-ui'` per the README,
+// and so docs-site demo islands at /components/icon/ and /components/logo/
+// can render. See commits for IconDemo / LogoDemo restoration.
+export * from './src/components/TkxIcon';
+export * from './src/components/TkxLogo';
+
 // Components (v2.7) — Phase 1 quick wins
 export * from './src/components/TkxCaptcha';
 export * from './src/components/TkxFontProvider';

@@ -1,0 +1,35 @@
+---
+title: TkxIcon
+description: TkxIcon — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
+---
+
+import { IconGallery,IconSizesAndColours } from '../../../components/demos/IconDemo';
+
+```tsx
+import { TkxIcon } from 'tekivex-ui';
+```
+
+## Live demo
+
+### Gallery
+
+<IconGallery client:load />
+
+### Sizes And Colours
+
+<IconSizesAndColours client:load />
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+[`src/components/TkxIcon.tsx`](https://ui.tekivex.com)
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/icon).

@@ -1,0 +1,35 @@
+---
+title: TkxLogo
+description: TkxLogo — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
+---
+
+import { LogoBasic,LogoSizes } from '../../../components/demos/LogoDemo';
+
+```tsx
+import { TkxLogo } from 'tekivex-ui';
+```
+
+## Live demo
+
+### Basic
+
+<LogoBasic client:load />
+
+### Sizes
+
+<LogoSizes client:load />
+
+## Accessibility
+
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+[`src/components/TkxLogo.tsx`](https://ui.tekivex.com)
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/logo).
