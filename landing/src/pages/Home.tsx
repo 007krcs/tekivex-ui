@@ -38,6 +38,7 @@
 
 import { HeroPro } from '../sections/HeroPro';
 import { Stats } from '../sections/Stats';
+import { ComponentShowcase } from '../sections/ComponentShowcase';
 import { VerifyThis } from '../sections/VerifyThis';
 import { SecurityDeepDive } from '../sections/SecurityDeepDive';
 import { Features } from '../sections/Features';
@@ -60,6 +61,10 @@ export function Home() {
     <div className="tk-home">
       <HeroPro />
       <Stats />
+      {/* Visual showcase — 8 live components above the fold, addressing the
+          consumer report "Component is just code written not visible how it
+          looks" (2026-06-07). */}
+      <ComponentShowcase />
       <VerifyThis />
       <SecurityDeepDive />
       <Features />
