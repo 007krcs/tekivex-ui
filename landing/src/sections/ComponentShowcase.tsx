@@ -383,7 +383,7 @@ export function ComponentShowcase() {
             </div>
           </ShowcaseCard>
           <ShowcaseCard name="TkxStatistic" slug="statistic" description="KPI tile with value, label, delta, trend arrow.">
-            <TkxStatistic label="Active users" value="1,247" change="+12%" />
+            <TkxStatistic title="Active users" value="1,247" trend="up" trendValue="+12%" />
           </ShowcaseCard>
           <ShowcaseCard name="TkxBreadcrumb" slug="breadcrumb" description="Hierarchical nav with separators and current-page marker.">
             <TkxBreadcrumb items={[

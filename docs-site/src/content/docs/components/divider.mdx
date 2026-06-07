@@ -1,23 +1,27 @@
 ---
 title: TkxDivider
-description: Divider — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxDivider — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { DividerHorizontal,DividerWithLabel,DividerVertical } from '../../../components/demos/DividerDemo';
 
 ```tsx
 import { TkxDivider } from 'tekivex-ui';
 ```
 
-Divider is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Horizontal
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `orientation` | `'horizontal' \| 'vertical'` |  |  |
-| `label` | `string` |  |  |
-| `variant` | `'solid' \| 'dashed' \| 'dotted'` |  |  |
+<DividerHorizontal client:load />
+
+### With Label
+
+<DividerWithLabel client:load />
+
+### Vertical
+
+<DividerVertical client:load />
 
 ## Accessibility
 
@@ -29,8 +33,8 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxDivider.tsx`](https://ui.tekivex.com).
+[`src/components/TkxDivider.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/divider).
+For the full interactive sandbox where you can change every prop and watch
+the rendered component update in real time, open the
+[playground](/playground/#/components/divider).

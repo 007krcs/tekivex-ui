@@ -1,23 +1,31 @@
 ---
 title: TkxStatistic
-description: Statistic — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxStatistic — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { StatisticBasic,StatisticWithTrend,StatisticWithPrefix,StatisticLoading } from '../../../components/demos/StatisticDemo';
 
 ```tsx
 import { TkxStatistic } from 'tekivex-ui';
 ```
 
-Statistic is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `title` | `string; value: number \| string; prefix?: ReactNode; suffix?: ReactNode` | yes |  |
-| `precision` | `number; groupSeparator?: string; valueStyle?: CSSProperties` |  |  |
-| `loading` | `boolean; trend?: 'up' \| 'down'; trendValue?: string; style?: CSSProperties` |  |  |
+<StatisticBasic client:load />
+
+### With Trend
+
+<StatisticWithTrend client:load />
+
+### With Prefix
+
+<StatisticWithPrefix client:load />
+
+### Loading
+
+<StatisticLoading client:load />
 
 ## Accessibility
 
@@ -29,8 +37,8 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxStatistic.tsx`](https://ui.tekivex.com).
+[`src/components/TkxStatistic.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/statistic).
+For the full interactive sandbox where you can change every prop and watch
+the rendered component update in real time, open the
+[playground](/playground/#/components/statistic).

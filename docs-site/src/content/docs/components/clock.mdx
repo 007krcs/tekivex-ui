@@ -1,32 +1,27 @@
 ---
 title: TkxClock
-description: Clock — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxClock — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { ClockDigital,ClockAnalog,ClockSizes } from '../../../components/demos/ClockDemo';
 
 ```tsx
 import { TkxClock } from 'tekivex-ui';
 ```
 
-Clock is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Digital
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `variant` | `ClockVariant` |  |  |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl'` |  |  |
-| `showSeconds` | `boolean` |  |  |
-| `showDate` | `boolean` |  |  |
-| `format` | `DigitalFormat` |  |  |
-| `timezone` | `string` |  |  |
-| `timezone2` | `string` |  |  |
-| `label` | `string` |  |  |
-| `theme` | `'auto' \| 'light' \| 'dark'` |  |  |
-| `analogStyle` | `AnalogStyle` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
+<ClockDigital client:load />
+
+### Analog
+
+<ClockAnalog client:load />
+
+### Sizes
+
+<ClockSizes client:load />
 
 ## Accessibility
 
@@ -38,8 +33,8 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxClock.tsx`](https://ui.tekivex.com).
+[`src/components/TkxClock.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/clock).
+For the full interactive sandbox where you can change every prop and watch
+the rendered component update in real time, open the
+[playground](/playground/#/components/clock).

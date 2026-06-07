@@ -1,29 +1,23 @@
 ---
 title: TkxImage
-description: Image — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxImage — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { ImageBasic,ImageWithFallback } from '../../../components/demos/ImageDemo';
 
 ```tsx
 import { TkxImage } from 'tekivex-ui';
 ```
 
-Image is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `src` | `string` | yes |  |
-| `fallback` | `ReactNode` |  |  |
-| `placeholder` | `'blur' \| 'skeleton' \| 'none'` |  |  |
-| `fit` | `ImageFit` |  |  |
-| `ratio` | `ImageRatio` |  |  |
-| `radius` | `'none' \| 'sm' \| 'md' \| 'lg' \| 'full'` |  |  |
-| `caption` | `string` |  |  |
-| `lazy` | `boolean` |  |  |
-| `preview` | `boolean` |  |  |
+<ImageBasic client:load />
+
+### With Fallback
+
+<ImageWithFallback client:load />
 
 ## Accessibility
 
@@ -35,8 +29,8 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxImage.tsx`](https://ui.tekivex.com).
+[`src/components/TkxImage.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/image).
+For the full interactive sandbox where you can change every prop and watch
+the rendered component update in real time, open the
+[playground](/playground/#/components/image).

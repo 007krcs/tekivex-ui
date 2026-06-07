@@ -1,24 +1,31 @@
 ---
 title: TkxEmpty
-description: Empty — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxEmpty — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { EmptyBasic,EmptyWithDescription,EmptyWithCTA,EmptySimple } from '../../../components/demos/EmptyDemo';
 
 ```tsx
 import { TkxEmpty } from 'tekivex-ui';
 ```
 
-Empty is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `image` | `ReactNode \| 'default' \| 'simple'` |  |  |
-| `description` | `ReactNode` |  |  |
-| `children` | `ReactNode` |  |  |
-| `style` | `CSSProperties` |  |  |
+<EmptyBasic client:load />
+
+### With Description
+
+<EmptyWithDescription client:load />
+
+### With CTA
+
+<EmptyWithCTA client:load />
+
+### Simple
+
+<EmptySimple client:load />
 
 ## Accessibility
 
@@ -30,8 +37,8 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxEmpty.tsx`](https://ui.tekivex.com).
+[`src/components/TkxEmpty.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/empty).
+For the full interactive sandbox where you can change every prop and watch
+the rendered component update in real time, open the
+[playground](/playground/#/components/empty).
