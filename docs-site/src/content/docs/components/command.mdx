@@ -1,29 +1,19 @@
 ---
 title: TkxCommand
-description: Command — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxCommand — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { CommandBasic } from '../../../components/demos/CommandDemo';
 
 ```tsx
 import { TkxCommand } from 'tekivex-ui';
 ```
 
-Command is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `items` | `CommandItem[]` | yes |  |
-| `isOpen` | `boolean` |  |  |
-| `onClose` | `() => void` |  |  |
-| `placeholder` | `string` |  |  |
-| `emptyMessage` | `string` |  |  |
-| `maxItems` | `number` |  |  |
-| `onItemSelect` | `(item: CommandItem) => void` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
+<CommandBasic client:load />
 
 ## Accessibility
 
@@ -35,8 +25,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxCommand.tsx`](https://ui.tekivex.com).
+[`src/components/TkxCommand.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/command).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/command).

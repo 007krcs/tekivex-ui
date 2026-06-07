@@ -1,29 +1,19 @@
 ---
 title: TkxTransferList
-description: TransferList — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxTransferList — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { TransferListBasic } from '../../../components/demos/TransferListDemo';
 
 ```tsx
 import { TkxTransferList } from 'tekivex-ui';
 ```
 
-TransferList is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `sourceItems` | `TransferItem[]` | yes |  |
-| `targetItems` | `TransferItem[]` | yes |  |
-| `onTransfer` | `(source: TransferItem[], target: TransferItem[]) => void` | yes |  |
-| `sourceTitle` | `string` |  |  |
-| `targetTitle` | `string` |  |  |
-| `searchable` | `boolean` |  |  |
-| `height` | `number` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
+<TransferListBasic client:load />
 
 ## Accessibility
 
@@ -35,8 +25,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxTransferList.tsx`](https://ui.tekivex.com).
+[`src/components/TkxTransferList.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/transfer-list).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/transfer-list).

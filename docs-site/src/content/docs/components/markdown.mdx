@@ -1,87 +1,31 @@
 ---
 title: TkxMarkdown
-description: Safe Markdown renderer. CommonMark + GFM tables, sanitised by SecurityCore, syntax-highlighted code blocks.
+description: TkxMarkdown — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import { MarkdownBasic } from '../../../components/demos/MarkdownDemo';
 
 ```tsx
 import { TkxMarkdown } from 'tekivex-ui';
-
-<TkxMarkdown source={`
-# Hello
-This is **markdown** rendered by *tekivex-ui*.
-
-- Item one
-- Item two
-
-[Link](https://example.com)
-`} />
 ```
 
-## Supported syntax
+## Live demo
 
-- **CommonMark**: headings, paragraphs, emphasis, lists, blockquotes,
-  inline code, code blocks, links, images, hr
-- **GFM tables**:
-  ```md
-  | Column A | Column B |
-  |----------|----------|
-  | Cell 1   | Cell 2   |
-  ```
-- **GFM task lists**: `- [x] done` / `- [ ] todo`
-- **Strikethrough**: `~~deleted~~`
-- **Auto-linking**: bare URLs become anchors
+### Basic
 
-## Security
+<MarkdownBasic client:load />
 
-Every Markdown source string passes through SecurityCore before parsing:
+## Accessibility
 
-- HTML tags are stripped (no embedded `<script>`)
-- URLs go through `sanitizeHref()` — `javascript:` and `data:` schemes
-  blocked
-- Image `src` allowed only for `http`, `https`, `data:image/*`
-- Unicode homoglyph + bidi-override characters removed
-
-This makes `TkxMarkdown` safe for **untrusted user content** (forum posts,
-comments, profile bios) — XSS-resistant by default.
-
-<Aside type="caution" title="Server-side validation still required">
-  Even with SecurityCore, you should rate-limit and length-cap submissions
-  on the server. SecurityCore prevents XSS but not abuse.
-</Aside>
-
-## Code highlighting
-
-```md
-```js
-const x = 42;
-console.log(x);
-```
-```
-
-Renders with token colouring. Pass `highlightTheme="dark" | "light"` to
-override the auto-detection.
-
-## Custom link target
-
-```tsx
-<TkxMarkdown
-  source={src}
-  linkTarget="_blank"   // automatically adds rel="noopener noreferrer"
-/>
-```
-
-## Props
-
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `source` | `string` | yes | Markdown source. |
-| `linkTarget` | `'_self' \| '_blank'` | | Defaults to `_self`. |
-| `highlightTheme` | `'dark' \| 'light' \| 'auto'` | | Defaults to `auto` (follows ThemeProvider). |
-| `allowImages` | `boolean` | | Defaults to `true`. Disable for ultra-safe contexts. |
-| `maxLength` | `number` | | Truncate input. |
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
 
 ## Source
 
 [`src/components/TkxMarkdown.tsx`](https://ui.tekivex.com)
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/markdown).

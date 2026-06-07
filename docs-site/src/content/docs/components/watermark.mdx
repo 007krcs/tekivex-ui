@@ -1,32 +1,23 @@
 ---
 title: TkxWatermark
-description: Watermark — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxWatermark — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { WatermarkBasic,WatermarkMultiLine } from '../../../components/demos/WatermarkDemo';
 
 ```tsx
 import { TkxWatermark } from 'tekivex-ui';
 ```
 
-Watermark is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `text` | `string \| string[]` | yes |  |
-| `children` | `ReactNode` | yes |  |
-| `rotate` | `number` |  |  |
-| `gap` | `[number, number]` |  |  |
-| `fontSize` | `number` |  |  |
-| `color` | `string` |  |  |
-| `zIndex` | `number` |  |  |
-| `pattern` | `WatermarkPattern` |  | Layout mode. Defaults to 'tiled' (v2.6 behaviour). |
-| `dynamic` | `boolean` |  | Re-render the watermark whenever the tab becomes visible again. |
-| `refreshMs` | `number` |  | Periodic re-render interval in ms. 0 disables. |
-| `intensifyOnDevtools` | `boolean` |  | When DevTools open, increase opacity and blur the underlying content. |
-| `fingerprintId` | `string` |  | Optional fingerprint id (e.g. user id / session id). Hashed into the watermark. |
+<WatermarkBasic client:load />
+
+### Multi Line
+
+<WatermarkMultiLine client:load />
 
 ## Accessibility
 
@@ -38,8 +29,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxWatermark.tsx`](https://ui.tekivex.com).
+[`src/components/TkxWatermark.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/watermark).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/watermark).
