@@ -363,6 +363,30 @@ console.log('Step 2.5 — build docs-site/ (Astro Starlight) → overlay onto /'
 console.log('══════════════════════════════════════════════════════');
 let astroOverlaySucceeded = false;
 try {
+  // ── Pre-step: build packages/tekivex-india-admin/ ──────────────────────
+  //
+  // docs-site/package.json depends on `tekivex-india-admin: "file:../packages/
+  // tekivex-india-admin"`. The package's package.json points main/module/
+  // types at ./dist/index.{cjs,js,d.ts}. dist/ is git-ignored — it only
+  // exists after `npm run build` in that package. Without this step,
+  // docs-site's npm install symlinks/copies the package WITHOUT a built
+  // dist/, and Vite/Rollup's resolver fails with:
+  //
+  //   [commonjs--resolver] Failed to resolve entry for package
+  //   "tekivex-india-admin". The package may have incorrect main/module/
+  //   exports specified in its package.json.
+  //
+  // …which surfaces as an Astro build failure during Step 2.5. This is
+  // exactly the production bug the user reported on 2026-06-07 (every
+  // Astro page returning 404). Build the package here so its dist/ is
+  // present when docs-site's npm install + Astro build run below.
+  const INDIA_ADMIN = resolve(ROOT, 'packages/tekivex-india-admin');
+  if (existsSync(INDIA_ADMIN)) {
+    console.log('\n  Pre-build: packages/tekivex-india-admin/');
+    run('npm install --no-audit --no-fund', INDIA_ADMIN);
+    run('npm run build', INDIA_ADMIN);
+  }
+
   run('npm install --no-audit --no-fund --legacy-peer-deps', resolve(ROOT, 'docs-site'));
   // Astro writes to docs-site/dist by default. The landing build above
   // already populated docs-site/dist, so we redirect Astro's output to
