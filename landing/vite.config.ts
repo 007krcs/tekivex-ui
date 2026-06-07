@@ -35,6 +35,23 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     sourcemap: false,
+    // ── modulepreload tuning ─────────────────────────────────────────────
+    // Vite's default modulepreload behaviour eagerly hints every static
+    // dep of every lazy chunk so navigation feels instant. That's right
+    // for a 50 kB dependency but disastrous for vendor-three (531 kB /
+    // 132 kB gzip) — most landing-page visitors never visit the 3D
+    // example routes, so we'd be burning 132 kB of their data plan
+    // for nothing.
+    //
+    // Custom resolver filters vendor-three (and any large opt-in deps
+    // added in future) out of the preload list. The chunk is still
+    // BUILT and still LOADS when the user actually navigates to a 3D
+    // route — it's just not preloaded ahead of time.
+    modulePreload: {
+      resolveDependencies(_filename, deps) {
+        return deps.filter((d) => !/vendor-three/.test(d));
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {

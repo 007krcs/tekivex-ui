@@ -114,7 +114,7 @@ export function HeroPro() {
             }}
           >
             <a
-              href="/docs/security-threat-model"
+              href="/security/"
               className="hero-pro-cta-primary"
               style={{
                 display: 'inline-flex',
@@ -133,7 +133,7 @@ export function HeroPro() {
               View threat model
             </a>
             <a
-              href="/docs/quickstart"
+              href="/getting-started/"
               className="hero-pro-cta-secondary"
               style={{
                 display: 'inline-flex',

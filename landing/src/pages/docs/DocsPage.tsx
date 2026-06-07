@@ -33,6 +33,37 @@ export function DocsPage() {
         <p style={{ color: '#888', fontSize: 13, fontFamily: 'ui-monospace, monospace' }}>
           Ships in <code>{doc.pkg}</code>
         </p>
+
+        {/* Cross-link to the authoritative docs surfaces. The Astro
+            /components/<slug>/ page has the full Props table + live demos;
+            the playground SPA at /playground/components/<slug> renders an
+            interactive sandbox. These exist for ALL components in
+            DOCUMENTED_SLUGS — this landing /docs/ page is a lighter
+            standalone view kept for the 10 components it predates. */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 12,
+            padding: '12px 16px',
+            margin: '8px 0 24px',
+            borderRadius: 8,
+            background: '#f8fafc',
+            border: '1px solid #e5e7eb',
+            fontSize: 13,
+          }}
+        >
+          <strong style={{ color: '#1f2937' }}>Also at:</strong>
+          <a href={`/components/${doc.slug}/`} style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 600 }}>
+            /components/{doc.slug}/ →
+          </a>
+          <span style={{ color: '#9ca3af' }}>(full Props + live demos)</span>
+          <a href={`/playground/components/${doc.slug}`} style={{ color: '#0f766e', textDecoration: 'none', fontWeight: 600 }}>
+            /playground →
+          </a>
+          <span style={{ color: '#9ca3af' }}>(interactive sandbox)</span>
+        </div>
+
         <Body />
       </PageShell>
     </>
