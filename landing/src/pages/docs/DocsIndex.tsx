@@ -42,7 +42,8 @@ export function DocsIndex() {
                 key={p.slug}
                 style={{
                   padding: '12px 0',
-                  borderBottom: '1px solid rgba(255,255,255,0.06)',
+                  // light-mode page — was rgba(255,255,255,0.06) which is invisible on white
+                  borderBottom: '1px solid var(--tk-border)',
                 }}
               >
                 <Link
@@ -53,11 +54,14 @@ export function DocsIndex() {
                     color: 'inherit',
                   }}
                 >
-                  <span style={{ fontWeight: 700, color: '#fff', fontSize: 15 }}>{p.name}</span>
-                  <span style={{ color: '#666', fontSize: 12, marginLeft: 8, fontFamily: 'ui-monospace, monospace' }}>
+                  {/* Was color:#fff (invisible on white) — slate-900 is ~19:1 on white */}
+                  <span style={{ fontWeight: 700, color: 'var(--tk-fg)', fontSize: 15 }}>{p.name}</span>
+                  {/* Was color:#666 (~5.7:1, AA but not AAA) — slate-700 is ~10:1 */}
+                  <span style={{ color: 'var(--tk-fg-muted)', fontSize: 12, marginLeft: 8, fontFamily: 'ui-monospace, monospace' }}>
                     {p.pkg}
                   </span>
-                  <p style={{ margin: '4px 0 0', color: '#b8b8d4', fontSize: 13 }}>
+                  {/* Was color:#b8b8d4 light lavender — invisible on white */}
+                  <p style={{ margin: '4px 0 0', color: 'var(--tk-fg-faint)', fontSize: 13 }}>
                     {p.summary}
                   </p>
                 </Link>

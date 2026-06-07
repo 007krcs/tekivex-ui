@@ -1,2 +1,65 @@
-# SPA fallback — every unmatched URL serves index.html so React Router can handle it.
-/*    /index.html   200
+# ─────────────────────────────────────────────────────────────────────────────
+# Render / Netlify _redirects file for ui.tekivex.com.
+#
+# Why this isn't a single `/*  /index.html  200` catch-all anymore:
+# The unified production tree contains FOUR independent sub-sites:
+#   1. /                         — landing React Router SPA       (this file)
+#   2. /security/, /getting-started/, /components/<slug>/, /recipes/<slug>/,
+#      /blueprints/<slug>/, /quick-reference/, /themes/, /bundlers/,
+#      /rsc/, /ecosystem/, /license/  — Astro Starlight static pages
+#   3. /playground/*             — demo SPA (hash-routed internally)
+#   4. /book/*                   — packages/tkx-book static catalogue
+#
+# A wildcard `/*  /index.html  200` rule rewrote EVERY URL — including all
+# Astro paths — to the landing React app's index.html. Result: hitting
+# /security/ or /components/button/ showed a "Not Found" because the
+# landing SPA had no matching route, even though the Astro-generated
+# index.html files existed on disk in the deployed tree.
+#
+# Fix: explicitly scope the SPA fallback to ONLY the paths the landing
+# React Router actually handles. All other paths fall through to
+# Render's static-file resolution, which serves Astro's pre-rendered
+# index.html correctly.
+#
+# If you add a new top-level landing route (e.g. /pricing), add it here.
+# If you add a new Astro top-level path (e.g. /tutorials/), do NOT add
+# anything here — static resolution will find it automatically.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Landing React Router SPA paths — rewrite to /index.html so the SPA boots
+# and the in-app router resolves the actual page.
+/about               /index.html   200
+/about/*             /index.html   200
+/contact             /index.html   200
+/contact/*           /index.html   200
+/privacy             /index.html   200
+/privacy/*           /index.html   200
+/terms               /index.html   200
+/terms/*             /index.html   200
+/blog                /index.html   200
+/blog/*              /index.html   200
+/docs                /index.html   200
+/docs/*              /index.html   200
+/examples            /index.html   200
+/examples/*          /index.html   200
+
+# Legacy hash-routed Astro URLs (pre-flat-URL migration) → flat permanent
+# redirects. Kept for inbound links from blog posts / external sites.
+/#/                                 /                                 301
+/#/getting-started                  /getting-started/                 301
+/#/bundlers                         /bundlers/                        301
+/#/css-system                       /themes/                          301
+/#/rsc                              /rsc/                             301
+/#/security                         /security/                        301
+/#/ecosystem                        /ecosystem/                       301
+/#/license                          /license/                         301
+/#/components/:component            /components/:component/           301
+/#/templates/:template              /templates/:template/             301
+
+# NOTE: NO trailing `/*  /index.html  200` wildcard.
+# Astro paths (/security/, /getting-started/, /components/*, /recipes/*,
+# /blueprints/*, /quick-reference/, /themes/, /bundlers/, /rsc/,
+# /ecosystem/, /license/), the playground SPA (/playground/*), and the
+# book catalogue (/book/*) all rely on static-file resolution. The
+# wildcard would intercept and break them — which is exactly the
+# production bug this file was changed to fix.
