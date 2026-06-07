@@ -1,25 +1,27 @@
 ---
 title: TkxToggle
-description: Toggle — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxToggle — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { ToggleBasic,ToggleSizes,ToggleDisabled } from '../../../components/demos/ToggleDemo';
 
 ```tsx
 import { TkxToggle } from 'tekivex-ui';
 ```
 
-Toggle is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `checked` | `boolean` | yes |  |
-| `onChange` | `(checked: boolean) => void` | yes |  |
-| `label` | `string` | yes |  |
-| `size` | `ToggleSize` |  |  |
-| `hideLabel` | `boolean` |  |  |
+<ToggleBasic client:load />
+
+### Sizes
+
+<ToggleSizes client:load />
+
+### Disabled
+
+<ToggleDisabled client:load />
 
 ## Accessibility
 
@@ -31,8 +33,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxToggle.tsx`](https://ui.tekivex.com).
+[`src/components/TkxToggle.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/toggle).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/toggle).

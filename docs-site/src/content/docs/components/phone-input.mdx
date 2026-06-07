@@ -1,34 +1,23 @@
 ---
 title: TkxPhoneInput
-description: PhoneInput — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxPhoneInput — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { PhoneInputBasic,PhoneInputUS } from '../../../components/demos/PhoneInputDemo';
 
 ```tsx
 import { TkxPhoneInput } from 'tekivex-ui';
 ```
 
-PhoneInput is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `defaultCountry` | `string` |  | Initial country (ISO 3166-1 alpha-2, lowercase). Defaults to "in". |
-| `value` | `string` |  | Controlled value (E.164, e.g. "+919876543210"). |
-| `defaultValue` | `string` |  | Initial digits (without country code). For uncontrolled use. |
-| `onChange` | `(payload: PhoneChangePayload) => void` |  | Fires on every keystroke and country change. |
-| `onValid` | `(payload: PhoneChangePayload) => void` |  | Fires when the input loses focus, only if `valid`. |
-| `label` | `string` |  | Visible label above the input (required for WCAG compliance). |
-| `placeholder` | `string` |  | Placeholder shown inside the input. Defaults to a country-specific example. |
-| `disabled` | `boolean` |  | Disable input + picker. |
-| `required` | `boolean` |  | Mark required for screen readers. |
-| `id` | `string` |  | Optional id; auto-generated if omitted. |
-| `name` | `string` |  | Optional name (form submission). |
-| `extraCountries` | `PhoneCountry[]` |  | Optional list of additional countries to merge with the built-in set. |
-| `className` | `string` |  | Optional className on the root `<div>`. |
-| `style` | `CSSProperties` |  | Optional inline style on the root `<div>`. |
+<PhoneInputBasic client:load />
+
+### US
+
+<PhoneInputUS client:load />
 
 ## Accessibility
 
@@ -40,8 +29,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxPhoneInput.tsx`](https://ui.tekivex.com).
+[`src/components/TkxPhoneInput.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/phone-input).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/phone-input).
