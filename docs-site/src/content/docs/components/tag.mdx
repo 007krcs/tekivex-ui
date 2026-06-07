@@ -3,17 +3,25 @@ title: TkxTag
 description: Compact label with optional close button. Variants, sizes, and a paired TkxTagInput for tag editing.
 ---
 
+import { TagBasic, TagVariants, TagSizes, TagClosable } from '../../../components/demos/TagDemo';
+
 ```tsx
 import { TkxTag } from 'tekivex-ui';
+```
 
+## Basic
+
+<TagBasic client:load />
+
+```tsx
 <TkxTag>react</TkxTag>
-<TkxTag variant="primary">react-19</TkxTag>
-<TkxTag variant="success" closable onClose={() => removeTag('typescript')}>
-  typescript
-</TkxTag>
+<TkxTag>typescript</TkxTag>
+<TkxTag>wcag</TkxTag>
 ```
 
 ## Variants
+
+<TagVariants client:load />
 
 ```tsx
 <TkxTag variant="default">default</TkxTag>
@@ -26,11 +34,17 @@ import { TkxTag } from 'tekivex-ui';
 
 ## Sizes
 
+<TagSizes client:load />
+
 ```tsx
-<TkxTag size="sm">sm</TkxTag>
-<TkxTag size="md">md</TkxTag>
-<TkxTag size="lg">lg</TkxTag>
+<TkxTag size="sm" variant="primary">sm</TkxTag>
+<TkxTag size="md" variant="primary">md</TkxTag>
+<TkxTag size="lg" variant="primary">lg</TkxTag>
 ```
+
+## Closable
+
+<TagClosable client:load />
 
 ## With icon
 

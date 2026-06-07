@@ -3,13 +3,21 @@ title: TkxBreadcrumb
 description: Hierarchical navigation trail with auto-collapse on overflow, custom separators, and full WAI-ARIA semantics.
 ---
 
+import { BreadcrumbBasic, BreadcrumbCustomSeparator, BreadcrumbDeep } from '../../../components/demos/BreadcrumbDemo';
+
 ```tsx
 import { TkxBreadcrumb } from 'tekivex-ui';
+```
 
+## Basic
+
+<BreadcrumbBasic client:load />
+
+```tsx
 <TkxBreadcrumb
   items={[
     { label: 'Home', href: '/' },
-    { label: 'Components', href: '/components' },
+    { label: 'Components', href: '/components/' },
     { label: 'Breadcrumb' },
   ]}
 />
@@ -17,6 +25,14 @@ import { TkxBreadcrumb } from 'tekivex-ui';
 
 The last item (no `href`) is the current page — rendered as plain text
 with `aria-current="page"`.
+
+## Custom separator
+
+<BreadcrumbCustomSeparator client:load />
+
+## Deep trail (file-system style)
+
+<BreadcrumbDeep client:load />
 
 ## Custom separator
 

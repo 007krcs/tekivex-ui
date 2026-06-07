@@ -1,15 +1,36 @@
 ---
 title: TkxRadio
-description: Radio — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Accessible radio with single-choice group behaviour, color schemes, disabled options, and full keyboard support.
 ---
+
+import { RadioGroup, RadioDisabled, RadioColorSchemes } from '../../../components/demos/RadioDemo';
 
 ```tsx
 import { TkxRadio } from 'tekivex-ui';
 ```
 
-Radio is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Single choice from a group
+
+<RadioGroup client:load />
+
+```tsx
+const [speed, setSpeed] = useState('standard');
+
+<TkxRadio name="speed" value="eco"      checked={speed === 'eco'}      onChange={() => setSpeed('eco')}      label="Eco — 5–7 days" />
+<TkxRadio name="speed" value="standard" checked={speed === 'standard'} onChange={() => setSpeed('standard')} label="Standard — 2–3 days" />
+<TkxRadio name="speed" value="express"  checked={speed === 'express'}  onChange={() => setSpeed('express')}  label="Express — next day" />
+```
+
+All radios in a group share the same `name` prop. Keyboard arrows
+cycle through siblings (roving tab-index).
+
+## With disabled option
+
+<RadioDisabled client:load />
+
+## Color schemes
+
+<RadioColorSchemes client:load />
 
 ## Props
 
@@ -32,6 +53,6 @@ AAA audit is on the roadmap, not completed.
 
 The implementation lives at [`src/components/TkxRadio.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/radio).
+For a full interactive sandbox where you can change every prop and
+watch the rendered radio group update in real time, open the
+[playground](/playground/#/components/radio).

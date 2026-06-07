@@ -1,15 +1,41 @@
 ---
 title: TkxCheckbox
-description: Checkbox — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: Accessible checkbox with controlled state, indeterminate, color schemes, error state, and full keyboard support.
 ---
+
+import { CheckboxBasic, CheckboxStates, CheckboxColorSchemes, CheckboxWithError } from '../../../components/demos/CheckboxDemo';
 
 ```tsx
 import { TkxCheckbox } from 'tekivex-ui';
 ```
 
-Checkbox is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Basic
+
+<CheckboxBasic client:load />
+
+```tsx
+const [checked, setChecked] = useState(true);
+<TkxCheckbox checked={checked} onChange={setChecked} label="I agree to the terms" />
+```
+
+## States
+
+<CheckboxStates client:load />
+
+```tsx
+<TkxCheckbox checked={true} onChange={...} label="Checked" />
+<TkxCheckbox checked={false} onChange={...} label="Unchecked" />
+<TkxCheckbox isIndeterminate label="Indeterminate" />
+<TkxCheckbox checked={true} disabled label="Disabled (checked)" />
+```
+
+## Color schemes
+
+<CheckboxColorSchemes client:load />
+
+## With error message
+
+<CheckboxWithError client:load />
 
 ## Props
 
@@ -35,6 +61,6 @@ AAA audit is on the roadmap, not completed.
 
 The implementation lives at [`src/components/TkxCheckbox.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/checkbox).
+For a full interactive sandbox where you can change every prop and watch
+the rendered checkbox update in real time, open the
+[playground](/playground/#/components/checkbox).
