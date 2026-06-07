@@ -386,10 +386,69 @@ try {
       `\n    ${err instanceof Error ? err.message : err}`,
   );
   console.error(
-    '    This is non-fatal — landing + playground + book + security artifacts still ship.',
+    '    This is FATAL — the deploy is meaningfully broken without the Astro content layer.',
   );
 }
 console.log(`  Astro overlay step: ${astroOverlaySucceeded ? 'OK' : 'SKIPPED'}`);
+
+// ── Astro post-overlay assertion ────────────────────────────────────────────
+// History: an earlier version of this script allowed the deploy to ship
+// landing-only if Astro failed silently, calling it "non-fatal." Result: for
+// ~9 weeks ui.tekivex.com served zero Astro pages — every /security/,
+// /getting-started/, /components/<slug>/, /recipes/<slug>/, /blueprints/<slug>/
+// returned 404 and nobody noticed because the homepage and /playground/ both
+// worked. The user reported it 2026-06-07 with screenshots.
+//
+// New policy: if a known-critical Astro page is missing from the final tree,
+// abort the deploy with a loud, actionable error. We'd rather Render fail
+// the deploy and surface the build log than silently ship a broken site.
+//
+// Skip the check (e.g. when iterating on the build script itself) by setting:
+//   TEKIVEX_SKIP_ASTRO_ASSERTION=1
+const CRITICAL_ASTRO_PAGES = [
+  // Linked from landing's hero CTAs — bottom of homepage user-flow.
+  'security/index.html',
+  'getting-started/index.html',
+  // Linked from landing's AllComponents (every chip on the homepage).
+  'components/index.html',
+  'components/button/index.html',
+  'components/address-input/index.html',
+  // Recipes + blueprints — the content layer that motivates Astro.
+  'recipes/secure-file-upload/index.html',
+  'blueprints/healthtech-patient-intake/index.html',
+  // Discovery / navigation surfaces.
+  'quick-reference/index.html',
+  'ecosystem/index.html',
+];
+if (process.env.TEKIVEX_SKIP_ASTRO_ASSERTION !== '1') {
+  const missing = CRITICAL_ASTRO_PAGES.filter(
+    (p) => !existsSync(resolve(DIST, p)),
+  );
+  if (missing.length > 0) {
+    console.error('\n══════════════════════════════════════════════════════');
+    console.error('✗ ASTRO ASSERTION FAILED — DEPLOY ABORTED');
+    console.error('══════════════════════════════════════════════════════');
+    console.error('The following critical Astro pages are missing from the');
+    console.error('final deploy tree at docs-site/dist/:');
+    console.error('');
+    for (const p of missing) console.error(`    ✗ ${p}`);
+    console.error('');
+    console.error('Likely causes:');
+    console.error('  1. Astro build crashed silently in this environment');
+    console.error('     (check the Step 2.5 logs above for the real error)');
+    console.error('  2. docs-site/ npm install failed and Astro never ran');
+    console.error('  3. The page MDX was deleted but the assertion list');
+    console.error('     was not updated — edit CRITICAL_ASTRO_PAGES above');
+    console.error('');
+    console.error('To bypass this check (NOT recommended — production will');
+    console.error('serve 404 for these paths), set:');
+    console.error('  TEKIVEX_SKIP_ASTRO_ASSERTION=1');
+    console.error('');
+    process.exit(1);
+  } else {
+    console.log(`  ✓ Astro assertion passed (${CRITICAL_ASTRO_PAGES.length}/${CRITICAL_ASTRO_PAGES.length} critical pages present)`);
+  }
+}
 
 // ── 3. Build the demo SPA with /playground/ base, copy into dist/playground/
 //    Pass --base on the CLI directly — npm sometimes strips env vars
