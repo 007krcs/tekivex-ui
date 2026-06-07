@@ -1,25 +1,19 @@
 ---
 title: TkxAffix
-description: Affix — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxAffix — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { AffixBasic } from '../../../components/demos/AffixDemo';
 
 ```tsx
 import { TkxAffix } from 'tekivex-ui';
 ```
 
-Affix is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `children` | `ReactNode` | yes |  |
-| `offsetTop` | `number` |  |  |
-| `offsetBottom` | `number` |  |  |
-| `onChange` | `(affixed: boolean) => void` |  |  |
-| `target` | `() => HTMLElement \| Window` |  |  |
+<AffixBasic client:load />
 
 ## Accessibility
 
@@ -31,8 +25,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxAffix.tsx`](https://ui.tekivex.com).
+[`src/components/TkxAffix.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/affix).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/affix).

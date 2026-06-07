@@ -1,28 +1,23 @@
 ---
 title: TkxSnackbar
-description: Snackbar — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxSnackbar — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { SnackbarBasic,SnackbarVariants } from '../../../components/demos/SnackbarDemo';
 
 ```tsx
 import { TkxSnackbar } from 'tekivex-ui';
 ```
 
-Snackbar is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `message` | `string` | yes |  |
-| `isOpen` | `boolean` | yes |  |
-| `onClose` | `() => void` |  |  |
-| `action` | `{ label: string; onClick: () => void }` |  |  |
-| `variant` | `'default' \| 'success' \| 'error' \| 'warning' \| 'info'` |  |  |
-| `position` | `'bottom-left' \| 'bottom-center' \| 'bottom-right' \| 'top-center'` |  |  |
-| `autoHideDuration` | `number` |  |  |
-| `icon` | `ReactNode` |  |  |
+<SnackbarBasic client:load />
+
+### Variants
+
+<SnackbarVariants client:load />
 
 ## Accessibility
 
@@ -34,8 +29,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxSnackbar.tsx`](https://ui.tekivex.com).
+[`src/components/TkxSnackbar.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/snackbar).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/snackbar).
