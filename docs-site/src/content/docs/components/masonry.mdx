@@ -1,23 +1,19 @@
 ---
 title: TkxMasonry
-description: Masonry — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxMasonry — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { MasonryBasic } from '../../../components/demos/MasonryDemo';
 
 ```tsx
 import { TkxMasonry } from 'tekivex-ui';
 ```
 
-Masonry is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `columns` | `number \| { sm?: number; md?: number; lg?: number }` |  |  |
-| `gap` | `number` |  |  |
-| `children` | `ReactNode` | yes |  |
+<MasonryBasic client:load />
 
 ## Accessibility
 
@@ -29,8 +25,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxMasonry.tsx`](https://ui.tekivex.com).
+[`src/components/TkxMasonry.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/masonry).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/masonry).

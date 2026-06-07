@@ -1,49 +1,35 @@
 ---
 title: TkxCurrencyInput
-description: Locale-aware currency input — INR lakh/crore grouping, JPY/KRW zero-decimal, 20 currencies, min/max clamping.
+description: TkxCurrencyInput — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { CurrencyInputINR,CurrencyInputUSD } from '../../../components/demos/CurrencyInputDemo';
 
 ```tsx
 import { TkxCurrencyInput } from 'tekivex-ui';
-
-<TkxCurrencyInput
-  label="Income"
-  value={income}
-  onChange={setIncome}
-  currency="INR"
-/>
 ```
 
-A formatted-numeric input that **understands currency grouping rules per
-locale**. INR shows `1,23,456` (Indian lakh/crore), USD shows `123,456`
-(thousands), JPY/KRW show no decimal places, etc.
+## Live demo
 
-## Props
+### INR
 
-| Prop | Type | Default |
-|---|---|---|
-| `value` | `number \| null` | — |
-| `onChange` | `(v: number \| null) => void` | — |
-| `currency` | ISO-4217 code | `'USD'` |
-| `min` / `max` | `number` | unclamped |
-| `precision` | `number` | derived from currency (JPY=0, USD=2, etc.) |
-| `showSymbol` | `boolean` | `true` |
-| `label` | `string` | — |
+<CurrencyInputINR client:load />
 
-## Supported currencies
+### USD
 
-INR · USD · EUR · GBP · JPY · CNY · KRW · CAD · AUD · CHF · SGD · HKD ·
-NZD · ZAR · BRL · MXN · TRY · RUB · AED · SAR.
-
-(20 in total — extending the map is a one-liner if you need more.)
+<CurrencyInputUSD client:load />
 
 ## Accessibility
 
-- Real `<input>` with `<label>`, `aria-label`, `aria-describedby` for hint
-- Currency symbol prefix is decorative — uses `aria-hidden="true"`
-- Min/max clamping happens on `change`, not on every keystroke
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
 
-## Testing
+## Source
 
-See `tests/TkxCurrencyInput.test.tsx` — 8 tests covering INR lakh/crore,
-JPY zero-decimal, and bounds clamping.
+[`src/components/TkxCurrencyInput.tsx`](https://ui.tekivex.com)
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/currency-input).

@@ -1,98 +1,31 @@
 ---
 title: TkxAadhaarInput
-description: 12-digit Aadhaar entry with Verhoeff checksum validation. Masks first 8 digits at render. WCAG-compliant.
+description: TkxAadhaarInput — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import { AadhaarInputBasic } from '../../../components/demos/AadhaarInputDemo';
 
 ```tsx
-import { TkxAadhaarInput, isValidAadhaar } from 'tekivex-ui';
-
-<TkxAadhaarInput
-  label="Aadhaar number"
-  required
-  onChange={({ digits, valid, display }) => {
-    console.log({ digits, valid, display });
-    // digits: '234123412346'
-    // valid:  true
-    // display: 'XXXX XXXX 2346' (masked by default)
-  }}
-/>
+import { TkxAadhaarInput } from 'tekivex-ui';
 ```
 
-## Verhoeff validation
+## Live demo
 
-Aadhaar's 12th digit is a Verhoeff checksum over the other 11 — UIDAI's
-official validity check. `TkxAadhaarInput` runs the full algorithm on
-every keystroke; `valid: true` means the number passes the same check
-UIDAI's own systems use.
+### Basic
 
-```tsx
-import { isValidAadhaar } from 'tekivex-ui';
-
-isValidAadhaar('234123412346');   // → true
-isValidAadhaar('123456789012');   // → false (checksum mismatch)
-isValidAadhaar('1234');           // → false (too short)
-```
-
-The validator is exported as a pure function for use in form libraries
-(Yup, Zod, React Hook Form), server-side validation, and tests.
-
-## Default privacy mode
-
-By default the first 8 digits render masked:
-
-```
-XXXX XXXX 2346
-```
-
-The full digit string is **always** surfaced via `onChange.digits` — the
-mask is purely a display protection. To show the full number while typing,
-pass `mask={false}`.
-
-<Aside type="caution" title="Aadhaar Act compliance">
-  Storing or transmitting full Aadhaar to anyone other than UIDAI requires
-  KUA/AUA registration under the Aadhaar (Targeted Delivery) Act 2016.
-  This component **collects** the value locally — what you do with it on
-  submit is your responsibility. For most non-government use cases, keep
-  the value in client memory only and submit a hashed/masked form.
-</Aside>
-
-## Controlled mode
-
-```tsx
-const [value, setValue] = useState('');
-
-<TkxAadhaarInput
-  value={value}
-  onChange={({ digits }) => setValue(digits)}
-/>
-```
+<AadhaarInputBasic client:load />
 
 ## Accessibility
 
-- `<input type="text" inputMode="numeric">` so mobile keyboards default to digits
-- Live error announcement (`role="alert"`) on checksum failure
-- Live "X digits remaining" hint as user types
-- Monospace + tabular-nums font + 1.5px letter-spacing for legibility
-
-## Props
-
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `value` | `string` | | Controlled value (digits only). |
-| `defaultValue` | `string` | | Uncontrolled initial value. |
-| `onChange` | `(payload: AadhaarChangePayload) => void` | | Fires on every keystroke. |
-| `label` | `string` | | WCAG-required label. |
-| `mask` | `boolean` | | Mask first 8 digits at render. Default: `true`. |
-| `disabled` | `boolean` | | |
-| `required` | `boolean` | | |
-
-`AadhaarChangePayload` shape:
-```ts
-{ raw: string; digits: string; display: string; valid: boolean }
-```
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
 
 ## Source
 
 [`src/components/TkxAadhaarInput.tsx`](https://ui.tekivex.com)
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/aadhaar-input).

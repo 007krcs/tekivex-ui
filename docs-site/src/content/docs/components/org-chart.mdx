@@ -1,35 +1,19 @@
 ---
 title: TkxOrgChart
-description: OrgChart — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxOrgChart — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { OrgChartBasic } from '../../../components/demos/OrgChartDemo';
 
 ```tsx
 import { TkxOrgChart } from 'tekivex-ui';
 ```
 
-OrgChart is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `data` | `OrgNode` | yes | Root node of the tree. |
-| `direction` | `'vertical' \| 'horizontal'` |  | Layout direction. Default: 'vertical'. |
-| `interactive` | `boolean` |  | Enable pan/zoom. Default: true. |
-| `initialZoom` | `number` |  | Initial zoom level (0.25 – 4). Default: 1. |
-| `nodeWidth` | `number` |  | Width of each node card (px). Default: 200. |
-| `nodeHeight` | `number` |  | Height of each node card (px). Default: 84. |
-| `siblingGap` | `number` |  | Sibling gap (px). Default: 28. |
-| `levelGap` | `number` |  | Level gap (px). Default: 64. |
-| `onNodeClick` | `(node: OrgNode) => void` |  | Called when a node is clicked. |
-| `renderNode` | `(node: OrgNode, isActive: boolean) => ReactNode` |  | Custom node renderer. Must return a React element of the declared size. |
-| `collapsedByDefault` | `boolean` |  | Start with all subtrees collapsed except the root. Default: false. |
-| `height` | `number \| string` |  | Container height. Default: 560. |
-| `ariaLabel` | `string` |  | aria-label for the chart wrapper. |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
+<OrgChartBasic client:load />
 
 ## Accessibility
 
@@ -41,8 +25,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxOrgChart.tsx`](https://ui.tekivex.com).
+[`src/components/TkxOrgChart.tsx`](https://ui.tekivex.com)
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/org-chart).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/org-chart).
