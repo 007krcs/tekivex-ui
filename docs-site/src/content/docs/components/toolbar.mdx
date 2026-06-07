@@ -1,27 +1,23 @@
 ---
 title: TkxToolbar
-description: Toolbar — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxToolbar — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { ToolbarBasic,ToolbarVariants } from '../../../components/demos/ToolbarDemo';
 
 ```tsx
 import { TkxToolbar } from 'tekivex-ui';
 ```
 
-Toolbar is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `items` | `ToolbarItem[]` | yes |  |
-| `orientation` | `'horizontal' \| 'vertical'` |  |  |
-| `size` | `'sm' \| 'md' \| 'lg'` |  |  |
-| `variant` | `'default' \| 'outlined' \| 'filled'` |  |  |
-| `ariaLabel` | `string` |  |  |
-| `className` | `string` |  |  |
-| `style` | `CSSProperties` |  |  |
+<ToolbarBasic client:load />
+
+### Variants
+
+<ToolbarVariants client:load />
 
 ## Accessibility
 
@@ -33,8 +29,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxToolbar.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxToolbar.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/toolbar).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/toolbar).

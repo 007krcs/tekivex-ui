@@ -1,27 +1,23 @@
 ---
 title: TkxAppBar
-description: AppBar — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxAppBar — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { AppBarBasic,AppBarTitleOnly } from '../../../components/demos/AppBarDemo';
 
 ```tsx
 import { TkxAppBar } from 'tekivex-ui';
 ```
 
-AppBar is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `title` | `ReactNode` |  |  |
-| `logo` | `ReactNode` |  |  |
-| `actions` | `ReactNode` |  |  |
-| `navigation` | `ReactNode` |  |  |
-| `position` | `'fixed' \| 'sticky' \| 'static'` |  |  |
-| `variant` | `'default' \| 'transparent' \| 'elevated'` |  |  |
-| `color` | `'primary' \| 'surface'` |  |  |
+<AppBarBasic client:load />
+
+### Title Only
+
+<AppBarTitleOnly client:load />
 
 ## Accessibility
 
@@ -33,8 +29,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxAppBar.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxAppBar.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/app-bar).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/app-bar).

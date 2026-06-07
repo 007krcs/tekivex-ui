@@ -1,26 +1,19 @@
 ---
 title: TkxCascader
-description: Cascader — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxCascader — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { CascaderBasic } from '../../../components/demos/CascaderDemo';
 
 ```tsx
 import { TkxCascader } from 'tekivex-ui';
 ```
 
-Cascader is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `options` | `CascaderOption[]` | yes |  |
-| `value` | `string[]` |  |  |
-| `onChange` | `(value: string[], selectedOptions: CascaderOption[]) => void` |  |  |
-| `placeholder` | `string` |  |  |
-| `label` | `string` |  |  |
-| `multiple` | `boolean` |  |  |
+<CascaderBasic client:load />
 
 ## Accessibility
 
@@ -32,8 +25,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxCascader.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxCascader.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/cascader).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/cascader).

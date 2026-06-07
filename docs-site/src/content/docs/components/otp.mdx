@@ -1,94 +1,39 @@
 ---
 title: TkxOTP
-description: One-time-password input. Auto-advance, paste support, mobile-friendly, with proper ARIA group semantics.
+description: TkxOTP — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { OTPBasic,OTPCustomLength,OTPWithComplete } from '../../../components/demos/OTPDemo';
 
 ```tsx
 import { TkxOTP } from 'tekivex-ui';
-
-const [code, setCode] = useState('');
-
-<TkxOTP
-  length={6}
-  value={code}
-  onChange={setCode}
-  onComplete={(v) => verify(v)}
-/>
 ```
 
-## Length
+## Live demo
 
-```tsx
-<TkxOTP length={4} />    {/* 4-digit PIN */}
-<TkxOTP length={6} />    {/* 6-digit OTP — default */}
-<TkxOTP length={8} />    {/* longer codes */}
-```
+### Basic
 
-## Numeric vs alphanumeric
+<OTPBasic client:load />
 
-```tsx
-<TkxOTP length={6} type="numeric" />     {/* digits 0-9 only */}
-<TkxOTP length={8} type="alphanumeric" /> {/* digits + letters */}
-```
+### Custom Length
 
-`numeric` triggers the numeric keyboard on mobile.
+<OTPCustomLength client:load />
 
-## Mask (for sensitive codes)
+### With Complete
 
-```tsx
-<TkxOTP length={6} mask />
-{/* digits render as • • • • • • */}
-```
-
-## Paste behavior
-
-When the user pastes a 6-character string anywhere in the field, the
-characters auto-distribute across all six boxes. Works with one-time
-codes copied from email or SMS without needing the WebOTP API.
-
-## With WebOTP API
-
-For Android Chrome users, opt into the platform-level SMS auto-fill API:
-
-```tsx
-useEffect(() => {
-  if (!('OTPCredential' in window)) return;
-  const ac = new AbortController();
-  navigator.credentials
-    .get({ otp: { transport: ['sms'] }, signal: ac.signal } as any)
-    .then((cred: any) => cred && setCode(cred.code))
-    .catch(() => {});
-  return () => ac.abort();
-}, []);
-
-<TkxOTP value={code} onChange={setCode} onComplete={verify} />
-```
-
-The user receives an SMS, taps "Auto-fill", and the code is delivered to
-your form without extra typing.
+<OTPWithComplete client:load />
 
 ## Accessibility
 
-- Group container: `role="group"` + localised `aria-label`
-- Each cell is a real `<input maxlength="1">` — keyboard-reachable
-- Auto-advance on input
-- **Backspace** in an empty cell focuses the previous cell
-- Paste distributes across cells
-- `inputMode="numeric"` on mobile when `type="numeric"`
-
-## Props
-
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `length` | `number` | | Defaults to `6`. |
-| `value` | `string` | | Controlled value. |
-| `onChange` | `(value: string) => void` | | Fires on every keystroke. |
-| `onComplete` | `(value: string) => void` | | Fires when all cells filled. |
-| `type` | `'numeric' \| 'alphanumeric'` | | Defaults to `numeric`. |
-| `mask` | `boolean` | | Render dots instead of characters. |
-| `disabled` | `boolean` | | |
-| `autoFocus` | `boolean` | | First cell receives focus on mount. |
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
 
 ## Source
 
-[`src/components/TkxOTP.tsx`](https://ui.tekivex.com)
+Implementation in [`src/components/TkxOTP.tsx`](https://ui.tekivex.com).
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/otp).

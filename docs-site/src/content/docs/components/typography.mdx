@@ -1,81 +1,35 @@
 ---
-title: TkxTypography
-description: Semantic typography primitives — Heading, Text, Code, Kbd. Self-tested against WCAG 2.1 AAA contrast, fluid scale, RTL-aware.
+title: Typography
+description: Typography — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
 
-```tsx
-import {
-  TkxHeading,
-  TkxText,
-  TkxCode,
-  TkxKbd,
-  TkxLink,
-} from 'tekivex-ui';
-
-<TkxHeading level={1}>Welcome</TkxHeading>
-<TkxText size="md" color="muted">Subtle subtext.</TkxText>
-<TkxText>
-  Press <TkxKbd>Cmd</TkxKbd>+<TkxKbd>K</TkxKbd> to open the command palette,
-  or run <TkxCode>npm run dev</TkxCode>.
-</TkxText>
-```
-
-Semantic typography primitives that share the theme tokens, scale
-predictably, and self-test against WCAG 2.1 AAA contrast at every size
-via the internal `meetsAAA()` helper. Third-party AAA audit is on the
-roadmap, not completed.
-
-## Components
-
-| Component | Renders | Use |
-|---|---|---|
-| `TkxHeading` | `<h1>`–`<h6>` | Page + section titles |
-| `TkxText` | `<p>` or `<span>` | Body copy + spans |
-| `TkxCode` | `<code>` | Inline code |
-| `TkxKbd` | `<kbd>` | Keyboard shortcuts |
-| `TkxLink` | `<a>` | Inline links with focus ring |
-
-## Heading
+import { TypographyTitles,TypographyTextStyles } from '../../../components/demos/TypographyDemo';
 
 ```tsx
-<TkxHeading level={2} size="2xl" color="primary" align="center">
-  Section title
-</TkxHeading>
+import { TkxTitle, TkxText } from 'tekivex-ui';
 ```
 
-| Prop | Type | Default |
-|---|---|---|
-| `level` | `1 \| 2 \| 3 \| 4 \| 5 \| 6` | `1` |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl' \| '3xl' \| '4xl'` | derived from level |
-| `color` | `'default' \| 'muted' \| 'primary' \| 'success' \| 'warning' \| 'danger'` | `'default'` |
-| `align` | `'left' \| 'center' \| 'right'` | `'left'` |
-| `weight` | `'normal' \| 'medium' \| 'semibold' \| 'bold' \| 'black'` | `'bold'` |
+## Live demo
 
-`size` is independent from `level` — you can render an `<h2>` that looks
-like a small caption (`<TkxHeading level={2} size="xs">`).
+### Titles
 
-## Text
+<TypographyTitles client:load />
 
-```tsx
-<TkxText size="sm" color="muted" italic>Caption text</TkxText>
-```
+### Text Styles
 
-| Prop | Type | Default |
-|---|---|---|
-| `as` | `'p' \| 'span' \| 'div'` | `'p'` |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` |
-| `color` | (same set as Heading) | `'default'` |
-| `weight` | `'normal' \| 'medium' \| 'semibold' \| 'bold'` | `'normal'` |
-| `italic` | `boolean` | `false` |
-| `truncate` | `boolean` | `false` |
-| `clamp` | `1 \| 2 \| 3 \| 4 \| 5` | unset |
+<TypographyTextStyles client:load />
 
 ## Accessibility
 
-- Heading levels are real `<h1>`–`<h6>` — never use `<div role="heading">`
-- Color tokens target WCAG 2.1 **AAA** (7:1) for body text and
-  **AA Large** (4.5:1) for headings against every theme background,
-  verified via the internal `meetsAAA()` helper
-- `truncate` and `clamp` keep `aria-label` set to the full text — screen
-  readers hear the whole sentence even when sighted users see "..."
-- RTL-aware — `align="left"` flips when the document direction is RTL
+- Keyboard navigation supported on all interactive elements
+- `:focus-visible` outline at 2px (theme-token `primary`)
+- ARIA roles and properties applied per WAI-ARIA 1.2
+- Respects `prefers-reduced-motion`
+- Minimum 44×44 touch target where applicable
+
+## Source
+
+Implementation in [`src/components/TkxTypography.tsx`](https://ui.tekivex.com).
+
+For the full interactive sandbox, open the
+[playground](/playground/#/components/typography).

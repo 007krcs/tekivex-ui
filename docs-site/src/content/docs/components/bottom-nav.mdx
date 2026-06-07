@@ -1,24 +1,23 @@
 ---
 title: TkxBottomNav
-description: BottomNav — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
+description: TkxBottomNav — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 ---
+
+import { BottomNavBasic,BottomNavIconOnly } from '../../../components/demos/BottomNavDemo';
 
 ```tsx
 import { TkxBottomNav } from 'tekivex-ui';
 ```
 
-BottomNav is part of the tekivex-ui library. Every component is self-tested
-against WCAG 2.1 AAA criteria, fully typed, and tree-shakeable. A third-party
-AAA audit is on the roadmap, not completed.
+## Live demo
 
-## Props
+### Basic
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `items` | `BottomNavItem[]` | yes |  |
-| `activeId` | `string` |  |  |
-| `onChange` | `(id: string) => void` |  |  |
-| `showLabels` | `boolean` |  |  |
+<BottomNavBasic client:load />
+
+### Icon Only
+
+<BottomNavIconOnly client:load />
 
 ## Accessibility
 
@@ -30,8 +29,7 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxBottomNav.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxBottomNav.tsx`](https://ui.tekivex.com).
 
-> This page is a generated scaffold. It will be replaced with hand-authored
-> examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/bottom-nav).
+For the full interactive sandbox, open the
+[playground](/playground/#/components/bottom-nav).
