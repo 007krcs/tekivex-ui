@@ -42,21 +42,66 @@ export default defineConfig({
           },
         },
         {
-          // SoftwareApplication JSON-LD — duplicated here so every page carries it
+          // Site-wide structured data graph — SoftwareApplication +
+          // Organization + WebSite(SearchAction). Carried on every page so
+          // any crawl entry point surfaces the full entity graph. Per-page
+          // BreadcrumbList + TechArticle are injected by src/components/Head.astro.
           tag: 'script',
           attrs: { type: 'application/ld+json' },
           content: JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'SoftwareApplication',
-            name: 'TekiVex UI',
-            applicationCategory: 'DeveloperApplication',
-            operatingSystem: 'Web',
-            url: 'https://ui.tekivex.com/',
-            version: '3.0.2',
-            license: 'https://ui.tekivex.com',
-            codeRepository: 'https://ui.tekivex.com',
-            downloadUrl: 'https://www.npmjs.com/package/tekivex-ui',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+            '@graph': [
+              {
+                '@type': 'SoftwareApplication',
+                '@id': 'https://ui.tekivex.com/#software',
+                name: 'TekiVex UI',
+                applicationCategory: 'DeveloperApplication',
+                operatingSystem: 'Web',
+                description:
+                  'Production-grade React component library — 116 components, WCAG 2.1 AAA, built-in security kernel with published threat model, headless primitives, zero-runtime CSS engine, 44-locale i18n.',
+                url: 'https://ui.tekivex.com/',
+                softwareVersion: '3.20.1',
+                license: 'https://opensource.org/licenses/MIT',
+                codeRepository: 'https://github.com/007krcs/tekivex-ui',
+                downloadUrl: 'https://www.npmjs.com/package/tekivex-ui',
+                installUrl: 'https://www.npmjs.com/package/tekivex-ui',
+                programmingLanguage: ['TypeScript', 'JavaScript'],
+                operatingSystem: 'Web',
+                offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+                author: { '@id': 'https://ui.tekivex.com/#org' },
+                publisher: { '@id': 'https://ui.tekivex.com/#org' },
+              },
+              {
+                '@type': 'Organization',
+                '@id': 'https://ui.tekivex.com/#org',
+                name: 'TekiVex UI',
+                url: 'https://ui.tekivex.com/',
+                logo: 'https://ui.tekivex.com/og-image.png',
+                sameAs: [
+                  'https://www.npmjs.com/package/tekivex-ui',
+                  'https://github.com/007krcs/tekivex-ui',
+                ],
+              },
+              {
+                '@type': 'WebSite',
+                '@id': 'https://ui.tekivex.com/#website',
+                name: 'TekiVex UI',
+                url: 'https://ui.tekivex.com/',
+                description:
+                  'Documentation for TekiVex UI — accessible, secure React component library.',
+                publisher: { '@id': 'https://ui.tekivex.com/#org' },
+                inLanguage: 'en',
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: {
+                    '@type': 'EntryPoint',
+                    urlTemplate:
+                      'https://ui.tekivex.com/?q={search_term_string}',
+                  },
+                  'query-input': 'required name=search_term_string',
+                },
+              },
+            ],
           }),
         },
       ],
@@ -122,6 +167,12 @@ export default defineConfig({
       ],
       customCss: ['./src/styles/global.css'],
       lastUpdated: true,
+      // Custom Head override — injects per-page Open Graph, Twitter Card,
+      // canonical URL, BreadcrumbList + TechArticle JSON-LD. See
+      // src/components/Head.astro.
+      components: {
+        Head: './src/components/Head.astro',
+      },
     }),
     react(),
     sitemap(),

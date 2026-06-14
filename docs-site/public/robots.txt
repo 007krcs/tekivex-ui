@@ -1,4 +1,106 @@
+# robots.txt for ui.tekivex.com
+#
+# Policy: this is open-source developer documentation. We WANT to be
+# indexed and cited by every search engine and every AI answer engine.
+# So we explicitly welcome the major AI crawlers (some operators check
+# for their own user-agent token even when User-agent: * already allows
+# all). Nothing here is sensitive; everything is meant to be found.
+#
+# Reference user-agent tokens verified current as of 2026-06.
+
+# ── Traditional search engines ──────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# ── AI answer / search / citation engines ───────────────────────────────────
+# OpenAI
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic (Claude)
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google Gemini / Vertex (training + grounding)
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Common Crawl (feeds many open LLMs)
+User-agent: CCBot
+Allow: /
+
+# Microsoft Copilot
+User-agent: BingPreview
+Allow: /
+
+# Amazon
+User-agent: Amazonbot
+Allow: /
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# You.com
+User-agent: YouBot
+Allow: /
+
+# Diffbot
+User-agent: Diffbot
+Allow: /
+
+# ── Everyone else ────────────────────────────────────────────────────────────
 User-agent: *
 Allow: /
 
+# Sitemaps + AI index manifest
 Sitemap: https://ui.tekivex.com/sitemap-index.xml
+Sitemap: https://ui.tekivex.com/sitemap.xml

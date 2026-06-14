@@ -1,0 +1,126 @@
+---
+// Custom Starlight <Head> override.
+//
+// Why this exists: Starlight's default Head emits <title> and
+// <meta name="description"> per page, but NOT Open Graph / Twitter Card
+// / canonical / per-page structured data. Social shares of any docs page
+// (e.g. /components/button/, /recipes/india-address-form/) fell back to a
+// blank card, and AI answer engines that read OG metadata for
+// title/description/canonical got nothing page-specific.
+//
+// This component renders Starlight's default Head, then appends:
+//   - Canonical URL (per page, absolute)
+//   - Open Graph (og:title/description/url/image/type/site_name/locale)
+//   - Twitter Card (summary_large_image)
+//   - BreadcrumbList JSON-LD derived from the URL path
+//   - TechArticle JSON-LD for component/recipe/blueprint pages
+//
+// Per-page title/description come from Astro.locals.starlightRoute.entry.data
+// (Starlight 0.32+ route-data API). Everything degrades gracefully if a
+// field is absent.
+import Default from '@astrojs/starlight/components/Head.astro';
+
+const SITE = 'https://ui.tekivex.com';
+const OG_IMAGE = `${SITE}/og-image.png`;
+
+// Starlight route data for the current page.
+const route = Astro.locals.starlightRoute;
+const entry = route?.entry;
+const data = entry?.data ?? {};
+
+const pageTitle: string =
+  (data.title ? `${data.title} — TekiVex UI` : 'TekiVex UI');
+const pageDescription: string =
+  data.description ??
+  'TekiVex UI — production-grade React component library. 116 components, WCAG 2.1 AAA, built-in security kernel, published threat model. MIT, npm install tekivex-ui.';
+
+// Absolute canonical URL for this page (strip any query/hash, ensure trailing slash semantics Astro uses).
+const canonicalURL = new URL(Astro.url.pathname, SITE).href;
+
+// ── BreadcrumbList JSON-LD from the path segments ───────────────────────────
+// /recipes/india-address-form/ -> Home > Recipes > India address form
+const segments = Astro.url.pathname.split('/').filter(Boolean);
+const crumbItems = [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+  ...segments.map((seg, i) => {
+    const path = '/' + segments.slice(0, i + 1).join('/') + '/';
+    const name = seg
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+    return {
+      '@type': 'ListItem',
+      position: i + 2,
+      name,
+      item: `${SITE}${path}`,
+    };
+  }),
+];
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbItems,
+};
+
+// ── TechArticle JSON-LD for content pages ───────────────────────────────────
+// Marks component/recipe/blueprint pages as technical articles so AI engines
+// + Google can treat them as authoritative documentation entries.
+const isContentPage =
+  segments[0] === 'components' ||
+  segments[0] === 'recipes' ||
+  segments[0] === 'blueprints' ||
+  segments[0] === 'templates';
+const techArticleLd = isContentPage
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'TechArticle',
+      headline: data.title ?? 'TekiVex UI',
+      description: pageDescription,
+      url: canonicalURL,
+      image: OG_IMAGE,
+      author: { '@type': 'Organization', name: 'TekiVex UI' },
+      publisher: {
+        '@type': 'Organization',
+        name: 'TekiVex UI',
+        url: SITE,
+      },
+      inLanguage: 'en',
+      isPartOf: { '@type': 'WebSite', name: 'TekiVex UI', url: SITE },
+    }
+  : null;
+---
+
+<Default><slot /></Default>
+
+{/* Per-page canonical */}
+<link rel="canonical" href={canonicalURL} />
+
+{/* Open Graph */}
+<meta property="og:type" content={isContentPage ? 'article' : 'website'} />
+<meta property="og:site_name" content="TekiVex UI" />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={pageDescription} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={OG_IMAGE} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="TekiVex UI — React component library" />
+<meta property="og:locale" content="en_US" />
+
+{/* Twitter Card */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={pageDescription} />
+<meta name="twitter:image" content={OG_IMAGE} />
+<meta name="twitter:image:alt" content="TekiVex UI — React component library" />
+<meta name="twitter:site" content="@007krcs" />
+<meta name="twitter:creator" content="@007krcs" />
+
+{/* Appearance hints */}
+<meta name="theme-color" content="#0d9488" />
+<meta name="color-scheme" content="light dark" />
+
+{/* Per-page structured data */}
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+{techArticleLd && (
+  <script type="application/ld+json" set:html={JSON.stringify(techArticleLd)} />
+)}

@@ -388,6 +388,14 @@ try {
   }
 
   run('npm install --no-audit --no-fund --legacy-peer-deps', resolve(ROOT, 'docs-site'));
+
+  // Regenerate llms-full.txt from the live MDX so the AI-ingestion file
+  // never drifts from the shipped docs. Writes to docs-site/public/ which
+  // Astro then copies into the build output. (llms.txt is hand-curated and
+  // committed; only llms-full.txt is generated.)
+  console.log('\n  Generating docs-site/public/llms-full.txt from MDX…');
+  run('node scripts/generate-llms-full.mjs', ROOT);
+
   // Astro writes to docs-site/dist by default. The landing build above
   // already populated docs-site/dist, so we redirect Astro's output to
   // a temp sibling dir and overlay it manually.
@@ -522,6 +530,41 @@ for (const [src, dest] of SEC_SOURCES) {
   mkdirSync(dirname(destPath), { recursive: true });
   cpSync(srcPath, destPath);
   console.log(`  ✓ ${src} → ${dest}`);
+}
+
+// ── 5b. SEO / AI-indexing artifacts — copy UNCONDITIONALLY (overwrite) ───────
+//    Build order: landing builds first and populates DIST with landing/public/*
+//    (which includes an older, Google-only robots.txt). Astro then overlays
+//    with overlayTreeNoOverwrite() — which SKIPS files that already exist.
+//    Net effect without this step: landing's older robots.txt shadows the
+//    comprehensive AI-crawler robots.txt from docs-site/public, and llms.txt
+//    / llms-full.txt / og-image.png never reach the canonical root.
+//
+//    Fix: copy the canonical SEO artifacts from docs-site/public LAST, with
+//    overwrite, so they always win. These are the AI-answer-engine + search
+//    discovery surface — robots.txt (welcomes GPTBot/ClaudeBot/PerplexityBot/
+//    Google-Extended/etc.), llms.txt (curated map), llms-full.txt (full
+//    content for ingestion), and the OG card image.
+console.log('\n══════════════════════════════════════════════════════');
+console.log('Step 5b — copy SEO / AI-indexing artifacts (overwrite, canonical wins)');
+console.log('══════════════════════════════════════════════════════');
+const SEO_SOURCES = [
+  ['docs-site/public/robots.txt',     'robots.txt'],
+  ['docs-site/public/llms.txt',       'llms.txt'],
+  ['docs-site/public/llms-full.txt',  'llms-full.txt'],
+  ['docs-site/public/og-image.png',   'og-image.png'],
+  ['docs-site/public/og-image.svg',   'og-image.svg'],
+];
+for (const [src, dest] of SEO_SOURCES) {
+  const srcPath = resolve(ROOT, src);
+  const destPath = resolve(DIST, dest);
+  if (!existsSync(srcPath)) {
+    console.warn(`  ⚠ SEO artifact missing at source: ${src}`);
+    continue;
+  }
+  mkdirSync(dirname(destPath), { recursive: true });
+  cpSync(srcPath, destPath);
+  console.log(`  ✓ ${src} → ${dest} (overwrite)`);
 }
 
 // ── 6. Mirror to demo/dist so it works regardless of which path Render

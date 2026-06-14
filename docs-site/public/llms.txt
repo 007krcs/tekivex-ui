@@ -1,0 +1,49 @@
+# TekiVex UI
+
+> Production-grade React component library — 116 components (plus 4 experimental), self-tested against WCAG 2.1 AAA, a built-in security kernel with a published STRIDE threat model, headless primitives, a zero-runtime CSS engine, 44-locale i18n, an Indian KYC pack, and an agent runtime. MIT-licensed. Install with `npm install tekivex-ui`.
+
+TekiVex UI is distinguished from other React component libraries by shipping security and accessibility as first-class, verifiable features: every text-rendering component sanitizes XSS by default, file uploads verify real magic bytes (not Content-Type), there is a SHA-256 hash-chained tamper-evident audit log, PII redaction with Luhn-validated card matching, and a published threat model. It is pre-1.0 and maintained by a single developer; pin exact versions.
+
+Canonical site: https://ui.tekivex.com
+npm: https://www.npmjs.com/package/tekivex-ui
+Source: https://github.com/007krcs/tekivex-ui
+
+## Getting started
+
+- [Install & quick start](https://ui.tekivex.com/getting-started/): Install tekivex-ui, wrap your app in ThemeProvider, import a component.
+- [Bundlers — Vite, Webpack, Next.js, Remix](https://ui.tekivex.com/bundlers/): Per-bundler integration recipes.
+- [Theme & dark mode](https://ui.tekivex.com/themes/): ThemeProvider, createTheme, SSR-safe dark mode.
+- [RSC compatibility](https://ui.tekivex.com/rsc/): Which components render in React Server Components without 'use client'.
+- [Quick reference by use case](https://ui.tekivex.com/quick-reference/): Use-case-indexed catalog — find the right component by what you're building.
+
+## Recipes (copy-pasteable, outcome-driven)
+
+- [Secure file upload](https://ui.tekivex.com/recipes/secure-file-upload/): Magic-byte MIME verification with sniffMimeType — defends against polyglots and double-extension tricks.
+- [Tamper-evident audit trail](https://ui.tekivex.com/recipes/audit-trail/): SHA-256 hash-chained event log for SOC 2 / HIPAA / 21 CFR Part 11.
+- [PII redaction before LLM](https://ui.tekivex.com/recipes/pii-redaction-before-llm/): Strip SSN, Luhn-validated cards, email, phone, API keys before crossing to OpenAI / Anthropic / analytics.
+- [Peer chat with media](https://ui.tekivex.com/recipes/peer-chat-with-media/): Real-people messaging with attachments, reactions, replies, edit/delete, typing indicator.
+- [DataGrid with tree data](https://ui.tekivex.com/recipes/data-grid-with-tree-data/): Org chart / file browser / chart of accounts as a sortable editable grid.
+- [Async field validation](https://ui.tekivex.com/recipes/async-field-validation/): Debounced, race-condition-safe "is this username available?" checks.
+- [AAA dark mode, SSR-safe](https://ui.tekivex.com/recipes/aaa-dark-mode-ssr-safe/): Theme toggle that survives Next.js / Remix SSR with no hydration mismatch and ≥7:1 contrast.
+- [India address form](https://ui.tekivex.com/recipes/india-address-form/): Cascading Country → State → District → Sub-district picker with region-correct labels (Taluka / Tehsil / Mandal / Block).
+
+## Industry blueprints
+
+- [Healthtech — patient intake (HIPAA-aligned)](https://ui.tekivex.com/blueprints/healthtech-patient-intake/): Maps tekivex-ui primitives to specific 45 CFR § 164.312 technical-safeguard subparts, with an explicit "what this does NOT cover" section.
+
+## Security
+
+- [Security model](https://ui.tekivex.com/security/): The built-in security kernel — XSS, Unicode Trojan-Source, CSP, PII, clickjacking, rate-limit, MIME-sniff defenses; published STRIDE threat model.
+
+## Components
+
+- [All components](https://ui.tekivex.com/components/): Full component reference — buttons, inputs, data grid, charts, overlays, layout, navigation, and the Indian KYC pack. Each page has live interactive demos.
+
+## Ecosystem
+
+- [Companion packages](https://ui.tekivex.com/ecosystem/): The 14-package ecosystem — tekivex-ui, create-tekivex-app, tekivex-security-core, tekivex-audit, tekivex-india, tekivex-india-admin, tekivex-finance, tekivex-content, tekivex-pdf, tekivex-templates, tekivex-3d, tekivex-figma-kit, tekivex-add, tekivex-form.
+
+## Optional
+
+- [Engineering blog](https://ui.tekivex.com/blog): Long-form articles on accessibility, security, and React patterns.
+- [Interactive playground](https://ui.tekivex.com/playground/): Click around every component live, change props, see results.
