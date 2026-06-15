@@ -33,6 +33,23 @@ export default defineConfig({
         { icon: 'npm', label: 'npm', href: 'https://www.npmjs.com/package/tekivex-ui' },
       ],
       head: [
+        // Search-engine ownership verification — Google Search Console + Bing
+        // Webmaster Tools. Carried on every Astro page so verification works
+        // regardless of which URL the tool fetches.
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'google-site-verification',
+            content: 'iJGXqeB5Lxtpbl6GP-wcDDNHViHyKCE7WTeu08E4F7Y',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'msvalidate.01',
+            content: '15ACD6CF5E1FCB9BA9E115BA8C0B6BD8',
+          },
+        },
         {
           tag: 'meta',
           attrs: {
