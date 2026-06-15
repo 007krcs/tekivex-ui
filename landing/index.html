@@ -23,6 +23,17 @@
     />
     <meta property="og:url" content="https://ui.tekivex.com/" />
     <meta property="og:locale" content="en_US" />
+    <!-- og:image — REQUIRED for a preview card to appear when the link is
+         shared (WhatsApp / Slack / iMessage / Twitter / LinkedIn / Facebook).
+         Absolute URL; the file is placed at the site root by the unified
+         build (scripts/build-unified-site.mjs Step 5b). 1200×630, <300 KB so
+         WhatsApp (which caps preview images at ~300 KB) still renders it. -->
+    <meta property="og:image" content="https://ui.tekivex.com/og-image.png" />
+    <meta property="og:image:secure_url" content="https://ui.tekivex.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TekiVex UI — production-grade React component library" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -31,6 +42,10 @@
       name="twitter:description"
       content="116 production components. Zero runtime dependencies in core. Tamper-evident SHA-256 audit trail. Published security threat model. MIT-licensed, pre-1.0."
     />
+    <meta name="twitter:image" content="https://ui.tekivex.com/og-image.png" />
+    <meta name="twitter:image:alt" content="TekiVex UI — production-grade React component library" />
+    <meta name="twitter:site" content="@007krcs" />
+    <meta name="twitter:creator" content="@007krcs" />
 
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
 

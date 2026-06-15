@@ -9,6 +9,10 @@
 import { useEffect } from 'react';
 
 const SITE_ORIGIN = 'https://ui.tekivex.com';
+// Default social-share card. Every route falls back to this unless it passes
+// its own opts.image, so a shared link ALWAYS renders a preview image on
+// WhatsApp / Slack / iMessage / Twitter / LinkedIn / Facebook.
+const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`;
 
 export function usePageMeta(title: string, description?: string, opts?: { keywords?: string; image?: string }) {
   useEffect(() => {
@@ -44,15 +48,23 @@ export function usePageMeta(title: string, description?: string, opts?: { keywor
     if (opts?.keywords) setMeta('keywords', opts.keywords);
 
     // Open Graph + Twitter Card so social shares pick up the right title
+    const ogImage = opts?.image ?? DEFAULT_OG_IMAGE;
     setMeta('og:title', title);
     setMeta('og:url', canonicalHref);
     if (description) setMeta('og:description', description);
     setMeta('og:type', 'website');
-    if (opts?.image) setMeta('og:image', opts.image);
+    setMeta('og:site_name', 'TekiVex UI');
+    // og:image always set (default fallback) so every route has a preview card.
+    setMeta('og:image', ogImage);
+    setMeta('og:image:width', '1200');
+    setMeta('og:image:height', '630');
+    setMeta('og:image:alt', 'TekiVex UI — production-grade React component library');
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', title);
     if (description) setMeta('twitter:description', description);
-    if (opts?.image) setMeta('twitter:image', opts.image);
+    setMeta('twitter:image', ogImage);
+    setMeta('twitter:site', '@007krcs');
+    setMeta('twitter:creator', '@007krcs');
 
     return () => {
       document.title = previous;
