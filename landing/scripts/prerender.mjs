@@ -75,7 +75,7 @@ const routes = [
     path: '/about',
     title: 'About TekiVex UI — Open-source React components built for production',
     description:
-      'TekiVex UI is a React component library covering 113 production primitives, a WebGL 3D toolkit, a Holographic UI family, and a printable-template pipeline. Read why we built it and how we plan to keep it maintained.',
+      'TekiVex UI is an open-source React component library — 116 production components, a WebGL 3D toolkit, and a built-in security kernel. Read why we built it.',
     h1: 'About TekiVex UI',
     body:
       'TekiVex UI is an open-source React component library distributed under the MIT license. The Tekivex package family — tekivex-ui, tekivex-3d, and tekivex-pdf — gives React developers 113 accessible components, a real WebGL 3D toolkit, holographic surfaces, browser-native PDF, and printable templates.',
@@ -147,7 +147,7 @@ const routes = [
     path: '/examples/blog',
     title: 'Configurable blog example — TekiVex UI',
     description:
-      'A Medium-style block editor: write posts with paragraph + heading + image + code + quote + list + video blocks. No markdown visible to writers. Persists to localStorage; swap one file for any backend.',
+      'A Medium-style block editor — paragraph, heading, image, code, quote, list, and video blocks. No markdown shown to writers. Persists to localStorage.',
     h1: 'Configurable blog',
     body:
       'A complete block-based blog application: write posts with the same WYSIWYG blocks readers see, upload cover images, drop in syntax-highlighted code blocks, organise by category and tags, search the archive, configure your brand.',
@@ -156,10 +156,10 @@ const routes = [
     path: '/examples/property-tour',
     title: 'Property tour example — TekiVex UI',
     description:
-      'A real-estate listing with an embedded 360° walkthrough — the same shape every real-estate, hotel, or venue site needs. Drag through rooms, click hotspots to teleport, request a viewing, and run a mortgage calculator without leaving the page.',
+      'A real-estate listing with an embedded 360° walkthrough — drag through rooms, click hotspots, request a viewing, and run a mortgage calculator.',
     h1: 'Property tour',
     body:
-      'A real-estate listing with an embedded 360° walkthrough: drag through rooms, click hotspots to teleport, request a viewing, and run a mortgage calculator. The shape every property, hotel, or venue site needs.',
+      'A real-estate listing with an embedded 360° walkthrough — drag through rooms, click hotspots, request a viewing, run a mortgage calculator.',
   },
   {
     path: '/examples/ar-product',
@@ -174,7 +174,7 @@ const routes = [
     path: '/examples/mission-control',
     title: 'Mission control example — TekiVex UI',
     description:
-      'A live operations dashboard built with the tekivex-ui holographic surfaces — KPI tiles, gauges, deploy pipeline, alert feed terminal, regional capacity, commit stream, all updating in real time.',
+      'A live operations dashboard built with tekivex-ui holographic surfaces — KPI tiles, gauges, deploy pipeline, alert feed, and a live commit stream.',
     h1: 'Mission control',
     body:
       'A NOC / SRE-style live operations dashboard built entirely with the tekivex-ui holographic surfaces: KPI tiles, gauges, deploy pipeline, alert feed terminal, regional capacity, commit stream — all updating in real time.',
@@ -205,9 +205,22 @@ function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// Clamp a description to a search/social-safe length at a word boundary.
+// Google truncates ~155–160 chars; social previews ~125. Blog summaries
+// double as card excerpts and can run long, so we clamp here when baking
+// the <meta> tags rather than forcing authors to shorten the source.
+function clampDescription(s, max = 155) {
+  const t = String(s).replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 60 ? cut.slice(0, lastSpace) : cut).replace(/[.,;:—-]+$/, '') + '…';
+}
+
 function makeHtml(route) {
   let html = baseHtml;
   const url = `${ORIGIN}${route.path}`;
+  const metaDescription = clampDescription(route.description);
 
   // Title
   html = html.replace(
@@ -217,7 +230,7 @@ function makeHtml(route) {
   // Description
   html = html.replace(
     /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/,
-    `<meta name="description" content="${escapeHtml(route.description)}" />`,
+    `<meta name="description" content="${escapeHtml(metaDescription)}" />`,
   );
   // Canonical
   html = html.replace(
@@ -235,7 +248,7 @@ function makeHtml(route) {
   );
   html = html.replace(
     /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/,
-    `<meta property="og:description" content="${escapeHtml(route.description)}" />`,
+    `<meta property="og:description" content="${escapeHtml(metaDescription)}" />`,
   );
   html = html.replace(
     /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/,
@@ -243,7 +256,7 @@ function makeHtml(route) {
   );
   html = html.replace(
     /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/,
-    `<meta name="twitter:description" content="${escapeHtml(route.description)}" />`,
+    `<meta name="twitter:description" content="${escapeHtml(metaDescription)}" />`,
   );
 
   // Prerendered body content — placed inside #root so the React hydrate
@@ -303,7 +316,7 @@ for (const route of routes) {
     path: '/',
     title: 'TekiVex UI — Production-grade React components, in 360°',
     description:
-      'Open-source React component library: 113 accessible primitives, a WebGL 3D + 360° toolkit, holographic UI, browser-native PDF, and printable templates. MIT licensed, WCAG 2.1 AAA.',
+      'Open-source React component library — 116 accessible components, WCAG 2.1 AAA, a built-in security kernel, and a WebGL 3D toolkit. MIT licensed.',
     h1: 'TekiVex UI — Production-grade React components, in 360°',
     body:
       'TekiVex UI is the React component library at the core of the Tekivex ecosystem — 113 accessible components across 13 npm packages including tekivex-ui, tekivex-3d, and tekivex-pdf. WCAG 2.1 AAA, MIT licensed, zero runtime dependencies.',

@@ -22,7 +22,7 @@ export default defineConfig({
     starlight({
       title: 'TekiVex UI',
       description:
-        'React component library — 116 components, self-tested against WCAG 2.1 AAA (third-party audit on roadmap), built-in security primitives, 1,798 tests, RSC-ready. npm install tekivex-ui',
+        'React component library — 116 components, WCAG 2.1 AAA, built-in security kernel, RSC-ready. MIT, npm install tekivex-ui.',
       logo: {
         // Lightning bolt (matches favicon)
         src: './src/assets/logo.svg',

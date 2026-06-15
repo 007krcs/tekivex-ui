@@ -30,9 +30,25 @@ const data = entry?.data ?? {};
 
 const pageTitle: string =
   (data.title ? `${data.title} — TekiVex UI` : 'TekiVex UI');
-const pageDescription: string =
+
+// Clamp a description to a search/social-safe length at a word boundary.
+// Google truncates ~155–160 chars; mobile social previews ~125. We clamp
+// the OG/Twitter description to 155 so it's never flagged as too long, even
+// if a page's frontmatter description drifts long in future. (Starlight's
+// own <meta name="description"> still comes straight from frontmatter — kept
+// ≤160 by content discipline; this is defense-in-depth for the social tags.)
+function clampDescription(s: string, max = 155): string {
+  const t = s.replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 60 ? cut.slice(0, lastSpace) : cut).replace(/[.,;:—-]+$/, '') + '…';
+}
+
+const rawDescription: string =
   data.description ??
-  'TekiVex UI — production-grade React component library. 116 components, WCAG 2.1 AAA, built-in security kernel, published threat model. MIT, npm install tekivex-ui.';
+  'Production-grade React component library — 116 components, WCAG 2.1 AAA, built-in security kernel. MIT, npm install tekivex-ui.';
+const pageDescription = clampDescription(rawDescription);
 
 // Absolute canonical URL for this page (strip any query/hash, ensure trailing slash semantics Astro uses).
 const canonicalURL = new URL(Astro.url.pathname, SITE).href;

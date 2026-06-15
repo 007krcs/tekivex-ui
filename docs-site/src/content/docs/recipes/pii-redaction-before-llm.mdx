@@ -1,6 +1,6 @@
 ---
 title: PII redaction before sending to an LLM
-description: Strip SSN, Luhn-validated credit cards, email, phone, and API keys from text before it crosses the boundary to OpenAI, Anthropic, or any third-party service. Regex + mod-10 — no false positives on 13-digit order IDs.
+description: Strip SSN, Luhn-validated cards, email, phone, and API keys from text before it reaches OpenAI / Anthropic / any third party. Regex + mod-10 validation.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
