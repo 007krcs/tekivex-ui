@@ -1,0 +1,148 @@
+---
+title: TkxSecurityDashboard
+description: Live view of the security kernel — XSS, Trojan-Source, PII, audit, rate-limit, and MIME events. JSON export for SIEM.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { SecurityDashboardLive, SecurityDashboardCompact } from '../../../components/demos/SecurityDashboardDemo';
+
+The tekivex-ui security kernel blocks XSS, Trojan-Source unicode, PII
+leaks, clickjacking, rate-limit abuse, and MIME forgery — but it does so
+**silently**. `TkxSecurityDashboard` makes that invisible work visible:
+it subscribes to the kernel's event stream and renders a live log,
+severity-coloured counts, and a one-click JSON export for a SIEM or
+incident report.
+
+```tsx
+import { TkxSecurityDashboard } from 'tekivex-ui';
+
+// Zero config — it self-subscribes to the kernel. No provider needed.
+<TkxSecurityDashboard />
+```
+
+## Live demo
+
+Click a button to make the kernel block a **real** threat — each button
+calls the same primitive (`sanitizeString`, `sanitizeUnicode`,
+`scrubPII`, `audit`, `createRateLimiter`) your app calls. Watch the event
+appear below.
+
+<SecurityDashboardLive client:visible />
+
+<Aside type="tip">
+  Nothing in this demo is faked. The buttons run the actual kernel
+  functions; the dashboard renders whatever they emit. In your app the
+  events come from your inputs, file uploads, and audit calls — no wiring
+  required.
+</Aside>
+
+## How it works
+
+Every defensive primitive emits a `SecurityEvent` when — and only when —
+it actually blocks something. The dashboard's hook subscribes via
+`onSecurityEvent`, seeds from a bounded 500-entry ring buffer on mount,
+and re-renders as events arrive.
+
+| Event type | Emitted by | Severity |
+|---|---|---|
+| `xss-sanitized` | `sanitizeString` | `warning` |
+| `unicode-stripped` | `sanitizeUnicode` (Trojan-Source / CVE-2021-42574) | `critical` |
+| `pii-redacted` | `scrubPII` | `warning` |
+| `audit` | `audit()` | `info` |
+| `clickjacking-detected` | `installFrameBuster` | `critical` |
+| `rate-limited` | `createRateLimiter` | `warning` |
+| `mime-rejected` | `sniffMimeType` | `critical` |
+
+Emission is **zero-overhead** when no listener is attached and nothing is
+blocked, and a throwing listener can never break the primitive that
+emitted it.
+
+## Compact mode
+
+Drop the scrolling log and the export button for a small status widget —
+summary tiles only.
+
+<SecurityDashboardCompact client:visible />
+
+```tsx
+<TkxSecurityDashboard compact hideExport />
+```
+
+## The hook
+
+`useSecurityEvents()` is the engine under the dashboard. It is
+self-subscribing — no provider required — and returns everything you need
+to build your own UI.
+
+```tsx
+import { useSecurityEvents } from 'tekivex-ui';
+
+function SecurityBadge() {
+  const { events, counts, bySeverity, clear, toJSON } = useSecurityEvents();
+  return (
+    <span>
+      {bySeverity.critical} critical · {bySeverity.warning} warning
+    </span>
+  );
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `events` | `readonly SecurityEvent[]` | The buffered events, oldest first. |
+| `counts` | `Record<SecurityEventType, number>` | Count per event type. |
+| `bySeverity` | `Record<SecuritySeverity, number>` | Count per severity. |
+| `clear()` | `() => void` | Clear the in-memory buffer (does **not** touch the SHA-256 audit chain). |
+| `toJSON()` | `() => string` | Serialise the buffer to JSON for download / SIEM. |
+
+## App-wide aggregation (optional)
+
+By default every dashboard keeps its own buffer. Wrap your app in
+`SecurityProvider` to share one buffer across multiple widgets so they
+stay in sync.
+
+```tsx
+import { SecurityProvider, TkxSecurityDashboard } from 'tekivex-ui';
+
+<SecurityProvider maxEvents={500}>
+  <App />
+  {/* every dashboard / badge inside now reads the same buffer */}
+  <TkxSecurityDashboard />
+</SecurityProvider>
+```
+
+## Forwarding to a SIEM
+
+The raw `onSecurityEvent` subscription is public — pipe events anywhere
+(Datadog, Splunk, your own `/security/events` endpoint) without rendering
+any UI.
+
+```tsx
+import { onSecurityEvent } from 'tekivex-ui';
+
+const unsubscribe = onSecurityEvent((evt) => {
+  if (evt.severity === 'critical') {
+    fetch('/security/events', {
+      method: 'POST',
+      body: JSON.stringify(evt),
+    });
+  }
+});
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `maxEvents` | `number` | `200` | Max events retained in the log. |
+| `hideExport` | `boolean` | `false` | Hide the JSON export button. |
+| `compact` | `boolean` | `false` | Summary tiles only — no event log. |
+| `className` | `string` | — | Class on the root `<section>`. |
+| `style` | `CSSProperties` | — | Inline style merged onto the card. |
+
+<Aside>
+  The dashboard is **read-only** — it never modifies what the kernel
+  does, only reports it. Clearing the dashboard clears the in-memory
+  event buffer; the tamper-evident SHA-256 audit chain (`getAuditLog`,
+  `verifyAuditIntegrity`) is untouched.
+</Aside>
