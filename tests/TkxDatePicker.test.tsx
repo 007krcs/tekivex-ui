@@ -176,6 +176,17 @@ describe('TkxDatePicker', () => {
 
   // ── Range mode ──────────────────────────────────────────────────────────
   describe('range mode', () => {
+    // These tests click May 2026 day cells but don't pass a value/defaultMonth,
+    // so the picker opens on whatever "today" is. Pin the clock to May 2026 so
+    // the rendered month matches the fixtures regardless of the real date.
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 4, 1));
+    });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it('mode="range" renders Apply/Cancel footer', () => {
       const { container } = wrap(<TkxDatePicker mode="range" label="X" />);
       openPicker(getInput(container));
@@ -281,6 +292,16 @@ describe('TkxDatePicker', () => {
 
   // ── Multi mode ──────────────────────────────────────────────────────────
   describe('multi mode', () => {
+    // Same as range mode: clicks target May 2026 with no value/defaultMonth,
+    // so pin the clock to May 2026 for a deterministic rendered month.
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 4, 1));
+    });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it('mode="multiple" — each click adds a date to the array', () => {
       const onMultiChange = vi.fn();
       const { container } = wrap(
