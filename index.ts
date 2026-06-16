@@ -197,6 +197,30 @@ export * from './src/components/TkxList';
 export * from './src/components/TkxIcon';
 export * from './src/components/TkxLogo';
 
+// Security dashboard — live event stream from the security kernel.
+// (v3.21 — "make the invisible kernel visible")
+export {
+  TkxSecurityDashboard,
+  SecurityProvider,
+  useSecurityEvents,
+} from './src/components/TkxSecurityDashboard';
+export type {
+  TkxSecurityDashboardProps,
+  SecurityProviderProps,
+  SecurityEventsState,
+} from './src/components/TkxSecurityDashboard';
+export {
+  onSecurityEvent,
+  getRecentSecurityEvents,
+  clearSecurityEvents,
+  emitSecurityEvent,
+} from './src/engine/security';
+export type {
+  SecurityEvent,
+  SecurityEventType,
+  SecuritySeverity,
+} from './src/engine/security';
+
 // Components (v2.7) — Phase 1 quick wins
 export * from './src/components/TkxCaptcha';
 export * from './src/components/TkxFontProvider';

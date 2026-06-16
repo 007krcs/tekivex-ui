@@ -103,6 +103,81 @@ const HTML_ENTITIES: Record<string, string> = {
  * This is a defense-in-depth helper — it does NOT allow-list HTML. For rich
  * HTML input, use a dedicated sanitizer such as DOMPurify.
  */
+// ── Security event stream ────────────────────────────────────────────────────
+// The kernel blocks XSS, Trojan-Source unicode, PII leaks, clickjacking, and
+// rate-limit abuse — but silently. This pub/sub surfaces each defensive action
+// as an observable event so a consumer can render a live security dashboard
+// (see TkxSecurityDashboard / SecurityProvider) or forward events to a SIEM.
+// Zero overhead when no listener is attached and nothing is blocked.
+
+export type SecurityEventType =
+  | 'xss-sanitized'
+  | 'unicode-stripped'
+  | 'pii-redacted'
+  | 'audit'
+  | 'clickjacking-detected'
+  | 'rate-limited'
+  | 'mime-rejected';
+
+export type SecuritySeverity = 'info' | 'warning' | 'critical';
+
+export interface SecurityEvent {
+  readonly id: string;
+  readonly type: SecurityEventType;
+  readonly timestamp: number;
+  readonly severity: SecuritySeverity;
+  readonly message: string;
+  readonly detail?: Readonly<Record<string, unknown>>;
+}
+
+type SecurityEventListener = (evt: SecurityEvent) => void;
+const securityListeners = new Set<SecurityEventListener>();
+const recentSecurityEvents: SecurityEvent[] = [];
+const MAX_RECENT_EVENTS = 500;
+let securityEventSeq = 0;
+
+/** Subscribe to security events. Returns an unsubscribe function. */
+export function onSecurityEvent(listener: SecurityEventListener): () => void {
+  securityListeners.add(listener);
+  return () => {
+    securityListeners.delete(listener);
+  };
+}
+
+/** Snapshot of the most recent security events (bounded ring buffer of 500). */
+export function getRecentSecurityEvents(): readonly SecurityEvent[] {
+  return recentSecurityEvents.slice();
+}
+
+/** Clear the in-memory event buffer (does NOT affect the SHA-256 audit trail). */
+export function clearSecurityEvents(): void {
+  recentSecurityEvents.length = 0;
+}
+
+/** Emit a security event. Public so consumers can record their own signals. */
+export function emitSecurityEvent(
+  type: SecurityEventType,
+  message: string,
+  severity: SecuritySeverity = 'info',
+  detail?: Record<string, unknown>,
+): SecurityEvent {
+  const evt: SecurityEvent = Object.freeze({
+    id: `se_${++securityEventSeq}`,
+    type,
+    timestamp: Date.now(),
+    severity,
+    message,
+    detail: detail ? Object.freeze({ ...detail }) : undefined,
+  });
+  recentSecurityEvents.push(evt);
+  if (recentSecurityEvents.length > MAX_RECENT_EVENTS) recentSecurityEvents.shift();
+  for (const listener of securityListeners) {
+    // A listener throwing must never break the primitive that emitted.
+    try { listener(evt); } catch { /* swallow */ }
+  }
+  return evt;
+}
+
 export function sanitizeString(input: unknown): string {
   // Treat null/undefined as the empty string. Without this guard,
   // String(undefined) returns the literal "undefined", which silently
@@ -114,7 +189,17 @@ export function sanitizeString(input: unknown): string {
   // Strip NUL + disallowed C0 controls (keep \t \n \r).
   // eslint-disable-next-line no-control-regex
   s = s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
-  return s.replace(/[<>&'"`]/g, (char) => HTML_ENTITIES[char] ?? char);
+  let escapes = 0;
+  const out = s.replace(/[<>&'"`]/g, (char) => { escapes++; return HTML_ENTITIES[char] ?? char; });
+  if (escapes > 0) {
+    emitSecurityEvent(
+      'xss-sanitized',
+      `Escaped ${escapes} HTML-sensitive character${escapes === 1 ? '' : 's'} before render`,
+      'warning',
+      { escapes },
+    );
+  }
+  return out;
 }
 
 export function sanitizeProps<T extends Record<string, unknown>>(props: T): T {
@@ -276,6 +361,12 @@ export function audit(
   });
 
   auditTrail = Object.freeze([...auditTrail, entry]);
+  emitSecurityEvent(
+    'audit',
+    `${component}: ${action}`,
+    'info',
+    { component, action, chainHash: entry.chainHash },
+  );
   return entry;
 }
 
@@ -482,10 +573,20 @@ export function isSafeAttrName(name: unknown): boolean {
 export function sanitizeUnicode(raw: unknown): string {
   if (typeof raw !== 'string') return '';
   // Zero-width joiners, non-joiners, BOM, bidi overrides, soft hyphen.
-  return raw.replace(
+  const out = raw.replace(
     /[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF\u00AD]/g,
     '',
   );
+  if (out.length !== raw.length) {
+    // Bidi / zero-width chars are the Trojan-Source attack vector (CVE-2021-42574).
+    emitSecurityEvent(
+      'unicode-stripped',
+      'Removed bidirectional / zero-width control characters (Trojan-Source vector)',
+      'critical',
+      { charsRemoved: raw.length - out.length },
+    );
+  }
+  return out;
 }
 
 // ── CSP builder ──────────────────────────────────────────────────────────────
@@ -600,6 +701,11 @@ export function isFramed(): boolean {
 export function installFrameBuster(onDetect?: () => void): void {
   if (typeof window === 'undefined') return;
   if (!isFramed()) return;
+  emitSecurityEvent(
+    'clickjacking-detected',
+    'Page is embedded in a cross-origin frame — clickjacking precondition',
+    'critical',
+  );
   if (onDetect) { onDetect(); return; }
   try {
     (window.top as Window).location.href = window.self.location.href;
@@ -633,7 +739,15 @@ export function createRateLimiter(n: number, intervalMs: number): RateLimiter {
         tokens = Math.min(n, tokens + refill);
         lastRefill = now;
       }
-      if (tokens <= 0) return false;
+      if (tokens <= 0) {
+        emitSecurityEvent(
+          'rate-limited',
+          'Action throttled — token bucket exhausted',
+          'warning',
+          { capacity: n, intervalMs },
+        );
+        return false;
+      }
       tokens -= 1;
       return true;
     },
@@ -669,6 +783,12 @@ export async function sniffMimeType(file: File): Promise<string | null> {
   if (head[0] === 0x7b || head[0] === 0x5b) return 'application/json';
   // UTF-8 text heuristic: no NULs in first 12 bytes.
   if (![...head].includes(0)) return 'text/plain';
+  emitSecurityEvent(
+    'mime-rejected',
+    `File "${file.name}" rejected — magic bytes match no allow-listed type (claimed: ${file.type || 'unknown'})`,
+    'critical',
+    { name: file.name, claimedType: file.type },
+  );
   return null;
 }
 
@@ -724,10 +844,19 @@ const PII_PATTERNS: Array<{ name: string; re: RegExp; repl: string | ((m: string
 export function scrubPII(raw: unknown): string {
   if (typeof raw !== 'string') return '';
   let s = raw;
+  let redactions = 0;
   for (const { re, repl } of PII_PATTERNS) {
     s = typeof repl === 'function'
-      ? s.replace(re, repl as (m: string) => string)
-      : s.replace(re, repl);
+      ? s.replace(re, (m: string) => { redactions++; return (repl as (m: string) => string)(m); })
+      : s.replace(re, (m: string) => { redactions++; return repl as string; });
+  }
+  if (redactions > 0) {
+    emitSecurityEvent(
+      'pii-redacted',
+      `Redacted ${redactions} PII token${redactions === 1 ? '' : 's'} before the text left the trust boundary`,
+      'warning',
+      { redactions },
+    );
   }
   return s;
 }

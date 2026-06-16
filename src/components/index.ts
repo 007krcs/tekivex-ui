@@ -13,6 +13,7 @@ export * from './TkxAvatar';
 export * from './TkxTable';
 export * from './TkxDivider';
 export * from './TkxIcon';
+export * from './TkxSecurityDashboard';
 export * from './TkxLogo';
 export * from './TkxSelect';
 export * from './TkxCheckbox';

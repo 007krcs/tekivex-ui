@@ -5,6 +5,54 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.21.0] — 2026-06-16
+
+### Added — the security kernel is now observable (`TkxSecurityDashboard`)
+
+The security kernel has always blocked XSS, Trojan-Source unicode, PII
+leaks, clickjacking, rate-limit abuse, and MIME forgery — but silently.
+Consumers had no way to *see* it work. This release surfaces every
+defensive action as an observable event stream and ships a drop-in
+dashboard to render it.
+
+**New security-event stream** (`src/engine/security.ts`):
+
+- `onSecurityEvent(listener)` — subscribe to defensive actions; returns
+  an unsubscribe function.
+- `getRecentSecurityEvents()` — snapshot of a bounded (500-entry) ring
+  buffer.
+- `clearSecurityEvents()` — clear the in-memory buffer (does **not**
+  touch the SHA-256 audit chain).
+- `emitSecurityEvent(type, message, severity?, detail?)` — public so
+  consumers can record their own signals.
+- Types: `SecurityEvent`, `SecurityEventType`, `SecuritySeverity`.
+
+All seven event types are now emitted by the primitives themselves:
+`xss-sanitized` (`sanitizeString`), `unicode-stripped` (`sanitizeUnicode`
+— the Trojan-Source / CVE-2021-42574 vector, severity `critical`),
+`pii-redacted` (`scrubPII`, with redaction count), `audit` (every
+`audit()` entry), `clickjacking-detected` (`installFrameBuster`),
+`rate-limited` (`createRateLimiter` on bucket exhaustion), and
+`mime-rejected` (`sniffMimeType` on magic-byte mismatch). Emission is
+**zero-overhead** when no listener is attached and nothing is blocked,
+and a throwing listener can never break the primitive that emitted.
+
+**New component** (`tekivex-ui` root export):
+
+- `<TkxSecurityDashboard />` — zero-config drop-in. Summary tiles
+  (XSS / Trojan-Source / PII / audit counts), a live scrolling event log
+  (severity-coloured, `aria-live`), one-click JSON export for a SIEM /
+  incident report, and a clear button. `compact` and `hideExport` props.
+- `useSecurityEvents(maxEvents?)` — the underlying hook. Self-
+  subscribing; needs **no** provider. Returns
+  `{ events, counts, bySeverity, clear, toJSON }`.
+- `<SecurityProvider>` — **optional**. Shares one event buffer app-wide
+  so multiple dashboards / widgets stay in sync.
+
+12 new tests in `tests/security-events.test.ts` cover the pub/sub
+contract, the bounded ring buffer, throwing-listener resilience, and
+every primitive's emission (and non-emission on clean input).
+
 ## [3.20.1] — 2026-05-31
 
 Documentation-only patch. No code changes — the dist tarball is
