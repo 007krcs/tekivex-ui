@@ -27,6 +27,8 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from 'react';
+import { useTheme, tkxThemeVars } from '../themes';
+import { sanitizeString } from '../engine/security';
 
 // ── Public types ────────────────────────────────────────────────────────────
 
@@ -202,6 +204,7 @@ export function TkxMindMap({
   style,
   className,
 }: TkxMindMapProps) {
+  const theme = useTheme();
   // ── Uncontrolled fallbacks ──
   const [internalSelected, setInternalSelected] = useState<string | null>(root.id);
   const [internalCollapsed, setInternalCollapsed] = useState<Set<string>>(() => {
@@ -317,8 +320,9 @@ export function TkxMindMap({
         width: '100%',
         overflow: 'auto',
         outline: 'none',
-        background: 'var(--tkx-bg, #0a0a0f)',
-        color: 'var(--tkx-fg, #e8e8f4)',
+        ...tkxThemeVars(theme),
+        background: 'var(--tkx-bg)',
+        color: 'var(--tkx-fg)',
         ...style,
       }}
     >
@@ -417,7 +421,7 @@ export function TkxMindMap({
                     borderRadius: 4,
                     border: 'none',
                     background: accent,
-                    color: '#0a0a0f',
+                    color: 'var(--tkx-bg)',
                     cursor: 'pointer',
                     fontSize: 12,
                     fontWeight: 700,
@@ -438,9 +442,9 @@ export function TkxMindMap({
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                 }}
-                title={f.laid.node.label}
+                title={sanitizeString(f.laid.node.label)}
               >
-                {f.laid.node.label}
+                {sanitizeString(f.laid.node.label)}
               </span>
             </div>
           );

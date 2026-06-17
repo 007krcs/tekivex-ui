@@ -74,12 +74,16 @@ function detectDevtools(): boolean {
 /**
  * Reactively reports whether DevTools is likely open. Heuristic only —
  * works against most users, defeated by undocked DevTools or float-window mode.
+ *
+ * Pass `enabled={false}` to skip the polling entirely (no `setInterval`, no
+ * `resize` listener) — important so every `<TkxWatermark>` that isn't using
+ * `intensifyOnDevtools` doesn't spin a 1s timer for nothing.
  */
-export function useDevtoolsOpen(): boolean {
+export function useDevtoolsOpen(enabled = true): boolean {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (!enabled || typeof window === 'undefined') return;
     setOpen(detectDevtools());
     const handler = () => setOpen(detectDevtools());
     window.addEventListener('resize', handler);
@@ -88,9 +92,9 @@ export function useDevtoolsOpen(): boolean {
       window.removeEventListener('resize', handler);
       window.clearInterval(interval);
     };
-  }, []);
+  }, [enabled]);
 
-  return open;
+  return enabled ? open : false;
 }
 
 // ── Canvas Renderer ──────────────────────────────────────────────────────────
@@ -176,7 +180,8 @@ export function TkxWatermark({
   const containerRef = useRef<HTMLDivElement>(null);
   const [bgImage, setBgImage] = useState('');
   const [tick, setTick] = useState(0);
-  const devtoolsOpen = useDevtoolsOpen();
+  // Only poll for DevTools when the consumer actually opted into the behaviour.
+  const devtoolsOpen = useDevtoolsOpen(intensifyOnDevtools);
 
   // Sanitise + optionally augment with fingerprint
   const lines = useMemo(() => {

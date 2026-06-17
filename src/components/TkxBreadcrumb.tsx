@@ -2,6 +2,8 @@
 
 import {
   useCallback,
+  useEffect,
+  useState,
   type ReactNode,
   type CSSProperties,
   type KeyboardEvent,
@@ -116,8 +118,15 @@ export function TkxBreadcrumb({
   const t = useLocale();
   const reducedMotion = useReducedMotion();
 
+  // Clicking the ellipsis expands the trail in place (reset when items change).
+  const [expanded, setExpanded] = useState(false);
+  useEffect(() => {
+    setExpanded(false);
+  }, [items]);
+
   // Collapse logic: show first, last, and ellipsis when items exceed maxItems
-  const shouldCollapse = maxItems !== undefined && maxItems > 1 && items.length > maxItems;
+  const shouldCollapse =
+    !expanded && maxItems !== undefined && maxItems > 1 && items.length > maxItems;
 
   const getVisibleItems = useCallback((): { item: BreadcrumbItem; originalIndex: number }[] => {
     if (!shouldCollapse || !maxItems) {
@@ -289,7 +298,8 @@ export function TkxBreadcrumb({
         <li key="ellipsis" role="presentation">
           <EllipsisButton
             onClick={() => {
-              // Re-render without collapse -- parent can control maxItems
+              // Reveal the hidden middle items in place.
+              setExpanded(true);
             }}
             bgColor={theme.surfaceAlt}
             hoverColor={theme.surface}

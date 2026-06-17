@@ -308,6 +308,33 @@ export function useTheme(): ThemeTokens {
 }
 
 /**
+ * Map the active theme onto the legacy `--tkx-*` CSS custom properties that
+ * several editor/grid components (FlowChart, FormBuilder, Gantt, MindMap,
+ * PivotTable, Spreadsheet, FormulaBar) reference via `var(--tkx-bg, #fallback)`.
+ *
+ * The library's theme system never *defined* these variables, so those
+ * components always fell back to their hardcoded dark hex and ignored light
+ * themes. Spreading the result of this helper onto a component's root element
+ * binds every `var(--tkx-*)` reference in its subtree to the live theme — one
+ * edit instead of rewriting dozens of color literals.
+ *
+ * @example
+ * const theme = useTheme();
+ * <div style={{ ...tkxThemeVars(theme), ...rest }}>…</div>
+ */
+export function tkxThemeVars(theme: ThemeTokens): Record<string, string> {
+  return {
+    '--tkx-bg': theme.bg,
+    '--tkx-bg-subtle': theme.surface,
+    '--tkx-fg': theme.text,
+    '--tkx-fg-muted': theme.textMuted,
+    '--tkx-accent': theme.primary,
+    '--tkx-border': theme.border,
+    '--tkx-border-soft': theme.surfaceAlt,
+  };
+}
+
+/**
  * Returns the user's OS-level color-scheme preference, reactively.
  * Useful for consumers managing their own theme switching.
  *
