@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import { type ReactNode, type CSSProperties } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
@@ -26,6 +26,8 @@ export interface TkxListProps {
   loading?: boolean;
   emptyText?: string;
   grid?: { column?: number; gutter?: number };
+  className?: string;
+  style?: CSSProperties;
 }
 
 // ── Size Tokens ──────────────────────────────────────────────────────────────
@@ -86,6 +88,8 @@ export function TkxList({
   loading = false,
   emptyText = 'No data',
   grid,
+  className,
+  style,
 }: TkxListProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
@@ -101,10 +105,11 @@ export function TkxList({
       role="list"
       aria-label="List"
       aria-busy={loading}
-      className={tkx('font-sans rounded-lg overflow-hidden')}
+      className={tkx('font-sans rounded-lg overflow-hidden', className ?? '')}
       style={{
         border: bordered ? `1px solid ${theme.border}` : 'none',
         backgroundColor: theme.surface,
+        ...style,
       }}
     >
       {/* Header */}

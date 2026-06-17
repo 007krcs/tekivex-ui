@@ -21,6 +21,8 @@ export interface TkxSegmentedProps {
   onChange?: (value: string) => void;
   size?: 'sm' | 'md' | 'lg';
   block?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 // ── Size Map ─────────────────────────────────────────────────────────────────
@@ -39,6 +41,8 @@ export function TkxSegmented({
   onChange,
   size = 'md',
   block = false,
+  className,
+  style,
 }: TkxSegmentedProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
@@ -111,11 +115,12 @@ export function TkxSegmented({
       ref={containerRef}
       role="radiogroup"
       aria-label="Segmented control"
-      className={tkx('relative inline-flex items-center rounded-lg p-1')}
+      className={tkx('relative inline-flex items-center rounded-lg p-1', className ?? '')}
       style={{
         backgroundColor: theme.surfaceAlt,
         border: `1px solid ${theme.border}`,
         width: block ? '100%' : undefined,
+        ...style,
       }}
       onKeyDown={handleKeyDown}
     >

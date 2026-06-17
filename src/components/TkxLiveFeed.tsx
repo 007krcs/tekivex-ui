@@ -35,6 +35,8 @@ export interface TkxLiveFeedProps {
   emptyMessage?: string;
   pauseOnHover?: boolean;
   renderItem?: (item: FeedItem) => React.ReactNode;
+  className?: string;
+  style?: CSSProperties;
 }
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -198,6 +200,8 @@ export function TkxLiveFeed({
   emptyMessage = 'No activity yet.',
   pauseOnHover = true,
   renderItem,
+  className,
+  style,
 }: TkxLiveFeedProps) {
   const theme = useTheme();
   injectFeedStyles();
@@ -284,7 +288,7 @@ export function TkxLiveFeed({
   if (visibleItems.length === 0) {
     return createElement(
       'div',
-      { style: { ...containerStyle, display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+      { className, style: { ...containerStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', ...style } },
       createElement('span', { style: { color: theme.textMuted, fontSize: 14 } }, sanitizeString(emptyMessage)),
     );
   }
@@ -316,7 +320,8 @@ export function TkxLiveFeed({
     'div',
     {
       ref: containerRef,
-      style: containerStyle,
+      className,
+      style: { ...containerStyle, ...style },
       onScroll: handleScroll,
       onMouseEnter: pauseOnHover ? () => setIsHovered(true) : undefined,
       onMouseLeave: pauseOnHover ? () => setIsHovered(false) : undefined,

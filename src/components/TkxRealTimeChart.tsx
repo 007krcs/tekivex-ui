@@ -36,6 +36,8 @@ export interface TkxRealTimeChartProps {
   animate?: boolean;
   yMin?: number;
   yMax?: number;
+  className?: string;
+  style?: CSSProperties;
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -72,6 +74,8 @@ export function TkxRealTimeChart({
   animate = true,
   yMin,
   yMax,
+  className,
+  style,
 }: TkxRealTimeChartProps) {
   const theme = useTheme();
   const lineColor = color ?? theme.primary;
@@ -206,7 +210,7 @@ export function TkxRealTimeChart({
 
   return createElement(
     'div',
-    { ref: containerRef, style: wrapStyle },
+    { ref: containerRef, className, style: { ...wrapStyle, ...style } },
     createElement(
       'svg',
       {

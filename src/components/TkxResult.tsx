@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import { type ReactNode, type CSSProperties } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
@@ -16,6 +16,8 @@ export interface TkxResultProps {
   subTitle?: string;
   icon?: ReactNode;
   extra?: ReactNode;
+  className?: string;
+  style?: CSSProperties;
 }
 
 // ── Status Icons (SVG) ──────────────────────────────────────────────────────
@@ -84,7 +86,7 @@ function getStatusColor(status: ResultStatus, theme: ReturnType<typeof useTheme>
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function TkxResult({ status, title, subTitle, icon, extra }: TkxResultProps) {
+export function TkxResult({ status, title, subTitle, icon, extra, className, style }: TkxResultProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
   const accentColor = getStatusColor(status, theme);
@@ -95,9 +97,10 @@ export function TkxResult({ status, title, subTitle, icon, extra }: TkxResultPro
     <div
       role="status"
       aria-live="polite"
-      className={tkx('flex flex-col items-center text-center px-6 py-12 font-sans')}
+      className={tkx('flex flex-col items-center text-center px-6 py-12 font-sans', className ?? '')}
       style={{
         animation: reducedMotion ? 'none' : 'tkxFadeIn 0.3s ease',
+        ...style,
       }}
     >
       <div className={tkx('mb-6')}>

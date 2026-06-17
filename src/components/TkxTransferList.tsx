@@ -5,6 +5,7 @@ import {
   useMemo,
   useCallback,
   useId,
+  useRef,
   type CSSProperties,
   type KeyboardEvent,
 } from 'react';
@@ -149,10 +150,43 @@ function ListPanel({
   const allSelected = enabledItems.length > 0 && enabledItems.every((i) => selected.has(i.value));
   const someSelected = enabledItems.some((i) => selected.has(i.value));
 
+  // Roving tabindex: keep exactly one <li> tabbable at a time so the list is
+  // not a tab-trap. Track the focused option's value; default to the first.
+  const optionRefs = useRef<Map<string, HTMLLIElement>>(new Map());
+  const [focusedValue, setFocusedValue] = useState<string | null>(null);
+  const rovingValue =
+    focusedValue !== null && filtered.some((i) => i.value === focusedValue)
+      ? focusedValue
+      : filtered[0]?.value;
+
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>, value: string) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onToggle(value);
+      return;
+    }
+    if (
+      e.key === 'ArrowDown' ||
+      e.key === 'ArrowUp' ||
+      e.key === 'Home' ||
+      e.key === 'End'
+    ) {
+      e.preventDefault();
+      if (filtered.length === 0) return;
+      const currentIdx = filtered.findIndex((i) => i.value === value);
+      if (currentIdx < 0) return;
+      let nextIdx = currentIdx;
+      if (e.key === 'ArrowDown') {
+        nextIdx = (currentIdx + 1) % filtered.length;
+      } else if (e.key === 'ArrowUp') {
+        nextIdx = (currentIdx - 1 + filtered.length) % filtered.length;
+      } else if (e.key === 'Home') {
+        nextIdx = 0;
+      } else if (e.key === 'End') {
+        nextIdx = filtered.length - 1;
+      }
+      const nextValue = filtered[nextIdx]?.value;
+      if (nextValue) optionRefs.current.get(nextValue)?.focus();
     }
   };
 
@@ -239,12 +273,17 @@ function ListPanel({
             return (
               <li
                 key={item.value}
+                ref={(el) => {
+                  if (el) optionRefs.current.set(item.value, el);
+                  else optionRefs.current.delete(item.value);
+                }}
                 role="option"
                 aria-selected={isChecked}
                 aria-disabled={item.disabled || undefined}
-                tabIndex={0}
+                tabIndex={rovingValue === item.value ? 0 : -1}
+                onFocus={() => setFocusedValue(item.value)}
                 onClick={() => !item.disabled && onToggle(item.value)}
-                onKeyDown={(e) => !item.disabled && handleKeyDown(e, item.value)}
+                onKeyDown={(e) => handleKeyDown(e, item.value)}
                 className={tkx(
                   'flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-sm',
                   'outline-none focus-visible:ring-2 focus-visible:ring-offset-1',

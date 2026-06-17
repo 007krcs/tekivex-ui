@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode, type CSSProperties } from 'react';
 import { useTheme } from '../themes';
 import { tkx, cx } from '../engine/tkx';
 import { sanitizeString } from '../engine/security';
@@ -26,6 +26,8 @@ export interface TkxTimelineProps {
   variant?: TimelineVariant;
   orientation?: 'vertical' | 'horizontal';
   connectorStyle?: 'solid' | 'dashed' | 'dotted';
+  className?: string;
+  style?: CSSProperties;
 }
 
 // ── Animation injection ───────────────────────────────────────────────────────
@@ -201,6 +203,8 @@ export function TkxTimeline({
   variant = 'default',
   orientation = 'vertical',
   connectorStyle = 'solid',
+  className,
+  style,
 }: TkxTimelineProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
@@ -218,7 +222,7 @@ export function TkxTimeline({
 
   if (isHorizontal) {
     return (
-      <div role="list" aria-label="Timeline" className={tkx('flex items-start w-full overflow-x-auto')}>
+      <div role="list" aria-label="Timeline" className={tkx('flex items-start w-full overflow-x-auto', className ?? '')} style={style}>
         {items.map((item, idx) => {
           const status = item.status ?? 'pending';
           const connColor = status === 'completed' ? theme.success : theme.border;
@@ -256,7 +260,7 @@ export function TkxTimeline({
 
   // Vertical layouts
   return (
-    <div role="list" aria-label="Timeline" className={tkx('flex flex-col')}>
+    <div role="list" aria-label="Timeline" className={tkx('flex flex-col', className ?? '')} style={style}>
       {items.map((item, idx) => {
         const status = item.status ?? 'pending';
         const isLast = idx === items.length - 1;

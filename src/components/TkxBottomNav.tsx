@@ -6,6 +6,7 @@ import {
   useEffect,
   type ReactNode,
   type KeyboardEvent,
+  type CSSProperties,
 } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
@@ -26,6 +27,8 @@ export interface TkxBottomNavProps {
   activeId?: string;
   onChange?: (id: string) => void;
   showLabels?: boolean;
+  className?: string;
+  style?: CSSProperties;
 }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -58,6 +61,8 @@ export function TkxBottomNav({
   activeId,
   onChange,
   showLabels = true,
+  className,
+  style,
 }: TkxBottomNavProps) {
   const theme = useTheme();
   const reduced = useReducedMotion();
@@ -126,12 +131,13 @@ export function TkxBottomNav({
       ref={navRef}
       role="navigation"
       aria-label="Bottom navigation"
-      className={tkx('fixed bottom-0 left-0 right-0 z-[1000] font-sans')}
+      className={tkx('fixed bottom-0 left-0 right-0 z-[1000] font-sans', className ?? '')}
       style={{
         height: NAV_HEIGHT,
         backgroundColor: theme.surface,
         borderTop: `1px solid ${theme.border}`,
         boxShadow: `0 -2px 12px ${theme.bg}44`,
+        ...style,
       }}
     >
       <div

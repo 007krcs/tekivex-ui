@@ -30,6 +30,8 @@ export interface TkxAppBarProps {
   position?: 'fixed' | 'sticky' | 'static';
   variant?: 'default' | 'transparent' | 'elevated';
   color?: 'primary' | 'surface';
+  className?: string;
+  style?: CSSProperties;
 }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -96,6 +98,8 @@ export function TkxAppBar({
   position = 'sticky',
   variant = 'default',
   color = 'surface',
+  className,
+  style,
 }: TkxAppBarProps) {
   const theme = useTheme();
   const reduced = useReducedMotion();
@@ -170,12 +174,13 @@ export function TkxAppBar({
   return (
     <header
       role="banner"
-      className={tkx('font-sans w-full')}
+      className={tkx('font-sans w-full', className ?? '')}
       style={{
         ...positionStyles[position],
         ...variantStyles[variant],
         color: textColor,
         height: BAR_HEIGHT,
+        ...style,
       }}
     >
       <div

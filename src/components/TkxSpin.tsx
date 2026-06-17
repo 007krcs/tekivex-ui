@@ -22,6 +22,7 @@ export interface TkxSpinProps {
   children?: ReactNode;
   fullscreen?: boolean;
   delay?: number;
+  className?: string;
   style?: CSSProperties;
 }
 
@@ -126,6 +127,7 @@ export function TkxSpin({
   children,
   fullscreen = false,
   delay = 0,
+  className,
   style,
 }: TkxSpinProps) {
   const theme = useTheme();
@@ -145,7 +147,7 @@ export function TkxSpin({
   }, [spinning, delay]);
 
   if (!visible) {
-    return children ? createElement('div', { style }, children) : null;
+    return children ? createElement('div', { className, style }, children) : null;
   }
 
   const sizeConfig = SIZE_MAP[size];
@@ -191,6 +193,7 @@ export function TkxSpin({
     return createElement(
       'div',
       {
+        className,
         style: {
           position: 'fixed',
           inset: 0,
@@ -211,6 +214,7 @@ export function TkxSpin({
     return createElement(
       'div',
       {
+        className,
         style: {
           position: 'relative',
           ...style,
@@ -251,6 +255,7 @@ export function TkxSpin({
   return createElement(
     'div',
     {
+      className,
       style: {
         display: 'inline-flex',
         alignItems: 'center',

@@ -2,6 +2,7 @@
 
 import {
   useRef,
+  useState,
   useCallback,
   type ReactNode,
   type CSSProperties,
@@ -73,6 +74,14 @@ export function TkxToolbar({
   const focusableIds = items
     .filter((item) => item.type !== 'separator' && !item.disabled)
     .map((item) => item.id);
+
+  // Roving tabindex: track which item is currently tabbable. Default to the
+  // first focusable item; updated on focus so Tab returns to the last-focused.
+  const [focusedId, setFocusedId] = useState<string | null>(null);
+  const rovingId =
+    focusedId !== null && focusableIds.includes(focusedId)
+      ? focusedId
+      : focusableIds[0];
 
   const focusItem = useCallback((id: string) => {
     itemRefs.current.get(id)?.focus();
@@ -200,7 +209,7 @@ export function TkxToolbar({
 
         const safeLabel = sanitizeString(item.label);
         const isFocusable = !item.disabled;
-        const isFirstFocusable = focusableIds[0] === item.id;
+        const isRoving = rovingId === item.id;
 
         return (
           <button
@@ -214,8 +223,11 @@ export function TkxToolbar({
             aria-pressed={item.type === 'toggle' ? item.active : undefined}
             aria-label={safeLabel}
             aria-disabled={item.disabled || undefined}
-            tabIndex={isFocusable && isFirstFocusable ? 0 : -1}
+            tabIndex={isFocusable && isRoving ? 0 : -1}
             disabled={item.disabled}
+            onFocus={() => {
+              if (!item.disabled) setFocusedId(item.id);
+            }}
             onClick={() => {
               if (!item.disabled) item.onClick?.();
             }}
