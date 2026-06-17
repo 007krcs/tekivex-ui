@@ -1,0 +1,62 @@
+---
+title: TkxTreemap
+description: Zero-dependency squarified SVG treemap with nesting. Rectangles sized by value, auto-contrast labels, and per-node click handlers.
+---
+
+`TkxTreemap` lays out hierarchical data as nested rectangles sized
+proportionally to value, using the squarified algorithm (Bruls / Huijsen /
+van Wijk, 1999) so each rectangle stays as close to square as possible. Use it
+for disk usage, budget breakdowns, portfolio weights, or any part-of-whole
+data where relative size matters.
+
+```tsx
+import { TkxTreemap } from 'tekivex-ui';
+
+<TkxTreemap
+  data={[
+    { label: 'Engineering', value: 45, children: [
+      { label: 'Frontend', value: 20 },
+      { label: 'Backend', value: 25 },
+    ]},
+    { label: 'Sales', value: 30 },
+    { label: 'Marketing', value: 25 },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `TkxTreemapNode[]` | — | Nodes: `{ label, value, color?, children? }`. |
+| `width` | `number` | `600` | SVG width in px. |
+| `height` | `number` | `400` | SVG height in px. |
+| `colors` | `string[]` | brand cycle | Colour cycle when a node omits `color`. |
+| `showLabels` | `boolean` | `true` | Render text labels inside rectangles. |
+| `showValues` | `boolean` | `false` | Render the value below the label (leaf nodes only). |
+| `minLabelSize` | `number` | `80` | Skip labels for rects smaller than this area in px². |
+| `formatValue` | `(v: number) => string` | `String(v)` | Format value and tooltip text. |
+| `ariaLabel` | `string` | auto | Accessible name; auto-summarises node count and total. |
+| `onNodeClick` | `(node, path) => void` | — | Fires on click; `path` is the index path from the root. |
+
+All other `div` attributes (except `onClick`) are spread onto the root.
+
+## Behaviour notes
+
+- **Nesting**: a node with a `children` array is laid out as a sub-treemap
+  inside its own rectangle, recursively. Children are inset slightly so the
+  parent border (and parent label, when shown) stays visible.
+- Nodes with zero or negative values are filtered out before layout — they
+  occupy no space.
+- Colours cycle by each node's **original input index**, so re-sorting for the
+  squarified pass does not change which colour a node gets.
+- Labels are suppressed when a rectangle's area drops below `minLabelSize`;
+  `showValues` additionally requires the area to exceed `minLabelSize * 1.5`
+  and applies only to leaf nodes.
+- `onNodeClick` calls `stopPropagation`, so clicking a deeply nested child does
+  not also fire its ancestors' handlers.
+- Cell text auto-picks black or white for contrast (WCAG luminance).
+
+## Source
+
+[`src/components/TkxTreemap.tsx`](https://ui.tekivex.com)

@@ -1,0 +1,72 @@
+---
+title: TkxGauge
+description: Zero-dependency SVG gauge with arc and speedometer variants, color thresholds, ticks, and animated fill. WAI-ARIA meter role.
+---
+
+`TkxGauge` renders a circular progress gauge as a single self-contained SVG.
+Use it for KPIs, utilisation dials, scores, or any single bounded value you
+want shown as a fill arc. Two shapes are available: a 270° `arc` and a 180°
+top-half `speedometer`.
+
+```tsx
+import { TkxGauge } from 'tekivex-ui';
+
+<TkxGauge value={72} label="CPU" />
+```
+
+## Thresholds
+
+Pass an array of `{ at, color }` stops to segment the arc by value band. The
+filled arc is split at each boundary, and the centre value text adopts the
+colour of the band the current value falls into.
+
+```tsx
+<TkxGauge
+  value={88}
+  variant="speedometer"
+  thresholds={[
+    { at: 0, color: '#06d6a0' },
+    { at: 60, color: '#ffbe0b' },
+    { at: 85, color: '#ef476f' },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `value` | `number` | — | Current value (required). Clamped into `[min, max]`. |
+| `min` | `number` | `0` | Range start. |
+| `max` | `number` | `100` | Range end. |
+| `size` | `number` | `200` | Width/height of the square SVG in px. Drives the value font size. |
+| `thickness` | `number` | `16` | Stroke width of the arc in px. |
+| `variant` | `'arc' \| 'speedometer'` | `'arc'` | `arc` = 270° sweep with a gap at the bottom; `speedometer` = 180° top half. |
+| `thresholds` | `GaugeThreshold[]` | — | `{ at: number; color: string }[]` color bands. The largest `at` ≤ value wins. |
+| `label` | `string` | — | Caption rendered below the gauge. |
+| `showValue` | `boolean` | `true` | Render the value in the centre. |
+| `showTicks` | `boolean` | `false` | Render 11 major + 4 minor tick marks per segment. |
+| `formatValue` | `(v: number) => string` | `String(v)` | Format the centre value and `aria-valuetext`. |
+| `ariaLabel` | `string` | `label` ?? `'Gauge'` | Accessible name for the meter. |
+
+All other `div` attributes are spread onto the root element.
+
+## Behaviour notes
+
+- The fill animates from its previous value to the new value over ~400ms with
+  an ease-out cubic curve, driven by `requestAnimationFrame`. When the user
+  has `prefers-reduced-motion: reduce` set, the gauge snaps to the value with
+  no animation.
+- If `min > max` is passed, the two are swapped internally (`safeMin` /
+  `safeMax`), so the gauge never renders an inverted range.
+- The root element uses `role="meter"` with `aria-valuenow/min/max/valuetext`.
+  The inner SVG is `aria-hidden`, so the accessible value comes entirely from
+  these attributes — provide `formatValue` if you want screen readers to hear
+  units (for example, a function that appends a percent sign to the value).
+- `thresholds` are sorted ascending internally; you do not need to pre-sort
+  them. A threshold whose `at` falls outside `[min, max]` does not create a
+  visible boundary.
+
+## Source
+
+[`src/components/TkxGauge.tsx`](https://ui.tekivex.com)

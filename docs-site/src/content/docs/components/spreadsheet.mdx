@@ -1,0 +1,103 @@
+---
+title: TkxSpreadsheet
+description: Editable cell grid with a built-in formula evaluator (SUM, AVG, IF, ranges, cell refs) and circular-reference detection. You own the cell map.
+---
+
+```tsx
+import { TkxSpreadsheet, type SpreadsheetData } from 'tekivex-ui';
+```
+
+`TkxSpreadsheet` is an editable grid with a real formula engine. Cells hold
+literal numbers/strings or `=`-prefixed formulas supporting arithmetic, cell
+references, ranges, and functions. The evaluator detects circular references and
+surfaces error sentinels. Use it for editable tabular input, lightweight
+calculators, or anywhere users expect spreadsheet-style entry — without pulling
+in a heavyweight grid dependency.
+
+## Usage
+
+Cell data is a flat `Record<address, rawString>` you hold in state.
+
+```tsx
+import { useState } from 'react';
+import { TkxSpreadsheet, type SpreadsheetData } from 'tekivex-ui';
+
+function Demo() {
+  const [data, setData] = useState<SpreadsheetData>({
+    cells: {
+      A1: 'Qty',  B1: 'Price', C1: 'Total',
+      A2: '3',    B2: '4.50',  C2: '=A2*B2',
+      C3: '=SUM(C2:C2)',
+    },
+  });
+
+  return <TkxSpreadsheet data={data} onChange={setData} cols={4} rows={12} />;
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `SpreadsheetData` | required | Controlled cell map. |
+| `onChange` | `(next: SpreadsheetData) => void` | required | Fired when a cell is committed or cleared. |
+| `cols` | `number` | `8` | Number of columns (A, B, C, …). |
+| `rows` | `number` | `20` | Number of rows. |
+| `colWidth` | `number` | `96` | Column width in px. |
+| `rowHeight` | `number` | `28` | Row height in px. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the grid container. |
+
+## Data shape
+
+```ts
+interface SpreadsheetData {
+  /** address → raw content. "A1": "42", "B2": "=A1*2", "C3": "hello" */
+  cells: Record<string, string>;
+}
+```
+
+- A value beginning with `=` is a **formula**; anything else is a literal
+  (numeric if it parses as a finite number, otherwise a string).
+- Empty cells are simply absent from the map — clearing a cell deletes its key.
+
+### Formula language
+
+| Feature | Examples |
+|---|---|
+| Arithmetic | `=1 + 2*3`, `=(A1+B1)/2`, `=2^10` (power), unary `=-A1` |
+| Cell refs | `=A1 + B2` |
+| Ranges (inside functions) | `=SUM(A1:A10)`, `=AVG(B1:B5)` |
+| Functions | `SUM`, `AVG` (alias `AVERAGE`), `MIN`, `MAX`, `COUNT`, `ROUND(v, d)`, `IF(cond, t, f)` |
+
+Error sentinels shown in-cell (rendered in the danger color): `#CYCLE!`
+(circular reference), `#REF!` (bad range), `#DIV/0!`, `#NAME?` (unknown
+function), `#ERROR!` (malformed formula), `#NUM!`.
+
+The evaluator is exported standalone as `evaluate(address, cells)` for reuse
+(e.g. a formula bar in a different layout). Address helpers `colLetter`,
+`colIndex`, `addr`, `parseAddr`, plus `spreadsheetToRecords` /
+`recordsToSpreadsheet` converters, are also exported.
+
+## Behavior / gotchas
+
+- **Controlled cells.** `data` + `onChange` are required; the grid holds only
+  cursor + edit-draft state. Commits replace the whole `cells` map via
+  `onChange`.
+- **Keyboard model** (grid focused, not editing):
+  - Arrow keys / `Tab` (`Shift+Tab` reverse) — move the active cell.
+  - `Enter` or `F2` — start editing the active cell.
+  - Any printable key — starts editing with that character as the first input.
+  - `Delete` / `Backspace` — clear the active cell.
+- **While editing:** `Enter` commits and moves down; `Tab` commits and moves
+  right; `Esc` cancels; blur commits.
+- **Single-cell only:** there is no multi-cell selection, range fill, or
+  multi-cell clipboard paste — paste lands in the single active cell.
+- **No string literals inside formulas** (`="hello"` is unsupported), and **no
+  cross-sheet refs** (`Sheet2!A1`) — single sheet by design.
+- **Formula display vs raw:** a cell shows its *computed* value; the underlying
+  `=formula` is only visible while editing that cell. Formula cells render in
+  the accent color.
+- **Memoised eval per render** shares work across cross-referencing cells, so a
+  column of `=A2*B2`-style formulas stays cheap.
+```

@@ -1,0 +1,79 @@
+---
+title: TkxCommandPalette
+description: Zero-dependency Cmd-K command palette with built-in fuzzy search, sections, recents, keyboard navigation, and ARIA combobox semantics.
+---
+
+`TkxCommandPalette` is a keyboard-first command launcher in the Linear /
+Raycast / GitHub style. It opens on a hotkey (Cmd-K / Ctrl-K by default),
+fuzzy-matches as you type, groups commands into sections, floats your recent
+picks to the top, and renders into a portal so it is never trapped by a
+clipped ancestor. It is headless about side effects: your parent owns the
+command list and the `onSelect` behaviour.
+
+```tsx
+import { TkxCommandPalette } from 'tekivex-ui';
+
+<TkxCommandPalette
+  commands={[
+    { id: 'settings', title: 'Open settings', section: 'App',
+      shortcut: ['Cmd', ','], onSelect: () => openSettings() },
+    { id: 'docs', title: 'Search docs', subtitle: 'Find anything',
+      section: 'Help', onSelect: () => openDocs() },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `commands` | `CommandPaletteCommand[]` | — | The full command list (required). |
+| `hotkey` | `CommandHotkey \| null` | `{ ctrl: true, key: 'k' }` | Key to toggle open. `null` disables the hotkey. |
+| `open` | `boolean` | — | Controlled open state. Omit for uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | — | Fires on open/close (controlled and uncontrolled). |
+| `placeholder` | `string` | `'Type a command…'` | Search input placeholder. |
+| `onSelect` | `(cmd) => void` | — | Global selection callback (in addition to a command's own `onSelect`). |
+| `recents` | `boolean` | `true` | Show a "Recents" group at the top when the query is empty. |
+| `maxRecents` | `number` | `5` | Max recent commands retained. |
+| `emptyState` | `ReactNode` | `No matches for "…"` | Node shown when nothing matches. |
+| `className` | `string` | — | Class on the overlay. |
+
+### Command shape
+
+| Key | Type | Description |
+|---|---|---|
+| `id` | `string` | Stable identifier; also the recents key. |
+| `title` | `string` | Primary label. |
+| `subtitle` | `string?` | One-line description under the title (also fuzzy-matched). |
+| `section` | `string?` | Group header. Defaults to `'Commands'`. |
+| `icon` | `ReactNode?` | Emoji or short text icon. |
+| `shortcut` | `string[]?` | Right-aligned keyboard hint, rendered as kbd pills. |
+| `data` | `unknown?` | Free-form payload returned to your callback. |
+| `hidden` | `boolean?` | Hide this command without removing it from the list. |
+| `onSelect` | `(cmd) => void?` | Per-command override of the global `onSelect`. |
+
+## Behaviour notes
+
+- **Hotkey is platform-aware**: with `ctrl: true`, it matches `metaKey` on
+  Mac (Cmd) and `ctrlKey` elsewhere. `shift`/`alt` must match exactly (both
+  default to `false`).
+- **Keyboard model**: type to search, ↑/↓ to move, Enter to run, Esc to close,
+  Home/End jump to the first/last result. Hovering or moving the mouse over a
+  row also makes it active.
+- **Fuzzy scoring** requires a case-insensitive subsequence match; prefix hits,
+  word-boundary hits, and contiguous runs score higher, and long titles are
+  slightly penalised so short exact matches win. The `fuzzyScore(query, text)`
+  helper is exported if you want to reuse the same ranking. A subtitle match
+  scores 4 points lower than the same match on the title.
+- Running a command bumps it to the front of recents (capped at `maxRecents`)
+  and closes the palette. Recents are component-local state — they are not
+  persisted across reloads.
+- Filter commands with `hidden: true` rather than recreating the list, so
+  recents and identities stay stable.
+- Renders via `createPortal` into `document.body`; returns `null` when closed
+  or during SSR (no `document`). Uses `role="dialog"` / `aria-modal` with an
+  ARIA combobox + listbox and `aria-activedescendant` for the active option.
+
+## Source
+
+[`src/components/TkxCommandPalette.tsx`](https://ui.tekivex.com)

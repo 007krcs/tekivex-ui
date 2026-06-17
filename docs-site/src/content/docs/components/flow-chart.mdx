@@ -1,0 +1,129 @@
+---
+title: TkxFlowChart
+description: Headless node-edge graph editor — pan, zoom, drag nodes, draw edges, inline rename, and an inspector. Parent owns the nodes and edges arrays.
+---
+
+```tsx
+import { TkxFlowChart, type FlowChartData } from 'tekivex-ui';
+```
+
+`TkxFlowChart` is a controlled, headless 2D graph editor: a pannable / zoomable
+canvas with draggable nodes, cubic-Bezier edges, click-to-select, keyboard
+navigation, inline rename, a right-click context menu, and a property inspector.
+Use it for flow diagrams, pipeline builders, state machines, or any
+node-and-edge surface where **you own the data** and the component only emits
+changes.
+
+## Usage
+
+You must hold `data` in state and apply every `onChange` payload back — the
+component never mutates anything implicitly.
+
+```tsx
+import { useState } from 'react';
+import { TkxFlowChart, type FlowChartData } from 'tekivex-ui';
+
+function Demo() {
+  const [graph, setGraph] = useState<FlowChartData>({
+    nodes: [
+      { id: 'a', x: 40,  y: 60, label: 'Start', color: '#00f5d4' },
+      { id: 'b', x: 320, y: 60, label: 'Process' },
+    ],
+    edges: [{ id: 'a-b', from: 'a', to: 'b' }],
+  });
+
+  return (
+    <TkxFlowChart
+      data={graph}
+      onChange={setGraph}
+      onSelect={(id) => console.log('selected', id)}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `FlowChartData` | required | Controlled `{ nodes, edges }` graph state. |
+| `onChange` | `(next: FlowChartData) => void` | required | Fired on every mutation (drag, edge add, rename, delete, inspector edits). You must persist it. |
+| `selectedId` | `string \| null` | — | Controlled selected node id. Omit to let the component own selection internally. |
+| `onSelect` | `(id: string \| null) => void` | — | Fired on selection change. |
+| `initialViewport` | `Viewport` | `{ x: 0, y: 0, scale: 1 }` | Initial pan/zoom. Uncontrolled after mount. |
+| `draggable` | `boolean` | `true` | Allow node drag. |
+| `pannable` | `boolean` | `true` | Allow canvas pan (drag empty space). |
+| `zoomable` | `boolean` | `true` | Allow wheel + pinch zoom. |
+| `minZoom` | `number` | `0.25` | Min zoom factor. |
+| `maxZoom` | `number` | `3` | Max zoom factor. |
+| `height` | `number` | `480` | Canvas height in px. Width is always 100% of the parent. |
+| `showGrid` | `boolean` | `true` | Render the background dot grid. |
+| `showControls` | `boolean` | `true` | Show the zoom-in / fit / zoom-out / inspector toolbar. |
+| `renderNode` | `(node: FlowNode, isSelected: boolean) => ReactNode` | — | Custom node body renderer. **Disables inline double-click rename** (see gotchas). |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the container. |
+
+## Data shape
+
+```ts
+interface FlowNode {
+  id: string;
+  x: number;          // top-left corner in graph-space
+  y: number;
+  width?: number;     // default 160
+  height?: number;    // default 60
+  label: string;
+  color?: string;     // accent for border + ports + edges
+  data?: unknown;     // free-form payload echoed back to you
+}
+
+interface FlowEdge {
+  id: string;
+  from: string;       // source node id
+  to: string;         // target node id
+  label?: string;     // drawn at the edge midpoint
+  color?: string;     // defaults to the source node's color
+}
+
+interface FlowChartData {
+  nodes: FlowNode[];
+  edges: FlowEdge[];
+}
+
+interface Viewport { x: number; y: number; scale: number }
+```
+
+Coordinates are **graph-space** (not screen pixels). The viewport translate +
+scale maps them to the screen. Edges always route from the right port of the
+source to the left port of the target (left-to-right reading flow).
+
+## Behavior / gotchas
+
+- **Fully controlled data.** `data` + `onChange` are required. Nothing moves,
+  connects, or deletes unless you write the new state back. Dropping the
+  `onChange` result on the floor makes the editor appear frozen.
+- **Selection can be controlled or uncontrolled.** Pass `selectedId` to control
+  it; omit it and the component tracks selection internally while still firing
+  `onSelect`.
+- **Creating edges:** drag from a node's right-hand `+` port onto another node.
+  A live dashed draft line tracks the cursor; dropping on a valid target node
+  appends a new edge. Duplicate `from→to` edges are silently ignored. Edge
+  endpoints are not draggable and edges cannot be re-routed — delete and redraw.
+- **Inline rename:** double-click a node to edit its label (Enter commits, Esc
+  cancels). This only works with the **default** renderer — passing `renderNode`
+  suppresses it because your custom body owns the double-click.
+- **Keyboard model** (focus the canvas first):
+  - `Tab` / `Shift+Tab` — cycle node selection (Tab with nothing selected
+    selects the first node).
+  - Arrow keys — nudge the selected node by 1px; `Shift` + arrow = 10px.
+  - `Delete` / `Backspace` — if an **edge** is selected, removes just that
+    edge; otherwise removes the selected **node** and all connected edges.
+- **Edge selection takes Delete priority.** Click an edge to select it (node
+  selection is cleared) so `Delete` targets the edge, not a node.
+- **Context menu:** right-click a node for Rename / Duplicate / Bring-to-front /
+  Delete. All actions go through `onChange`.
+- **Zoom anchoring:** wheel and pinch zoom keep the point under the
+  cursor/pinch-center fixed. The fit button (`⤢`) frames all nodes.
+- `touchAction` is set to `none` when pan or zoom is enabled, so the component
+  owns touch gestures inside its bounds.
+```

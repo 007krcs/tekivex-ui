@@ -1,0 +1,63 @@
+---
+title: TkxHeatmap
+description: Zero-dependency SVG matrix heatmap for cohorts, confusion and correlation matrices. Sequential or diverging scales, legend, auto-contrast labels.
+---
+
+`TkxHeatmap` is a matrix-style heatmap: categorical x and y axes with
+colour-coded cells. Reach for it for cohort retention, confusion matrices,
+correlation matrices, or hourly-traffic grids. For the date-driven
+GitHub-style activity calendar, use [`TkxCalendarHeatmap`](/components/calendar-heatmap)
+instead.
+
+```tsx
+import { TkxHeatmap } from 'tekivex-ui';
+
+<TkxHeatmap
+  data={[
+    { x: 'Mon', y: '9am', value: 12 },
+    { x: 'Mon', y: '10am', value: 30 },
+    { x: 'Tue', y: '9am', value: 8 },
+  ]}
+  showValues
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `TkxHeatmapCell[]` | — | Cells: `{ x, y, value, label? }`. `x`/`y` are `string \| number`. |
+| `xLabels` | `Array<string \| number>` | derived | X-axis order; if omitted, sorted unique values from `data`. |
+| `yLabels` | `Array<string \| number>` | derived | Y-axis order; if omitted, sorted unique values from `data`. |
+| `cellSize` | `number` | `32` | Cell side length in px. |
+| `gap` | `number` | `2` | Spacing between cells in px. |
+| `colorScale` | `'sequential' \| 'diverging' \| string[]` | `'sequential'` | Built-in scale or custom hex stop array. |
+| `domain` | `[number, number]` | derived | `[min, max]` for colour mapping; defaults to data min/max. |
+| `showValues` | `boolean` | `false` | Render the value text inside each cell. |
+| `showLegend` | `boolean` | `true` | Render the colour legend. |
+| `legendPosition` | `'right' \| 'bottom'` | `'right'` | Legend placement. |
+| `formatValue` | `(v: number) => string` | `String(v)` | Format cell and tooltip values. |
+| `emptyCellColor` | `string` | `theme.surfaceAlt` | Fill for an (x, y) pair with no datapoint. |
+| `ariaLabel` | `string` | auto | Accessible name; auto-generated from grid size and range. |
+| `onCellClick` | `(cell: TkxHeatmapCell) => void` | — | Fires when a cell that has data is clicked. |
+
+All other `div` attributes (except `onClick`) are spread onto the root.
+
+## Behaviour notes
+
+- **Scales**: `'sequential'` lerps from a near-white tint to the theme primary;
+  `'diverging'` is a fixed red → white → blue ramp ideal for correlation
+  matrices in `[-1, 1]`. A custom `string[]` is interpolated evenly across its
+  stops.
+- Axis labels with mixed numeric/string values are sorted numerically only when
+  *every* value parses as a number; otherwise they sort by `localeCompare`.
+- Long x-axis labels (wider than a cell) are automatically rotated -45°.
+- In-cell value text picks black or white per WCAG luminance for contrast, so
+  it stays readable on any cell colour.
+- A degenerate domain (all values identical) maps every cell to the mid-colour.
+- `onCellClick` only fires for cells that have a datapoint — empty cells are
+  not interactive.
+
+## Source
+
+[`src/components/TkxHeatmap.tsx`](https://ui.tekivex.com)

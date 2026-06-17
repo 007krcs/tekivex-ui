@@ -1,0 +1,115 @@
+---
+title: TkxKanban
+description: Headless drag-drop kanban board with pointer + full keyboard reordering, WIP limits, and a WAI-ARIA grid model. Parent owns the columns array.
+---
+
+```tsx
+import { TkxKanban, type KanbanColumn, type KanbanReorderEvent } from 'tekivex-ui';
+```
+
+`TkxKanban` is a headless, accessible drag-drop board. It handles pointer drag
+(mouse / touch / pen) **and** full keyboard reordering, announces moves to
+screen readers, and emits a single `onReorder` event with the from/to
+coordinates. You apply the move to your own data and re-pass `columns`. Use it
+for task boards, pipelines, triage queues — anywhere cards move between columns.
+
+## Usage
+
+The board is controlled: compute the new card order from each `onReorder` event
+and write it back to `columns`.
+
+```tsx
+import { useState } from 'react';
+import { TkxKanban, type KanbanColumn, type KanbanReorderEvent } from 'tekivex-ui';
+
+function Demo() {
+  const [columns, setColumns] = useState<KanbanColumn[]>([
+    { id: 'todo',  title: 'To do', cards: [{ id: '1', title: 'Spec the API' }] },
+    { id: 'doing', title: 'Doing', wipLimit: 2, cards: [] },
+    { id: 'done',  title: 'Done',  cards: [] },
+  ]);
+
+  function handleReorder(e: KanbanReorderEvent) {
+    setColumns((cols) => {
+      const next = cols.map((c) => ({ ...c, cards: [...c.cards] }));
+      const from = next.find((c) => c.id === e.fromColumnId)!;
+      const [card] = from.cards.splice(e.fromIndex, 1);
+      next.find((c) => c.id === e.toColumnId)!.cards.splice(e.toIndex, 0, card);
+      return next;
+    });
+  }
+
+  return <TkxKanban columns={columns} onReorder={handleReorder} />;
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `columns` | `KanbanColumn[]` | required | Controlled column + card data, in display order. |
+| `onReorder` | `(e: KanbanReorderEvent) => void` | required | Fired once on drop / keyboard commit. You apply the move. |
+| `renderCard` | `(card, column) => ReactNode` | — | Custom card body. Replaces the default badge/title/assignee renderer. |
+| `onCardClick` | `(card, column) => void` | — | Fired on click — **suppressed while a drag is in progress**. |
+| `maxHeight` | `number \| string` | `720` | Board max height; cards scroll inside columns above it. |
+| `minColumnWidth` | `number` | `280` | Min column width before columns wrap to the next row. |
+| `isDragDisabled` | `boolean` | `false` | Disable all drag (board-wide). |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the board grid. |
+
+## Data shape
+
+```ts
+interface KanbanCard {
+  id: string;
+  title: string;
+  description?: string;
+  badges?: { label: string; color?: string }[];
+  assignee?: { name: string; avatarUrl?: string };
+  isDragDisabled?: boolean;   // lock just this card
+  data?: unknown;
+}
+
+interface KanbanColumn {
+  id: string;
+  title: string;
+  cards: KanbanCard[];        // in display order
+  wipLimit?: number;          // count badge turns "danger" at/above this
+  color?: string;             // header accent + drop highlight
+}
+
+interface KanbanReorderEvent {
+  cardId: string;
+  fromColumnId: string;
+  fromIndex: number;
+  toColumnId: string;
+  toIndex: number;
+}
+```
+
+`KanbanCard` / `KanbanColumn` / `KanbanReorderEvent` are also re-exported as
+`TkxKanbanCard`, `TkxKanbanColumn`, `TkxKanbanReorderEvent`.
+
+## Behavior / gotchas
+
+- **Controlled data, one event.** The board never mutates `columns`. On drop it
+  fires exactly one `onReorder`; you splice the card out of the source and into
+  the target yourself. If from and to are identical, no event fires.
+- **Keyboard reordering** (focus a card, then):
+  - Space / Enter — pick up the card (and drop it when held).
+  - ↑ / ↓ — move within the column; ← / → — move to the adjacent column.
+  - Esc — cancel and return to the original spot.
+  - Every move is announced via an `aria-live` region.
+- **`onCardClick` vs drag.** A click that follows a drag is swallowed, so you
+  won't accidentally open a card you just dropped.
+- **WIP limits are advisory.** Exceeding `wipLimit` turns the column's count
+  badge red but does **not** block drops — enforce limits in your `onReorder`
+  handler if you need a hard cap.
+- **Pointer drags use capture + a transl-transform ghost** and respect
+  `prefers-reduced-motion` (the ghost transform/transition is dropped).
+- **Per-card locking:** set `card.isDragDisabled` to pin a single card while the
+  rest of the board stays draggable; `isDragDisabled` on the component locks
+  everything.
+- ARIA: the board is `role="grid"` with `role="row"` columns and
+  `role="gridcell"` cards exposing `aria-grabbed` during drag.
+```

@@ -1,0 +1,61 @@
+---
+title: TkxCalendarHeatmap
+description: GitHub-style activity calendar heatmap. Pass date/value points for a year grid with intensity colors, tooltips, and keyboard cell navigation.
+---
+
+`TkxCalendarHeatmap` is the date-driven, GitHub-style activity heatmap. Pass an
+array of `{ date, value }` and get a week × day grid (a rolling year by
+default) where each cell's intensity reflects its value. Use it for
+contributions, streaks, deploys, logins, or any per-day activity. For a
+categorical matrix instead, use [`TkxHeatmap`](/components/heatmap).
+
+```tsx
+import { TkxCalendarHeatmap } from 'tekivex-ui';
+
+<TkxCalendarHeatmap
+  data={[
+    { date: '2026-01-04', value: 3 },
+    { date: '2026-01-05', value: 7 },
+    { date: '2026-02-11', value: 1 },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `HeatmapDataPoint[]` | — | Entries: `{ date, value }`. Same-day entries are summed. |
+| `endDate` | `Date \| string` | today | Inclusive end of the range. |
+| `startDate` | `Date \| string` | `endDate − 365d` | Inclusive start of the range. |
+| `colors` | `[string, string, string, string, string]` | theme spectrum | 5-stop scale, low → high (index 0 = empty). |
+| `cellSize` | `number` | `11` | Cell side length in px. |
+| `gap` | `number` | `3` | Gap between cells in px. |
+| `showMonthLabels` | `boolean` | `true` | Month labels along the top. |
+| `showWeekdayLabels` | `boolean` | `true` | Mon/Wed/Fri labels on the left. |
+| `onCellClick` | `(point: { date, value }) => void` | — | Click handler for a cell. |
+| `formatTooltip` | `(point: { date, value }) => string` | auto | Format the tooltip + cell `aria-label`. |
+| `ariaLabel` | `string` | auto | Accessible name for the whole grid. |
+| `className` | `string` | — | Class on the root. |
+| `style` | `CSSProperties` | — | Inline style merged onto the root. |
+
+## Behaviour notes
+
+- **Intensity bucketing**: a cell's colour is chosen by its value as a ratio of
+  the dataset's max — `>75%`, `>50%`, `>25%`, else the lowest non-empty shade;
+  zero/negative maps to the empty colour (scale index 0). It is *not* a
+  continuous gradient.
+- Weeks are Sunday-based (matching GitHub). All date maths runs in UTC, so a
+  `date` string is bucketed by its UTC day regardless of the viewer's timezone.
+- **Keyboard navigation**: cells are focusable; arrow keys move within the grid
+  (←/→ across weeks, ↑/↓ within a week), and Enter or Space activates
+  `onCellClick`. Only the first cell is in the tab order (roving tabindex).
+- A tooltip follows hover and focus; its transition respects
+  `prefers-reduced-motion`.
+- The grid uses `role="grid"` with `role="row"` / `role="gridcell"`; each cell's
+  `aria-label` comes from `formatTooltip` (default: `"<value> on <date>"` or
+  `"No activity on <date>"`).
+
+## Source
+
+[`src/components/TkxCalendarHeatmap.tsx`](https://ui.tekivex.com)

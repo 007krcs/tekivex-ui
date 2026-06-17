@@ -1,0 +1,48 @@
+---
+title: TkxSparkline
+description: Tiny zero-dependency inline SVG sparkline with line, area, and bar variants, optional smoothing, last-point marker, and trailing value.
+---
+
+`TkxSparkline` is a compact, inline trend chart for tables, cards, and stat
+rows — no axes, just the shape of a series. It renders inside a `<span>` so it
+flows with text. Three variants are available: `line`, `area`, and `bar`.
+
+```tsx
+import { TkxSparkline } from 'tekivex-ui';
+
+<TkxSparkline data={[3, 7, 4, 9, 6, 12, 8]} showValue />
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `number[]` | — | The series to plot (required). |
+| `variant` | `'line' \| 'area' \| 'bar'` | `'line'` | Render style. |
+| `width` | `number` | `120` | SVG width in px. |
+| `height` | `number` | `32` | SVG height in px. |
+| `color` | `string` | `theme.primary` | Stroke / fill colour. |
+| `showPoints` | `boolean` | `false` | Draw a dot at every data point (line/area only). |
+| `showLastPoint` | `boolean` | `true` | Draw a dot at the final point (suppressed when `showPoints` is on). |
+| `showValue` | `boolean` | `false` | Render the last value as text beside the chart. |
+| `smooth` | `boolean` | `false` | Use a Catmull-Rom smoothed curve instead of straight segments (line/area only). |
+| `ariaLabel` | `string` | auto | Accessible name; auto-describes count and trend. |
+
+All other `span` attributes are spread onto the root.
+
+## Behaviour notes
+
+- The auto-generated `aria-label` describes the trend direction (up / down /
+  flat) by comparing the first and last value, e.g. *"Sparkline showing 7
+  values, trending up"*. Override it via `ariaLabel`.
+- `showLastPoint` is ignored when `showPoints` is `true` (the full set of
+  points already includes the last one).
+- `smooth` only affects `line` and `area` — the `bar` variant ignores it.
+- A single-value series renders centred; an empty array renders an empty SVG
+  with an accessible "no data" label.
+- The inner SVG is `aria-hidden`; the accessible description lives on the root
+  `span` with `role="img"`.
+
+## Source
+
+[`src/components/TkxSparkline.tsx`](https://ui.tekivex.com)

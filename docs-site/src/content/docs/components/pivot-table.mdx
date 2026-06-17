@@ -1,0 +1,84 @@
+---
+title: TkxPivotTable
+description: Group and aggregate a flat record array into a pivot table with multi-level row/column groups, five aggregators, and grand totals. Zero deps.
+---
+
+```tsx
+import { TkxPivotTable, type PivotValue } from 'tekivex-ui';
+```
+
+`TkxPivotTable` takes a flat array of records and pivots it: you declare which
+fields become **row groups**, which become **column groups**, and which fields
+**aggregate**. It supports multi-level groups on both axes, five built-in
+aggregators, deterministic ordering, and grand totals. Use it for summarising
+tabular data — sales by region × quarter, counts by category, etc. — without a
+charting or BI dependency.
+
+## Usage
+
+```tsx
+import { TkxPivotTable } from 'tekivex-ui';
+
+const sales = [
+  { region: 'West', quarter: 'Q1', amount: 100 },
+  { region: 'West', quarter: 'Q2', amount: 140 },
+  { region: 'East', quarter: 'Q1', amount: 90  },
+];
+
+<TkxPivotTable
+  data={sales}
+  rows={['region']}
+  cols={['quarter']}
+  values={[{ field: 'amount', agg: 'sum' }]}
+/>;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `PivotRecord[]` | required | Flat list of records to pivot. |
+| `rows` | `string[]` | required | Row group fields, outermost first. |
+| `cols` | `string[]` | `[]` | Column group fields, outermost first. `[]` = no column grouping. |
+| `values` | `PivotValue[]` | required | Aggregations. **At least one is required — throws otherwise.** |
+| `sortRows` | `(a: string, b: string, level: number) => number` | lexicographic | Comparator for row group keys per level. |
+| `sortCols` | `(a: string, b: string, level: number) => number` | lexicographic | Comparator for column group keys per level. |
+| `showTotals` | `boolean` | `true` | Render grand-total row, column, and corner cell. |
+| `formatNumber` | `(n: number) => string` | 4-decimal trim | Cell number formatter. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the scroll container. |
+
+## Data shape
+
+```ts
+type PivotRecord = Record<string, unknown>;
+
+type PivotAggregator = 'sum' | 'avg' | 'min' | 'max' | 'count';
+
+interface PivotValue {
+  field?: string;          // field on each record to aggregate; ignored for 'count'
+  agg: PivotAggregator;
+  label?: string;          // header label; default `${agg}(${field})`, or 'count'
+}
+```
+
+## Behavior / gotchas
+
+- **`values` must be non-empty** — the component throws
+  `TkxPivotTable: values must contain at least one entry` if you pass `[]`.
+- **Non-numeric values are skipped** for `sum` / `avg` / `min` / `max`. Only
+  fields whose value is an actual `number` contribute; strings/null are ignored
+  rather than coerced. Empty aggregations render as a blank cell (`null`), not
+  `0`.
+- **`count` ignores `field`** and counts every contributing record in the group.
+- **Group keys are stringified.** Each grouping field's value is coerced with
+  `String(value ?? '')`, so `1` and `'1'` collapse into the same group and
+  `null`/`undefined` become the empty-string group.
+- **Default sort is lexicographic** on the stringified keys — so months sort
+  alphabetically (`Apr`, `Aug`, …), not calendar order. Pass `sortRows` /
+  `sortCols` (you get the level index) to impose a custom order.
+- **Multiple `values`** add a sub-column per value under each column group; the
+  value-label row always renders, even with no column grouping.
+- Rendering is pure and memoised on `data` / `rows` / `cols` / `values` /
+  sort comparators — stable references avoid recompute.
+```

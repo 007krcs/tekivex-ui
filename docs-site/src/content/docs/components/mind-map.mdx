@@ -1,0 +1,98 @@
+---
+title: TkxMindMap
+description: Collapsible horizontal tidy-tree with SVG links, full keyboard navigation, and controlled-or-uncontrolled selection and collapse state. Zero deps.
+---
+
+```tsx
+import { TkxMindMap, type MindMapNode } from 'tekivex-ui';
+```
+
+`TkxMindMap` renders a recursive tree as a horizontal tidy layout (root on the
+left, children fanning out right) with cubic-Bezier SVG links and
+HTML-rendered, focusable nodes. It supports expand/collapse, full keyboard
+navigation, and either internal or controlled selection + collapse state. Use it
+for mind maps, outlines, taxonomies, decision trees — any hierarchy you want to
+browse and fold.
+
+## Usage
+
+Pass a single `root` node; children nest via `children`.
+
+```tsx
+import { TkxMindMap, type MindMapNode } from 'tekivex-ui';
+
+const root: MindMapNode = {
+  id: 'root',
+  label: 'Product',
+  children: [
+    { id: 'a', label: 'Frontend', children: [
+      { id: 'a1', label: 'Components' },
+      { id: 'a2', label: 'Theming' },
+    ]},
+    { id: 'b', label: 'Backend', collapsed: true, children: [
+      { id: 'b1', label: 'API' },
+    ]},
+  ],
+};
+
+<TkxMindMap
+  root={root}
+  onSelect={(id) => console.log('selected', id)}
+  onToggle={(id, collapsed) => console.log(id, collapsed)}
+/>;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `root` | `MindMapNode` | required | The tree's root node. |
+| `selectedId` | `string \| null` | — | Controlled selected node id. Omit for internal selection (defaults to the root). |
+| `collapsedIds` | `Set<string>` | — | Controlled set of collapsed ids. Omit to use internal collapse state. |
+| `onSelect` | `(id: string, node: MindMapNode) => void` | — | Fired on click and keyboard move. |
+| `onToggle` | `(id: string, nextCollapsed: boolean) => void` | — | Fired when a node is expanded/collapsed. |
+| `leafHeight` | `number` | `44` | Vertical px reserved per leaf. |
+| `levelWidth` | `number` | `200` | Horizontal px between depth levels. |
+| `nodeWidth` | `number` | `160` | Node card width in px. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the scroll container. |
+
+## Data shape
+
+```ts
+interface MindMapNode {
+  id: string;
+  label: string;
+  children?: MindMapNode[];  // omit or [] for a leaf
+  color?: string;            // accent for border, toggle dot, and the incoming link
+  collapsed?: boolean;       // pre-collapsed at first render (seeds internal state)
+  data?: unknown;            // free-form payload echoed to callbacks
+}
+```
+
+## Behavior / gotchas
+
+- **Two independently controllable states.** Selection (`selectedId`) and
+  collapse (`collapsedIds`) are each separately controlled-or-uncontrolled. Omit
+  either prop to let the component own that piece while still firing the matching
+  callback.
+- **`node.collapsed` only seeds internal state.** It is read once to build the
+  initial collapsed set; in controlled mode, drive folding via `collapsedIds`
+  instead.
+- **Keyboard model** (focus the tree — it is `role="tree"`):
+  - → — if the node is collapsed, expands it; otherwise moves to the first
+    child.
+  - ← — moves to the parent; at the root, collapses it.
+  - ↑ / ↓ — move between siblings.
+  - Enter / Space — toggle expand/collapse of the selected node.
+- **Double-click** a node with children to toggle it; the inline `+` / `−`
+  button on each parent also toggles (and stops propagation so it doesn't also
+  select).
+- **Labels are sanitised** with `sanitizeString` before render (and as the
+  `title` tooltip), so untrusted labels can't smuggle control characters.
+- **Layout is leaf-count proportional:** each subtree reserves vertical space by
+  its visible leaf count and the parent sits at the centroid of its children —
+  collapsing a branch reflows the whole map.
+- Nodes are absolutely positioned inside a scrollable box; the SVG link layer is
+  `aria-hidden` and shifted so negative `y` positions stay in view.
+```

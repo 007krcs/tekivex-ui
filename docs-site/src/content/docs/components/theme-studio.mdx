@@ -1,0 +1,79 @@
+---
+title: TkxThemeStudio
+description: Visual theme editor — pick token colors, see a live component preview with real-time WCAG contrast badges, and export as TypeScript, JSON, or CSS.
+---
+
+```tsx
+import { TkxThemeStudio, type ThemeTokens } from 'tekivex-ui';
+```
+
+`TkxThemeStudio` is a two-pane visual theme editor: edit the design tokens on the
+left with native color pickers, watch a live component preview re-render on the
+right, and read a real-time WCAG contrast badge on every token that should meet
+a threshold. Export the result as TypeScript, JSON, or CSS variables. Use it to
+let designers tune brand colors without filing PRs, and to verify per-token
+contrast for accessibility claims.
+
+## Usage
+
+It seeds from the ambient `ThemeProvider` by default; pass `initialTheme` to
+start from a specific token set.
+
+```tsx
+import { TkxThemeStudio, type ThemeTokens } from 'tekivex-ui';
+
+<TkxThemeStudio
+  onChange={(tokens) => console.log('live tokens', tokens)}
+  onExport={(format, text) => download(`theme.${format}`, text)}
+/>;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `initialTheme` | `ThemeTokens` | ambient theme | Token set to load initially. |
+| `onChange` | `(tokens: ThemeTokens) => void` | — | Fired on every token edit and on Reset. |
+| `onExport` | `(format: 'json' \| 'ts' \| 'css', text: string) => void` | — | Fired when the user clicks **Save…**. The button is disabled if this is omitted. |
+| `preview` | `ReactNode` | sample components | Custom preview content rendered inside a `ThemeProvider` with the live tokens. |
+| `exportName` | `string` | `'myTheme'` | Variable name used in the TypeScript export. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the grid wrapper. |
+
+## Data shape
+
+The component edits a `ThemeTokens` object (imported from `tekivex-ui`). The
+editor groups its editable tokens as:
+
+| Group | Tokens |
+|---|---|
+| Surfaces | `bg`, `surface`, `surfaceAlt`, `border` |
+| Text | `text` (vs `bg`, target 7:1), `textMuted` (vs `bg`, 4.5:1) |
+| Brand | `primary`, `secondary` (each vs `bg`, 4.5:1) |
+| Status | `success`, `warning`, `danger`, `info` (each vs `bg`, 4.5:1) |
+
+Each contrast-checked token shows a live ratio + grade badge (AAA ≥ 7, AA ≥ 4.5,
+AA Large ≥ 3, otherwise **fail**), computed with the WCAG relative-luminance
+formula. The badge turns to the fail color when the token misses its threshold.
+
+## Behavior / gotchas
+
+- **Internal working copy.** Tokens are edited in the component's own state
+  (seeded from `initialTheme` or the ambient theme). `onChange` reports each
+  change, but the studio is not a controlled input — there is no `value` prop to
+  push edits back in.
+- **Reset** restores the original seed (`initialTheme` ?? ambient) and fires
+  `onChange` with it.
+- **Color inputs expect 6-digit hex.** Both the native `<input type="color">`
+  and the hex text field work in `#rrggbb`; the text field only accepts edits
+  matching `#[0-9a-f]{0,6}`. Contrast math returns 0 luminance for non-hex
+  values, so non-hex tokens read as failing.
+- **The preview re-themes live.** The right pane wraps `preview` (or the default
+  sample components) in a nested `ThemeProvider` using the in-progress tokens, so
+  you see real components, not swatches. Replace it via the `preview` prop to
+  preview your own UI.
+- **Export tabs** switch between `ts` (default), `json`, and `css`. **Copy**
+  writes the current export text to the clipboard; **Save…** is only enabled when
+  you pass `onExport`.
+- **Responsive:** collapses to a single column under ~760px.
+```

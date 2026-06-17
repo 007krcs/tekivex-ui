@@ -1,0 +1,58 @@
+---
+title: TkxFunnelChart
+description: Zero-dependency SVG conversion funnel. Trapezoid stages encode value as width, with automatic drop-off percentages between steps.
+---
+
+`TkxFunnelChart` renders a conversion funnel as a stack of trapezoids whose
+width tapers from one stage to the next, encoding each stage's value as
+horizontal extent. Drop-off percentages render between stages so leaks are
+obvious at a glance. Use it for sales funnels, signup flows, or any
+multi-step conversion.
+
+```tsx
+import { TkxFunnelChart } from 'tekivex-ui';
+
+<TkxFunnelChart
+  data={[
+    { label: 'Visited', value: 1000 },
+    { label: 'Signed up', value: 420 },
+    { label: 'Activated', value: 180 },
+    { label: 'Paid', value: 64 },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `TkxFunnelStage[]` | — | Stages: `{ label, value, color? }`, largest first by convention. |
+| `width` | `number` | `400` | SVG width in px. |
+| `height` | `number` | `300` | SVG height in px. |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Stack top-to-bottom or left-to-right. |
+| `colors` | `string[]` | brand cycle | Colour cycle used when a stage omits `color`. |
+| `showValues` | `boolean` | `true` | Render the value inside each stage. |
+| `showPercentages` | `boolean` | `true` | Render drop-off % between consecutive stages. |
+| `formatValue` | `(v: number) => string` | `String(v)` | Format stage and tooltip values. |
+| `gap` | `number` | `4` | Gap in px between stages. |
+| `ariaLabel` | `string` | auto | Accessible name; auto-summarises stages and total drop-off. |
+| `onStageClick` | `(stage, index) => void` | — | Fires when a stage is clicked. |
+
+All other `div` attributes (except `onClick`) are spread onto the root.
+
+## Behaviour notes
+
+- Stage widths are normalised against the **first** stage's value (treated as
+  100%), so the funnel always starts full-width regardless of the absolute
+  numbers.
+- Stages with zero or negative values do not vanish: width is clamped to a 4%
+  minimum so the stage stays visible and clickable.
+- Drop-off labels render as `−23%` when the next stage is smaller; if a later
+  stage grows (negative drop), it shows `+N%` instead.
+- A single-stage funnel degenerates to a rectangle (no taper).
+- In-stage value text auto-picks black or white for contrast against the
+  stage fill (WCAG luminance), so it stays legible on any colour.
+
+## Source
+
+[`src/components/TkxFunnelChart.tsx`](https://ui.tekivex.com)

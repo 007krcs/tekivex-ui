@@ -1,0 +1,97 @@
+---
+title: TkxGantt
+description: Day-resolution project timeline with dependency arrows, progress bars, and UTC-safe date math. Reschedule tasks via keyboard; parent owns the data.
+---
+
+```tsx
+import { TkxGantt, type GanttTask } from 'tekivex-ui';
+```
+
+`TkxGantt` renders a project timeline: a task-label column on the left and a
+scrollable day-resolution timeline on the right, with SVG dependency arrows,
+in-bar progress fills, and weekend striping. It auto-fits the scale to the
+date range of your tasks. All date math runs in **UTC**, so a task never slides
+a day when the user's timezone changes. Use it for schedules, roadmaps, and
+project plans.
+
+## Usage
+
+`tasks` is your data; rescheduling is emitted via `onTaskChange` for you to
+commit.
+
+```tsx
+import { useState } from 'react';
+import { TkxGantt, type GanttTask } from 'tekivex-ui';
+
+function Demo() {
+  const [tasks, setTasks] = useState<GanttTask[]>([
+    { id: 'a', label: 'Design',  start: '2026-05-01', end: '2026-05-05', progress: 1 },
+    { id: 'b', label: 'Build',   start: '2026-05-06', end: '2026-05-14', progress: 0.4, dependencies: ['a'] },
+    { id: 'c', label: 'Ship',    start: '2026-05-15', end: '2026-05-16', dependencies: ['b'] },
+  ]);
+
+  return (
+    <TkxGantt
+      tasks={tasks}
+      onTaskChange={(id, next) =>
+        setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, ...next } : t)))
+      }
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `tasks` | `GanttTask[]` | required | The task list. |
+| `dayWidth` | `number` | `28` | Pixels per day on the timeline. |
+| `rowHeight` | `number` | `40` | Height of each task row in px. |
+| `labelColumnWidth` | `number` | `220` | Width of the left task-label column in px. |
+| `selectedId` | `string \| null` | — | Controlled selected task id. Omit for internal selection (defaults to the first task). |
+| `onSelect` | `(id: string, task: GanttTask) => void` | — | Fired on row click and keyboard navigation. |
+| `onTaskChange` | `(id, next: { start: string; end: string }, task) => void` | — | Fired on keyboard reschedule. You must commit it. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the outer container. |
+
+## Data shape
+
+```ts
+interface GanttTask {
+  id: string;
+  label: string;
+  start: string | Date;     // 'YYYY-MM-DD' (inclusive start day) or a Date
+  end: string | Date;       // inclusive end day; must be >= start
+  progress?: number;        // 0..1, default 0 — fills the bar
+  dependencies?: string[];  // ids this task depends on; draws an arrow from each
+  color?: string;           // bar accent
+  data?: unknown;           // free-form payload echoed to callbacks
+}
+```
+
+Exported date helpers: `parseDay`, `formatDay`, `dayDiff` (all UTC-safe).
+
+## Behavior / gotchas
+
+- **Strict date format.** String dates must match `YYYY-MM-DD`; anything else
+  throws `TkxGantt: invalid date "..."`. Pass a `Date` object if you have one —
+  it is normalised to UTC midnight.
+- **Inclusive day ranges.** `start` and `end` are both inclusive, so a 1-day
+  task has `start === end`. The bar width is `(dayDiff(start, end) + 1)` days.
+- **Selection is controlled-or-uncontrolled.** Pass `selectedId` to control it;
+  omit it and the component selects the first task and tracks selection
+  internally while still firing `onSelect`.
+- **Rescheduling is keyboard-only and headless.** Focus the chart, then:
+  - ↑ / ↓ — select previous / next task.
+  - ← / → — shift the **selected** task one day earlier / later. This emits
+    `onTaskChange` with the new `{ start, end }`; the chart does **not** move the
+    bar until you commit the change back into `tasks`. There is no drag-to-move.
+- **Dependency arrows** route orthogonally from the right edge of the source bar
+  into the left edge of the target. A dependency on an unknown id is skipped
+  silently.
+- **Auto-fit range** pads one day on each side of the min start / max end for
+  breathing room; an empty `tasks` array shows a 7-day window from today.
+- **Progress** is clamped to `0..1` and rendered as a fill overlay inside the
+  bar.
+```

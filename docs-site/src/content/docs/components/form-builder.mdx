@@ -1,0 +1,102 @@
+---
+title: TkxFormBuilder
+description: Visual form designer with a palette, canvas, inspector, live preview, and JSON view. Edits a small JSON-serialisable FormSchema you own.
+---
+
+```tsx
+import { TkxFormBuilder, type FormSchema } from 'tekivex-ui';
+```
+
+`TkxFormBuilder` is a three-pane visual form designer (palette · canvas ·
+inspector) with tabs for **Design**, **Preview** (renders the real form with
+validation), and **JSON**. It edits a compact, JSON-serialisable `FormSchema`
+that you own — persist it, version it, or feed it to a code generator. Use it
+when you need end users or designers to assemble forms without touching code.
+
+## Usage
+
+The schema is controlled: hold it in state and write back every `onChange`.
+
+```tsx
+import { useState } from 'react';
+import { TkxFormBuilder, type FormSchema } from 'tekivex-ui';
+
+function Demo() {
+  const [schema, setSchema] = useState<FormSchema>({
+    title: 'Contact us',
+    fields: [
+      { id: 'f1', type: 'text',  name: 'full_name', label: 'Full name', required: true },
+      { id: 'f2', type: 'email', name: 'email',     label: 'Email',     required: true },
+    ],
+  });
+
+  return <TkxFormBuilder schema={schema} onChange={setSchema} />;
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `schema` | `FormSchema` | required | Controlled schema. |
+| `onChange` | `(next: FormSchema) => void` | required | Fired on add / remove / reorder / edit. You must persist it. |
+| `allowedTypes` | `FormFieldType[]` | all 8 types | Restricts the field types shown in the palette. |
+| `defaultTab` | `'design' \| 'preview' \| 'json'` | `'design'` | Initially active tab. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the outer container (fixed 600px tall by default). |
+
+## Data shape
+
+```ts
+type FormFieldType =
+  | 'text' | 'email' | 'number' | 'textarea'
+  | 'select' | 'radio' | 'checkbox' | 'date';
+
+interface FormFieldOption { label: string; value: string }
+
+interface FormField {
+  id: string;            // stable internal id
+  type: FormFieldType;
+  name: string;          // key in the submitted data object
+  label: string;
+  placeholder?: string;
+  helpText?: string;
+  required?: boolean;
+  options?: FormFieldOption[]; // select / radio only
+  min?: number;          // number range, or date min
+  max?: number;
+  pattern?: string;      // regex string (text/email), authored as a string for JSON safety
+}
+
+interface FormSchema {
+  title?: string;
+  description?: string;
+  fields: FormField[];
+}
+```
+
+A `validateField(field, value)` helper is also exported so you can run the same
+validation logic outside the Preview tab (returns an error string or `null`).
+
+## Behavior / gotchas
+
+- **Controlled schema only.** `schema` + `onChange` are both required; the
+  builder never holds the field data itself. Only the *selected field* and
+  *active tab* are internal UI state.
+- **Adding fields:** click a type in the palette to **append** it (touch-first;
+  there is no drag-from-palette). New `select` / `radio` fields get two starter
+  options.
+- **Reordering is button-based, not drag.** Each canvas field has ↑ / ↓ buttons
+  (keyboard reachable). There is intentionally no drag DSL.
+- **`name` is sanitised on edit.** The inspector strips anything outside
+  `[A-Za-z0-9_]` from the field name as you type, since it becomes the data key.
+  Keep names unique yourself — duplicates collide in the submitted object.
+- **Inspector fields are conditional:** options editor shows only for
+  `select` / `radio`; min/max only for `number`; regex pattern only for
+  `text` / `email`.
+- **Preview validation** runs `required`, email format, number min/max, and the
+  regex `pattern` on submit; a bad regex is ignored (so the form still works)
+  rather than throwing. Successful submit dumps the collected values as JSON.
+- **Canvas selection** is reachable via keyboard (Enter / Space selects the
+  focused field row).
+```

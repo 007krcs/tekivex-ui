@@ -1,0 +1,139 @@
+---
+title: TkxMessageThread
+description: Headless chat thread UI — bubbles, replies, reactions, edits, attachments, typing indicators, and delivery states. You wire it to any backend.
+---
+
+```tsx
+import { TkxMessageThread, type PeerMessage, type PeerSender } from 'tekivex-ui';
+```
+
+`TkxMessageThread` is a headless chat-thread UI primitive: grouped message
+bubbles, day separators, reply previews, reactions, inline edit/delete,
+attachment rendering, a typing indicator, and per-message delivery states. It
+owns **no** transport — you push `messages` in and handle send / react / edit /
+delete / attach via callbacks. Use it as the view layer over any realtime
+backend (Pusher, Socket.io, Ably, custom WebSocket).
+
+> Also exported as **`TkxPeerChat`** (the stabilised name as of v3.19);
+> `TkxMessageThread` is the original, now a deprecated alias.
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import { TkxMessageThread, type PeerMessage, type PeerSender } from 'tekivex-ui';
+
+const senders: Record<string, PeerSender> = {
+  me:   { id: 'me',   name: 'You' },
+  ada:  { id: 'ada',  name: 'Ada Lovelace', presence: 'online' },
+};
+
+function Demo() {
+  const [messages, setMessages] = useState<PeerMessage[]>([
+    { id: 'm1', senderId: 'ada', text: 'Hey!', timestamp: new Date() },
+  ]);
+
+  return (
+    <TkxMessageThread
+      messages={messages}
+      senders={senders}
+      currentUserId="me"
+      onSend={(text, replyTo) =>
+        setMessages((m) => [
+          ...m,
+          { id: crypto.randomUUID(), senderId: 'me', text, replyTo, timestamp: new Date(), delivery: 'sent' },
+        ])
+      }
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `messages` | `PeerMessage[]` | required | The thread, oldest-first. |
+| `senders` | `Record<string, PeerSender>` | required | Sender lookup keyed by sender id. |
+| `currentUserId` | `string` | required | Which sender is "me" (right-aligned, own-message actions). |
+| `onSend` | `(text, replyTo?) => void \| Promise<void>` | — | Send a new message. Without it, the composer can't send. |
+| `onReact` | `(messageId, emoji) => void \| Promise<void>` | — | Toggle a reaction. |
+| `onEdit` | `(messageId, newText) => void \| Promise<void>` | — | Edit own message (Edit action only shows when provided). |
+| `onDelete` | `(messageId) => void \| Promise<void>` | — | Delete own message (confirms via `window.confirm`). |
+| `onAttach` | `(files: File[]) => void \| Promise<void>` | — | Handle picked files. Enables the attach button. |
+| `height` | `string \| number` | `520` | Thread height. |
+| `placeholder` | `string` | `'Type a message…'` | Composer placeholder. |
+| `showTimeSeparators` | `boolean` | `true` | Render Today / Yesterday / date separators. |
+| `groupConsecutive` | `boolean` | `true` | Collapse avatar/header for consecutive messages from the same sender within 5 min. |
+| `emojiPickerOptions` | `string[]` | `['👍','❤️','😂','🎉','😢','👀']` | Emojis offered in the react picker. |
+| `typingUserIds` | `string[]` | — | Sender ids currently typing (drives the indicator). |
+| `onTypingStart` | `() => void` | — | Local user began a typing session (fires on first keystroke). |
+| `onTypingStop` | `() => void` | — | Local user idle 3s, or blurred / sent. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the outer container. |
+
+## Data shape
+
+```ts
+type PeerPresence = 'online' | 'offline' | 'away' | 'unknown';
+type MessageDeliveryState = 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
+type AttachmentKind = 'image' | 'file' | 'audio' | 'video';
+
+interface PeerSender {
+  id: string; name: string;
+  avatar?: string; presence?: PeerPresence; role?: string;
+}
+
+interface PeerAttachment {
+  id: string; kind: AttachmentKind; name: string; url: string; mimeType: string;
+  size?: number; width?: number; height?: number; duration?: number; thumbnail?: string;
+}
+
+interface PeerReaction { emoji: string; by: string[] }  // `by` = sender ids
+
+interface PeerMessage {
+  id: string;
+  senderId: string;
+  text?: string;
+  attachments?: PeerAttachment[];
+  reactions?: PeerReaction[];
+  replyTo?: string;                 // id of the message being replied to
+  timestamp: Date | string;
+  editedAt?: Date | string;         // shows an "(edited)" marker
+  deletedAt?: Date | string;        // renders "Message deleted"
+  delivery?: MessageDeliveryState;  // own messages show a delivery icon
+}
+```
+
+## Behavior / gotchas
+
+- **Headless transport.** The component never sends, stores, or mutates
+  messages. Realtime arrival, delivery-state transitions, presence updates, and
+  attachment upload progress are **all your job** — update the `messages` /
+  `senders` props from your backend.
+- **Composer is uncontrolled** (it holds its own draft). `Enter` sends;
+  `Shift+Enter` inserts a newline. The textarea auto-grows up to ~6 lines. Send
+  is disabled while the draft is empty.
+- **Typing indicator is consumer-driven and not a debounce.** `onTypingStart`
+  fires once on the **first** keystroke of a session; subsequent keystrokes just
+  reset a 3-second idle timer. `onTypingStop` fires on idle, blur, send, or when
+  the composer is cleared. Display is driven separately by `typingUserIds`
+  (1 → "X is typing", 2 → "X and Y", 3+ → "Several people are typing"; unknown
+  ids fall back to "Unknown").
+- **Attachments are content-sniffed.** `onAttach` only receives files whose
+  sniffed MIME major type matches the declared one; mismatches are refused with
+  an inline alert (`File type does not match its content…`). The component does
+  not upload — it hands you `File[]`.
+- **All user-visible text is sanitised** with `sanitizeString` (message bodies,
+  names, reply previews, placeholders) to strip control/bidi characters.
+- **Own-message actions** (Edit, Delete) only appear for `currentUserId` **and**
+  only when the matching callback is provided. Delete prompts `window.confirm`.
+- **Grouping + separators:** consecutive same-sender messages within 5 minutes
+  hide the repeated avatar/header (toggle with `groupConsecutive`); day
+  separators render Today / Yesterday / locale date (toggle with
+  `showTimeSeparators`).
+- **Out of scope:** message search, reply nesting deeper than one level, and
+  end-to-end encryption — this is a UI primitive.
+- Auto-scrolls to the newest message; respects `prefers-reduced-motion` (jumps
+  instead of smooth-scrolling, and stills the typing dots).
+```

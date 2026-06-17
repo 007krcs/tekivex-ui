@@ -1,0 +1,84 @@
+---
+title: TkxAutoForm
+description: Render a complete accessible form from a declarative schema — validation, error summary, themed controls, and built-in input sanitisation.
+---
+
+`TkxAutoForm` renders a complete, working form from a declarative `FormSchema`
+— no manual field wiring. It is the runtime counterpart to `TkxFormBuilder`:
+the builder *designs* a schema (and emits it as JSON), `TkxAutoForm` *renders*
+one. Author the schema by hand, fetch it from an API, or pipe it straight out
+of the builder. You get validation, an accessible error summary, themed
+controls, and kernel-grade input sanitisation on submit.
+
+```tsx
+import { TkxAutoForm } from 'tekivex-ui';
+
+const schema = {
+  title: 'Contact',
+  fields: [
+    { id: '1', type: 'text',  name: 'name',  label: 'Name', required: true },
+    { id: '2', type: 'email', name: 'email', label: 'Email', required: true },
+    { id: '3', type: 'textarea', name: 'note', label: 'Message' },
+  ],
+};
+
+<TkxAutoForm schema={schema} onSubmit={(data) => console.log(data)} />
+```
+
+`FormSchema`, `FormField`, `FormFieldType`, `FormFieldOption`, and
+`validateField` are re-exported from the package root — import them from
+`'tekivex-ui'` alongside `TkxAutoForm`.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `schema` | `FormSchema` | — | The form definition (`{ title?, description?, fields }`). |
+| `defaultValues` | `Record<string, unknown>` | — | Initial values, keyed by field `name`. |
+| `onSubmit` | `(data: Record<string, unknown>) => void` | — | Called with validated (and by default sanitised) values. |
+| `onChange` | `(values: Record<string, unknown>) => void` | — | Called on every change with the current raw values. |
+| `submitLabel` | `string` | `'Submit'` | Submit button text. |
+| `sanitize` | `boolean` | `true` | Run string values through the security kernel before `onSubmit`. |
+| `redactPII` | `boolean` | `false` | Additionally redact PII (email, cards, SSN, phone, API keys) from strings. |
+| `validateOnBlur` | `boolean` | `true` | Validate a field on blur, not only on submit. |
+| `className` | `string` | — | Class on the `<form>` element. |
+| `style` | `CSSProperties` | — | Inline style merged onto the `<form>`. |
+
+### FormField shape
+
+Each entry in `schema.fields` is a `FormField`:
+
+| Key | Type | Description |
+|---|---|---|
+| `id` | `string` | Stable React key. |
+| `type` | `'text' \| 'email' \| 'number' \| 'textarea' \| 'select' \| 'radio' \| 'checkbox' \| 'date'` | Control to render. |
+| `name` | `string` | Key in the submitted data object. |
+| `label` | `string` | Field label. |
+| `placeholder` | `string?` | Placeholder / checkbox inline label. |
+| `helpText` | `string?` | Hint rendered under the control. |
+| `required` | `boolean?` | Marks the field required (renders `*`). |
+| `options` | `FormFieldOption[]?` | `{ label, value }[]` for select / radio. |
+| `min` / `max` | `number?` | Min/max for number & date; min/maxLength for text. |
+| `pattern` | `string?` | Regex (text inputs), authored as a string for JSON safety. |
+
+## Behaviour notes
+
+- **Security on submit**: when `sanitize` is on (the default), every string
+  value is run through `sanitizeUnicode → sanitizeString` before it reaches
+  `onSubmit`. With `redactPII` on, values additionally pass through `scrubPII`
+  — useful when the payload is forwarded to an LLM. Non-string values pass
+  through untouched. These kernel primitives emit `SecurityEvent`s, so a
+  `TkxSecurityDashboard` on the page reacts as users submit.
+- **Accessible error summary**: on a failed submit, an error summary with
+  `role="alert"` is rendered and focused, and each entry links to (and focuses)
+  the offending field. Field anchors are derived from `name` as
+  `#tkx-af-<name>`, so field names must be unique within the form.
+- The `<form>` uses `noValidate`; validation is driven entirely by
+  `validateField`, not the browser. `validateOnBlur` controls whether a field
+  is re-checked on blur in addition to the submit pass.
+- `onChange` reports the **raw** (un-sanitised) values; only the `onSubmit`
+  payload is hardened.
+
+## Source
+
+[`src/components/TkxAutoForm.tsx`](https://ui.tekivex.com)

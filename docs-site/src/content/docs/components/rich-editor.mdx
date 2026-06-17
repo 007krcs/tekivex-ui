@@ -1,0 +1,102 @@
+---
+title: TkxRichEditor
+description: Accessible contenteditable rich-text editor with a sanitising HTML/Markdown/text output, paste scrubbing, and an imperative ref handle.
+---
+
+```tsx
+import { TkxRichEditor, type TkxRichEditorHandle } from 'tekivex-ui';
+```
+
+`TkxRichEditor` is a dependency-light rich-text editor built on
+`contenteditable`. Every output (and every paste) is run through tekivex's HTML
+sanitiser — no `<script>`, no `javascript:` URLs, no Trojan-Source unicode. It
+exposes an **imperative ref** for reading HTML / Markdown / plain text and
+setting content. Use it for comment boxes, article bodies, or any rich input
+where you don't want to ship Slate/TipTap/Lexical (~100 KB each).
+
+## Usage
+
+The editor is **uncontrolled**: seed it with `initialValue`, listen to
+`onChange` for the sanitised HTML, and use a ref to pull other formats.
+
+```tsx
+import { useRef } from 'react';
+import { TkxRichEditor, type TkxRichEditorHandle } from 'tekivex-ui';
+
+function Demo() {
+  const ref = useRef<TkxRichEditorHandle>(null);
+
+  return (
+    <>
+      <TkxRichEditor
+        ref={ref}
+        initialValue="<p>Hello <strong>world</strong></p>"
+        placeholder="Write something…"
+        onChange={(html) => console.log(html)}
+      />
+      <button onClick={() => console.log(ref.current?.getMarkdown())}>
+        Export Markdown
+      </button>
+    </>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `initialValue` | `string` | `''` | Initial HTML, sanitised on mount. Read once — not a controlled value. |
+| `onChange` | `(html: string) => void` | — | Fired on every edit with **sanitised** HTML. |
+| `placeholder` | `string` | `'Start writing…'` | Shown when empty. |
+| `tools` | `Tool[]` | all | Subset/order of toolbar buttons to show. |
+| `maxHeight` | `number \| string` | — | Max content height before scrolling. |
+| `minHeight` | `number \| string` | `200` | Min content height. |
+| `label` | `string` | `'Rich text editor'` | `aria-label` for the editor textbox. |
+| `isDisabled` | `boolean` | `false` | Content shown but not editable. |
+| `topSlot` | `ReactNode` | — | Rendered above the toolbar (e.g. word count). |
+| `bottomSlot` | `ReactNode` | — | Rendered below the editor. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the wrapper. |
+
+### Imperative handle (`TkxRichEditorHandle`)
+
+```ts
+interface TkxRichEditorHandle {
+  getHTML: () => string;        // current sanitised HTML
+  getMarkdown: () => string;    // lossy Markdown of the supported subset
+  getText: () => string;        // plain textContent
+  setHTML: (html: string) => void; // replace content (sanitised first)
+  focus: () => void;
+}
+```
+
+### Tool ids
+
+`'bold' | 'italic' | 'underline' | 'strike' | 'h1' | 'h2' | 'h3' | 'ul' | 'ol' | 'quote' | 'code' | 'codeblock' | 'link' | 'image' | 'hr'`
+
+## Behavior / gotchas
+
+- **Uncontrolled by design.** `initialValue` is read **once on mount** — later
+  changes to that prop are ignored. To replace content programmatically, call
+  `ref.current.setHTML(...)`. There is no `value` prop.
+- **Everything is sanitised.** Output HTML, pasted HTML, and `setHTML` input all
+  pass the inline sanitiser. Disallowed tags are unwrapped (text kept);
+  `<script>`/`<style>`/`<iframe>`/form elements are dropped **with their
+  content**; `on*` and non-allowlisted attributes are stripped; links are forced
+  to `rel="noopener noreferrer" target="_blank"`; image `src` is limited to
+  `http(s):` or `data:image/`.
+- **Links and images prompt.** The link (⌘K) and image tools use `window.prompt`
+  for the URL and reject `javascript:` / `data:` (links) or non-image sources
+  (images) with a `window.alert`. Image alt text is also prompted.
+- **Keyboard shortcuts:** ⌘/Ctrl + B / I / U for formatting, ⌘/Ctrl + K for
+  link. Toolbar buttons are a roving-tabindex `role="toolbar"` — Arrow
+  Left/Right, Home/End move focus between them.
+- **Markdown export is lossy** (~98% fidelity for the supported subset);
+  underline becomes `<u>` since Markdown has no native underline.
+- **execCommand-based.** Formatting relies on `document.execCommand`; active-tool
+  highlighting uses `queryCommandState`, which can be flaky on non-Chromium
+  engines (failures are swallowed, not thrown).
+- **SSR-safe:** sanitisation no-ops when `document` is undefined, so server
+  renders don't crash — content is sanitised again on the client.
+```
