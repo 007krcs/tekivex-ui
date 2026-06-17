@@ -456,6 +456,13 @@ export type {
   FormFieldOption,
 } from './src/components/TkxFormBuilder';
 
+// ── Schema-to-UI form generator ────────────────────────────────────────────────
+// Renders a working, themed, accessible, security-hardened form from a
+// FormSchema (the same model TkxFormBuilder produces). String values pass
+// through the security kernel before onSubmit — see TkxSecurityDashboard.
+export { TkxAutoForm } from './src/components/TkxAutoForm';
+export type { TkxAutoFormProps } from './src/components/TkxAutoForm';
+
 // ── Resume + Biodata templates ────────────────────────────────────────────────
 // Moved out of tekivex-ui into their own repos so apps that only need the
 // templates don't have to pull the entire UI library:

@@ -55,6 +55,7 @@ export * from './TkxMasonry';
 export * from './TkxRichTextDisplay';
 export * from './TkxMarkdown';
 export * from './TkxForm';
+export * from './TkxAutoForm';
 export * from './TkxLayout';
 export * from './TkxConfigProvider';
 export * from './TkxTypography';
