@@ -5,6 +5,63 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.22.0] — 2026-06-17
+
+### Added — TkxAutoForm (schema-to-UI form generator)
+
+Renders a complete, themed, accessible, security-hardened form from a
+`FormSchema` (the same model `TkxFormBuilder` produces) — no manual field
+wiring. String values pass through the security kernel on submit (so a
+`TkxSecurityDashboard` lights up). Per-field `aria-invalid`/`aria-describedby`,
+a focus-managed error summary, `defaultValues`/`onSubmit`/`sanitize`/`redactPII`.
+
+### Fixed — library-wide component audit (user-perspective sweep)
+
+A 122-component audit (recorded in `docs/COMPONENT-AUDIT.md`) drove a wave of
+correctness, theming, accessibility, and honesty fixes:
+
+- **TkxQRCode now produces a *scannable* code.** The previous render filled the
+  data region with a seeded-random pattern and did not scan. Replaced with a
+  real dependency-free ISO/IEC 18004 encoder (GF(256) Reed–Solomon, byte +
+  alphanumeric, auto version 1–10, L/M/Q/H, all 8 masks, BCH format/version
+  bits), verified against the canonical "HELLO WORLD" spec codeword vector.
+- **Light-mode theming.** Editor/grid components (`TkxFlowChart`,
+  `TkxFormBuilder`, `TkxFormulaBar`, `TkxGantt`, `TkxMindMap`, `TkxPivotTable`,
+  `TkxSpreadsheet`, `TkxHolographicAdvanced`) referenced `--tkx-*` CSS variables
+  the theme never defined, so they were dark-only. New `tkxThemeVars(theme)`
+  helper binds them to the live theme. Plus hardcoded-hex cleanups in
+  `TkxStepper`, `TkxToggle`, `TkxSlider`, `TkxAvatar`, `TkxCarousel`,
+  `TkxAIConfidenceBar`, `TkxAIThinking`.
+- **TkxCalendarHeatmap** timezone off-by-one — a point dated `2026-06-17` could
+  land on the wrong day. Date handling is now local-calendar consistent.
+- **TkxBreadcrumb** collapse ellipsis was a no-op (collapsed items unreachable);
+  it now expands in place.
+- **TkxWatermark** ran a 1s `setInterval` on every instance; now only when
+  `intensifyOnDevtools` is set.
+- **A11y:** roving tabindex now follows focus in `TkxToolbar`/`TkxTransferList`
+  (was a tab-trap); `TkxTour` has a real focus trap; `TkxSignaturePad` canvas is
+  keyboard-operable (Backspace clears, Ctrl/Cmd+Z undoes).
+- **TkxCurrencyInput** caret-position restoration on reformat is now implemented.
+- **TkxPagination** rows-per-page selector now recomputes totals for uncontrolled
+  use; removed dead code.
+- **Passthrough:** `className`/`style` added on `TkxAppBar`, `TkxBottomNav`,
+  `TkxList`, `TkxLiveFeed`, `TkxRealTimeChart`, `TkxResult`, `TkxTimeline`,
+  `TkxSegmented`, `TkxSpin`.
+- **Honesty:** removed false claims / dead props — `TkxCascader.multiple`
+  (no-op), `TkxClock.theme` (unused), `TkxLiveMetrics.refreshInterval` (no-op),
+  `TkxCheckout.steps` (nonexistent), `TkxImageEditor` pinch-zoom/pan claims,
+  `TkxAIThinking` "Quantum AI" marketing subtitle; `TkxMindMap` labels are now
+  sanitized.
+
+### Documentation
+
+18 new component pages for previously-undocumented components (`gauge`,
+`heatmap`, `funnel-chart`, `treemap`, `sparkline`, `auto-form`,
+`calendar-heatmap`, `command-palette`, `flow-chart`, `form-builder`, `kanban`,
+`spreadsheet`, `pivot-table`, `rich-editor`, `gantt`, `mind-map`,
+`theme-studio`, `message-thread`) — each with a real props table and the
+non-obvious working details surfaced by the audit.
+
 ## [3.21.0] — 2026-06-16
 
 ### Added — the security kernel is now observable (`TkxSecurityDashboard`)
