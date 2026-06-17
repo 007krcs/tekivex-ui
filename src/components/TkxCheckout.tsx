@@ -8,9 +8,8 @@
 //   2. Payment    — uses TkxPaymentButton
 //   3. Confirm    — review + place
 //
-// Consumers can replace any step's content via the `steps` prop. The
-// component handles step transitions, validates progress, and returns a
-// structured CheckoutResult on completion.
+// The component handles step transitions, validates progress, and reports
+// the collected address + payment result to onComplete.
 //
 // This is intentionally a wrapper around the existing primitives — not a
 // monolith. Composing your own checkout from TkxAddressInput +

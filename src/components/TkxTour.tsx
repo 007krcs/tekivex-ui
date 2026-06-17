@@ -103,12 +103,16 @@ export function TkxTour({
     if (isOpen) tipRef.current?.focus();
   }, [isOpen, current]);
 
+  const isControlled = controlledCurrent !== undefined;
+
   const goTo = useCallback(
     (idx: number) => {
-      setInternal(idx);
+      // In controlled mode the parent owns `current`; only notify via onChange
+      // and let the parent drive the step. Otherwise advance internal state.
+      if (!isControlled) setInternal(idx);
       onChange?.(idx);
     },
-    [onChange],
+    [isControlled, onChange],
   );
 
   const handleNext = useCallback(() => {
@@ -166,7 +170,40 @@ export function TkxTour({
           fontFamily: 'inherit',
         }}
         onKeyDown={(e) => {
-          if (e.key === 'Escape') onClose?.();
+          if (e.key === 'Escape') {
+            onClose?.();
+            return;
+          }
+          if (e.key === 'Tab') {
+            // Focus trap: keep Tab / Shift+Tab cycling inside the popover so
+            // focus can't escape to dimmed background content.
+            const root = tipRef.current;
+            if (!root) return;
+            const focusable = Array.from(
+              root.querySelectorAll<HTMLElement>(
+                'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+              ),
+            ).filter((el) => el.offsetParent !== null || el === root);
+            if (focusable.length === 0) {
+              e.preventDefault();
+              root.focus();
+              return;
+            }
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            const active = document.activeElement as HTMLElement | null;
+            if (e.shiftKey) {
+              if (active === first || active === root || !root.contains(active)) {
+                e.preventDefault();
+                last.focus();
+              }
+            } else {
+              if (active === last) {
+                e.preventDefault();
+                first.focus();
+              }
+            }
+          }
         }}
       >
         <h3

@@ -18,7 +18,9 @@ import {
   forwardRef,
   useCallback,
   useId,
+  useLayoutEffect,
   useMemo,
+  useRef,
   type CSSProperties,
   type Ref,
 } from 'react';
@@ -97,6 +99,22 @@ export const TkxCurrencyInput = forwardRef<HTMLInputElement, TkxCurrencyInputPro
     const theme = useTheme();
     const autoId = useId();
     const inputId = id ?? autoId;
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    // Number of digit characters that were to the left of the caret at the
+    // moment of the last edit. After the value reformats (group separators
+    // may shift), we restore the caret to sit after the same digit count so
+    // typing/backspacing doesn't fling the cursor to the end.
+    const caretDigitsRef = useRef<number | null>(null);
+
+    // Merge the forwarded ref with our internal one.
+    const setInputRef = useCallback(
+      (node: HTMLInputElement | null) => {
+        inputRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) (ref as { current: HTMLInputElement | null }).current = node;
+      },
+      [ref],
+    );
     const resolvedLocale = locale ?? defaultLocale(currency);
     const resolvedPrecision = precision ?? (ZERO_DECIMAL.has(currency) ? 0 : 2);
 
@@ -129,8 +147,43 @@ export const TkxCurrencyInput = forwardRef<HTMLInputElement, TkxCurrencyInputPro
 
     const display = value === null || Number.isNaN(value) ? '' : formatter.format(value);
 
+    // Restore caret position after the value reformats. We walk the formatted
+    // string counting digits and place the caret right after the Nth digit
+    // (N = digits that were left of the caret before the edit), so inserted or
+    // removed group separators don't push the cursor to the end.
+    useLayoutEffect(() => {
+      const want = caretDigitsRef.current;
+      caretDigitsRef.current = null;
+      const el = inputRef.current;
+      if (want === null || !el || el !== document.activeElement) return;
+      let seen = 0;
+      let pos = display.length;
+      for (let i = 0; i < display.length; i++) {
+        if (/\d/.test(display[i])) {
+          seen++;
+          if (seen === want) {
+            pos = i + 1;
+            break;
+          }
+        }
+      }
+      if (want === 0) pos = 0;
+      try {
+        el.setSelectionRange(pos, pos);
+      } catch {
+        /* input type may not support selection in some environments */
+      }
+    }, [display]);
+
     const handleChange = useCallback(
-      (raw: string) => {
+      (raw: string, caretPos: number | null) => {
+        // Remember how many digits sat left of the caret so we can restore it
+        // after the controlled value reformats.
+        if (caretPos !== null) {
+          caretDigitsRef.current = (raw.slice(0, caretPos).match(/\d/g) ?? []).length;
+        } else {
+          caretDigitsRef.current = null;
+        }
         // Strip everything except digits, minus sign (when min < 0), and a decimal separator.
         const cleaned = raw.replace(/[^\d.,\-]/g, '');
         // Determine which character is the decimal separator in the active locale.
@@ -205,13 +258,13 @@ export const TkxCurrencyInput = forwardRef<HTMLInputElement, TkxCurrencyInputPro
         <div style={groupStyle}>
           {showSymbol && <span style={symbolStyle} aria-hidden="true">{symbol}</span>}
           <input
-            ref={ref}
+            ref={setInputRef}
             id={inputId}
             name={name}
             type="text"
             inputMode={resolvedPrecision > 0 ? 'decimal' : 'numeric'}
             value={display}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => handleChange(e.target.value, e.target.selectionStart)}
             disabled={disabled}
             required={required}
             aria-label={label ?? `Amount in ${currency}`}

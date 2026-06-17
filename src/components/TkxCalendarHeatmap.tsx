@@ -64,26 +64,45 @@ export interface TkxCalendarHeatmapProps {
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-function toISO(d: Date): string {
-  return d.toISOString().slice(0, 10);
+/**
+ * Format a Date as a YYYY-MM-DD key using its LOCAL calendar fields.
+ * Using local getters (not toISOString, which is UTC) keeps the day-key
+ * consistent with how date-only strings are parsed below, so a point dated
+ * "2026-06-17" always lands on the 17th regardless of the viewer's timezone.
+ */
+function toLocalKey(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
+/**
+ * Parse an incoming date value as a LOCAL calendar date. Date-only strings
+ * ("YYYY-MM-DD") are split and constructed via `new Date(y, m-1, d)` so they
+ * are NOT shifted by the UTC interpretation `new Date(str)` would apply.
+ */
 function parseDate(d: Date | string): Date {
-  return d instanceof Date ? new Date(d) : new Date(d);
+  if (d instanceof Date) return new Date(d);
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d.trim());
+  if (m) {
+    return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  }
+  return new Date(d);
 }
 
 function addDays(d: Date, n: number): Date {
   const r = new Date(d);
-  r.setUTCHours(0, 0, 0, 0);
-  r.setUTCDate(r.getUTCDate() + n);
+  r.setHours(0, 0, 0, 0);
+  r.setDate(r.getDate() + n);
   return r;
 }
 
 function startOfWeek(d: Date): Date {
   const r = new Date(d);
-  r.setUTCHours(0, 0, 0, 0);
+  r.setHours(0, 0, 0, 0);
   // Sunday-based week (matches GitHub)
-  r.setUTCDate(r.getUTCDate() - r.getUTCDay());
+  r.setDate(r.getDate() - r.getDay());
   return r;
 }
 
@@ -121,7 +140,7 @@ export function TkxCalendarHeatmap({
   const { end, start, weeks, valuesByDate, max, total } = useMemo(() => {
     const endRaw = endDate ? parseDate(endDate) : new Date();
     const e = new Date(endRaw);
-    e.setUTCHours(0, 0, 0, 0);
+    e.setHours(0, 0, 0, 0);
     const s = startDate ? parseDate(startDate) : addDays(e, -365);
 
     // Normalise data → date map
@@ -129,7 +148,7 @@ export function TkxCalendarHeatmap({
     let totalSum = 0;
     let maxValue = 0;
     for (const point of data) {
-      const iso = toISO(parseDate(point.date));
+      const iso = toLocalKey(parseDate(point.date));
       const next = (map.get(iso) ?? 0) + point.value;
       map.set(iso, next);
       totalSum += point.value;
@@ -188,7 +207,7 @@ export function TkxCalendarHeatmap({
     const out: { week: number; label: string }[] = [];
     let lastMonth = -1;
     weeks.forEach((week, i) => {
-      const m = week[0].getUTCMonth();
+      const m = week[0].getMonth();
       if (m !== lastMonth) {
         out.push({ week: i, label: MONTH_NAMES[m] });
         lastMonth = m;
@@ -217,7 +236,7 @@ export function TkxCalendarHeatmap({
 
   const finalAriaLabel =
     ariaLabel ??
-    `Activity heatmap from ${toISO(start)} to ${toISO(end)}. ${total} total events.`;
+    `Activity heatmap from ${toLocalKey(start)} to ${toLocalKey(end)}. ${total} total events.`;
 
   const wrapStyle: CSSProperties = {
     display: 'inline-block',
@@ -317,7 +336,7 @@ export function TkxCalendarHeatmap({
                 if (day < start || day > end) {
                   return <div key={dayIdx} aria-hidden="true" />;
                 }
-                const iso = toISO(day);
+                const iso = toLocalKey(day);
                 const value = valuesByDate.get(iso) ?? 0;
                 const fill = colorForValue(value, max, scale);
                 const tooltip = fmt({ date: iso, value });

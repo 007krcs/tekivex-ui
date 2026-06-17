@@ -24,7 +24,6 @@ import {
   type Ref,
 } from 'react';
 import { useTheme } from '../themes';
-import { useLocale } from '../i18n';
 
 export interface TkxSignaturePadProps {
   /** Visible label above the canvas (required for WCAG). */
@@ -86,7 +85,6 @@ export const TkxSignaturePad = forwardRef<TkxSignaturePadHandle, TkxSignaturePad
     ref: Ref<TkxSignaturePadHandle>,
   ) {
     const theme = useTheme();
-    const t = useLocale();
     const containerRef = useRef<HTMLDivElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const strokesRef = useRef<Stroke[]>([]);
@@ -202,18 +200,35 @@ export const TkxSignaturePad = forwardRef<TkxSignaturePadHandle, TkxSignaturePad
       onChange?.(canvasRef.current?.toDataURL('image/png') ?? '');
     };
 
+    const clear = useCallback(() => {
+      strokesRef.current = [];
+      currentRef.current = null;
+      redraw();
+      onChange?.(canvasRef.current?.toDataURL('image/png') ?? '');
+    }, [redraw, onChange]);
+
+    const undo = useCallback(() => {
+      strokesRef.current.pop();
+      redraw();
+      onChange?.(canvasRef.current?.toDataURL('image/png') ?? '');
+    }, [redraw, onChange]);
+
+    // Keyboard support on the focused canvas: Backspace/Delete clears the pad,
+    // Ctrl/Cmd+Z removes the last stroke.
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLCanvasElement>) => {
+      if (disabled) return;
+      if (e.key === 'Backspace' || e.key === 'Delete') {
+        e.preventDefault();
+        clear();
+      } else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        undo();
+      }
+    };
+
     useImperativeHandle(ref, () => ({
-      clear: () => {
-        strokesRef.current = [];
-        currentRef.current = null;
-        redraw();
-        onChange?.(canvasRef.current?.toDataURL('image/png') ?? '');
-      },
-      undo: () => {
-        strokesRef.current.pop();
-        redraw();
-        onChange?.(canvasRef.current?.toDataURL('image/png') ?? '');
-      },
+      clear,
+      undo,
       isEmpty: () => strokesRef.current.length === 0,
       toDataURL: (mimeType = 'image/png', quality = 0.92) =>
         canvasRef.current?.toDataURL(mimeType, quality) ?? '',
@@ -221,7 +236,7 @@ export const TkxSignaturePad = forwardRef<TkxSignaturePadHandle, TkxSignaturePad
         new Promise((resolve) => {
           canvasRef.current?.toBlob((b) => resolve(b), mimeType, quality);
         }),
-    }), [redraw, onChange]);
+    }), [clear, undo]);
 
     // ── Styles ─────────────────────────────────────────────────────────────
     const rootStyle: CSSProperties = {
@@ -252,12 +267,14 @@ export const TkxSignaturePad = forwardRef<TkxSignaturePadHandle, TkxSignaturePad
         <canvas
           ref={canvasRef}
           role="img"
-          aria-label={label ?? t.uploadFiles ?? 'Signature pad'}
+          tabIndex={disabled ? -1 : 0}
+          aria-label={label ?? 'Signature pad'}
           style={canvasStyle}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
+          onKeyDown={handleKeyDown}
         />
       </div>
     );

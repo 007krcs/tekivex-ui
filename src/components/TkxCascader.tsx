@@ -22,7 +22,6 @@ export interface TkxCascaderProps {
   onChange?: (value: string[], selectedOptions: CascaderOption[]) => void;
   placeholder?: string;
   label?: string;
-  multiple?: boolean;
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -75,7 +74,6 @@ export function TkxCascader({
   onChange,
   placeholder = 'Select...',
   label,
-  multiple = false,
 }: TkxCascaderProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
@@ -125,10 +123,10 @@ export function TkxCascader({
       if (!opt.children?.length) {
         const selected = getSelectedOptions(options, newPath);
         onChange?.(newPath, selected);
-        if (!multiple) setOpen(false);
+        setOpen(false);
       }
     },
-    [hoverPath, options, onChange, multiple],
+    [hoverPath, options, onChange],
   );
 
   const handleKeyDown = useCallback(

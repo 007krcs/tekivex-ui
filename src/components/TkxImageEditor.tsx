@@ -9,9 +9,8 @@
 //   - 90° rotation (left/right)
 //   - Brightness + contrast sliders (Canvas2D filter)
 //   - Output as Blob/File via getResult()
-//   - Pinch-zoom + pan via touch / wheel
-//   - Keyboard: arrow keys (move), +/- (zoom), R (rotate)
-//   - WCAG: focus indicators, screen-reader announcements, 44px touch targets
+//   - Keyboard: arrow keys nudge the crop frame (Shift = larger step)
+//   - WCAG: focus indicators, labelled crop region, 36px touch targets
 //
 // Rendering pipeline:
 //   image → offscreen canvas (rotated) → display canvas → cropped output canvas

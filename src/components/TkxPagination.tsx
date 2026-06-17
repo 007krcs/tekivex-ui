@@ -27,64 +27,6 @@ const SIZE_MAP = {
   lg: { height: 44, minWidth: 44, fontSize: '1rem', px: 12 },
 };
 
-const ELLIPSIS = '…';
-
-function buildPageRange(
-  currentPage: number,
-  totalPages: number,
-  siblingCount: number,
-  showEdges: boolean,
-): (number | typeof ELLIPSIS)[] {
-  if (totalPages <= 1) return [1];
-
-  const range = (lo: number, hi: number): number[] =>
-    Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
-
-  const siblingStart = Math.max(currentPage - siblingCount, 1);
-  const siblingEnd = Math.min(currentPage + siblingCount, totalPages);
-
-  const showLeftEllipsis = siblingStart > 2;
-  const showRightEllipsis = siblingEnd < totalPages - 1;
-
-  if (!showEdges) {
-    const pages: (number | typeof ELLIPSIS)[] = [];
-    if (showLeftEllipsis) pages.push(ELLIPSIS);
-    pages.push(...range(siblingStart, siblingEnd));
-    if (showRightEllipsis) pages.push(ELLIPSIS);
-    return pages;
-  }
-
-  const pages: (number | typeof ELLIPSIS)[] = [1];
-
-  if (showLeftEllipsis) {
-    pages.push(ELLIPSIS);
-  } else {
-    for (let i = 2; i < siblingStart; i++) pages.push(i);
-  }
-
-  pages.push(...range(siblingStart, siblingEnd));
-
-  if (showRightEllipsis) {
-    pages.push(ELLIPSIS);
-  } else {
-    for (let i = siblingEnd + 1; i < totalPages; i++) pages.push(i);
-  }
-
-  if (totalPages > 1) pages.push(totalPages);
-
-  // deduplicate preserving order
-  const seen = new Set<number | typeof ELLIPSIS>();
-  const result: (number | typeof ELLIPSIS)[] = [];
-  for (const p of pages) {
-    const key = p === ELLIPSIS ? `${ELLIPSIS}${result.length}` : p;
-    if (!seen.has(p === ELLIPSIS ? (key as unknown as typeof ELLIPSIS) : p)) {
-      seen.add(p === ELLIPSIS ? (key as unknown as typeof ELLIPSIS) : p);
-      result.push(p);
-    }
-  }
-  return result;
-}
-
 function buildPages(
   currentPage: number,
   totalPages: number,
@@ -143,12 +85,11 @@ function buildPages(
     }
   }
   return deduped;
-  void buildPageRange;
 }
 
 export function TkxPagination({
   total,
-  pageSize: pageSizeProp = 10,
+  pageSize: pageSizeProp,
   page,
   defaultPage = 1,
   onChange,
@@ -184,8 +125,12 @@ export function TkxPagination({
   const [internalPage, setInternalPage] = useState(defaultPage);
   const currentPage = isControlled ? page! : internalPage;
 
-  const [internalPageSize, setInternalPageSize] = useState(pageSizeProp);
-  const pageSize = pageSizeProp;
+  // `pageSize` is controlled when the prop is explicitly provided; otherwise
+  // the component owns it via internal state (driven by the <select>), and
+  // totalPages/ranges must be derived from that internal value.
+  const isPageSizeControlled = pageSizeProp !== undefined;
+  const [internalPageSize, setInternalPageSize] = useState(pageSizeProp ?? 10);
+  const pageSize = isPageSizeControlled ? pageSizeProp : internalPageSize;
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -197,7 +142,7 @@ export function TkxPagination({
   };
 
   const handlePageSizeChange = (newSize: number) => {
-    setInternalPageSize(newSize);
+    if (!isPageSizeControlled) setInternalPageSize(newSize);
     onPageSizeChange?.(newSize);
     goTo(1);
   };
@@ -374,11 +319,11 @@ export function TkxPagination({
               className={tkx('text-sm')}
               style={{ color: theme.textMuted, fontSize: s.fontSize, whiteSpace: 'nowrap' }}
             >
-              Rows per page
+              {t.itemsPerPage ?? 'Rows per page'}
             </label>
             <select
               id={selectId}
-              value={internalPageSize}
+              value={pageSize}
               onChange={e => handlePageSizeChange(Number(e.target.value))}
               style={{
                 height: s.height,
