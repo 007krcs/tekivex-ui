@@ -25,7 +25,6 @@ export interface TkxClockProps {
   timezone?: string;
   timezone2?: string;
   label?: string;
-  theme?: 'auto' | 'light' | 'dark';
   analogStyle?: AnalogStyle;
   className?: string;
   style?: CSSProperties;

@@ -1,8 +1,7 @@
 'use client';
 
-import { type ReactNode, useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { type ReactNode, useState, useRef, useEffect, useCallback } from 'react';
 import { useTheme } from '../themes';
-import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
 
@@ -14,6 +13,8 @@ export interface TkxAffixProps {
   offsetBottom?: number;
   onChange?: (affixed: boolean) => void;
   target?: () => HTMLElement | Window;
+  /** Accessible label for the affixed region. When omitted, no aria-label is set. */
+  ariaLabel?: string;
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -45,6 +46,7 @@ export function TkxAffix({
   offsetBottom,
   onChange,
   target,
+  ariaLabel,
 }: TkxAffixProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
@@ -53,9 +55,6 @@ export function TkxAffix({
   const [affixed, setAffixed] = useState(false);
   const [placeholderSize, setPlaceholderSize] = useState({ width: 0, height: 0 });
   const prevAffixed = useRef(false);
-
-  // Sanitize any debug info strings for security
-  const _labelSafe = useMemo(() => sanitizeString('Sticky content'), []);
 
   const checkPosition = useCallback(() => {
     const el = placeholderRef.current;
@@ -129,7 +128,7 @@ export function TkxAffix({
       <div
         ref={fixedRef}
         role="region"
-        aria-label={_labelSafe}
+        aria-label={ariaLabel}
         className={tkx(affixed ? 'tkx-affixed' : '')}
         style={fixedStyle}
       >

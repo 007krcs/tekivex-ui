@@ -63,6 +63,8 @@ interface ThumbProps {
   step: number;
   isDisabled: boolean;
   trackColor: string;
+  surfaceColor: string;
+  disabledColor: string;
   trackHeight: number;
   thumbSize: number;
   ariaLabel: string;
@@ -73,7 +75,7 @@ interface ThumbProps {
   onChangeEnd?: () => void;
 }
 
-function Thumb({ value, min, max, step, isDisabled, trackColor, thumbSize, ariaLabel, tooltipMode, formatValue, orientation, onChange, onChangeEnd }: ThumbProps) {
+function Thumb({ value, min, max, step, isDisabled, trackColor, surfaceColor, disabledColor, thumbSize, ariaLabel, tooltipMode, formatValue, orientation, onChange, onChangeEnd }: ThumbProps) {
   const [focused, setFocused] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -174,8 +176,8 @@ function Thumb({ value, min, max, step, isDisabled, trackColor, thumbSize, ariaL
           width: thumbSize,
           height: thumbSize,
           borderRadius: '50%',
-          backgroundColor: isDisabled ? '#888' : trackColor,
-          border: `3px solid #fff`,
+          backgroundColor: isDisabled ? disabledColor : trackColor,
+          border: `3px solid ${surfaceColor}`,
           boxShadow: focused ? `0 0 0 3px ${trackColor}44` : '0 1px 4px rgba(0,0,0,0.3)',
           outline: 'none',
           display: 'block',
@@ -399,6 +401,8 @@ export function TkxSlider({
               step={step}
               isDisabled={isDisabled}
               trackColor={trackColor}
+              surfaceColor={theme.surface}
+              disabledColor={theme.textMuted}
               trackHeight={sizes.track}
               thumbSize={sizes.thumb}
               ariaLabel={safeLabel ?? 'Slider'}
@@ -417,6 +421,8 @@ export function TkxSlider({
                 step={step}
                 isDisabled={isDisabled}
                 trackColor={trackColor}
+                surfaceColor={theme.surface}
+                disabledColor={theme.textMuted}
                 trackHeight={sizes.track}
                 thumbSize={sizes.thumb}
                 ariaLabel={`${safeLabel ?? 'Range'} start`}
@@ -433,6 +439,8 @@ export function TkxSlider({
                 step={step}
                 isDisabled={isDisabled}
                 trackColor={trackColor}
+                surfaceColor={theme.surface}
+                disabledColor={theme.textMuted}
                 trackHeight={sizes.track}
                 thumbSize={sizes.thumb}
                 ariaLabel={`${safeLabel ?? 'Range'} end`}

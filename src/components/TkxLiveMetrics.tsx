@@ -31,7 +31,6 @@ export interface TkxLiveMetricsProps {
   metrics: MetricItem[];
   columns?: number;
   animate?: boolean;
-  refreshInterval?: number;
   onMetricClick?: (metric: MetricItem) => void;
 }
 

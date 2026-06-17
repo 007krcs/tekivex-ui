@@ -29,6 +29,7 @@
 import { useEffect, useState, type CSSProperties, type KeyboardEvent } from 'react';
 import { addr, parseAddr, evaluate, type SpreadsheetData } from './TkxSpreadsheet';
 import { sanitizeUnicode } from '../engine/security';
+import { useTheme, tkxThemeVars } from '../themes';
 
 export interface TkxFormulaBarProps {
   /** The same SpreadsheetData passed to TkxSpreadsheet. */
@@ -58,6 +59,7 @@ export function TkxFormulaBar({
   style,
   className,
 }: TkxFormulaBarProps) {
+  const theme = useTheme();
   const a = addr(active.col, active.row);
   const raw = data.cells[a] ?? '';
 
@@ -110,6 +112,7 @@ export function TkxFormulaBar({
       data-testid="tkx-formula-bar"
       className={className}
       style={{
+        ...tkxThemeVars(theme),
         display: 'flex',
         alignItems: 'stretch',
         gap: 0,
@@ -159,7 +162,7 @@ export function TkxFormulaBar({
           display: 'inline-flex',
           alignItems: 'center',
           padding: '0 12px',
-          color: '#888',
+          color: theme.textMuted,
           fontStyle: 'italic',
           fontFamily: 'serif',
           fontSize: 14,
@@ -202,7 +205,7 @@ export function TkxFormulaBar({
             padding: '0 12px',
             borderLeft: '1px solid var(--tkx-border-soft, #1a1a25)',
             background: 'rgba(0,245,212,0.06)',
-            color: typeof result === 'string' && result.startsWith('#') ? '#ff006e' : '#c4a8ff',
+            color: typeof result === 'string' && result.startsWith('#') ? theme.danger : theme.text,
             fontWeight: 600,
             minWidth: 80,
             justifyContent: 'flex-end',

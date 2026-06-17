@@ -52,11 +52,13 @@ interface ArrowBtnProps {
   onClick: () => void;
   isDisabled: boolean;
   primaryColor: string;
+  surfaceColor: string;
+  textColor: string;
   position: 'inside' | 'outside';
   orientation: 'horizontal' | 'vertical';
 }
 
-function ArrowBtn({ direction, onClick, isDisabled, primaryColor, position, orientation }: ArrowBtnProps) {
+function ArrowBtn({ direction, onClick, isDisabled, primaryColor, surfaceColor, textColor, position, orientation }: ArrowBtnProps) {
   const isVertical = orientation === 'vertical';
   const isPrev = direction === 'prev';
 
@@ -85,9 +87,9 @@ function ArrowBtn({ direction, onClick, isDisabled, primaryColor, position, orie
         height: 36,
         borderRadius: '50%',
         border: 'none',
-        backgroundColor: 'rgba(0,0,0,0.45)',
+        backgroundColor: `${surfaceColor}cc`,
         backdropFilter: 'blur(4px)',
-        color: '#fff',
+        color: textColor,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -98,8 +100,8 @@ function ArrowBtn({ direction, onClick, isDisabled, primaryColor, position, orie
       }}
       onFocus={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 3px ${primaryColor}55`; }}
       onBlur={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
-      onMouseEnter={(e) => { if (!isDisabled) (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(0,0,0,0.65)'; }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(0,0,0,0.45)'; }}
+      onMouseEnter={(e) => { if (!isDisabled) (e.currentTarget as HTMLElement).style.backgroundColor = surfaceColor; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = `${surfaceColor}cc`; }}
     >
       {isVertical ? (
         isPrev ? (
@@ -354,6 +356,8 @@ export function TkxCarousel({
             onClick={prev}
             isDisabled={!canPrev}
             primaryColor={theme.primary}
+            surfaceColor={theme.surface}
+            textColor={theme.text}
             position="outside"
             orientation={orientation}
           />
@@ -389,6 +393,8 @@ export function TkxCarousel({
                 onClick={prev}
                 isDisabled={!canPrev}
                 primaryColor={theme.primary}
+                surfaceColor={theme.surface}
+                textColor={theme.text}
                 position="inside"
                 orientation={orientation}
               />
@@ -397,6 +403,8 @@ export function TkxCarousel({
                 onClick={next}
                 isDisabled={!canNext}
                 primaryColor={theme.primary}
+                surfaceColor={theme.surface}
+                textColor={theme.text}
                 position="inside"
                 orientation={orientation}
               />
@@ -445,7 +453,7 @@ export function TkxCarousel({
                     height: 8,
                     borderRadius: 9999,
                     border: 'none',
-                    backgroundColor: idx === currentIdx ? theme.primary : 'rgba(255,255,255,0.5)',
+                    backgroundColor: idx === currentIdx ? theme.primary : theme.textMuted,
                     cursor: 'pointer',
                     padding: 0,
                     transition: 'width 250ms ease, background 250ms ease',
@@ -466,6 +474,8 @@ export function TkxCarousel({
             onClick={next}
             isDisabled={!canNext}
             primaryColor={theme.primary}
+            surfaceColor={theme.surface}
+            textColor={theme.text}
             position="outside"
             orientation={orientation}
           />

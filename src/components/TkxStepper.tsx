@@ -82,6 +82,7 @@ interface StepCircleProps {
   textMuted: string;
   border: string;
   surface: string;
+  bg: string;
   variant: 'default' | 'outlined' | 'filled';
   reducedMotion: boolean;
   clickable: boolean;
@@ -101,6 +102,7 @@ function StepCircle({
   textMuted,
   border,
   surface,
+  bg,
   variant,
   reducedMotion,
   clickable,
@@ -118,16 +120,16 @@ function StepCircle({
   if (isCompleted) {
     bgColor = variant === 'filled' ? success : surface;
     borderColor = success;
-    color = variant === 'filled' ? '#fff' : success;
+    color = variant === 'filled' ? bg : success;
   } else if (isActive) {
     bgColor = variant === 'outlined' ? surface : primary;
     borderColor = primary;
-    color = variant === 'outlined' ? primary : '#fff';
+    color = variant === 'outlined' ? primary : bg;
     borderWidth = 2;
   } else if (isError) {
     bgColor = variant === 'filled' ? danger : surface;
     borderColor = danger;
-    color = variant === 'filled' ? '#fff' : danger;
+    color = variant === 'filled' ? bg : danger;
   } else if (isPending) {
     bgColor = surface;
     borderColor = border;
@@ -326,6 +328,7 @@ export function TkxStepper({
             textMuted={theme.textMuted}
             border={theme.border}
             surface={theme.surface}
+            bg={theme.bg}
             variant={variant}
             reducedMotion={reducedMotion}
             clickable={clickable}

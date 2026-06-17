@@ -135,8 +135,8 @@ export function TkxAIThinking({
         {/* Indicator */}
         <div style={{ opacity: active ? 1 : 0.35, transition: 'opacity 0.3s' }}>
           {active ? indicator : (
-            <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: '#fff', fontSize: 11, fontWeight: 900 }}>✓</span>
+            <div style={{ width: 20, height: 20, borderRadius: '50%', background: theme.success, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ color: theme.bg, fontSize: 11, fontWeight: 900 }}>✓</span>
             </div>
           )}
         </div>
@@ -150,11 +150,6 @@ export function TkxAIThinking({
           }}>
             {active ? (steps ? steps[stepIdx] : label) : 'Done'}
           </span>
-          {active && (
-            <span style={{ fontSize: fs - 2, color: theme.textMuted }}>
-              ⚛ Quantum AI · Amplitude Amplification
-            </span>
-          )}
         </div>
       </div>
 

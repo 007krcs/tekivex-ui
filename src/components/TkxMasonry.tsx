@@ -8,8 +8,6 @@ import {
   type ReactNode,
   type CSSProperties,
 } from 'react';
-import { useTheme } from '../themes';
-import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
 
@@ -100,7 +98,6 @@ export function TkxMasonry({
   gap = 16,
   children,
 }: TkxMasonryProps) {
-  const theme = useTheme();
   const reduced = useReducedMotion();
   const breakpoint = useBreakpoint();
 

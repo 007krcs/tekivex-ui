@@ -20,9 +20,6 @@ export interface TkxAvatarProps extends Omit<ImgHTMLAttributes<HTMLImageElement>
 }
 
 const SIZE_PX: Record<AvatarSize, number> = { xs: 24, sm: 32, md: 40, lg: 56, xl: 72 };
-const STATUS_COLORS: Record<AvatarStatus, string> = {
-  online: '#06d6a0', offline: '#8888aa', away: '#ffbe0b', busy: '#f72585',
-};
 
 export const TkxAvatar = forwardRef<HTMLDivElement, TkxAvatarProps>(
   ({ src, alt, initials, size = 'md', shape = 'circle', status, className, style, ...rest }, ref) => {
@@ -35,6 +32,12 @@ export const TkxAvatar = forwardRef<HTMLDivElement, TkxAvatarProps>(
     const showImage = src && !imageError;
     const showInitials = !showImage && initials;
     const statusDotSize = Math.max(8, px * 0.22);
+    const statusColors: Record<AvatarStatus, string> = {
+      online: theme.success,
+      away: theme.warning,
+      busy: theme.danger,
+      offline: theme.textMuted,
+    };
 
     const containerClass = tkx(
       'relative inline-flex shrink-0',
@@ -90,7 +93,7 @@ export const TkxAvatar = forwardRef<HTMLDivElement, TkxAvatarProps>(
             className={tkx('absolute bottom-0 right-0 rounded-full')}
             style={{
               width: statusDotSize, height: statusDotSize,
-              backgroundColor: STATUS_COLORS[status],
+              backgroundColor: statusColors[status],
               border: `2px solid ${theme.bg}`,
             }}
           />

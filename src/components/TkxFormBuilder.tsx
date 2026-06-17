@@ -25,6 +25,7 @@ import {
   type ChangeEvent,
   type ReactNode,
 } from 'react';
+import { useTheme, tkxThemeVars } from '../themes';
 
 // ── Public types ────────────────────────────────────────────────────────────
 
@@ -783,6 +784,7 @@ export function TkxFormBuilder({
   style,
   className,
 }: TkxFormBuilderProps) {
+  const theme = useTheme();
   const [tab, setTab] = useState<'design' | 'preview' | 'json'>(defaultTab);
   const [selectedId, setSelectedId] = useState<string | null>(
     schema.fields[0]?.id ?? null,
@@ -839,6 +841,7 @@ export function TkxFormBuilder({
       className={className}
       data-testid="tkx-form-builder"
       style={{
+        ...tkxThemeVars(theme),
         display: 'flex',
         flexDirection: 'column',
         height: 600,
@@ -873,7 +876,7 @@ export function TkxFormBuilder({
               minHeight: 44,
               border: 'none',
               background: tab === id ? 'var(--tkx-bg, #0a0a0f)' : 'transparent',
-              color: tab === id ? 'var(--tkx-accent, #00f5d4)' : '#aaa',
+              color: tab === id ? 'var(--tkx-accent, #00f5d4)' : theme.textMuted,
               borderBottom: tab === id ? '2px solid var(--tkx-accent, #00f5d4)' : '2px solid transparent',
               cursor: 'pointer',
               fontSize: 13,
@@ -915,7 +918,7 @@ export function TkxFormBuilder({
             padding: 16,
             overflow: 'auto',
             background: 'var(--tkx-bg-subtle, #0d0d14)',
-            color: '#00f5d4',
+            color: theme.primary,
             fontSize: 12,
             fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           }}

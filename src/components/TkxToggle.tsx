@@ -81,7 +81,7 @@ export const TkxToggle = forwardRef<HTMLButtonElement, TkxToggleProps>(
               top: '50%', left: thumbOffset,
               width: td, height: td,
               transform: 'translateY(-50%)',
-              backgroundColor: '#ffffff',
+              backgroundColor: theme.surface,
               boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
               transition: reducedMotion ? 'none' : 'left 200ms ease',
             }}

@@ -23,11 +23,14 @@ const HEIGHT: Record<NonNullable<TkxAIConfidenceBarProps['size']>, number> = {
   sm: 4, md: 8, lg: 12,
 };
 
-function confidenceColor(value: number, primary: string): string {
-  if (value >= 80) return '#10b981';  // green
-  if (value >= 55) return primary;    // brand
-  if (value >= 30) return '#f59e0b';  // amber
-  return '#ef4444';                   // red
+function confidenceColor(
+  value: number,
+  theme: { primary: string; success: string; warning: string; danger: string },
+): string {
+  if (value >= 80) return theme.success;  // green
+  if (value >= 55) return theme.primary;  // brand
+  if (value >= 30) return theme.warning;  // amber
+  return theme.danger;                    // red
 }
 
 export function TkxAIConfidenceBar({
@@ -42,7 +45,7 @@ export function TkxAIConfidenceBar({
   const theme = useTheme();
   const fillRef = useRef<HTMLDivElement>(null);
   const clamped = Math.max(0, Math.min(100, value));
-  const color = confidenceColor(clamped, theme.primary);
+  const color = confidenceColor(clamped, theme);
   const h = HEIGHT[size];
 
   useEffect(() => {

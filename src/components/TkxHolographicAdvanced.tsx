@@ -27,6 +27,7 @@ import {
   type ReactNode,
 } from 'react';
 import { injectHolographicStyles } from './TkxHolographic';
+import { useTheme, tkxThemeVars } from '../themes';
 
 // Make sure CSS is registered the first time any extended component renders.
 function useEnsureStyles() {
@@ -59,11 +60,13 @@ export const TkxHolographicPanel = forwardRef<HTMLDivElement, TkxHolographicPane
     ref,
   ) {
     useEnsureStyles();
+    const theme = useTheme();
     return (
       <div
         ref={ref}
         className="tkx-holo-root"
         style={{
+          ...tkxThemeVars(theme),
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
@@ -73,7 +76,7 @@ export const TkxHolographicPanel = forwardRef<HTMLDivElement, TkxHolographicPane
           border: `1px solid ${accent}33`,
           boxShadow: `0 0 0 1px ${accent}11, 0 12px 40px rgba(0,0,0,0.5)`,
           overflow: 'hidden',
-          color: '#e8e8f4',
+          color: theme.text,
           ...style,
         }}
         {...rest}
@@ -120,7 +123,7 @@ export const TkxHolographicPanel = forwardRef<HTMLDivElement, TkxHolographicPane
                     minHeight: 38,
                     border: 'none',
                     background: 'transparent',
-                    color: on ? accent : '#aaa',
+                    color: on ? accent : theme.textMuted,
                     fontWeight: 600,
                     fontSize: 12,
                     cursor: 'pointer',
@@ -186,6 +189,7 @@ export function TkxHolographicGauge({
   style,
 }: TkxHolographicGaugeProps) {
   useEnsureStyles();
+  const theme = useTheme();
   const v = Math.max(0, Math.min(100, value));
   const stroke = size * thickness;
   const r = (size - stroke) / 2;
@@ -205,6 +209,7 @@ export function TkxHolographicGauge({
       aria-valuetext={ariaValueText ?? `${v.toFixed(0)} percent`}
       className={className}
       style={{
+        ...tkxThemeVars(theme),
         position: 'relative',
         width: size,
         height: size,
@@ -253,7 +258,7 @@ export function TkxHolographicGauge({
           position: 'relative',
           textAlign: 'center',
           zIndex: 1,
-          color: '#e8e8f4',
+          color: theme.text,
         }}
       >
         <div
@@ -270,7 +275,7 @@ export function TkxHolographicGauge({
           {label ?? `${v.toFixed(0)}%`}
         </div>
         {caption && (
-          <div style={{ fontSize: 10, color: '#888', marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div style={{ fontSize: 10, color: theme.textMuted, marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             {caption}
           </div>
         )}
@@ -309,12 +314,13 @@ export function TkxHolographicProgress({
   style,
 }: TkxHolographicProgressProps) {
   useEnsureStyles();
+  const theme = useTheme();
   const v = Math.max(0, Math.min(1, value));
   return (
-    <div className={className} style={style}>
+    <div className={className} style={{ ...tkxThemeVars(theme), ...style }}>
       {(label || valueLabel) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6, fontSize: 12 }}>
-          <span style={{ color: '#aaa', fontWeight: 600 }}>{label}</span>
+          <span style={{ color: theme.textMuted, fontWeight: 600 }}>{label}</span>
           <span style={{ color: accent, fontFamily: 'ui-monospace, monospace', fontVariantNumeric: 'tabular-nums' }}>
             {valueLabel ?? `${(v * 100).toFixed(0)}%`}
           </span>
@@ -382,6 +388,7 @@ export function TkxHolographicTerminal({
   style,
 }: TkxHolographicTerminalProps) {
   useEnsureStyles();
+  const theme = useTheme();
   const wrapRef = useRef<HTMLDivElement | null>(null);
   // Type-on: render each new line character-by-character.
   const [typed, setTyped] = useState<string[]>(() => (typeSpeed === 0 ? lines : []));
@@ -441,6 +448,7 @@ export function TkxHolographicTerminal({
       aria-live="polite"
       className={className}
       style={{
+        ...tkxThemeVars(theme),
         position: 'relative',
         height,
         padding: 12,
@@ -461,7 +469,7 @@ export function TkxHolographicTerminal({
       <pre style={{ margin: 0, position: 'relative', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
         {visible.map((line, i) => (
           <div key={i}>
-            <span style={{ color: '#666' }}>{prompt}</span>
+            <span style={{ color: theme.textMuted }}>{prompt}</span>
             <span style={{ color: accent }}>{line}</span>
             {i === visible.length - 1 && (
               <span

@@ -152,8 +152,8 @@ describe('TkxLiveMetrics', () => {
     expect(container.firstChild).toBeTruthy();
   });
 
-  it('refreshInterval prop accepted', () => {
-    const { container } = render(<TkxLiveMetrics metrics={metrics} refreshInterval={1000} />, { wrapper: W });
+  it('renders with the default refresh behaviour', () => {
+    const { container } = render(<TkxLiveMetrics metrics={metrics} />, { wrapper: W });
     expect(container.firstChild).toBeTruthy();
   });
 });

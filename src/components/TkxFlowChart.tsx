@@ -44,6 +44,7 @@ import {
   type ReactNode,
   type WheelEvent,
 } from 'react';
+import { useTheme, tkxThemeVars } from '../themes';
 
 // ── Public types ────────────────────────────────────────────────────────────
 
@@ -172,6 +173,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
     },
     forwardedRef,
   ) {
+    const theme = useTheme();
     const [viewport, setViewport] = useState<Viewport>(initialViewport ?? DEFAULT_VIEWPORT);
     const [internalSelected, setInternalSelected] = useState<string | null>(null);
     const selected = controlledSelected !== undefined ? controlledSelected : internalSelected;
@@ -589,6 +591,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
         onWheel={onWheel}
         data-testid="tkx-flowchart"
         style={{
+          ...tkxThemeVars(theme),
           position: 'relative',
           width: '100%',
           height,
@@ -815,7 +818,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                       borderRadius: 4,
                       border: `1px solid ${accent}`,
                       background: 'rgba(8,10,25,0.95)',
-                      color: '#fff',
+                      color: theme.text,
                       textAlign: 'center',
                       fontSize: 'inherit',
                       fontWeight: 'inherit',
@@ -875,7 +878,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                     cursor: 'crosshair',
                     padding: 0,
                     touchAction: 'none',
-                    color: '#0a0a0f',
+                    color: theme.bg,
                     fontSize: 12,
                     fontWeight: 900,
                     fontFamily: 'inherit',
@@ -945,7 +948,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 display: 'inline-flex',
                 alignItems: 'center',
                 padding: '0 10px',
-                color: '#aaa',
+                color: theme.textMuted,
                 fontSize: 11,
                 fontFamily: 'ui-monospace, monospace',
                 fontVariantNumeric: 'tabular-nums',
@@ -1033,7 +1036,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
         {showInspector && selected && (() => {
           const node = data.nodes.find((n) => n.id === selected);
           if (!node) return null;
-          const accent = node.color ?? '#00f5d4';
+          const accent = node.color ?? theme.primary;
           const w = node.width ?? 160;
           const h = node.height ?? 60;
           const patch = (next: Partial<FlowNode>) => {
@@ -1063,7 +1066,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 zIndex: 5,
               }}
             >
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#888', marginBottom: 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: theme.textMuted, marginBottom: 8 }}>
                 Properties
               </div>
               <InspectorField label="Label">

@@ -1,3 +1,5 @@
+'use client';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // TkxPivotTable — group + aggregate a flat record list
 //
@@ -15,6 +17,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useMemo, type CSSProperties } from 'react';
+import { useTheme, tkxThemeVars } from '../themes';
 
 // ── Public types ────────────────────────────────────────────────────────────
 
@@ -155,6 +158,8 @@ export function TkxPivotTable({
     throw new Error('TkxPivotTable: values must contain at least one entry');
   }
 
+  const theme = useTheme();
+
   const { rowPaths, colPaths, lookup, rowTotals, colTotals, grandTotal } = useMemo(() => {
     // Build the row + column key trees.
     const rowTree = emptyNode();
@@ -259,6 +264,7 @@ export function TkxPivotTable({
     <div
       className={className}
       style={{
+        ...tkxThemeVars(theme),
         overflow: 'auto',
         border: `1px solid ${borderC}`,
         borderRadius: 8,
@@ -291,7 +297,7 @@ export function TkxPivotTable({
                     border: `1px solid ${borderC}`,
                     padding: cellPad,
                     fontWeight: 700,
-                    color: '#888',
+                    color: theme.textMuted,
                     textAlign: 'left',
                   }}
                 >
@@ -354,7 +360,7 @@ export function TkxPivotTable({
                   border: `1px solid ${borderC}`,
                   padding: cellPad,
                   fontWeight: 700,
-                  color: '#888',
+                  color: theme.textMuted,
                   textAlign: 'left',
                 }}
               >
@@ -372,7 +378,7 @@ export function TkxPivotTable({
                     padding: cellPad,
                     fontSize: 11,
                     fontWeight: 600,
-                    color: '#aaa',
+                    color: theme.textMuted,
                     textAlign: 'right',
                   }}
                 >

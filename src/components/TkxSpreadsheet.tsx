@@ -31,6 +31,7 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from 'react';
+import { useTheme, tkxThemeVars } from '../themes';
 
 // ── Public types ────────────────────────────────────────────────────────────
 
@@ -538,6 +539,7 @@ export function TkxSpreadsheet({
   style,
   className,
 }: TkxSpreadsheetProps) {
+  const theme = useTheme();
   const [active, setActive] = useState<{ col: number; row: number }>({ col: 0, row: 0 });
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
@@ -650,6 +652,7 @@ export function TkxSpreadsheet({
       data-testid="tkx-spreadsheet"
       onKeyDown={onGridKeyDown}
       style={{
+        ...tkxThemeVars(theme),
         position: 'relative',
         width: totalWidth,
         maxWidth: '100%',
@@ -698,7 +701,7 @@ export function TkxSpreadsheet({
               textAlign: 'center',
               lineHeight: `${headerHeight}px`,
               fontWeight: 700,
-              color: c === active.col ? 'var(--tkx-accent, #00f5d4)' : '#888',
+              color: c === active.col ? 'var(--tkx-accent, #00f5d4)' : theme.textMuted,
               borderRight: '1px solid var(--tkx-border-soft, #1a1a25)',
             }}
           >
@@ -723,7 +726,7 @@ export function TkxSpreadsheet({
               textAlign: 'center',
               lineHeight: `${rowHeight}px`,
               fontWeight: 700,
-              color: r === active.row ? 'var(--tkx-accent, #00f5d4)' : '#888',
+              color: r === active.row ? 'var(--tkx-accent, #00f5d4)' : theme.textMuted,
               background: 'var(--tkx-bg-subtle, #0d0d14)',
               borderRight: '1px solid var(--tkx-border, #2a2a3e)',
               borderBottom: '1px solid var(--tkx-border-soft, #1a1a25)',
@@ -766,7 +769,7 @@ export function TkxSpreadsheet({
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   color: typeof computed(a) === 'string' && (computed(a) as string).startsWith('#')
-                    ? '#ff006e'
+                    ? theme.danger
                     : isFormula
                       ? 'var(--tkx-accent, #00f5d4)'
                       : 'var(--tkx-fg, #e8e8f4)',

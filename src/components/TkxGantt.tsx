@@ -25,6 +25,7 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from 'react';
+import { useTheme, tkxThemeVars } from '../themes';
 
 // ── Public types ────────────────────────────────────────────────────────────
 
@@ -113,6 +114,7 @@ export function TkxGantt({
   style,
   className,
 }: TkxGanttProps) {
+  const theme = useTheme();
   const [internalSelected, setInternalSelected] = useState<string | null>(tasks[0]?.id ?? null);
   const selected = controlledSelected !== undefined ? controlledSelected : internalSelected;
 
@@ -216,6 +218,7 @@ export function TkxGantt({
       onKeyDown={onKeyDown}
       data-testid="tkx-gantt"
       style={{
+        ...tkxThemeVars(theme),
         display: 'flex',
         outline: 'none',
         border: '1px solid var(--tkx-border, #2a2a3e)',
@@ -249,7 +252,7 @@ export function TkxGantt({
             fontWeight: 700,
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            color: '#888',
+            color: theme.textMuted,
           }}
         >
           Task
@@ -313,7 +316,7 @@ export function TkxGantt({
                     width: dayWidth,
                     height: headerHeight,
                     fontSize: 10,
-                    color: isWeekend ? '#666' : '#aaa',
+                    color: isWeekend ? theme.textMuted : theme.text,
                     textAlign: 'center',
                     borderRight: '1px solid var(--tkx-border-soft, #1a1a25)',
                     paddingTop: 4,
