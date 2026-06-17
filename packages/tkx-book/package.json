@@ -1,5 +1,5 @@
 {
-  "name": "@tekivex/book",
+  "name": "tekivex-book",
   "version": "0.2.0-preview",
   "private": false,
   "description": "Component playground for tekivex-ui. Pure Vite + React. Tabbed addons: Controls, Docs (MDX), A11y (axe-core), Viewport (device frames), Snapshot (visual diff), Interactions (record/replay). CSF-compatible.",
