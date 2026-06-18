@@ -419,7 +419,7 @@ export function TkxOrgChart({
 
   // Build initial collapsed set.
   const [collapsed, setCollapsed] = useState<Set<string>>(() => {
-    if (!collapsedByDefault) return new Set();
+    if (!collapsedByDefault || !data) return new Set();
     const s = new Set<string>();
     function walk(n: OrgNode): void {
       if (n.id !== data.id) s.add(n.id);
@@ -430,10 +430,13 @@ export function TkxOrgChart({
   });
   const [zoom, setZoom] = useState(clampZoom(initialZoom));
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [activeId, setActiveId] = useState<string>(data.id);
+  const [activeId, setActiveId] = useState<string>(data?.id ?? '');
 
   const layout = useMemo(
-    () => buildLayout(data, collapsed, { nodeWidth, nodeHeight, siblingGap, levelGap, direction }),
+    () =>
+      data
+        ? buildLayout(data, collapsed, { nodeWidth, nodeHeight, siblingGap, levelGap, direction })
+        : { nodes: [], width: 0, height: 0 },
     [data, collapsed, nodeWidth, nodeHeight, siblingGap, levelGap, direction],
   );
 

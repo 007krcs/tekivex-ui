@@ -78,8 +78,8 @@ function SortIcon({ dir }: { dir: SortDirection }) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function TkxTable<T extends Record<string, unknown>>({
-  columns,
-  data,
+  columns: columns_,
+  data: data_,
   caption,
   sortable,
   stickyHeader,
@@ -100,6 +100,10 @@ export function TkxTable<T extends Record<string, unknown>>({
   compact,
 }: TkxTableProps<T>) {
   const theme = useTheme();
+
+  // Guard against missing array props (e.g. mounted before data is wired).
+  const columns = columns_ ?? [];
+  const data = data_ ?? [];
 
   // ── Sort ───────────────────────────────────────────────────────────────
   const [sortKey, setSortKey] = useState<keyof T | null>(null);

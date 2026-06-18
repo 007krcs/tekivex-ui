@@ -206,14 +206,14 @@ export function TkxMindMap({
 }: TkxMindMapProps) {
   const theme = useTheme();
   // ── Uncontrolled fallbacks ──
-  const [internalSelected, setInternalSelected] = useState<string | null>(root.id);
+  const [internalSelected, setInternalSelected] = useState<string | null>(root?.id ?? null);
   const [internalCollapsed, setInternalCollapsed] = useState<Set<string>>(() => {
     const s = new Set<string>();
     function walk(n: MindMapNode) {
       if (n.collapsed) s.add(n.id);
       n.children?.forEach(walk);
     }
-    walk(root);
+    if (root) walk(root);
     return s;
   });
   const selected = controlledSelected !== undefined ? controlledSelected : internalSelected;
@@ -221,9 +221,15 @@ export function TkxMindMap({
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // ── Layout ──
-  const laid = useMemo(() => layout(root, 0, collapsed, 0), [root, collapsed]);
-  const flat = useMemo(() => flatten(laid, levelWidth, leafHeight), [laid, levelWidth, leafHeight]);
-  const navMaps = useMemo(() => buildNavMaps(laid), [laid]);
+  const laid = useMemo(() => (root ? layout(root, 0, collapsed, 0) : null), [root, collapsed]);
+  const flat = useMemo(
+    () => (laid ? flatten(laid, levelWidth, leafHeight) : []),
+    [laid, levelWidth, leafHeight],
+  );
+  const navMaps = useMemo(
+    () => (laid ? buildNavMaps(laid) : { parents: new Map(), siblings: new Map(), firstChild: new Map() }),
+    [laid],
+  );
 
   // SVG sizing — bounding box of all flat nodes plus padding for node width.
   const maxX = Math.max(...flat.map((f) => f.x), 0) + nodeWidth;
@@ -304,6 +310,27 @@ export function TkxMindMap({
       select(next);
     }
   };
+
+  // ── Empty state (no root) ──
+  if (!root) {
+    return (
+      <div
+        ref={containerRef}
+        className={className}
+        role="tree"
+        aria-label="Mind map"
+        style={{
+          position: 'relative',
+          width: '100%',
+          ...tkxThemeVars(theme),
+          background: 'var(--tkx-bg)',
+          color: 'var(--tkx-fg)',
+          ...style,
+        }}
+        data-testid="tkx-mindmap"
+      />
+    );
+  }
 
   // ── Render ──
   return (

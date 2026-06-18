@@ -335,7 +335,7 @@ const BLOCK_RENDERERS: Record<string, (props: BlockRendererProps) => ReactNode> 
 // ── Main component ──────────────────────────────────────────────────────────
 
 export function TkxRichTextDisplay({
-  blocks,
+  blocks = [],
   className,
   style,
 }: TkxRichTextDisplayProps) {

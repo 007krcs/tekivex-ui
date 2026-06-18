@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useId, useEffect, type ReactElement, cloneElement } from 'react';
+import { useState, useRef, useId, useEffect, isValidElement, type ReactElement, cloneElement } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
 import { useEscapeKey, useClickOutside, useReducedMotion } from '../hooks';
@@ -50,15 +50,23 @@ export function TkxTooltip({ content, children, placement = 'top', delay = 300 }
     };
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const child = children as ReactElement<any>;
-  const trigger = cloneElement(child, {
-    'aria-describedby': visible ? tooltipId : undefined,
-    onMouseEnter: (e: React.MouseEvent) => { child.props.onMouseEnter?.(e); show(); },
-    onMouseLeave: (e: React.MouseEvent) => { child.props.onMouseLeave?.(e); hide(); },
-    onFocus: (e: React.FocusEvent) => { child.props.onFocus?.(e); show(); },
-    onBlur: (e: React.FocusEvent) => { child.props.onBlur?.(e); hide(); },
-  });
+  // If children is undefined or not a valid React element, cloneElement would
+  // throw ("must be a React element"). Render the children as-is in that case
+  // so a missing/conditional child doesn't white-screen the whole tree.
+  let trigger: React.ReactNode;
+  if (isValidElement(children)) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const child = children as ReactElement<any>;
+    trigger = cloneElement(child, {
+      'aria-describedby': visible ? tooltipId : undefined,
+      onMouseEnter: (e: React.MouseEvent) => { child.props.onMouseEnter?.(e); show(); },
+      onMouseLeave: (e: React.MouseEvent) => { child.props.onMouseLeave?.(e); hide(); },
+      onFocus: (e: React.FocusEvent) => { child.props.onFocus?.(e); show(); },
+      onBlur: (e: React.FocusEvent) => { child.props.onBlur?.(e); hide(); },
+    });
+  } else {
+    trigger = children ?? null;
+  }
 
   return (
     <span ref={wrapperRef} className={tkx('relative inline-flex')}>

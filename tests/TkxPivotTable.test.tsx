@@ -179,13 +179,14 @@ describe('TkxPivotTable', () => {
     expect(screen.queryByTestId('pivot-rowtotal-0-0')).not.toBeInTheDocument();
   });
 
-  it('throws when no values are configured', () => {
-    expect(() =>
-      render(
-        <TkxPivotTable data={SALES} rows={['region']} values={[]} />,
-        { wrapper: W },
-      ),
-    ).toThrow(/values/);
+  it('renders an empty state (no crash) when no values are configured', () => {
+    const { container } = render(
+      <TkxPivotTable data={SALES} rows={['region']} values={[]} />,
+      { wrapper: W },
+    );
+    // Empty state: no table body rows, just the container shell.
+    expect(screen.getByTestId('tkx-pivot')).toBeInTheDocument();
+    expect(container.querySelector('table')).not.toBeInTheDocument();
   });
 
   it('handles multi-level row groups', () => {

@@ -129,7 +129,7 @@ function Spinner({ size, color }: { size: number; color: string }) {
 // ── Main Component ─────────────────────────────────────────────────────────────
 
 export function TkxSelect({
-  options,
+  options = [],
   value: valueProp,
   defaultValue,
   placeholder,

@@ -100,7 +100,7 @@ function AnchorItem({
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function TkxAnchor({
-  items,
+  items = [],
   offsetTop = 0,
   getCurrentAnchor,
   onChange,

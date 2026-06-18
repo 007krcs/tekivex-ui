@@ -104,7 +104,7 @@ function shortMonth(d: Date): string {
 // ── Component ───────────────────────────────────────────────────────────────
 
 export function TkxGantt({
-  tasks,
+  tasks = [],
   dayWidth = 28,
   rowHeight = 40,
   labelColumnWidth = 220,

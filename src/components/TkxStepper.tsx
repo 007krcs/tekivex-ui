@@ -262,7 +262,7 @@ function Connector({
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function TkxStepper({
-  steps,
+  steps = [],
   activeStep = 0,
   orientation = 'horizontal',
   variant = 'default',

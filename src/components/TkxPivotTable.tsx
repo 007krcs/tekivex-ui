@@ -143,10 +143,10 @@ function leaves(node: Node, depth: number, prefix: string[] = []): string[][] {
 const lexicographic = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
 
 export function TkxPivotTable({
-  data,
-  rows,
+  data = [],
+  rows = [],
   cols = [],
-  values,
+  values = [],
   sortRows = lexicographic,
   sortCols = lexicographic,
   showTotals = true,
@@ -154,10 +154,6 @@ export function TkxPivotTable({
   style,
   className,
 }: TkxPivotTableProps) {
-  if (values.length === 0) {
-    throw new Error('TkxPivotTable: values must contain at least one entry');
-  }
-
   const theme = useTheme();
 
   const { rowPaths, colPaths, lookup, rowTotals, colTotals, grandTotal } = useMemo(() => {
@@ -249,6 +245,24 @@ export function TkxPivotTable({
       grandTotal: (vi: number): number | null => read(grandStates[vi], values[vi].agg),
     };
   }, [data, rows, cols, values, sortRows, sortCols]);
+
+  // ── Empty state (no value aggregations configured) ──
+  if (values.length === 0) {
+    return (
+      <div
+        className={className}
+        style={{
+          ...tkxThemeVars(theme),
+          border: '1px solid var(--tkx-border, #2a2a3e)',
+          borderRadius: 8,
+          background: 'var(--tkx-bg, #0a0a0f)',
+          color: 'var(--tkx-fg, #e8e8f4)',
+          ...style,
+        }}
+        data-testid="tkx-pivot"
+      />
+    );
+  }
 
   // ── Render ──
   const numCols = colPaths.length * values.length + (showTotals ? values.length : 0);

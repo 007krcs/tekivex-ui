@@ -119,7 +119,7 @@ function colorForValue(value: number, max: number, scale: string[]): string {
 // ── Component ───────────────────────────────────────────────────────────────
 
 export function TkxCalendarHeatmap({
-  data,
+  data = [],
   endDate,
   startDate,
   colors,

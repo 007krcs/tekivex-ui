@@ -8,6 +8,13 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
+    // Heavy components (DataGrid, Spreadsheet, CalendarHeatmap) legitimately
+    // take >5s to render in jsdom under load; the default 5s timeout flaked
+    // them. Give each worker fork extra heap so the broad render-smoke suite
+    // can't thrash GC near the 4 GB default and time out its neighbours.
+    testTimeout: 20000,
+    pool: 'forks',
+    poolOptions: { forks: { execArgv: ['--max-old-space-size=6144'] } },
     exclude: [
       '**/node_modules/**',
       '**/dist/**',

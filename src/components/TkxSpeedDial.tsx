@@ -111,7 +111,7 @@ const ACTION_BUTTON_SIZE = 48;
 const SPACING = 64;
 
 export function TkxSpeedDial({
-  actions,
+  actions = [],
   icon,
   direction = 'up',
   position = 'bottom-right',

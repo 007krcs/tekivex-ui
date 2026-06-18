@@ -261,8 +261,8 @@ function AttachmentBlock({ att, theme }: { att: PeerAttachment; theme: ReturnTyp
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function TkxMessageThread({
-  messages,
-  senders,
+  messages = [],
+  senders = {},
   currentUserId,
   onSend,
   onReact,

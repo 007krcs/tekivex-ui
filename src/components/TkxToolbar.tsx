@@ -55,7 +55,7 @@ const SIZE_MAP: Record<'sm' | 'md' | 'lg', SizeConfig> = {
 // ── Component ───────────────────────────────────────────────────────────────
 
 export function TkxToolbar({
-  items,
+  items = [],
   orientation = 'horizontal',
   size = 'md',
   variant = 'default',

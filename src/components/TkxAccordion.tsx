@@ -269,7 +269,7 @@ function AnimatedPanel({ isOpen, reduced, children, id, triggerId }: AnimatedPan
 // ── Main Component ────────────────────────────────────────────────────────────
 
 export function TkxAccordion({
-  items,
+  items = [],
   multiple = false,
   defaultOpen,
   value: valueProp,

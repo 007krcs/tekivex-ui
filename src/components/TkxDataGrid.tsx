@@ -735,8 +735,8 @@ function CellEditor<T>({
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function TkxDataGrid<T = any>({
-  columns,
-  data,
+  columns = [],
+  data = [],
   rowKey,
   selectable = false,
   selectedRows = [],

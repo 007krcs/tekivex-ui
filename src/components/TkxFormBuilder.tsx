@@ -777,7 +777,7 @@ const inputStyle: CSSProperties = {
 // ── Main component ──────────────────────────────────────────────────────────
 
 export function TkxFormBuilder({
-  schema,
+  schema = { fields: [] },
   onChange,
   allowedTypes = ALL_TYPES,
   defaultTab = 'design',
@@ -785,55 +785,60 @@ export function TkxFormBuilder({
   className,
 }: TkxFormBuilderProps) {
   const theme = useTheme();
+  // Guard against an undefined/partial schema (e.g. async data not yet loaded).
+  const safeSchema = useMemo<FormSchema>(
+    () => ({ ...schema, fields: schema?.fields ?? [] }),
+    [schema],
+  );
   const [tab, setTab] = useState<'design' | 'preview' | 'json'>(defaultTab);
   const [selectedId, setSelectedId] = useState<string | null>(
-    schema.fields[0]?.id ?? null,
+    safeSchema.fields[0]?.id ?? null,
   );
 
   const selectedField = useMemo(
-    () => schema.fields.find((f) => f.id === selectedId) ?? null,
-    [schema.fields, selectedId],
+    () => safeSchema.fields.find((f) => f.id === selectedId) ?? null,
+    [safeSchema.fields, selectedId],
   );
 
   const addField = useCallback(
     (type: FormFieldType) => {
-      const field = makeField(type, schema.fields.length);
-      onChange({ ...schema, fields: [...schema.fields, field] });
+      const field = makeField(type, safeSchema.fields.length);
+      onChange?.({ ...safeSchema, fields: [...safeSchema.fields, field] });
       setSelectedId(field.id);
     },
-    [schema, onChange],
+    [safeSchema, onChange],
   );
 
   const moveField = useCallback(
     (id: string, dir: -1 | 1) => {
-      const i = schema.fields.findIndex((f) => f.id === id);
+      const i = safeSchema.fields.findIndex((f) => f.id === id);
       if (i < 0) return;
       const j = i + dir;
-      if (j < 0 || j >= schema.fields.length) return;
-      const next = schema.fields.slice();
+      if (j < 0 || j >= safeSchema.fields.length) return;
+      const next = safeSchema.fields.slice();
       [next[i], next[j]] = [next[j], next[i]];
-      onChange({ ...schema, fields: next });
+      onChange?.({ ...safeSchema, fields: next });
     },
-    [schema, onChange],
+    [safeSchema, onChange],
   );
 
   const removeField = useCallback(
     (id: string) => {
-      onChange({ ...schema, fields: schema.fields.filter((f) => f.id !== id) });
+      onChange?.({ ...safeSchema, fields: safeSchema.fields.filter((f) => f.id !== id) });
       if (selectedId === id) setSelectedId(null);
     },
-    [schema, onChange, selectedId],
+    [safeSchema, onChange, selectedId],
   );
 
   const patchField = useCallback(
     (patch: Partial<FormField>) => {
       if (!selectedField) return;
-      onChange({
-        ...schema,
-        fields: schema.fields.map((f) => (f.id === selectedField.id ? { ...f, ...patch } : f)),
+      onChange?.({
+        ...safeSchema,
+        fields: safeSchema.fields.map((f) => (f.id === selectedField.id ? { ...f, ...patch } : f)),
       });
     },
-    [schema, onChange, selectedField],
+    [safeSchema, onChange, selectedField],
   );
 
   return (
@@ -893,7 +898,7 @@ export function TkxFormBuilder({
         <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
           <Palette types={allowedTypes} onAdd={addField} />
           <Canvas
-            fields={schema.fields}
+            fields={safeSchema.fields}
             selectedId={selectedId}
             onSelect={setSelectedId}
             onMove={moveField}
@@ -905,7 +910,7 @@ export function TkxFormBuilder({
 
       {tab === 'preview' && (
         <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-          <Preview schema={schema} />
+          <Preview schema={safeSchema} />
         </div>
       )}
 
@@ -923,7 +928,7 @@ export function TkxFormBuilder({
             fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           }}
         >
-          {JSON.stringify(schema, null, 2)}
+          {JSON.stringify(safeSchema, null, 2)}
         </pre>
       )}
     </div>

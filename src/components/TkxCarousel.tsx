@@ -129,7 +129,7 @@ function ArrowBtn({ direction, onClick, isDisabled, primaryColor, surfaceColor, 
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function TkxCarousel({
-  slides,
+  slides = [],
   autoPlay = false,
   autoPlayInterval = 4000,
   pauseOnHover = true,

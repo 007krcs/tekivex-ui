@@ -238,7 +238,7 @@ function SkeletonItem({ surface, border }: { surface: string; border: string }) 
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function TkxCommand({
-  items,
+  items = [],
   isOpen = false,
   onClose,
   placeholder,

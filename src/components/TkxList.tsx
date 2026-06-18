@@ -80,7 +80,7 @@ function Skeleton({ theme, reducedMotion }: { theme: ReturnType<typeof useTheme>
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function TkxList({
-  items,
+  items = [],
   header,
   footer,
   bordered = true,

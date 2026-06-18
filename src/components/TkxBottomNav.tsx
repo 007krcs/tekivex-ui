@@ -57,7 +57,7 @@ function injectKeyframes() {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function TkxBottomNav({
-  items,
+  items = [],
   activeId,
   onChange,
   showLabels = true,

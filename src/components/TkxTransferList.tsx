@@ -323,8 +323,8 @@ function ListPanel({
 // ── Main Component ──────────────────────────────────────────────────────────
 
 export function TkxTransferList({
-  sourceItems,
-  targetItems,
+  sourceItems = [],
+  targetItems = [],
   onTransfer,
   sourceTitle = 'Available',
   targetTitle = 'Selected',
@@ -387,7 +387,7 @@ export function TkxTransferList({
     const toMove = sourceItems.filter((i) => sourceSelected.has(i.value) && !i.disabled);
     const remainingSource = sourceItems.filter((i) => !sourceSelected.has(i.value) || i.disabled);
     const newTarget = [...targetItems, ...toMove];
-    onTransfer(remainingSource, newTarget);
+    onTransfer?.(remainingSource, newTarget);
     setSourceSelected(new Set());
   }, [sourceItems, targetItems, sourceSelected, onTransfer]);
 
@@ -397,7 +397,7 @@ export function TkxTransferList({
     const toMove = targetItems.filter((i) => targetSelected.has(i.value) && !i.disabled);
     const remainingTarget = targetItems.filter((i) => !targetSelected.has(i.value) || i.disabled);
     const newSource = [...sourceItems, ...toMove];
-    onTransfer(newSource, remainingTarget);
+    onTransfer?.(newSource, remainingTarget);
     setTargetSelected(new Set());
   }, [sourceItems, targetItems, targetSelected, onTransfer]);
 

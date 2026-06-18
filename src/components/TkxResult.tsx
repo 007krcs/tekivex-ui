@@ -86,7 +86,7 @@ function getStatusColor(status: ResultStatus, theme: ReturnType<typeof useTheme>
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export function TkxResult({ status, title, subTitle, icon, extra, className, style }: TkxResultProps) {
+export function TkxResult({ status = 'info', title = '', subTitle, icon, extra, className, style }: TkxResultProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
   const accentColor = getStatusColor(status, theme);
@@ -104,7 +104,7 @@ export function TkxResult({ status, title, subTitle, icon, extra, className, sty
       }}
     >
       <div className={tkx('mb-6')}>
-        {icon ?? STATUS_ICONS[status](accentColor)}
+        {icon ?? (STATUS_ICONS[status] ?? STATUS_ICONS.info)(accentColor)}
       </div>
 
       <h2

@@ -82,6 +82,9 @@ export function TkxAutoForm({
   style,
 }: TkxAutoFormProps) {
   const theme = useTheme();
+  // Tolerate a missing/partial schema (e.g. data still loading): treat it as an
+  // empty form rather than crashing on `schema.fields`.
+  const fields = schema?.fields ?? [];
   const [values, setValues] = useState<Record<string, unknown>>(() => ({ ...defaultValues }));
   const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [showSummary, setShowSummary] = useState(false);
@@ -113,7 +116,7 @@ export function TkxAutoForm({
       e.preventDefault();
       const nextErrors: Record<string, string | null> = {};
       let firstInvalid: string | null = null;
-      for (const f of schema.fields) {
+      for (const f of fields) {
         const err = validateField(f, values[f.name]);
         nextErrors[f.name] = err;
         if (err && firstInvalid === null) firstInvalid = f.name;
@@ -131,17 +134,17 @@ export function TkxAutoForm({
 
       // Build the clean payload. String values pass through the kernel.
       const payload: Record<string, unknown> = {};
-      for (const f of schema.fields) {
+      for (const f of fields) {
         const v = values[f.name];
         payload[f.name] =
           typeof v === 'string' ? hardenString(v, sanitize, redactPII) : v;
       }
       onSubmit?.(payload);
     },
-    [schema.fields, values, sanitize, redactPII, onSubmit],
+    [fields, values, sanitize, redactPII, onSubmit],
   );
 
-  const invalidFields = schema.fields.filter((f) => errors[f.name]);
+  const invalidFields = fields.filter((f) => errors[f.name]);
 
   return (
     <form
@@ -149,7 +152,7 @@ export function TkxAutoForm({
       onSubmit={handleSubmit}
       noValidate
       className={className}
-      aria-label={schema.title ?? 'Form'}
+      aria-label={schema?.title ?? 'Form'}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -159,12 +162,12 @@ export function TkxAutoForm({
         ...style,
       }}
     >
-      {schema.title && (
+      {schema?.title && (
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: theme.text }}>
           {schema.title}
         </h2>
       )}
-      {schema.description && (
+      {schema?.description && (
         <p style={{ margin: 0, color: theme.textMuted, fontSize: 14 }}>{schema.description}</p>
       )}
 
@@ -207,7 +210,7 @@ export function TkxAutoForm({
         </div>
       )}
 
-      {schema.fields.map((f) => (
+      {fields.map((f) => (
         <AutoFormField
           key={f.id}
           field={f}

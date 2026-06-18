@@ -136,6 +136,9 @@ export function TkxThinkingIndicator() {
 export function TkxChatBubble({ message, showTimestamp, avatarUser, avatarAssistant }: TkxChatBubbleProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
+  // Tolerate a missing message (e.g. data still loading) instead of crashing on
+  // the destructure below.
+  if (!message) return null;
   const { role, content, timestamp, isStreaming, error } = message;
 
   const safeContent = sanitizeString(content);
@@ -210,7 +213,7 @@ export function TkxChatBubble({ message, showTimestamp, avatarUser, avatarAssist
 // ── TkxChat ───────────────────────────────────────────────────────────────────
 
 export function TkxChat({
-  messages,
+  messages = [],
   onSend,
   isLoading = false,
   placeholder = 'Type a message…',

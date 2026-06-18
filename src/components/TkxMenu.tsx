@@ -934,7 +934,7 @@ void useItemStyle;
 
 export function TkxMenu({
   trigger,
-  items,
+  items = [],
   placement = 'bottom-start',
   isDisabled = false,
   onOpen,

@@ -199,7 +199,7 @@ function ItemContent({
 // ── Main TkxTimeline ──────────────────────────────────────────────────────────
 
 export function TkxTimeline({
-  items,
+  items = [],
   variant = 'default',
   orientation = 'vertical',
   connectorStyle = 'solid',

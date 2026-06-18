@@ -107,7 +107,7 @@ function EllipsisButton({
 // ── Component ───────────────────────────────────────────────────────────────
 
 export function TkxBreadcrumb({
-  items,
+  items = [],
   separator,
   maxItems,
   onNavigate,

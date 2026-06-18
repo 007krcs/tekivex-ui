@@ -15,6 +15,7 @@ import {
   useRef,
   useState,
   cloneElement,
+  isValidElement,
   type ReactNode,
   type ReactElement,
   type CSSProperties,
@@ -522,8 +523,16 @@ export function TkxFormField({
   style,
 }: TkxFormFieldProps) {
   const theme = useTheme();
-  const ctx = useFormContext();
-  const { state, layout, disabled } = ctx;
+  // Read the context directly rather than via useFormContext() so a field
+  // mounted OUTSIDE a <TkxForm> (e.g. an async-rendered shell before the form
+  // wrapper exists, or a smoke mount) renders an empty placeholder instead of
+  // throwing. All hooks below still run unconditionally (Rules of Hooks).
+  const ctx = useContext(FormContext);
+  const { state, layout, disabled } = ctx ?? {
+    state: { values: {}, errors: {}, touched: {} } as FormState,
+    layout: 'vertical' as const,
+    disabled: false,
+  };
 
   // Merge required shortcut into rules
   const rules = useMemo(() => mergeRequiredRule(rulesProp, required), [rulesProp, required]);
@@ -535,14 +544,14 @@ export function TkxFormField({
 
   // Register / unregister on mount / unmount
   const registeredRef = useRef(false);
-  if (!registeredRef.current) {
+  if (ctx && !registeredRef.current) {
     ctx.registerField(name, metaRef.current);
     registeredRef.current = true;
   }
 
   // Keep meta in sync
   useMemo(() => {
-    ctx.registerField(name, metaRef.current);
+    ctx?.registerField(name, metaRef.current);
   }, [rules, name, ctx]);
 
   // Cleanup on unmount — using a ref-based pattern since we cannot use useEffect
@@ -569,30 +578,35 @@ export function TkxFormField({
       } else {
         nextValue = eventOrValue;
       }
-      ctx.setFieldValue(name, nextValue);
+      ctx?.setFieldValue(name, nextValue);
     },
     [ctx, name],
   );
 
   // ─── onBlur: trigger validation on blur ────────────────────────────────
   const handleBlur = useCallback(() => {
-    ctx.setFieldTouched(name);
-    ctx.validateField(name);
+    ctx?.setFieldTouched(name);
+    ctx?.validateField(name);
   }, [ctx, name]);
 
   // ─── Clone child input with injected props ────────────────────────────
+  // Guard against a missing/invalid child (e.g. no-prop mount) — cloneElement
+  // throws on non-elements. When absent, render the label/messages only.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const typedChild = children as ReactElement<any>;
-  const childElement = cloneElement(typedChild, {
-    value: value ?? '',
-    onChange: handleChange,
-    onBlur: handleBlur,
-    error: safeError ?? undefined,
-    isInvalid: !!safeError,
-    isRequired,
-    disabled: disabled || typedChild.props.disabled,
-    name,
-  });
+  const childIsValid = isValidElement(children);
+  const childElement = childIsValid
+    ? cloneElement(typedChild, {
+        value: value ?? '',
+        onChange: handleChange,
+        onBlur: handleBlur,
+        error: safeError ?? undefined,
+        isInvalid: !!safeError,
+        isRequired,
+        disabled: disabled || typedChild.props.disabled,
+        name,
+      })
+    : null;
 
   // ─── Layout-dependent rendering ───────────────────────────────────────
   const isHorizontal = layout === 'horizontal';

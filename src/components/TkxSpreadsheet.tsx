@@ -532,7 +532,7 @@ function formatValue(v: CellValue): string {
 export function TkxSpreadsheet({
   cols = 8,
   rows = 20,
-  data,
+  data = { cells: {} },
   onChange,
   colWidth = 96,
   rowHeight = 28,
@@ -545,33 +545,36 @@ export function TkxSpreadsheet({
   const [draft, setDraft] = useState('');
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // Guard against a missing/partial `data` object (e.g. mounted before wiring).
+  const cells = data?.cells ?? {};
+
   // Memo a single eval context so cross-cell formulas share work.
   const computed = useMemo(() => {
     const memo = new Map<string, CellValue>();
-    const ctx: EvalContext = { cells: data.cells, stack: new Set(), memo };
+    const ctx: EvalContext = { cells, stack: new Set(), memo };
     return (a: string) => resolveCell(a, ctx);
-  }, [data]);
+  }, [cells]);
 
   const activeAddr = addr(active.col, active.row);
 
   const startEditing = useCallback(
     (initial?: string) => {
-      const raw = initial ?? data.cells[activeAddr] ?? '';
+      const raw = initial ?? cells[activeAddr] ?? '';
       setDraft(raw);
       setEditing(true);
       // Focus on next tick after the input renders.
       requestAnimationFrame(() => inputRef.current?.focus());
     },
-    [activeAddr, data.cells],
+    [activeAddr, cells],
   );
 
   const commit = useCallback(() => {
-    const next = { ...data.cells };
+    const next = { ...cells };
     if (draft === '') delete next[activeAddr];
     else next[activeAddr] = draft;
-    onChange({ cells: next });
+    onChange?.({ cells: next });
     setEditing(false);
-  }, [activeAddr, data, draft, onChange]);
+  }, [activeAddr, cells, draft, onChange]);
 
   const cancelEdit = useCallback(() => {
     setEditing(false);
@@ -601,10 +604,10 @@ export function TkxSpreadsheet({
       case 'Delete':
       case 'Backspace': {
         e.preventDefault();
-        if (data.cells[activeAddr] !== undefined) {
-          const next = { ...data.cells };
+        if (cells[activeAddr] !== undefined) {
+          const next = { ...cells };
           delete next[activeAddr];
-          onChange({ cells: next });
+          onChange?.({ cells: next });
         }
         break;
       }
@@ -740,7 +743,7 @@ export function TkxSpreadsheet({
           {Array.from({ length: cols }).map((_, c) => {
             const a = addr(c, r);
             const isActive = c === active.col && r === active.row;
-            const raw = data.cells[a] ?? '';
+            const raw = cells[a] ?? '';
             const display = raw === '' ? '' : formatValue(computed(a));
             const isFormula = raw.startsWith('=');
             return (

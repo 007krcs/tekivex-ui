@@ -378,7 +378,7 @@ export interface TkxHolographicTerminalProps {
 }
 
 export function TkxHolographicTerminal({
-  lines,
+  lines = [],
   typeSpeed = 12,
   prompt = '$ ',
   maxLines = 10,

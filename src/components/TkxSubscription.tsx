@@ -295,6 +295,23 @@ export function TkxProrationPreview({
   children,
 }: TkxProrationPreviewProps) {
   const theme = useTheme();
+
+  // Empty state — both plans are required to compute a proration.
+  if (!newPlan?.prices || !currentPlan?.prices) {
+    return (
+      <div
+        className={className}
+        style={{
+          border: `1px solid ${theme.border}`,
+          borderRadius: 12,
+          padding: 20,
+          background: theme.surface,
+          ...style,
+        }}
+      />
+    );
+  }
+
   const remainingFraction = cycleDays > 0 ? daysRemaining / cycleDays : 0;
   const credit = currentPlan.prices[cycle] * remainingFraction;
   const charge = newPlan.prices[cycle] * remainingFraction;

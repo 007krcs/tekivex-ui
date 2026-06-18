@@ -148,7 +148,7 @@ function TreeCheckbox({
 const INDENT_PX = 24;
 
 export function TkxTreeView({
-  data,
+  data = [],
   selected: controlledSelected,
   onSelect,
   expanded: controlledExpanded,

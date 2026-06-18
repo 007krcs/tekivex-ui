@@ -60,7 +60,7 @@ function computePosition(
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function TkxTour({
-  steps,
+  steps = [],
   isOpen = false,
   onClose,
   current: controlledCurrent,

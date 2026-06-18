@@ -50,8 +50,8 @@ export interface TkxFormulaBarProps {
 }
 
 export function TkxFormulaBar({
-  data,
-  active,
+  data = { cells: {} },
+  active = { col: 0, row: 0 },
   onChange,
   onActiveChange,
   showResult = true,

@@ -26,7 +26,7 @@ export interface TkxMentionsProps {
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function TkxMentions({
-  options,
+  options = [],
   value = '',
   onChange,
   trigger = '@',

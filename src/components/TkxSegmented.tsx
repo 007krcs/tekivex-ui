@@ -36,7 +36,7 @@ const SIZE_MAP = {
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function TkxSegmented({
-  options,
+  options = [],
   value,
   onChange,
   size = 'md',

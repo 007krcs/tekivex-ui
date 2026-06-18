@@ -156,7 +156,7 @@ interface ResultItem {
 }
 
 export function TkxCommandPalette({
-  commands,
+  commands = [],
   hotkey = DEFAULT_HOTKEY,
   open: controlledOpen,
   onOpenChange,
