@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import type { ThemeTokens } from 'tekivex-ui';
+import { TKX_VERSION } from '../version';
 import { TkxMarkdown } from '../../src/components/TkxMarkdown';
 import { TkxOrgChart } from '../../src/components/TkxOrgChart';
 
@@ -570,7 +571,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
           animation: 'tkxSlideUp 0.6s ease both',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: theme.primary, display: 'inline-block', animation: 'tkxPulseRing 1.5s ease-out infinite' }} />
-          v3.17.0 · 99 components · agent runtime · 1034+ tests
+          {TKX_VERSION} · 120+ components · agent runtime · 1,800+ tests
         </div>
 
         {/* Main headline */}
@@ -1090,7 +1091,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <footer style={{ position: 'relative', zIndex: 1, padding: isMobile ? '32px 16px' : '40px 32px', borderTop: `1px solid ${theme.border}`, textAlign: 'center', color: theme.textMuted, fontSize: 13 }}>
         <p style={{ margin: '0 0 8px' }}>
-          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> v3.17.0 · 99 components · agent runtime · MIT License
+          <span style={{ color: theme.primary, fontWeight: 700 }}>tekivex-ui</span> {TKX_VERSION} · 120+ components · agent runtime · MIT License
         </p>
         <p style={{ margin: 0 }}>
           © 2026 <a href="https://npmjs.com/package/tekivex-ui" target="_blank" rel="noreferrer" style={{ color: theme.textMuted, textDecoration: 'none' }}>npm</a> ·

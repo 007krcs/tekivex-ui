@@ -1,5 +1,6 @@
 import { useState, useMemo, type CSSProperties } from 'react';
 import type { ThemeTokens } from 'tekivex-ui';
+import { TKX_VERSION } from '../version';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -416,7 +417,7 @@ export function Sidebar({ currentRoute, onNavigate, theme }: SidebarProps) {
         <IconLogo />
         <div style={brandTextStyle}>
           <span style={brandNameStyle}>TekiVex UI</span>
-          <span style={versionBadgeStyle}>v3.17.0</span>
+          <span style={versionBadgeStyle}>{TKX_VERSION}</span>
         </div>
       </div>
 

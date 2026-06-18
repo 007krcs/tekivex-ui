@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { ThemeTokens } from 'tekivex-ui';
+import { TKX_VERSION } from '../version';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -345,7 +346,7 @@ export function Header({ currentRoute, isDark, onToggleTheme, theme, isMobile, o
             <span style={wcagBadgeStyle} title="Meets WCAG 2.1 Level AAA">
               WCAG AAA
             </span>
-            <span style={versionTextStyle}>v3.17.0</span>
+            <span style={versionTextStyle}>{TKX_VERSION}</span>
             <div style={dividerStyle} aria-hidden="true" />
           </>
         )}
