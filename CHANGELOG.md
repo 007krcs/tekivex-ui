@@ -5,6 +5,32 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.22.1] — 2026-06-18
+
+### Fixed — components no longer crash on undefined data (async-load robustness)
+
+A no-mercy render smoke test (mount every component with no props) found **42
+components that hard-crashed the whole React tree** when a required data prop was
+`undefined` — exactly what happens while data is still loading: `Cannot read
+'map' of undefined`, `items is not iterable`, `destructure 'role' of undefined`,
+`STATUS_ICONS[status] is not a function`, etc. A library component must degrade
+to an empty/placeholder state, not white-screen the host app.
+
+Defensive guards were added across 42 data-driven components (default arrays to
+`[]`, guard object access, early-return an empty state) — including DataGrid,
+Table, Select, Menu, Accordion, Breadcrumb, Stepper, TreeView, Toolbar,
+TransferList, Segmented, List, OrgChart, PivotTable, Spreadsheet, FormBuilder,
+AutoForm, Gantt, MindMap, Result, Chat, MessageThread, CommandPalette, Carousel,
+Tooltip, Tour, Tabs, Form/FormField, FormulaBar, Mentions, SpeedDial,
+RichTextDisplay, Subscription, Anchor, Timeline, and Command. Behaviour is
+unchanged when data **is** provided — only the previously-crashing `undefined`
+path now renders empty instead of throwing. `TkxPivotTable` no longer throws on
+empty `values` (renders an empty state).
+
+Also: the demo site no longer shows a stale hardcoded version (`v3.17.0`) — it
+now reads the version from `package.json`. New `tests/smoke-empty-mount.test.tsx`
+guards the highest-risk components against re-breaking.
+
 ## [3.22.0] — 2026-06-17
 
 ### Added — TkxAutoForm (schema-to-UI form generator)
