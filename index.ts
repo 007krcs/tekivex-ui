@@ -16,6 +16,8 @@ export type { TkxCardProps, TkxCardHeaderProps, CardVariant, CardPadding } from 
 
 export { TkxInput } from './src/components/TkxInput';
 export type { TkxInputProps } from './src/components/TkxInput';
+export { TkxTextarea } from './src/components/TkxTextarea';
+export type { TkxTextareaProps } from './src/components/TkxTextarea';
 
 export { TkxBadge } from './src/components/TkxBadge';
 export type { TkxBadgeProps, BadgeVariant, BadgeSize } from './src/components/TkxBadge';

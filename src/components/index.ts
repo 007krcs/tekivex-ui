@@ -1,6 +1,7 @@
 export * from './TkxButton';
 export * from './TkxCard';
 export * from './TkxInput';
+export * from './TkxTextarea';
 export * from './TkxBadge';
 export * from './TkxProgress';
 export * from './TkxToggle';

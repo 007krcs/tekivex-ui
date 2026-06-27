@@ -1,0 +1,73 @@
+---
+title: TkxTextarea
+description: Multi-line text input — the textarea counterpart to TkxInput. Label/hint/error, auto-grow, character counter, Unicode-safe.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The multi-line counterpart to [`TkxInput`](/components/input/). Same
+accessible `label` / `hint` / `error` / `isRequired` surface, plus the things a
+textarea actually needs: **auto-grow**, a **character counter**, and
+Trojan-Source Unicode stripping on input.
+
+```tsx
+import { TkxTextarea } from 'tekivex-ui';
+
+<TkxTextarea label="Bio" hint="A short description" placeholder="Tell us about yourself" />
+```
+
+## Auto-grow
+
+Set `autoResize` to grow the field with its content, bounded by `minRows` and
+`maxRows` (it scrolls past `maxRows`). Manual drag-resize is disabled while
+auto-growing.
+
+```tsx
+<TkxTextarea label="Notes" autoResize minRows={2} maxRows={10} />
+```
+
+## Character counter
+
+`showCount` renders a live `n / max` counter; it turns `danger`-coloured at the
+limit. Works in both controlled and uncontrolled mode.
+
+```tsx
+<TkxTextarea label="Tweet" showCount maxLength={280} />
+```
+
+## Validation
+
+```tsx
+<TkxTextarea label="Message" isRequired error="Message is required" />
+```
+
+`error` sets `aria-invalid`, renders a `role="alert"` message, and links it via
+`aria-describedby`. `isRequired` adds `aria-required` and a visual asterisk
+(the asterisk is `aria-hidden`).
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | — | **Required.** Accessible label. |
+| `hint` | `string` | — | Helper text below the field. |
+| `error` | `string` | — | Error message; sets `aria-invalid` + `role="alert"`. |
+| `isInvalid` | `boolean` | `false` | Force the invalid style without an error string. |
+| `isRequired` | `boolean` | `false` | Adds `aria-required` + asterisk. |
+| `autoResize` | `boolean` | `false` | Grow with content between `minRows`/`maxRows`. |
+| `minRows` | `number` | `3` | Minimum visible rows. |
+| `maxRows` | `number` | `8` | Max rows before scrolling (auto-resize only). |
+| `showCount` | `boolean` | `false` | Show a live character counter. |
+| `maxLength` | `number` | — | Hard character cap; powers the counter colour. |
+| `unicodeSafe` | `boolean` | `true` | Strip zero-width / bidi-override Unicode on input. |
+| `value` / `defaultValue` | `string` | — | Controlled / uncontrolled value. |
+| `...rest` | `TextareaHTMLAttributes` | — | `onChange`, `placeholder`, `name`, `disabled`, etc. |
+
+The component forwards its `ref` to the underlying `<textarea>`.
+
+<Aside>
+  `unicodeSafe` strips homograph / Trojan-Source characters (zero-width joiners,
+  RTL overrides) on input by default — the same defence `TkxInput` applies.
+  Disable it only for fields that legitimately need such characters (e.g. a
+  translation UI).
+</Aside>
