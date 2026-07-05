@@ -5,6 +5,43 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.23.0] — 2026-06-18
+
+### Added — four missing form/input primitives (Tier 1 gap closure)
+
+A user-perspective gap analysis found the library, despite 120+ components,
+was missing the most-reached-for input primitives. All four ship in this
+release, each with tests and a doc page:
+
+- **`TkxTextarea`** — the multi-line counterpart to `TkxInput`. Same
+  `label`/`hint`/`error`/`isRequired` chrome, plus `autoResize`
+  (`minRows`/`maxRows`), a `showCount`+`maxLength` live character counter,
+  Unicode-safe input, and ref forwarding. (Seven components previously
+  hand-rolled raw `<textarea>`s because no primitive existed.)
+- **`TkxField`** — the standalone form-control wrapper. Gives *any* control
+  (custom widgets, third-party inputs, plain elements) the standard accessible
+  label + hint + error chrome, injecting `id`/`aria-describedby`/
+  `aria-invalid`/`aria-required` via cloneElement or a function child.
+- **`TkxComboBox`** — multi-select combobox with removable token chips.
+  Typeahead filtering, full keyboard model (arrows + Enter toggle,
+  Backspace-on-empty removes the last chip, Escape closes),
+  `aria-multiselectable` listbox with `aria-activedescendant`, controlled +
+  uncontrolled, `maxSelected` cap, hidden input for plain form posts.
+  (`TkxAutocomplete` remains the single-select control.)
+- **`TkxCode`** — zero-dependency syntax-highlighted code block
+  (ts/tsx/js/jsx/json/bash/css/html/python). Tokenizes into React spans —
+  no `dangerouslySetInnerHTML` — with theme-token colours, optional line
+  numbers, line highlighting, copy button, and filename header. Honest about
+  being a regex-scale highlighter for snippets, not a full grammar.
+
+### Fixed
+
+- **Focus restore on close** for `TkxCommand` (command palette): its local
+  focus trap never returned focus to the opener, dropping keyboard users at
+  the top of the page. The shared `useFocusTrap` hook (Modal/Drawer) also
+  gained a defensive restore guard. Verified by live keyboard testing —
+  Escape now returns focus to the triggering element.
+
 ## [3.22.1] — 2026-06-18
 
 ### Fixed — components no longer crash on undefined data (async-load robustness)
