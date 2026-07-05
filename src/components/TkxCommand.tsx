@@ -34,6 +34,10 @@ function useFocusTrap(enabled: boolean) {
   useEffect(() => {
     if (!enabled || !ref.current) return;
     const el = ref.current;
+    // WAI-ARIA dialog pattern: return focus to the opener when the palette
+    // closes instead of dropping it to <body>.
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const focusable = el.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
@@ -48,7 +52,10 @@ function useFocusTrap(enabled: boolean) {
       }
     };
     el.addEventListener('keydown', trap);
-    return () => el.removeEventListener('keydown', trap);
+    return () => {
+      el.removeEventListener('keydown', trap);
+      if (previouslyFocused && previouslyFocused.isConnected) previouslyFocused.focus();
+    };
   }, [enabled]);
   return ref;
 }

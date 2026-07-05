@@ -1,0 +1,79 @@
+---
+title: TkxField
+description: Standalone form-control wrapper — gives any control the accessible label, hint, and error chrome with automatic aria wiring.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`TkxInput` and `TkxTextarea` ship label/hint/error chrome built in — but every
+*other* control (a custom widget, a third-party input, a plain `<select>`) had
+to re-implement that wiring by hand. `TkxField` extracts it into a standalone
+wrapper: the child automatically receives `id`, `aria-describedby`,
+`aria-invalid`, and `aria-required`.
+
+```tsx
+import { TkxField } from 'tekivex-ui';
+
+<TkxField label="Amount" hint="In INR" error={errors.amount}>
+  <MyCustomInput />
+</TkxField>
+```
+
+## How the child is wired
+
+**Element child** — the props are injected via `cloneElement`:
+
+```tsx
+<TkxField label="Country">
+  <select>
+    <option>India</option>
+  </select>
+</TkxField>
+```
+
+**Function child** — receive the props and spread them wherever you want
+(useful when the focusable element is nested):
+
+```tsx
+<TkxField label="Notes" hint="Markdown supported">
+  {(field) => (
+    <div className="editor-shell">
+      <textarea {...field} />
+    </div>
+  )}
+</TkxField>
+```
+
+If the child already carries an `id`, TkxField respects it (the label's
+`htmlFor` points at it) instead of generating one.
+
+## Validation
+
+```tsx
+<TkxField label="Email" isRequired error="Enter a valid email">
+  <input type="email" />
+</TkxField>
+```
+
+- `error` renders a `role="alert"` message, links it via `aria-describedby`,
+  and sets `aria-invalid` on the child.
+- `hint` is hidden while an error is showing (single message at a time).
+- `isRequired` adds `aria-required` plus a visual, `aria-hidden` asterisk.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | — | **Required.** Visible label, wired via `htmlFor`. |
+| `id` | `string` | auto | Explicit control id (else child's own id, else auto). |
+| `hint` | `string` | — | Helper text (suppressed while `error` shows). |
+| `error` | `string` | — | Error message; sets `aria-invalid` + `role="alert"`. |
+| `isInvalid` | `boolean` | `false` | Invalid state without an error string. |
+| `isRequired` | `boolean` | `false` | `aria-required` + asterisk. |
+| `children` | `ReactElement \| (field) => ReactNode` | — | The control; receives the injected field props. |
+| `className` / `style` | — | — | Root wrapper styling. |
+
+<Aside>
+  Prefer `TkxInput` / `TkxTextarea` for plain text fields — they include this
+  chrome already. Reach for `TkxField` when wrapping anything else.
+</Aside>

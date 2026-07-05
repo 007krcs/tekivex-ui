@@ -18,6 +18,12 @@ export { TkxInput } from './src/components/TkxInput';
 export type { TkxInputProps } from './src/components/TkxInput';
 export { TkxTextarea } from './src/components/TkxTextarea';
 export type { TkxTextareaProps } from './src/components/TkxTextarea';
+export { TkxField } from './src/components/TkxField';
+export type { TkxFieldProps, TkxFieldChildProps } from './src/components/TkxField';
+export { TkxComboBox } from './src/components/TkxComboBox';
+export type { TkxComboBoxProps, ComboBoxOption } from './src/components/TkxComboBox';
+export { TkxCode } from './src/components/TkxCode';
+export type { TkxCodeProps, TkxCodeLanguage } from './src/components/TkxCode';
 
 export { TkxBadge } from './src/components/TkxBadge';
 export type { TkxBadgeProps, BadgeVariant, BadgeSize } from './src/components/TkxBadge';

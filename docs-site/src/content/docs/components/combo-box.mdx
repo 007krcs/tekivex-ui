@@ -1,0 +1,116 @@
+---
+title: TkxComboBox
+description: Multi-select combobox with token chips. Type to filter, Enter to toggle, chips for selected values — recipients, tags, filters.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A **multi-select** combobox: selected values render as removable token chips
+before the text input, typing filters the option list, and selecting keeps the
+list open so you can pick several values in a row. Built for recipients, tags,
+and filter pickers.
+
+Same accessible `label` / `hint` / `error` / `isRequired` chrome as
+[`TkxInput`](/components/input/).
+
+```tsx
+import { TkxComboBox } from 'tekivex-ui';
+
+<TkxComboBox
+  label="Tags"
+  placeholder="Add tags…"
+  options={[
+    { value: 'bug', label: 'Bug' },
+    { value: 'docs', label: 'Docs' },
+    { value: 'perf', label: 'Performance' },
+  ]}
+  onChange={(values, selected) => console.log(values, selected)}
+/>
+```
+
+## Controlled and uncontrolled
+
+`value` (a `string[]`) makes the selection controlled; `defaultValue` seeds an
+uncontrolled one. `onChange` always receives both the value array and the
+matching option objects.
+
+```tsx
+const [tags, setTags] = useState<string[]>([]);
+
+<TkxComboBox label="Tags" options={options} value={tags} onChange={setTags} />
+```
+
+## Capping the selection
+
+`maxSelected` caps how many values can be picked. Once the cap is reached the
+remaining options are visibly muted, marked `aria-disabled`, and cannot be
+selected — but already-selected options stay interactive so they can be
+deselected.
+
+```tsx
+<TkxComboBox label="Assignees" options={people} maxSelected={3} />
+```
+
+## Plain form posts
+
+Pass `name` to render a hidden input that joins the selected values with `,`,
+so the component works in a plain `<form>` post without JavaScript glue.
+
+```tsx
+<TkxComboBox label="Categories" name="categories" options={categories} />
+// posts: categories=bug,docs
+```
+
+## Keyboard model
+
+Focus stays on the text input the whole time — the active option is conveyed
+via `aria-activedescendant`, not roving DOM focus.
+
+| Key | Action |
+|---|---|
+| Type | Filters options (case-insensitive substring) and opens the list. |
+| `ArrowDown` / `ArrowUp` | Move the active option; disabled options are skipped. |
+| `Enter` | Toggles the active option. The list **stays open** (multi-select convention) and the query is cleared. |
+| `Escape` | Closes the list. |
+| `Backspace` (empty input) | Removes the last chip. |
+
+Each chip's remove control is a real `<button>` labelled `Remove <label>`.
+Clicking outside closes the list.
+
+## Validation
+
+```tsx
+<TkxComboBox label="Recipients" isRequired error="Pick at least one recipient" />
+```
+
+`error` sets `aria-invalid`, renders a `role="alert"` message, and links it via
+`aria-describedby` — the same wiring as `TkxInput`.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | — | **Required.** Accessible label. |
+| `options` | `ComboBoxOption[]` | `[]` | `{ value, label, disabled? }` items. Safe to omit — a bare mount renders an empty list. |
+| `value` | `string[]` | — | Controlled selection. |
+| `defaultValue` | `string[]` | — | Uncontrolled initial selection. |
+| `onChange` | `(values: string[], selectedOptions: ComboBoxOption[]) => void` | — | Fires on every selection change. |
+| `placeholder` | `string` | — | Shown while nothing is selected. |
+| `hint` | `string` | — | Helper text below the field. |
+| `error` | `string` | — | Error message; sets `aria-invalid` + `role="alert"`. |
+| `isInvalid` | `boolean` | `false` | Force the invalid style without an error string. |
+| `isRequired` | `boolean` | `false` | Adds `aria-required` + asterisk. |
+| `disabled` | `boolean` | `false` | Disables the input and chip removal. |
+| `clearable` | `boolean` | `true` | Show a "Clear all" affordance when something is selected. |
+| `maxSelected` | `number` | — | Cap the number of selected values. |
+| `id` | `string` | auto | Id for the inner input (label association). |
+| `name` | `string` | — | Renders a hidden input with comma-joined values for form posts. |
+| `className` / `style` | — | — | Applied to the outer wrapper. |
+
+The component forwards its `ref` to the inner `<input>`.
+
+<Aside>
+  `TkxComboBox` is **multi-select**. For picking a single value, use
+  [`TkxAutocomplete`](/components/autocomplete/) (type-ahead) or
+  [`TkxSelect`](/components/select/) (fixed list).
+</Aside>

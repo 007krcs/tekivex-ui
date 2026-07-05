@@ -60,9 +60,22 @@ export function useFocusTrap(active: boolean): RefObject<HTMLElement | null> {
 
   useEffect(() => {
     if (!active || !ref.current) return;
+    // WAI-ARIA dialog pattern: remember the element focused before the trap
+    // activated and return focus to it on teardown. Without this, closing a
+    // Modal/Drawer dropped focus to <body> — an a11y defect caught by live
+    // keyboard testing.
+    const previouslyFocused =
+      typeof document !== 'undefined' && document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     const trap = createFocusTrap(ref.current);
     trap.activate();
-    return () => trap.deactivate();
+    return () => {
+      trap.deactivate();
+      if (previouslyFocused && previouslyFocused.isConnected) {
+        previouslyFocused.focus();
+      }
+    };
   }, [active]);
 
   return ref;

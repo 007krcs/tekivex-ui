@@ -1,0 +1,117 @@
+---
+title: TkxCode
+description: Zero-dependency syntax-highlighted code block. Line numbers, line highlighting, copy button, filename header — token colours from your theme.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A syntax-highlighted code block for docs and dev-tool UIs — with **zero
+dependencies**. Where [`TkxMarkdown`](/components/markdown/) renders code
+plainly, `TkxCode` tokenizes it with a small built-in regex highlighter and
+colours tokens from your active theme (keywords → `primary`, strings →
+`success`, comments → `textMuted`, numbers → `warning`, …). No hardcoded hex,
+so it follows every theme automatically.
+
+Highlighting output is React `<span>` text nodes — never
+`dangerouslySetInnerHTML` — so untrusted snippets can't inject markup.
+
+```tsx
+import { TkxCode } from 'tekivex-ui';
+
+<TkxCode
+  language="ts"
+  filename="hello.ts"
+  code={`const greet = (name: string) => {
+  // template literals work too
+  return \`Hello, \${name}!\`;
+};`}
+/>
+```
+
+## Line numbers & line highlighting
+
+`showLineNumbers` adds an `aria-hidden` gutter. `highlightLines` (1-based)
+tints the given rows with a subtle `primary`-coloured background and edge
+marker — great for "look at this line" moments in docs.
+
+```tsx
+<TkxCode
+  language="tsx"
+  showLineNumbers
+  highlightLines={[2, 3]}
+  code={snippet}
+/>
+```
+
+## Copy button & filename header
+
+The copy button is on by default (`copyable`) and writes the *original* code
+string via `navigator.clipboard` (guarded — it's a no-op where the API is
+unavailable). Pass `filename` to render a header bar; the copy button moves
+into it.
+
+```tsx
+<TkxCode language="bash" filename="deploy.sh" code={script} />
+<TkxCode language="json" copyable={false} code={payload} />
+```
+
+## Long code
+
+By default long lines scroll horizontally; set `wrap` to soft-wrap instead.
+`maxHeight` caps the block and scrolls vertically.
+
+```tsx
+<TkxCode language="json" maxHeight={320} wrap code={bigBlob} />
+```
+
+## Supported languages
+
+| Value | Highlights |
+|---|---|
+| `ts` / `js` | keywords, strings (incl. template literals), comments, numbers, booleans/`null`/`undefined`, function calls |
+| `tsx` / `jsx` | everything above, plus JSX tag names and attribute names |
+| `json` | object keys, string/number values, `true`/`false`/`null` |
+| `bash` | comments, strings, `$variables`, `--flags`, builtins/keywords |
+| `css` | selectors, at-rules, property names, numbers/units, hex colours, comments |
+| `html` | comments, tag names, attribute names, attribute-value strings |
+| `python` | keywords, strings (incl. `'''`/`"""` and `f`/`r` prefixes), decorators, comments, numbers, `True`/`False`/`None` |
+| `text` | none — plain rendering (the default) |
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `code` | `string` | `''` | The source to display. A bare mount never crashes. |
+| `language` | `TkxCodeLanguage` | `'text'` | One of the languages above; `'text'` disables highlighting. |
+| `showLineNumbers` | `boolean` | `false` | Render an `aria-hidden` line-number gutter. |
+| `highlightLines` | `number[]` | — | 1-based lines to emphasise with a `primary`-tinted row. |
+| `copyable` | `boolean` | `true` | Show the copy button (`aria-label="Copy code"`). |
+| `filename` | `string` | — | Header bar with the filename; also feeds the code's `aria-label`. |
+| `wrap` | `boolean` | `false` | Soft-wrap long lines instead of horizontal scrolling. |
+| `maxHeight` | `number \| string` | — | Cap the code area's height (number = px). |
+| `className` / `style` | — | — | Applied to the root container. |
+
+The component forwards its `ref` to the root `<div>`. The code renders inside
+semantic `<pre><code>` with an `aria-label` derived from `filename` or
+`language`.
+
+## Limitations
+
+<Aside type="caution">
+  `TkxCode` is a **lightweight regex highlighter for snippets**, not a
+  grammar-accurate parser. Know what it doesn't do:
+
+  - No template-literal interpolation nesting — `` `a ${b} c` `` is one string
+    token, the `${b}` inside is not re-highlighted.
+  - No regex-literal detection in JS/TS (`/foo/g` is treated as plain code, or
+    as a comment opener if it starts with `//`).
+  - TSX generics like `Array<string>` can be mistaken for JSX tags, and plain
+    words in JSX text content may match keywords.
+  - No bash heredocs, CSS nesting-aware selector logic, or HTML entities.
+
+  Comment/string precedence *is* correct (a keyword inside a string stays
+  string-coloured), and multi-line `/* … */`, `<!-- … -->` and Python
+  triple-quoted strings carry across lines. For full-fidelity highlighting of
+  large files, use a dedicated highlighter — this component is tuned for
+  docs-scale snippets with zero added bundle weight.
+</Aside>
