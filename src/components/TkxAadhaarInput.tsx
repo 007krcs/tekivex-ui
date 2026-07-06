@@ -9,10 +9,14 @@
 //
 // What this component does:
 //   1. Accept exactly 12 digits, displayed as XXXX XXXX XXXX
-//   2. Optionally mask the first 8 digits as XXXX XXXX (default — privacy)
+//   2. Optionally mask the first 8 digits AT REST (default — privacy): while
+//      the field is focused the real digits are shown so it is editable;
+//      on blur the display collapses to XXXX XXXX 1234. (Masking the value
+//      while typing made the field impossible to edit — every keystroke's
+//      X's were stripped as non-digits, destroying prior input.)
 //   3. Validate the Verhoeff checksum on every keystroke
-//   4. Surface { raw, e164: false, valid, masked } via onChange
-//   5. Never leak the unmasked value to the DOM unless mask=false
+//   4. Surface { raw, digits, display, valid } via onChange
+//   5. The at-rest DOM value is masked unless mask=false
 //
 // Security note:
 //   - Aadhaar is regulated under the Aadhaar Act 2016. Storing/transmitting
@@ -91,8 +95,10 @@ export interface TkxAadhaarInputProps {
   /** Visible label. */
   label?: string;
   /**
-   * Mask the first 8 digits at render. The full value is always surfaced
-   * via onChange — masking is a display-only protection. Default: true.
+   * Mask the first 8 digits at rest (when the field is not focused). While
+   * focused, the real digits are shown so the value stays editable. The full
+   * value is always surfaced via onChange — masking is a display-only,
+   * shoulder-surfing protection. Default: true.
    */
   mask?: boolean;
   /** Disable input. */
@@ -141,7 +147,11 @@ export const TkxAadhaarInput = forwardRef<HTMLInputElement, TkxAadhaarInputProps
     const [inner, setInner] = useState<string>(() => (defaultValue ?? '').replace(/\D+/g, '').slice(0, 12));
     const digits = isControlled ? (value ?? '').replace(/\D+/g, '').slice(0, 12) : inner;
 
-    const display = mask ? masked(digits) : format(digits);
+    // Mask at rest only. While focused, show the real formatted digits —
+    // rendering X's into the editable value destroyed prior input on every
+    // keystroke (the X's were stripped as non-digits).
+    const [focused, setFocused] = useState(false);
+    const display = mask && !focused ? masked(digits) : format(digits);
     const valid = isValidAadhaar(digits);
 
     const handleChange = (raw: string) => {
@@ -188,6 +198,8 @@ export const TkxAadhaarInput = forwardRef<HTMLInputElement, TkxAadhaarInputProps
           maxLength={14} // 12 digits + 2 spaces
           value={display}
           onChange={(e) => handleChange(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           disabled={disabled}
           required={required}
           aria-invalid={digits.length === 12 && !valid}

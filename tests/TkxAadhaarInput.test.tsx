@@ -145,4 +145,37 @@ describe('TkxAadhaarInput', () => {
       `${v.slice(0, 4)} ${v.slice(4, 8)} ${v.slice(8)}`,
     );
   });
+
+  // ── Mask-at-rest regression (the old always-masked value destroyed typed
+  //    digits: each keystroke's X's were stripped as non-digits) ─────────────
+  it('is editable while focused in masked mode — sequential typing accumulates all 12 digits', () => {
+    const v = VALID_VERHOEFF[0];
+    const payloads: string[] = [];
+    render(
+      <TkxAadhaarInput label="Aadhaar" onChange={(p) => payloads.push(p.digits)} />,
+      { wrapper: W },
+    );
+    const input = screen.getByLabelText('Aadhaar') as HTMLInputElement;
+    fireEvent.focus(input);
+    // Simulate real typing: each keystroke's event value is the CURRENT
+    // visible value plus the next digit appended.
+    for (const ch of v) {
+      fireEvent.change(input, { target: { value: input.value + ch } });
+    }
+    expect(payloads[payloads.length - 1]).toBe(v); // all 12 digits survived
+    // While focused, the real digits are visible (editable).
+    expect(input.value).toBe(`${v.slice(0, 4)} ${v.slice(4, 8)} ${v.slice(8)}`);
+  });
+
+  it('re-masks on blur and unmasks on focus', () => {
+    const v = VALID_VERHOEFF[0];
+    render(<TkxAadhaarInput label="Aadhaar" defaultValue={v} />, { wrapper: W });
+    const input = screen.getByLabelText('Aadhaar') as HTMLInputElement;
+    // At rest: masked.
+    expect(input.value).toBe(`XXXX XXXX ${v.slice(8)}`);
+    fireEvent.focus(input);
+    expect(input.value).toBe(`${v.slice(0, 4)} ${v.slice(4, 8)} ${v.slice(8)}`);
+    fireEvent.blur(input);
+    expect(input.value).toBe(`XXXX XXXX ${v.slice(8)}`);
+  });
 });
