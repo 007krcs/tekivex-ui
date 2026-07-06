@@ -5,6 +5,37 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.24.0] — 2026-06-18
+
+### Added — layout primitives (Tier 2 gap closure)
+
+- **`TkxSplitter` / `TkxSplitterPane`** — resizable split panes (horizontal /
+  vertical). Pointer-drag with per-pane `minSize`/`maxSize` clamping,
+  controlled (`sizes` + `onResize`/`onResizeEnd`) or uncontrolled
+  (`defaultSize`, normalized to 100%), double-click reset, and the full
+  WAI-ARIA window-splitter keyboard pattern — each gutter is a focusable
+  `role="separator"` with `aria-valuenow`; arrow keys move the divider,
+  Home/End snap to the limits. The library's editor/studio components
+  (FlowChart, Spreadsheet, ThemeStudio) finally have a host layout.
+  Gotcha (documented): the parent must give the splitter a height.
+- **`TkxDescriptions`** — read-only key/value detail view for record pages.
+  `bordered` renders a real `<table>` with `<th scope="row">` labels;
+  non-bordered renders a semantic `<dl>` grid. Responsive `column` count
+  (number or `{xs,sm,md,lg}`), per-item `span` with clamping, horizontal /
+  vertical layouts, `size` scale, `title`/`extra` header slots. String
+  content passes through the sanitizer.
+
+### Fixed
+
+- **`TkxAadhaarInput`**: masked mode (the default) was uneditable — the
+  X-masked value fed back through onChange, so every keystroke destroyed
+  previously typed digits; a full Aadhaar could not be typed at all. Masking
+  now applies **at rest**: real digits show while the field is focused,
+  `XXXX XXXX 1234` on blur. Privacy posture unchanged; regression tests added.
+- Focus traps (`useFocusTrap`, `TkxCommand`) restore focus to the opener on
+  close per the WAI-ARIA dialog pattern (shipped in the 3.23.0 line, noted
+  here for visibility).
+
 ## [3.23.0] — 2026-06-18
 
 ### Added — four missing form/input primitives (Tier 1 gap closure)
