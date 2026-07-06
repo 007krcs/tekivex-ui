@@ -1,0 +1,122 @@
+---
+title: TkxSplitter
+description: Resizable split panes for dashboards and IDE-style layouts. Drag or keyboard-resize, controlled or uncontrolled, horizontal or vertical.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Resizable split panes — the layout primitive that hosts editor/studio
+components like `TkxFlowChart`, `TkxSpreadsheet`, or `TkxPlayground` in
+dashboards and IDE-style UIs. Compose `TkxSplitterPane` children inside a
+`TkxSplitter`; every adjacent pair of panes gets a draggable, keyboard-operable
+gutter between them.
+
+```tsx
+import { TkxSplitter, TkxSplitterPane } from 'tekivex-ui';
+
+<div style={{ height: 400 }}>
+  <TkxSplitter direction="horizontal" onResizeEnd={(sizes) => console.log(sizes)}>
+    <TkxSplitterPane defaultSize={30} minSize={15}>
+      sidebar
+    </TkxSplitterPane>
+    <TkxSplitterPane>editor</TkxSplitterPane>
+  </TkxSplitter>
+</div>
+```
+
+Dragging a gutter resizes only its two adjacent panes (classic splitter
+behaviour) — with three panes you get two gutters, and each moves just one
+boundary. Touch works out of the box via Pointer Events. Double-click a gutter
+to reset its two panes to their initial sizes.
+
+## Vertical splits
+
+`direction="vertical"` stacks panes top-to-bottom:
+
+```tsx
+<TkxSplitter direction="vertical">
+  <TkxSplitterPane defaultSize={70}>canvas</TkxSplitterPane>
+  <TkxSplitterPane minSize={15}>console</TkxSplitterPane>
+</TkxSplitter>
+```
+
+## Controlled vs uncontrolled
+
+Uncontrolled by default: pane `defaultSize` props seed the internal state
+(normalized to sum 100; unspecified panes share the remainder equally).
+
+Pass `sizes` (percentages, one per pane) for full control — the component then
+never mutates itself; it only reports proposed sizes through `onResize` /
+`onResizeEnd`, and the DOM follows your prop:
+
+```tsx
+const [sizes, setSizes] = useState([30, 70]);
+
+<TkxSplitter sizes={sizes} onResize={setSizes}>
+  <TkxSplitterPane>left</TkxSplitterPane>
+  <TkxSplitterPane>right</TkxSplitterPane>
+</TkxSplitter>
+```
+
+`onResize` fires continuously during a drag (and on every keyboard step);
+`onResizeEnd` fires once on pointer release — useful for persisting layout to
+storage without write-spam.
+
+## Keyboard model
+
+Each gutter follows the WAI-ARIA window-splitter pattern: it is focusable
+(`tabIndex=0`), exposed as `role="separator"` with `aria-orientation`
+(a *vertical* separator for a horizontal split, and vice versa), and
+`aria-valuenow`/`aria-valuemin`/`aria-valuemax` reflect the preceding pane's
+percentage.
+
+| Key | Action (horizontal split) | Action (vertical split) |
+|---|---|---|
+| `ArrowLeft` / `ArrowRight` | Move divider 2% left / right | — |
+| `ArrowUp` / `ArrowDown` | — | Move divider 2% up / down |
+| `Home` | Snap preceding pane to its `minSize` | same |
+| `End` | Snap preceding pane to its max | same |
+
+## TkxSplitter props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `direction` | `'horizontal' \| 'vertical'` | `'horizontal'` | `horizontal` = panes side-by-side, `vertical` = stacked. |
+| `sizes` | `number[]` | — | Controlled sizes in percent, one per pane. Omit for uncontrolled mode. |
+| `onResize` | `(sizes: number[]) => void` | — | Fired continuously during drag and on keyboard resize. |
+| `onResizeEnd` | `(sizes: number[]) => void` | — | Fired on pointer release / after a keyboard step. |
+| `gutterSize` | `number` | `6` | Gutter thickness in px. |
+| `disabled` | `boolean` | `false` | Blocks drag and keyboard resizing. |
+| `className` / `style` | — | — | Applied to the root flex container. |
+| `children` | `ReactNode` | — | 2+ `TkxSplitterPane` for splitting; other children render as-is. |
+
+The component forwards its `ref` to the root `<div>`.
+
+## TkxSplitterPane props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `defaultSize` | `number` | — | Initial size in percent. Unspecified panes share the remainder equally. |
+| `minSize` | `number` | `10` | Minimum size in percent; drag/keyboard clamp here. |
+| `maxSize` | `number` | — | Maximum size in percent. |
+| `className` / `style` | — | — | Applied to the pane `<div>` (which has `overflow: auto`). |
+| `children` | `ReactNode` | — | Pane content; scrolls within the pane. |
+
+## Gotchas
+
+<Aside type="caution">
+  **The parent must give the splitter a height.** The container is
+  `width/height: 100%` — inside a parent with no explicit height (the default
+  for most block elements) a splitter collapses to zero. Wrap it in something
+  with a fixed height, `height: 100vh`, or a flex/grid track.
+</Aside>
+
+- **Percentages normalize.** `defaultSize` values that don't sum to 100 are
+  scaled proportionally, and panes without a `defaultSize` split whatever is
+  left over equally — you never end up with a broken layout.
+- **Controlled means controlled.** With `sizes` set, the splitter never moves
+  on its own: update your state from `onResize` or the panes stay put.
+- **Pane content scrolls.** Panes are `overflow: auto`, so oversized content
+  scrolls inside its pane instead of blowing up the layout.
+- **Gutters are theme-driven.** The gutter uses `theme.border` at rest and
+  `theme.primary` on hover/drag/focus — no hardcoded colours.

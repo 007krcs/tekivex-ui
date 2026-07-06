@@ -2,6 +2,8 @@ export * from './TkxButton';
 export * from './TkxCard';
 export * from './TkxInput';
 export * from './TkxTextarea';
+export * from './TkxSplitter';
+export * from './TkxDescriptions';
 export * from './TkxField';
 export * from './TkxComboBox';
 export * from './TkxCode';

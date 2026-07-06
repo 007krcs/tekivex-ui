@@ -1,0 +1,112 @@
+---
+title: TkxDescriptions
+description: Read-only key/value detail list for record-detail views. Bordered table or plain dl grid, responsive columns, span merging, header slots.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A read-only key/value detail list — the "view record" screen every admin/CRUD
+app hand-rolls. Feed it an `items` array and it lays labels and values out on
+a column grid, as either a semantic `<dl>` (default) or a **bordered
+`<table>`** with proper `<th scope="row">` label cells.
+
+```tsx
+import { TkxDescriptions } from 'tekivex-ui';
+
+<TkxDescriptions
+  title="User Info"
+  extra={<TkxButton size="sm">Edit</TkxButton>}
+  items={[
+    { key: 'name', label: 'Name', children: 'Ada Lovelace' },
+    { key: 'email', label: 'Email', children: 'ada@example.com' },
+    { key: 'role', label: 'Role', children: 'Admin' },
+    { key: 'bio', label: 'Bio', children: 'First programmer.', span: 3 },
+  ]}
+/>
+```
+
+## Item shape
+
+Each entry in `items`:
+
+| Field | Type | Description |
+|---|---|---|
+| `label` | `ReactNode` | The key / field name. Strings are sanitized. |
+| `children` | `ReactNode` | The value. Strings are sanitized; nodes render as-is. |
+| `key` | `string` | Optional stable React key (falls back to index). |
+| `span` | `number` | Columns this item stretches across. Default 1. |
+
+## Plain vs bordered
+
+The default renders a `<dl>`/`<dt>`/`<dd>` list on a CSS grid — light, no
+lines, labels in `textMuted`:
+
+```tsx
+<TkxDescriptions items={items} column={2} />
+```
+
+`bordered` switches to a real `<table>`: label cells are `<th scope="row">`
+with a `surfaceAlt` background, value cells are `<td>`, and everything sits on
+a `border`-token grid. When `title` is set, the table also gets a
+visually-hidden `<caption>` for assistive tech.
+
+```tsx
+<TkxDescriptions items={items} bordered size="small" />
+```
+
+## Layout & colon
+
+`layout="horizontal"` (default) puts the label beside the value and appends a
+`:` after each label in the plain variant; `colon={false}` removes it.
+`layout="vertical"` stacks the label above the value (never shows a colon).
+
+```tsx
+<TkxDescriptions items={items} layout="vertical" bordered />
+```
+
+## Responsive columns
+
+`column` takes a number (default `3`) or a breakpoint map:
+
+```tsx
+<TkxDescriptions items={items} column={{ xs: 1, sm: 2, lg: 4 }} />
+```
+
+The map resolves via `window.matchMedia` (sm ≥ 576px, md ≥ 768px, lg ≥ 992px);
+during SSR the largest defined breakpoint value is used, then the client
+corrects after mount.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `items` | `TkxDescriptionsItem[]` | `[]` | The key/value entries. |
+| `title` | `ReactNode` | — | Header title above the list. |
+| `extra` | `ReactNode` | — | Right-aligned header slot (e.g. an Edit button). |
+| `column` | `number \| { xs?, sm?, md?, lg? }` | `3` | Columns per row, fixed or responsive. |
+| `bordered` | `boolean` | `false` | Render as a bordered `<table>` grid. |
+| `layout` | `'horizontal' \| 'vertical'` | `'horizontal'` | Label beside vs above the value. |
+| `size` | `'small' \| 'middle' \| 'large'` | `'middle'` | Cell padding scale. |
+| `colon` | `boolean` | `true` | Append `:` to labels (horizontal, non-bordered). |
+| `labelStyle` | `CSSProperties` | — | Extra styles for every label cell. |
+| `contentStyle` | `CSSProperties` | — | Extra styles for every value cell. |
+| `className` / `style` | — | — | Applied to the root element. |
+
+The component forwards its `ref` to the root `<div>`.
+
+## Gotchas
+
+<Aside type="caution">
+  **`span` clamps to the current row.** Like Ant Design, an item's `span`
+  never exceeds the columns *remaining* in its row — `span={99}` on the last
+  slot of a 3-column row renders as span 1, it does not wrap or overflow. In
+  bordered mode the last cell of a partial row is additionally stretched to
+  fill the remainder so the table stays rectangular.
+</Aside>
+
+<Aside>
+  **The parent decides responsive columns.** `TkxDescriptions` only reacts to
+  the *viewport* via `matchMedia` — it does not observe its container. If it
+  lives in a resizable panel or split view, pass a numeric `column` derived
+  from your own container measurement instead of the breakpoint map.
+</Aside>

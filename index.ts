@@ -18,6 +18,14 @@ export { TkxInput } from './src/components/TkxInput';
 export type { TkxInputProps } from './src/components/TkxInput';
 export { TkxTextarea } from './src/components/TkxTextarea';
 export type { TkxTextareaProps } from './src/components/TkxTextarea';
+export { TkxSplitter, TkxSplitterPane } from './src/components/TkxSplitter';
+export type { TkxSplitterProps, TkxSplitterPaneProps } from './src/components/TkxSplitter';
+export { TkxDescriptions } from './src/components/TkxDescriptions';
+export type {
+  TkxDescriptionsProps,
+  TkxDescriptionsItem,
+  TkxDescriptionsColumnMap,
+} from './src/components/TkxDescriptions';
 export { TkxField } from './src/components/TkxField';
 export type { TkxFieldProps, TkxFieldChildProps } from './src/components/TkxField';
 export { TkxComboBox } from './src/components/TkxComboBox';
