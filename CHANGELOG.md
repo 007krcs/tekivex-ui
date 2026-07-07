@@ -5,6 +5,30 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.27.0] — 2026-06-18
+
+### Added — `useVirtualList` list-virtualization primitive
+
+A shared, tested fixed-height windowing hook (exported from the root and
+`tekivex-ui/headless`). Renders only the items visible in a scroll container
+(plus overscan), so a 100k-row list stays cheap. Five components already
+hand-rolled this pattern; it's now one reusable primitive with an `enabled`
+gate for small lists.
+
+### Fixed — TkxTransferList virtualizes long lists
+
+`TkxTransferList` rendered every option — a large list built thousands of DOM
+nodes per panel. It now windows lists longer than 60 items via `useVirtualList`
+(short lists keep the exact previous all-rendered path). Keyboard navigation
+scrolls off-window rows into view before focusing them, and each option carries
+`aria-setsize`/`aria-posinset` so screen readers still announce the true
+position in the full list.
+
+> Note: `TkxTreeView` (expand/collapse + roving focus) and `TkxMessageThread`
+> (variable-height messages + autoscroll) are **not** yet virtualized — those
+> need variable-height windowing and are deferred to a later release rather than
+> rushed. The `useVirtualList` primitive shipped here is the foundation for both.
+
 ## [3.26.0] — 2026-06-18
 
 ### Fixed — runtime quality
