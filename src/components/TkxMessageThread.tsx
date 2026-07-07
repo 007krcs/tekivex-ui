@@ -4,6 +4,7 @@ import {
   useState,
   useRef,
   useEffect,
+  useLayoutEffect,
   useCallback,
   useMemo,
   type KeyboardEvent,
@@ -13,7 +14,17 @@ import {
 import { useTheme } from '../themes';
 import { tkx, cx } from '../engine/tkx';
 import { sanitizeString, sniffMimeType } from '../engine/security';
-import { useReducedMotion } from '../hooks';
+import { useReducedMotion, useVariableVirtualList } from '../hooks';
+
+// useLayoutEffect warns on the server; fall back to useEffect there. The
+// virtualization-init effect it guards is a no-op on the server anyway.
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+// Above this many rendered rows (messages + day separators) the thread switches
+// to windowed virtualization. At or below it, the exact non-virtualized path is
+// preserved byte-for-byte.
+const VIRTUALIZE_THRESHOLD = 40;
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -102,6 +113,12 @@ export interface TkxMessageThreadProps {
    */
   onTypingStop?: () => void;
 }
+
+// A single rendered row: either a day/time separator or a message. `key` is the
+// stable id the virtualization height-cache is keyed by.
+type ThreadRow =
+  | { kind: 'sep'; key: string; label: string }
+  | { kind: 'msg'; key: string; msg: PeerMessage; showHeader: boolean };
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
@@ -338,12 +355,6 @@ export function TkxMessageThread({
     };
   }, []);
 
-  useEffect(() => {
-    const el = listRef.current;
-    if (!el) return;
-    el.scrollTo({ top: el.scrollHeight, behavior: reducedMotion ? 'auto' : 'smooth' });
-  }, [messages.length, reducedMotion]);
-
   const messageById = useMemo(() => {
     const m: Record<string, PeerMessage> = {};
     for (const msg of messages) m[msg.id] = msg;
@@ -463,47 +474,124 @@ export function TkxMessageThread({
   }, [typingUserIds, senders]);
 
   // ── Render rows with grouping + day separators ──────────────────────────────
-  const rows: Array<
-    | { kind: 'sep'; key: string; label: string }
-    | { kind: 'msg'; key: string; msg: PeerMessage; showHeader: boolean }
-  > = [];
-  let prev: PeerMessage | null = null;
-  for (const msg of messages) {
-    const d = toDate(msg.timestamp);
-    if (showTimeSeparators) {
-      const prevDay = prev ? toDate(prev.timestamp).toDateString() : null;
-      if (prevDay !== d.toDateString()) {
-        rows.push({ kind: 'sep', key: `sep-${msg.id}`, label: formatDayLabel(d) });
+  const rows = useMemo<ThreadRow[]>(() => {
+    const out: ThreadRow[] = [];
+    let prev: PeerMessage | null = null;
+    for (const msg of messages) {
+      const d = toDate(msg.timestamp);
+      if (showTimeSeparators) {
+        const prevDay = prev ? toDate(prev.timestamp).toDateString() : null;
+        if (prevDay !== d.toDateString()) {
+          out.push({ kind: 'sep', key: `sep-${msg.id}`, label: formatDayLabel(d) });
+        }
       }
+      const grouped =
+        groupConsecutive &&
+        prev != null &&
+        prev.senderId === msg.senderId &&
+        toDate(prev.timestamp).toDateString() === d.toDateString() &&
+        d.getTime() - toDate(prev.timestamp).getTime() < GROUP_WINDOW_MS;
+      out.push({ kind: 'msg', key: msg.id, msg, showHeader: !grouped });
+      prev = msg;
     }
-    const grouped =
-      groupConsecutive &&
-      prev != null &&
-      prev.senderId === msg.senderId &&
-      toDate(prev.timestamp).toDateString() === d.toDateString() &&
-      d.getTime() - toDate(prev.timestamp).getTime() < GROUP_WINDOW_MS;
-    rows.push({ kind: 'msg', key: msg.id, msg, showHeader: !grouped });
-    prev = msg;
-  }
+    return out;
+  }, [messages, showTimeSeparators, groupConsecutive]);
 
-  return (
-    <div
-      className={cx(tkx('flex flex-col overflow-hidden rounded-2xl'), className)}
-      style={{
-        height: heightVal,
-        backgroundColor: theme.bg,
-        border: `1px solid ${theme.border}`,
-        ...style,
-      }}
-    >
-      <div
-        ref={listRef}
-        role="log"
-        aria-live="polite"
-        aria-label="Message thread"
-        className={tkx('flex-1 overflow-y-auto p-4')}
-      >
-        {rows.map((row) => {
+  // ── Virtualization (variable-height, id-keyed, scroll-anchored) ─────────────
+  // Only long threads window; short ones keep the exact non-virtualized path.
+  const virtualEnabled = rows.length > VIRTUALIZE_THRESHOLD;
+
+  const getItemKey = useCallback((index: number) => rows[index]?.key ?? '', [rows]);
+
+  const estimateHeight = useCallback(
+    (index: number): number => {
+      const row = rows[index];
+      if (!row) return 72;
+      if (row.kind === 'sep') return 40;
+      // Base bubble; taller when it owns a header (avatar + name row) and taller
+      // still when it carries attachments (images/video reserve ~220px).
+      let h = row.showHeader ? 84 : 44;
+      if (row.msg.attachments?.length) h += 220;
+      return h;
+    },
+    [rows],
+  );
+
+  const virtual = useVariableVirtualList({
+    itemCount: rows.length,
+    getItemKey,
+    estimateHeight,
+    enabled: virtualEnabled,
+    containerRef: listRef,
+    maintainVisibleContentPosition: true,
+    pinToBottom: true,
+  });
+
+  // The hook owns anchoring/pin-follow, but nothing seeds the initial "sit at
+  // the bottom" that a chat expects — and it seeds `pinnedRef` only from a real
+  // user scroll. On entering the virtualized path we scroll to the bottom once
+  // (non-programmatically) and call onScroll so the pin state is established.
+  const didInitVirtualScroll = useRef(false);
+  useIsomorphicLayoutEffect(() => {
+    if (!virtualEnabled) {
+      didInitVirtualScroll.current = false;
+      return;
+    }
+    if (didInitVirtualScroll.current || rows.length === 0) return;
+    const el = listRef.current;
+    if (!el) return;
+    didInitVirtualScroll.current = true;
+    el.scrollTop = el.scrollHeight;
+    virtual.onScroll();
+  }, [virtualEnabled, rows.length, virtual]);
+
+  // Non-virtualized path keeps the original behavior verbatim: follow the bottom
+  // on every new message. (Guarded off while virtualized — the hook handles it.)
+  useEffect(() => {
+    if (virtualEnabled) return;
+    const el = listRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: reducedMotion ? 'auto' : 'smooth' });
+  }, [messages.length, reducedMotion, virtualEnabled]);
+
+  // "N new ↓" pill: count appends that land while the user is scrolled away from
+  // the bottom; reset once they're pinned again. Prepends don't count (they
+  // don't change the last message id).
+  const [newCount, setNewCount] = useState(0);
+  const prevLastIdRef = useRef<string | undefined>(messages[messages.length - 1]?.id);
+  useEffect(() => {
+    const prevLast = prevLastIdRef.current;
+    const curLast = messages[messages.length - 1]?.id;
+    prevLastIdRef.current = curLast;
+    if (!virtualEnabled) {
+      setNewCount((c) => (c === 0 ? c : 0));
+      return;
+    }
+    if (virtual.isPinnedToBottom()) {
+      setNewCount((c) => (c === 0 ? c : 0));
+    } else if (curLast && curLast !== prevLast) {
+      setNewCount((c) => c + 1);
+    }
+  }, [messages, virtualEnabled, virtual]);
+
+  const jumpToLatest = useCallback(() => {
+    virtual.scrollToBottom(reducedMotion ? 'auto' : 'smooth');
+    setNewCount(0);
+  }, [virtual, reducedMotion]);
+
+  // Decoupled live region: with windowing a freshly appended message may not be
+  // in the DOM, so the role="log" region can't announce it. Mirror the latest
+  // message text here instead.
+  const lastMessage = messages[messages.length - 1];
+  const liveAnnouncement =
+    virtualEnabled && lastMessage && !lastMessage.deletedAt
+      ? `${sanitizeString(senders[lastMessage.senderId]?.name ?? 'Unknown')}: ${sanitizeString(
+          lastMessage.text ?? '',
+        )}`
+      : '';
+
+  // ── Single-row renderer, shared by the windowed and plain paths ─────────────
+  const renderRow = (row: ThreadRow) => {
           if (row.kind === 'sep') {
             return (
               <div key={row.key} className={tkx('flex items-center justify-center my-3')}>
@@ -723,8 +811,72 @@ export function TkxMessageThread({
               </div>
             </div>
           );
-        })}
-      </div>
+  };
+
+  return (
+    <div
+      className={cx(tkx('flex flex-col overflow-hidden rounded-2xl'), className)}
+      style={{
+        height: heightVal,
+        backgroundColor: theme.bg,
+        border: `1px solid ${theme.border}`,
+        ...style,
+      }}
+    >
+      {virtualEnabled ? (
+        <div className={tkx('relative flex-1 flex flex-col overflow-hidden')}>
+          {/* Windowed container is NOT a live region: rows mount/unmount as the
+              user scrolls, so aria-live here would announce old messages paging
+              into view (and double-announce new ones already covered by the
+              sr-only mirror below). The mirror at the bottom owns announcements. */}
+          <div
+            ref={listRef}
+            role="region"
+            aria-label="Message thread"
+            onScroll={virtual.onScroll}
+            className={tkx('flex-1 overflow-y-auto p-4')}
+            style={{ overflowAnchor: 'none' }}
+          >
+            <div style={{ height: virtual.totalHeight, position: 'relative' }}>
+              <div style={{ transform: `translateY(${virtual.offsetY}px)` }}>
+                {rows.slice(virtual.startIndex, virtual.endIndex).map((row) => (
+                  <div key={row.key} ref={virtual.measureRef(row.key)}>
+                    {renderRow(row)}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          {newCount > 0 && (
+            <button
+              type="button"
+              onClick={jumpToLatest}
+              aria-label={`${newCount} new ${newCount === 1 ? 'message' : 'messages'}, jump to latest`}
+              className={tkx(
+                'absolute left-1/2 -translate-x-1/2 bottom-3 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer border-none',
+              )}
+              style={{ backgroundColor: theme.primary, color: theme.bg, boxShadow: '0 2px 8px rgba(0,0,0,0.25)' }}
+            >
+              {newCount} new ↓
+            </button>
+          )}
+          {/* Decoupled live region: announces the latest message even when it's
+              rendered outside the virtualization window. */}
+          <div aria-live="polite" aria-atomic="true" className={tkx('sr-only')}>
+            {liveAnnouncement}
+          </div>
+        </div>
+      ) : (
+        <div
+          ref={listRef}
+          role="log"
+          aria-live="polite"
+          aria-label="Message thread"
+          className={tkx('flex-1 overflow-y-auto p-4')}
+        >
+          {rows.map((row) => renderRow(row))}
+        </div>
+      )}
 
       {/* Typing indicator (above composer, below message list) */}
       {typingLabel && (

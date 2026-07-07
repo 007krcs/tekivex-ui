@@ -214,3 +214,12 @@ export function useVirtualList(opts: VirtualListOptions): VirtualListResult {
 
   return { startIndex, endIndex, offsetY, totalHeight, onScroll };
 }
+
+// ── useVariableVirtualList ───────────────────────────────────────────────────
+// Variable-height sibling of useVirtualList. Large + anchoring-heavy, so it
+// lives in its own module; re-exported here so the import site stays `../hooks`.
+export {
+  useVariableVirtualList,
+  type VariableVirtualListOptions,
+  type VariableVirtualListResult,
+} from './useVariableVirtualList';

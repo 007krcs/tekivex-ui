@@ -337,4 +337,167 @@ describe('TkxTreeView', () => {
       expect(container.querySelector('script')).toBeNull();
     });
   });
+
+  // ── aria-setsize / aria-posinset (per sibling group) ───────────────────────
+  describe('aria set counts', () => {
+    it('computes aria-setsize/aria-posinset per sibling group, not per depth', () => {
+      render(<TkxTreeView data={treeData} expanded={['root', 'child2']} />, {
+        wrapper: Wrapper,
+      });
+      const item = (label: string) =>
+        screen.getByText(label).closest('[role="treeitem"]') as HTMLElement;
+
+      // Root group = [Root, Sibling] → setsize 2.
+      expect(item('Root').getAttribute('aria-setsize')).toBe('2');
+      expect(item('Root').getAttribute('aria-posinset')).toBe('1');
+      expect(item('Sibling').getAttribute('aria-setsize')).toBe('2');
+      expect(item('Sibling').getAttribute('aria-posinset')).toBe('2');
+
+      // Root's children = [Child One, Child Two] → setsize 2, independent of the
+      // (buggy) old depth-scoped count which would have merged sibling groups.
+      expect(item('Child One').getAttribute('aria-setsize')).toBe('2');
+      expect(item('Child One').getAttribute('aria-posinset')).toBe('1');
+      expect(item('Child Two').getAttribute('aria-posinset')).toBe('2');
+
+      // Grandchild is an only child → setsize 1, posinset 1.
+      expect(item('Grandchild').getAttribute('aria-setsize')).toBe('1');
+      expect(item('Grandchild').getAttribute('aria-posinset')).toBe('1');
+    });
+  });
+
+  // ── Roving tabindex ────────────────────────────────────────────────────────
+  describe('roving tabindex', () => {
+    it('first visible item is the initial tab stop', () => {
+      render(<TkxTreeView data={treeData} expanded={['root']} />, { wrapper: Wrapper });
+      const items = screen.getAllByRole('treeitem');
+      expect(items[0].getAttribute('tabindex')).toBe('0');
+      expect(items[1].getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('tab stop follows keyboard focus', () => {
+      render(<TkxTreeView data={treeData} expanded={['root']} />, { wrapper: Wrapper });
+      let items = screen.getAllByRole('treeitem');
+      items[0].focus();
+      fireEvent.keyDown(items[0], { key: 'ArrowDown' });
+      items = screen.getAllByRole('treeitem');
+      expect(document.activeElement).toBe(items[1]);
+      expect(items[1].getAttribute('tabindex')).toBe('0');
+      expect(items[0].getAttribute('tabindex')).toBe('-1');
+    });
+  });
+
+  // ── Virtualization (large trees) ───────────────────────────────────────────
+  describe('virtualization', () => {
+    // Flatten count must exceed the internal threshold (50) to window.
+    function bigLeaves(n: number): TreeNode[] {
+      return Array.from({ length: n }, (_, i) => ({ id: `n${i}`, label: `Node ${i}` }));
+    }
+
+    it('small trees keep the exact all-rendered <ul> path (no windowing)', () => {
+      render(<TkxTreeView data={bigLeaves(10)} />, { wrapper: Wrapper });
+      const tree = screen.getByRole('tree');
+      expect(tree.tagName).toBe('UL');
+      // All 10 rows are present in the DOM.
+      expect(screen.getAllByRole('treeitem')).toHaveLength(10);
+      expect(screen.getByText('Node 9')).toBeInTheDocument();
+    });
+
+    it('large trees window: the scroll container is role="tree" and only a slice renders', () => {
+      render(<TkxTreeView data={bigLeaves(60)} />, { wrapper: Wrapper });
+      const tree = screen.getByRole('tree');
+      // Now a scrollable div, not a <ul>.
+      expect(tree.tagName).toBe('DIV');
+      expect(tree).toHaveStyle({ overflowY: 'auto' });
+      // Only a windowed subset renders, not all 60 rows.
+      const rendered = screen.getAllByRole('treeitem');
+      expect(rendered.length).toBeGreaterThan(0);
+      expect(rendered.length).toBeLessThan(60);
+      // A far-down node is NOT in the DOM yet.
+      expect(screen.queryByText('Node 59')).not.toBeInTheDocument();
+    });
+
+    it('windowed rows still carry full-model aria set counts', () => {
+      render(<TkxTreeView data={bigLeaves(60)} />, { wrapper: Wrapper });
+      const first = screen.getByText('Node 0').closest('[role="treeitem"]') as HTMLElement;
+      // setsize reflects the FULL sibling group (60), not the rendered slice.
+      expect(first.getAttribute('aria-setsize')).toBe('60');
+      expect(first.getAttribute('aria-posinset')).toBe('1');
+    });
+
+    it('focusing an off-window node scrolls it into view then focuses it (End key)', () => {
+      render(<TkxTreeView data={bigLeaves(60)} />, { wrapper: Wrapper });
+      // Last node is off-window initially.
+      expect(screen.queryByText('Node 59')).not.toBeInTheDocument();
+
+      const items = screen.getAllByRole('treeitem');
+      items[0].focus();
+      fireEvent.keyDown(items[0], { key: 'End' });
+
+      // It is now mounted and holds focus.
+      const last = screen.getByText('Node 59').closest('[role="treeitem"]') as HTMLElement;
+      expect(last).toBeInTheDocument();
+      expect(document.activeElement).toBe(last);
+      expect(last.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('expand/collapse in a windowed tree recomputes visible model correctly', () => {
+      // First root has children; enough leaves after it to force windowing.
+      const data: TreeNode[] = [
+        {
+          id: 'parent',
+          label: 'Parent',
+          children: [
+            { id: 'kid-a', label: 'Kid A' },
+            { id: 'kid-b', label: 'Kid B' },
+          ],
+        },
+        ...Array.from({ length: 60 }, (_, i) => ({ id: `n${i}`, label: `Node ${i}` })),
+      ];
+      render(<TkxTreeView data={data} />, { wrapper: Wrapper });
+      expect(screen.getByRole('tree').tagName).toBe('DIV');
+      // Collapsed: children absent.
+      expect(screen.queryByText('Kid A')).not.toBeInTheDocument();
+
+      // Expand near the top of the window.
+      fireEvent.click(screen.getByText('Parent'));
+      const kidA = screen.getByText('Kid A').closest('[role="treeitem"]') as HTMLElement;
+      expect(kidA).toBeInTheDocument();
+      expect(kidA.getAttribute('aria-level')).toBe('2');
+      expect(kidA.getAttribute('aria-setsize')).toBe('2');
+      expect(kidA.getAttribute('aria-posinset')).toBe('1');
+
+      // Collapse again: children drop back out of the visible model.
+      fireEvent.click(screen.getByText('Parent'));
+      expect(screen.queryByText('Kid A')).not.toBeInTheDocument();
+    });
+
+    it('collapsing an ancestor of the focused node keeps exactly one tab stop', () => {
+      // Regression: when focusedId points at a node that leaves the flattened
+      // model (collapse via chevron does not run setFocusedId), the tab stop
+      // must fall back to the first row — not vanish, leaving the whole tree
+      // untabbable.
+      const data: TreeNode[] = [
+        {
+          id: 'parent',
+          label: 'Parent',
+          children: [
+            { id: 'kid-a', label: 'Kid A' },
+            { id: 'kid-b', label: 'Kid B' },
+          ],
+        },
+        { id: 'sib', label: 'Sibling' },
+      ];
+      render(<TkxTreeView data={data} />, { wrapper: Wrapper });
+      // Expand, focus a descendant (focusedId := kid-b), then collapse Parent.
+      fireEvent.click(screen.getByText('Parent'));
+      const kidB = screen.getByText('Kid B').closest('[role="treeitem"]') as HTMLElement;
+      fireEvent.focus(kidB);
+      fireEvent.click(screen.getByText('Parent'));
+      expect(screen.queryByText('Kid B')).not.toBeInTheDocument();
+      const tabbable = screen
+        .getAllByRole('treeitem')
+        .filter((el) => el.getAttribute('tabindex') === '0');
+      expect(tabbable).toHaveLength(1);
+    });
+  });
 });

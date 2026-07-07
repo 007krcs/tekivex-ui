@@ -375,6 +375,102 @@ describe('TkxPeerChat (v3.19 rename)', () => {
   });
 });
 
+// ── Virtualization (useVariableVirtualList integration) ─────────────────────
+
+// Alternating senders → no grouping → one <article> per message. All within
+// the same second → a single day separator, so rows = n + 1.
+function makeMany(n: number): PeerMessage[] {
+  const base = Date.now();
+  return Array.from({ length: n }, (_, i) => ({
+    id: `m${i}`,
+    senderId: i % 2 === 0 ? 'alice' : 'me',
+    text: `message ${i}`,
+    timestamp: new Date(base - (n - i) * 1000),
+  }));
+}
+
+describe('TkxMessageThread — virtualization', () => {
+  it('short threads (≤ threshold) render EVERY message (non-virtualized path)', () => {
+    render(
+      <TkxMessageThread messages={makeMany(20)} senders={senders} currentUserId="me" />,
+      { wrapper: Wrapper },
+    );
+    // 20 messages, all rendered — the exact current path, no windowing.
+    expect(screen.getAllByRole('article')).toHaveLength(20);
+    // No jump-to-latest pill on the non-virtualized path.
+    expect(screen.queryByRole('button', { name: /jump to latest/i })).toBeNull();
+  });
+
+  it('long threads window the DOM to far fewer rows than the model', () => {
+    render(
+      <TkxMessageThread messages={makeMany(60)} senders={senders} currentUserId="me" />,
+      { wrapper: Wrapper },
+    );
+    const articles = screen.getAllByRole('article');
+    // Windowed: only the slice near the top of the (zero-height jsdom) viewport
+    // is mounted, so far fewer than the 60 total.
+    expect(articles.length).toBeGreaterThan(0);
+    expect(articles.length).toBeLessThan(60);
+    // The windowed container is a labelled region (NOT a live region — that would
+    // announce old messages as they page into view; the sr-only mirror announces).
+    expect(screen.getByRole('region', { name: 'Message thread' })).toBeInTheDocument();
+  });
+
+  it('keeps the windowed container present and does not crash on a large thread', () => {
+    render(
+      <TkxMessageThread messages={makeMany(80)} senders={senders} currentUserId="me" />,
+      { wrapper: Wrapper },
+    );
+    const region = screen.getByRole('region', { name: 'Message thread' });
+    expect(region).toBeInTheDocument();
+    // overflow-anchor:none is set on the virtualized scroll container so the
+    // browser's native anchoring doesn't fight the hook's manual anchoring.
+    expect((region as HTMLElement).style.overflowAnchor).toBe('none');
+    // A spacer div sized to the full estimated height backs the scrollbar.
+    const spacer = region.querySelector('div[style*="height"]') as HTMLElement | null;
+    expect(spacer).not.toBeNull();
+    // The windowed container must NOT be a live region (no aria-live).
+    expect(region.getAttribute('aria-live')).toBeNull();
+  });
+
+  it('announces the latest message via a decoupled live region even when it is windowed out', () => {
+    render(
+      <TkxMessageThread messages={makeMany(60)} senders={senders} currentUserId="me" />,
+      { wrapper: Wrapper },
+    );
+    // The last message (message 59) is outside the top-anchored window, so it is
+    // not in the article list — but the decoupled aria-live region mirrors it.
+    const live = screen.getByText(/message 59/);
+    expect(live).toBeInTheDocument();
+    expect(live.closest('[aria-live="polite"]')).not.toBeNull();
+  });
+
+  it('surfaces a "N new" pill when a message arrives while scrolled away from the bottom', () => {
+    const { rerender } = render(
+      <TkxMessageThread messages={makeMany(60)} senders={senders} currentUserId="me" />,
+      { wrapper: Wrapper },
+    );
+    // Not at the bottom (zero-height jsdom viewport ⇒ never pinned), no pill yet.
+    expect(screen.queryByRole('button', { name: /jump to latest/i })).toBeNull();
+
+    const next = [
+      ...makeMany(60),
+      { id: 'm60', senderId: 'alice', text: 'brand new', timestamp: new Date() } as PeerMessage,
+    ];
+    rerender(
+      <TkxMessageThread messages={next} senders={senders} currentUserId="me" />,
+    );
+    const pill = screen.getByRole('button', { name: /jump to latest/i });
+    expect(pill).toBeInTheDocument();
+    expect(pill.textContent).toMatch(/1 new/);
+
+    // Clicking it scrolls to the latest and clears the pill (no crash on the
+    // stubbed jsdom scroll primitives).
+    fireEvent.click(pill);
+    expect(screen.queryByRole('button', { name: /jump to latest/i })).toBeNull();
+  });
+});
+
 describe('TkxMessageThread / TkxPeerChat — typing indicator', () => {
   it('renders nothing when typingUserIds is empty', () => {
     render(

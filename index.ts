@@ -283,8 +283,10 @@ export {
   useEscapeKey,
   useClickOutside,
   useVirtualList,
+  useVariableVirtualList,
 } from './src/hooks';
 export type { VirtualListOptions, VirtualListResult } from './src/hooks';
+export type { VariableVirtualListOptions, VariableVirtualListResult } from './src/hooks';
 
 // Engine APIs (public surface)
 export { Quantum, fnv1aHash, LRUCache, memoize, batchUpdate } from './src/engine/quantum';
