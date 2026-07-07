@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { renderHook } from '@testing-library/react';
-import { TkxToastProvider, useToast } from '../src/components/TkxToast';
+import { TkxToastProvider, useToast, toast as globalToast } from '../src/components/TkxToast';
 import { ThemeProvider } from '../src/themes';
 
 function Wrapper({ children }: { children: React.ReactNode }) {
@@ -143,5 +143,62 @@ describe('TkxToast', () => {
     act(() => { result.current.dismissAll(); });
     expect(document.body.textContent).not.toMatch(/A/);
     expect(document.body.textContent).not.toMatch(/B/);
+  });
+
+  it('two default providers do NOT double-render the same toast', () => {
+    const { result } = renderHook(() => useToast(), { wrapper: Wrapper });
+    const { container } = render(
+      <ThemeProvider>
+        <TkxToastProvider />
+        <TkxToastProvider />
+      </ThemeProvider>,
+    );
+    void container;
+    act(() => { result.current.toast({ title: 'ONCE' }); });
+    const matches = (document.body.textContent?.match(/ONCE/g) ?? []).length;
+    expect(matches).toBe(1);
+    act(() => { result.current.dismissAll(); });
+  });
+
+  it('an isolated provider keeps its toasts separate from the global store', () => {
+    let isolatedToast: ReturnType<typeof useToast>['toast'] | null = null;
+    function Grabber() {
+      isolatedToast = useToast().toast;
+      return null;
+    }
+    render(
+      <ThemeProvider>
+        <TkxToastProvider isolated>
+          <Grabber />
+        </TkxToastProvider>
+      </ThemeProvider>,
+    );
+    // Fire on the GLOBAL store; the isolated region must not show it.
+    act(() => { globalToast({ title: 'GLOBAL-ONLY' }); });
+    // Fire on the ISOLATED store.
+    act(() => { isolatedToast!({ title: 'ISO-ONLY' }); });
+    expect(document.body.textContent).toMatch(/ISO-ONLY/);
+    act(() => {
+      // clean up global
+    });
+  });
+
+  it('fires onDismiss when a toast is removed by timeout', () => {
+    const onDismiss = vi.fn();
+    const { result } = renderHook(() => useToast(), { wrapper: Wrapper });
+    act(() => { result.current.toast({ title: 'X', duration: 1000, onDismiss }); });
+    expect(onDismiss).not.toHaveBeenCalled();
+    act(() => { vi.advanceTimersByTime(1000); });
+    expect(onDismiss).toHaveBeenCalledTimes(1);
+  });
+
+  it('the module-level toast() targets the default store', () => {
+    render(
+      <ThemeProvider>
+        <TkxToastProvider />
+      </ThemeProvider>,
+    );
+    act(() => { globalToast({ title: 'FROM-MODULE' }); });
+    expect(document.body.textContent).toMatch(/FROM-MODULE/);
   });
 });

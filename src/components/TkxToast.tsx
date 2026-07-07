@@ -1,6 +1,8 @@
 'use client';
 
 import {
+  createContext,
+  useContext,
   useState,
   useEffect,
   useCallback,
@@ -27,76 +29,175 @@ export interface ToastItem {
   variant?: ToastVariant;
   duration?: number;
   action?: { label: string; onClick: () => void };
+  /** Fires when the toast leaves the screen (timeout, close button, or programmatic dismiss). */
+  onDismiss?: (id: string) => void;
 }
 
 export interface TkxToastProps {
   position?: ToastPosition;
+  /**
+   * Use a private store scoped to this provider instead of the shared global
+   * store. Toasts fired via `useToast()` inside this subtree land here only;
+   * the module-level `toast()` and any non-isolated provider are unaffected.
+   * Use this to run a second toast region without the two mirroring each other.
+   */
+  isolated?: boolean;
   children?: React.ReactNode;
 }
 
-// ── Module-level store ────────────────────────────────────────────────────────
-
-type Listener = (toasts: ToastItem[]) => void;
+// ── Store factory (one per provider; a shared default for back-compat) ─────────
 
 const MAX_VISIBLE = 5;
-let queue: ToastItem[] = [];
-let visible: ToastItem[] = [];
-const listeners = new Set<Listener>();
-const timers = new Map<string, ReturnType<typeof setTimeout>>();
+type Listener = (toasts: ToastItem[]) => void;
 
-function notify() {
-  const snapshot = [...visible];
-  listeners.forEach((fn) => fn(snapshot));
+interface TimerRecord {
+  handle: ReturnType<typeof setTimeout> | null;
+  remaining: number;
+  startedAt: number;
 }
 
-function scheduleRemove(id: string, duration: number) {
-  if (duration === 0) return;
-  timers.set(id, setTimeout(() => removeToast(id), duration));
+export interface ToastStore {
+  add(item: Omit<ToastItem, 'id'>): string;
+  remove(id: string): void;
+  dismissAll(): void;
+  pause(): void;
+  resume(): void;
+  subscribe(fn: Listener): () => void;
+  getSnapshot(): ToastItem[];
 }
 
-function removeToast(id: string) {
-  clearTimeout(timers.get(id));
-  timers.delete(id);
-  const wasVisible = visible.some((t) => t.id === id);
-  visible = visible.filter((t) => t.id !== id);
-  queue = queue.filter((t) => t.id !== id);
-  if (wasVisible && queue.length > 0 && visible.length < MAX_VISIBLE) {
-    const next = queue.shift()!;
-    visible = [...visible, next];
-    scheduleRemove(next.id, next.duration ?? 4000);
-  }
-  notify();
+function createToastStore(): ToastStore {
+  let queue: ToastItem[] = [];
+  let visible: ToastItem[] = [];
+  const listeners = new Set<Listener>();
+  const timers = new Map<string, TimerRecord>();
+  let paused = false;
+
+  const notify = () => {
+    const snapshot = [...visible];
+    listeners.forEach((fn) => fn(snapshot));
+  };
+
+  const schedule = (id: string, duration: number) => {
+    if (duration === 0) return; // sticky
+    const rec: TimerRecord = { handle: null, remaining: duration, startedAt: Date.now() };
+    if (!paused) {
+      rec.startedAt = Date.now();
+      rec.handle = setTimeout(() => remove(id), duration);
+    }
+    timers.set(id, rec);
+  };
+
+  const remove = (id: string) => {
+    const rec = timers.get(id);
+    if (rec?.handle) clearTimeout(rec.handle);
+    timers.delete(id);
+    const removed = visible.find((t) => t.id === id) ?? queue.find((t) => t.id === id);
+    const wasVisible = visible.some((t) => t.id === id);
+    visible = visible.filter((t) => t.id !== id);
+    queue = queue.filter((t) => t.id !== id);
+    if (wasVisible && queue.length > 0 && visible.length < MAX_VISIBLE) {
+      const next = queue.shift()!;
+      visible = [...visible, next];
+      schedule(next.id, next.duration ?? 4000);
+    }
+    notify();
+    removed?.onDismiss?.(id);
+  };
+
+  const add = (item: Omit<ToastItem, 'id'>): string => {
+    const id = `tkx-toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const toast: ToastItem = { ...item, id, duration: item.duration ?? 4000 };
+    if (visible.length < MAX_VISIBLE) {
+      visible = [...visible, toast];
+      schedule(id, toast.duration!);
+    } else {
+      queue = [...queue, toast];
+    }
+    notify();
+    return id;
+  };
+
+  const dismissAll = () => {
+    const dismissed = [...visible, ...queue];
+    timers.forEach((rec) => rec.handle && clearTimeout(rec.handle));
+    timers.clear();
+    visible = [];
+    queue = [];
+    notify();
+    dismissed.forEach((t) => t.onDismiss?.(t.id));
+  };
+
+  // Pause every running countdown, banking the remaining time.
+  const pause = () => {
+    if (paused) return;
+    paused = true;
+    const now = Date.now();
+    timers.forEach((rec) => {
+      if (rec.handle) {
+        clearTimeout(rec.handle);
+        rec.handle = null;
+        rec.remaining = Math.max(0, rec.remaining - (now - rec.startedAt));
+      }
+    });
+  };
+
+  // Resume from the banked remaining time (not a reset).
+  const resume = () => {
+    if (!paused) return;
+    paused = false;
+    const now = Date.now();
+    timers.forEach((rec, id) => {
+      if (!rec.handle) {
+        rec.startedAt = now;
+        rec.handle = setTimeout(() => remove(id), rec.remaining);
+      }
+    });
+  };
+
+  return {
+    add,
+    remove,
+    dismissAll,
+    pause,
+    resume,
+    subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    },
+    getSnapshot: () => [...visible],
+  };
 }
 
-function addToast(item: Omit<ToastItem, 'id'>): string {
-  const id = `tkx-toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-  const toast: ToastItem = { ...item, id, duration: item.duration ?? 4000 };
-  if (visible.length < MAX_VISIBLE) {
-    visible = [...visible, toast];
-    scheduleRemove(id, toast.duration!);
-  } else {
-    queue = [...queue, toast];
-  }
-  notify();
-  return id;
-}
+/** The shared default store — target of the module-level `toast()` and of
+ *  `useToast()` when called outside any (non-isolated) provider. */
+const globalStore = createToastStore();
 
-function dismissAll() {
-  timers.forEach((t) => clearTimeout(t));
-  timers.clear();
-  visible = [];
-  queue = [];
-  notify();
-}
+const ToastStoreContext = createContext<ToastStore | null>(null);
 
-// ── Hook ──────────────────────────────────────────────────────────────────────
+// ── Public imperative API ──────────────────────────────────────────────────────
+
+/**
+ * Fire a toast from outside React (e.g. an API-error interceptor). Targets the
+ * shared default store, so at least one non-isolated `TkxToastProvider` must be
+ * mounted to show it. Provider-scoped (`isolated`) stores are not reachable here.
+ */
+export function toast(item: Omit<ToastItem, 'id'>): string {
+  return globalStore.add(item);
+}
 
 export function useToast() {
-  const toast = useCallback((item: Omit<ToastItem, 'id'>) => addToast(item), []);
-  const dismiss = useCallback((id: string) => removeToast(id), []);
-  const dismissAllToasts = useCallback(() => dismissAll(), []);
-  return { toast, dismiss, dismissAll: dismissAllToasts };
+  const ctx = useContext(ToastStoreContext);
+  const store = ctx ?? globalStore;
+  const toastFn = useCallback((item: Omit<ToastItem, 'id'>) => store.add(item), [store]);
+  const dismiss = useCallback((id: string) => store.remove(id), [store]);
+  const dismissAllToasts = useCallback(() => store.dismissAll(), [store]);
+  return { toast: toastFn, dismiss, dismissAll: dismissAllToasts };
 }
+
+// Only one non-isolated provider renders the shared store, so two default
+// providers no longer mirror each other. Tracked at module scope.
+let globalRendererMounted = false;
 
 // ── Variant config ────────────────────────────────────────────────────────────
 
@@ -232,20 +333,46 @@ function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 
-export function TkxToastProvider({ position = 'top-right', children }: TkxToastProps) {
-  const [toasts, setToasts] = useState<ToastItem[]>([...visible]);
+export function TkxToastProvider({ position = 'top-right', isolated = false, children }: TkxToastProps) {
+  // Isolated providers own a private store; default providers share the global.
+  const storeRef = useRef<ToastStore | null>(null);
+  if (storeRef.current === null) {
+    storeRef.current = isolated ? createToastStore() : globalStore;
+  }
+  const store = storeRef.current;
+
+  const [toasts, setToasts] = useState<ToastItem[]>(() => store.getSnapshot());
   const reduced = useReducedMotion();
   const tStrings = useLocale();
 
+  // A default (shared-store) provider renders only if it's the first one; extra
+  // default providers still supply context but don't paint, so the shared store
+  // is never mirrored. Isolated providers always render their own store.
+  const [isRenderer, setIsRenderer] = useState(false);
   useEffect(() => {
-    setToasts([...visible]);
-    const handler: Listener = (next) => setToasts([...next]);
-    listeners.add(handler);
-    return () => { listeners.delete(handler); };
-  }, []);
-
-  const isBottom = position.startsWith('bottom');
-  const posStyle = POSITION_STYLES[position];
+    let renderer = true;
+    if (!isolated) {
+      if (globalRendererMounted) {
+        renderer = false;
+        const __proc = (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process;
+        if (__proc?.env?.NODE_ENV !== 'production') {
+          // eslint-disable-next-line no-console
+          console.warn(
+            'TkxToast: multiple non-isolated <TkxToastProvider>s are mounted. Only the first renders the shared toasts. Pass `isolated` to run a second, independent toast region.',
+          );
+        }
+      } else {
+        globalRendererMounted = true;
+      }
+    }
+    setIsRenderer(renderer);
+    setToasts([...store.getSnapshot()]);
+    const unsub = store.subscribe((next) => setToasts([...next]));
+    return () => {
+      unsub();
+      if (!isolated && renderer) globalRendererMounted = false;
+    };
+  }, [isolated, store]);
 
   // Inject keyframes once
   const injectedRef = useRef(false);
@@ -269,22 +396,36 @@ export function TkxToastProvider({ position = 'top-right', children }: TkxToastP
     }
   }, []);
 
-  if (typeof document === 'undefined') return <>{children}</>;
+  const wrap = (node: ReactNode) => (
+    <ToastStoreContext.Provider value={store}>{node}</ToastStoreContext.Provider>
+  );
 
+  if (typeof document === 'undefined' || !isRenderer) return wrap(children);
+
+  const isBottom = position.startsWith('bottom');
+  const posStyle = POSITION_STYLES[position];
   const ordered = isBottom ? [...toasts].reverse() : toasts;
 
-  return <>{children}{createPortal(
-    <div
-      aria-label={tStrings.notifications ?? 'Notifications'}
-      className={tkx('fixed z-[9999] flex flex-col gap-2 pointer-events-none')}
-      style={posStyle}
-    >
-      {ordered.map((t) => (
-        <div key={t.id} className={tkx('pointer-events-auto')}>
-          <ToastCard toast={t} position={position} onDismiss={removeToast} reduced={reduced} />
-        </div>
-      ))}
-    </div>,
-    document.body,
-  )}</>;
+  return wrap(
+    <>
+      {children}
+      {createPortal(
+        <div
+          aria-label={tStrings.notifications ?? 'Notifications'}
+          className={tkx('fixed z-[9999] flex flex-col gap-2 pointer-events-none')}
+          style={posStyle}
+          // Pause auto-dismiss while the pointer is over the stack.
+          onMouseEnter={store.pause}
+          onMouseLeave={store.resume}
+        >
+          {ordered.map((t) => (
+            <div key={t.id} className={tkx('pointer-events-auto')}>
+              <ToastCard toast={t} position={position} onDismiss={store.remove} reduced={reduced} />
+            </div>
+          ))}
+        </div>,
+        document.body,
+      )}
+    </>,
+  );
 }

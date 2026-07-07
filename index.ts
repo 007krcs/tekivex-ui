@@ -82,8 +82,8 @@ export type { TkxCheckboxProps, CheckboxSize } from './src/components/TkxCheckbo
 export { TkxRadio, TkxRadioGroup } from './src/components/TkxRadio';
 export type { TkxRadioProps, TkxRadioGroupProps } from './src/components/TkxRadio';
 
-export { TkxToastProvider, useToast } from './src/components/TkxToast';
-export type { TkxToastProps, ToastItem, ToastVariant, ToastPosition } from './src/components/TkxToast';
+export { TkxToastProvider, useToast, toast } from './src/components/TkxToast';
+export type { TkxToastProps, ToastItem, ToastVariant, ToastPosition, ToastStore } from './src/components/TkxToast';
 
 export { TkxAccordion } from './src/components/TkxAccordion';
 export type { TkxAccordionProps, AccordionItem } from './src/components/TkxAccordion';
