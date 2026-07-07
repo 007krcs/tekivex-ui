@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { createRef } from 'react';
 import { render, fireEvent, screen, within, act } from '@testing-library/react';
 import { TkxDatePicker, type DatePreset } from '../src/components/TkxDatePicker';
 import { ThemeProvider } from '../src/themes';
@@ -869,6 +870,185 @@ describe('TkxDatePicker', () => {
           </ThemeProvider>,
         ),
       ).not.toThrow();
+    });
+  });
+
+  // ── Localized calendar labels ─────────────────────────────────────────────
+  // Expected strings are computed with Intl in the test itself (not hardcoded)
+  // so the assertions hold regardless of the ICU data the environment ships.
+  describe('localized calendar labels', () => {
+    it('locale="hi" renders the month header from Intl, not English', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 3, 15)} onChange={() => {}} locale="hi" label="X" />,
+      );
+      openPicker(getInput(container));
+      const dlg = getDialog()!;
+      const expectedMonth = new Intl.DateTimeFormat('hi', { month: 'long' }).format(
+        new Date(2026, 3, 1),
+      );
+      expect(within(dlg).getByText(expectedMonth)).toBeInTheDocument();
+      // Credibility check: the header must actually be localized.
+      expect(within(dlg).queryByText('April')).toBeNull();
+    });
+
+    it('locale="hi" renders weekday header labels from Intl (Sun..Sat)', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 3, 15)} onChange={() => {}} locale="hi" label="X" />,
+      );
+      openPicker(getInput(container));
+      const dlg = getDialog()!;
+      const fmt = new Intl.DateTimeFormat('hi', { weekday: 'short' });
+      // 2023-01-01 is a Sunday → Sun..Sat labels.
+      const expectedLabels = Array.from({ length: 7 }, (_, i) =>
+        fmt.format(new Date(2023, 0, 1 + i)),
+      );
+      for (const wd of expectedLabels) {
+        expect(within(dlg).getAllByText(wd).length).toBeGreaterThan(0);
+      }
+    });
+
+    it('default locale still renders English month names (backwards compat)', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 3, 15)} onChange={() => {}} label="X" />,
+      );
+      openPicker(getInput(container));
+      expect(within(getDialog()!).getByText('April')).toBeInTheDocument();
+    });
+  });
+
+  // ── weekStartsOn ──────────────────────────────────────────────────────────
+  describe('weekStartsOn', () => {
+    // Uncontrolled pickers open on "today" — pin the clock to May 2026 like
+    // the sibling range/multi suites so the rendered month is deterministic.
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 4, 1));
+    });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    function getWeekdayHeaderCells(dlg: HTMLElement): HTMLElement[] {
+      const fmt = new Intl.DateTimeFormat('en-US', { weekday: 'short' });
+      const labels = Array.from({ length: 7 }, (_, i) => fmt.format(new Date(2023, 0, 1 + i)));
+      return (Array.from(dlg.querySelectorAll('div')) as HTMLElement[]).filter(
+        (el) => el.children.length === 0 && labels.includes(el.textContent ?? ''),
+      );
+    }
+
+    it('default (weekStartsOn=0): first weekday column is Sunday', () => {
+      const { container } = wrap(<TkxDatePicker label="X" />);
+      openPicker(getInput(container));
+      const cells = getWeekdayHeaderCells(getDialog()!);
+      expect(cells.length).toBe(7);
+      const sunday = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(
+        new Date(2023, 0, 1),
+      );
+      expect(cells[0].textContent).toBe(sunday);
+    });
+
+    it('weekStartsOn={1}: first weekday column is Monday', () => {
+      const { container } = wrap(<TkxDatePicker weekStartsOn={1} label="X" />);
+      openPicker(getInput(container));
+      const cells = getWeekdayHeaderCells(getDialog()!);
+      expect(cells.length).toBe(7);
+      const monday = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(
+        new Date(2023, 0, 2),
+      );
+      expect(cells[0].textContent).toBe(monday);
+    });
+
+    it('weekStartsOn={1}: dates land in the correct columns (May 1, 2026 is a Friday → column 4)', () => {
+      const { container } = wrap(<TkxDatePicker weekStartsOn={1} label="X" />);
+      openPicker(getInput(container));
+      const may1 = getDayByLabel(2026, 4, 1);
+      const grid = may1.parentElement as HTMLElement;
+      const idx = Array.from(grid.children).indexOf(may1);
+      // Monday-first week: Mon=0 … Fri=4.
+      expect(idx % 7).toBe(4);
+      // The grid should start with the previous month's Monday, Apr 27 2026.
+      const firstCell = grid.children[0] as HTMLElement;
+      expect(firstCell).toBe(queryDayByLabel(2026, 3, 27));
+    });
+
+    it('weekStartsOn={0} (default): May 1, 2026 (Friday) lands in column 5', () => {
+      const { container } = wrap(<TkxDatePicker label="X" />);
+      openPicker(getInput(container));
+      const may1 = getDayByLabel(2026, 4, 1);
+      const grid = may1.parentElement as HTMLElement;
+      const idx = Array.from(grid.children).indexOf(may1);
+      expect(idx % 7).toBe(5);
+    });
+
+    it('keyboard navigation still works with weekStartsOn={1}', () => {
+      const onChange = vi.fn();
+      const { container } = wrap(
+        <TkxDatePicker weekStartsOn={1} value={new Date(2026, 4, 15)} onChange={onChange} label="X" />,
+      );
+      openPicker(getInput(container));
+      const dlg = getDialog()!;
+      getDayByLabel(2026, 4, 15).focus();
+      fireEvent.keyDown(dlg, { key: 'ArrowDown' });
+      fireEvent.keyDown(dlg, { key: 'Enter' });
+      const arg = onChange.mock.calls[onChange.mock.calls.length - 1][0] as Date;
+      expect(arg.getDate()).toBe(22);
+    });
+  });
+
+  // ── name prop (plain HTML form submission) ────────────────────────────────
+  describe('name prop / hidden form input', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 4, 1));
+    });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('renders a hidden input that updates after selecting a date (single mode)', () => {
+      const { container } = wrap(<TkxDatePicker name="dob" label="X" />);
+      const hidden = container.querySelector('input[type="hidden"][name="dob"]') as HTMLInputElement;
+      expect(hidden).not.toBeNull();
+      expect(hidden.value).toBe('');
+      // The visible text input is still the first input in the field.
+      expect(getInput(container).type).toBe('text');
+      openPicker(getInput(container));
+      fireEvent.click(getDayByLabel(2026, 4, 15));
+      expect(hidden.value).toBe('2026-05-15');
+    });
+
+    it('range mode posts "start/end" ISO joined with a slash', () => {
+      const { container } = wrap(
+        <TkxDatePicker
+          mode="range"
+          name="stay"
+          rangeValue={[new Date(2026, 4, 5), new Date(2026, 4, 20)]}
+          onRangeChange={() => {}}
+          label="X"
+        />,
+      );
+      const hidden = container.querySelector('input[type="hidden"][name="stay"]') as HTMLInputElement;
+      expect(hidden.value).toBe('2026-05-05/2026-05-20');
+    });
+
+    it('no hidden input is rendered without a name prop', () => {
+      const { container } = wrap(<TkxDatePicker label="X" />);
+      expect(container.querySelector('input[type="hidden"]')).toBeNull();
+    });
+  });
+
+  // ── Ref forwarding ────────────────────────────────────────────────────────
+  describe('ref forwarding', () => {
+    it('forwards ref to the visible text input element', () => {
+      const ref = createRef<HTMLInputElement>();
+      const { container } = wrap(<TkxDatePicker ref={ref} label="X" />);
+      expect(ref.current).toBeInstanceOf(HTMLInputElement);
+      expect(ref.current!.type).toBe('text');
+      expect(ref.current).toBe(getInput(container));
+    });
+
+    it('displayName is preserved', () => {
+      expect((TkxDatePicker as { displayName?: string }).displayName).toBe('TkxDatePicker');
     });
   });
 });

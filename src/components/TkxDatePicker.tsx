@@ -6,8 +6,11 @@ import {
   useEffect,
   useCallback,
   useId,
+  useMemo,
   useReducer,
+  forwardRef,
   type CSSProperties,
+  type ForwardedRef,
   type KeyboardEvent,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -20,6 +23,7 @@ import { useReducedMotion } from '../hooks';
 
 export type DatePickerMode = 'single' | 'range' | 'multiple';
 export type DatePickerView = 'day' | 'month' | 'year';
+export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface DatePreset {
   label: string;
@@ -42,6 +46,10 @@ export interface TkxDatePickerProps {
   disabledDates?: Date[] | ((date: Date) => boolean);
   locale?: string;
   dateFormat?: string;
+  /** First day of the week: 0=Sunday (default) … 6=Saturday. */
+  weekStartsOn?: WeekStartsOn;
+  /** When set, a hidden input posts the committed value in plain HTML forms. */
+  name?: string;
 
   // Time picker
   showTime?: boolean;
@@ -66,14 +74,48 @@ export interface TkxDatePickerProps {
   style?: CSSProperties;
 }
 
-// ── Constants ─────────────────────────────────────────────────────────────────
+// ── Localized calendar labels ─────────────────────────────────────────────────
+//
+// The library ships 44 locales, so weekday/month labels must come from
+// Intl.DateTimeFormat rather than hardcoded English constants. Results are
+// cached per locale+style — label sets are tiny and immutable.
 
-const DAYS_SHORT = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function makeDateTimeFormat(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  try {
+    return new Intl.DateTimeFormat(locale || 'en', options);
+  } catch {
+    // Invalid BCP-47 tag from a consumer — fall back to English.
+    return new Intl.DateTimeFormat('en', options);
+  }
+}
+
+const monthNamesCache = new Map<string, string[]>();
+
+/** Localized month names for months 0..11 ('long' → January…, 'short' → Jan…). */
+function getMonthNames(locale: string, style: 'long' | 'short'): string[] {
+  const key = `${locale}|${style}`;
+  let names = monthNamesCache.get(key);
+  if (!names) {
+    const fmt = makeDateTimeFormat(locale, { month: style });
+    names = Array.from({ length: 12 }, (_, m) => fmt.format(new Date(2023, m, 1)));
+    monthNamesCache.set(key, names);
+  }
+  return names;
+}
+
+const weekdayLabelsCache = new Map<string, string[]>();
+
+/** Localized short weekday labels, Sunday-first (index 0=Sun … 6=Sat). */
+function getWeekdayShortLabels(locale: string): string[] {
+  let labels = weekdayLabelsCache.get(locale);
+  if (!labels) {
+    const fmt = makeDateTimeFormat(locale, { weekday: 'short' });
+    // 2023-01-01 is a Sunday, so 2023-01-01 … 2023-01-07 covers Sun..Sat.
+    labels = Array.from({ length: 7 }, (_, i) => fmt.format(new Date(2023, 0, 1 + i)));
+    weekdayLabelsCache.set(locale, labels);
+  }
+  return labels;
+}
 
 // ── Date helpers ──────────────────────────────────────────────────────────────
 
@@ -123,8 +165,8 @@ function formatDate(
     const yy = yyyy.slice(-2);
     const M = d.getMonth() + 1;
     const MM = String(M).padStart(2, '0');
-    const MMM = MONTH_ABBR[d.getMonth()];
-    const MMMM = MONTH_NAMES[d.getMonth()];
+    const MMM = getMonthNames(locale, 'short')[d.getMonth()];
+    const MMMM = getMonthNames(locale, 'long')[d.getMonth()];
     const D = d.getDate();
     const DD = String(D).padStart(2, '0');
     // Order matters: longest tokens first so "MM" doesn't clobber "MMM".
@@ -179,8 +221,9 @@ function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month + 1, 0).getDate();
 }
 
-function getCalendarGrid(year: number, month: number): Date[] {
-  const firstDay = new Date(year, month, 1).getDay();
+function getCalendarGrid(year: number, month: number, weekStartsOn: WeekStartsOn = 0): Date[] {
+  // Column offset of the 1st of the month relative to the week's first day.
+  const firstDay = (new Date(year, month, 1).getDay() - weekStartsOn + 7) % 7;
   const daysInMonth = getDaysInMonth(year, month);
   const cells: Date[] = [];
 
@@ -470,6 +513,8 @@ interface CalendarMonthProps {
   onSetFocused: (d: Date | null) => void;
   theme: ReturnType<typeof import('../themes').useTheme>;
   locale: string;
+  weekdayLabels: string[];
+  weekStartsOn: WeekStartsOn;
 }
 
 function CalendarMonth({
@@ -488,8 +533,10 @@ function CalendarMonth({
   onSetFocused,
   theme,
   locale,
+  weekdayLabels,
+  weekStartsOn,
 }: CalendarMonthProps) {
-  const cells = getCalendarGrid(year, month);
+  const cells = getCalendarGrid(year, month, weekStartsOn);
 
   return (
     <div>
@@ -502,9 +549,9 @@ function CalendarMonth({
           marginBottom: '4px',
         }}
       >
-        {DAYS_SHORT.map((d) => (
+        {Array.from({ length: 7 }, (_, i) => weekdayLabels[(weekStartsOn + i) % 7]).map((d, i) => (
           <div
-            key={d}
+            key={`${d}-${i}`}
             style={{
               textAlign: 'center',
               fontSize: '11px',
@@ -623,7 +670,7 @@ function CalendarMonth({
 
 // ── Main Component ────────────────────────────────────────────────────────────
 
-export function TkxDatePicker({
+export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(function TkxDatePicker({
   value,
   onChange,
   rangeValue,
@@ -636,6 +683,8 @@ export function TkxDatePicker({
   disabledDates,
   locale = 'en-US',
   dateFormat,
+  weekStartsOn = 0,
+  name,
   showTime = false,
   timeValue,
   onTimeChange,
@@ -651,7 +700,7 @@ export function TkxDatePicker({
   id: idProp,
   className,
   style,
-}: TkxDatePickerProps) {
+}: TkxDatePickerProps, forwardedRef: ForwardedRef<HTMLInputElement>) {
   const theme = useTheme();
   const localeStrings = useLocale();
   const autoId = useId();
@@ -659,6 +708,17 @@ export function TkxDatePicker({
   const reduced = useReducedMotion();
 
   const today = startOfDay(new Date());
+
+  // ── Localized calendar labels (computed once per locale) ────────────────────
+
+  const { weekdayLabels, monthNames, monthAbbr } = useMemo(
+    () => ({
+      weekdayLabels: getWeekdayShortLabels(locale),
+      monthNames: getMonthNames(locale, 'long'),
+      monthAbbr: getMonthNames(locale, 'short'),
+    }),
+    [locale],
+  );
 
   // ── State ────────────────────────────────────────────────────────────────────
   //
@@ -738,7 +798,16 @@ export function TkxDatePicker({
 
   const anchorRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  // Keep the internal ref (focus management) AND forward to the consumer.
+  const setInputRef = useCallback(
+    (el: HTMLInputElement | null) => {
+      inputRef.current = el;
+      if (typeof forwardedRef === 'function') forwardedRef(el);
+      else if (forwardedRef) forwardedRef.current = el;
+    },
+    [forwardedRef],
+  );
   // Set briefly when Escape closes the picker, so the programmatic
   // input.focus() that follows doesn't immediately re-open via onFocus.
   // Cleared on the next user-initiated click.
@@ -1027,6 +1096,21 @@ export function TkxDatePicker({
     (mode === 'range' && (selectedRange[0] != null || selectedRange[1] != null)) ||
     (mode === 'multiple' && multiDates.length > 0);
 
+  // ── Hidden form value (plain HTML form submission via `name`) ────────────────
+
+  const toISODateString = (d: Date): string =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  let hiddenFormValue = '';
+  if (mode === 'single') {
+    hiddenFormValue = selectedDate ? toISODateString(selectedDate) : '';
+  } else if (mode === 'range') {
+    const [s, e] = selectedRange;
+    hiddenFormValue = s && e ? `${toISODateString(s)}/${toISODateString(e)}` : s ? toISODateString(s) : '';
+  } else if (mode === 'multiple') {
+    hiddenFormValue = multiDates.map(toISODateString).join('/');
+  }
+
   // ── Display range for calendar ────────────────────────────────────────────────
 
   const displayRange: [Date | null, Date | null] =
@@ -1184,7 +1268,7 @@ export function TkxDatePicker({
                     fontFamily: 'inherit',
                   }}
                 >
-                  {MONTH_NAMES[viewMonth]}
+                  {monthNames[viewMonth]}
                 </button>
                 <button
                   type="button"
@@ -1207,7 +1291,7 @@ export function TkxDatePicker({
                   <>
                     <span style={{ color: theme.textMuted, fontSize: '14px' }}>–</span>
                     <span style={{ fontSize: '14px', fontWeight: 600, color: theme.text }}>
-                      {MONTH_NAMES[month2]} {year2}
+                      {monthNames[month2]} {year2}
                     </span>
                   </>
                 )}
@@ -1284,6 +1368,8 @@ export function TkxDatePicker({
               onSetFocused={setFocusedDate}
               theme={theme}
               locale={locale}
+              weekdayLabels={weekdayLabels}
+              weekStartsOn={weekStartsOn}
             />
             {dualView && (
               <CalendarMonth
@@ -1302,6 +1388,8 @@ export function TkxDatePicker({
                 onSetFocused={setFocusedDate}
                 theme={theme}
                 locale={locale}
+                weekdayLabels={weekdayLabels}
+                weekStartsOn={weekStartsOn}
               />
             )}
           </div>
@@ -1316,12 +1404,12 @@ export function TkxDatePicker({
               gap: '6px',
             }}
           >
-            {MONTH_ABBR.map((name, idx) => {
+            {monthAbbr.map((monthLabel, idx) => {
               const isCurrentViewMonth = idx === viewMonth;
               const isTodayMonth = idx === today.getMonth() && viewYear === today.getFullYear();
               return (
                 <button
-                  key={name}
+                  key={idx}
                   type="button"
                   onClick={() => {
                     setViewMonth(idx);
@@ -1340,7 +1428,7 @@ export function TkxDatePicker({
                     transition: 'background-color 80ms ease',
                   }}
                 >
-                  {name}
+                  {monthLabel}
                 </button>
               );
             })}
@@ -1569,7 +1657,7 @@ export function TkxDatePicker({
         </span>
 
         <input
-          ref={inputRef}
+          ref={setInputRef}
           id={id}
           type="text"
           value={inputValue}
@@ -1668,10 +1756,13 @@ export function TkxDatePicker({
         <span role="alert" style={{ fontSize: '12px', color: theme.danger }}>{safeError}</span>
       )}
 
+      {/* Hidden input so the picker posts in plain HTML forms */}
+      {name && <input type="hidden" name={name} value={hiddenFormValue} />}
+
       {/* Portal popup */}
       {open && typeof document !== 'undefined' && createPortal(popupContent, document.body)}
     </div>
   );
-}
+});
 
 TkxDatePicker.displayName = 'TkxDatePicker';

@@ -148,6 +148,12 @@ const SpinPage = lazy(() => import('./docs/SpinPage').then(m => ({ default: m.Sp
 const EmptyPage = lazy(() => import('./docs/EmptyPage').then(m => ({ default: m.EmptyPage })));
 const StatisticPage = lazy(() => import('./docs/StatisticPage').then(m => ({ default: m.StatisticPage })));
 const ConfigProviderPage = lazy(() => import('./docs/ConfigProviderPage').then(m => ({ default: m.ConfigProviderPage })));
+const TextareaPage = lazy(() => import('./docs/TextareaPage').then(m => ({ default: m.TextareaPage })));
+const FieldPage = lazy(() => import('./docs/FieldPage').then(m => ({ default: m.FieldPage })));
+const ComboBoxPage = lazy(() => import('./docs/ComboBoxPage').then(m => ({ default: m.ComboBoxPage })));
+const CodePage = lazy(() => import('./docs/CodePage').then(m => ({ default: m.CodePage })));
+const SplitterPage = lazy(() => import('./docs/SplitterPage').then(m => ({ default: m.SplitterPage })));
+const DescriptionsPage = lazy(() => import('./docs/DescriptionsPage').then(m => ({ default: m.DescriptionsPage })));
 
 // ── Real-Time pages — lazy loaded ─────────────────────────────────────────────
 const LiveFeedPage = lazy(() => import('./docs/LiveFeedPage').then(m => ({ default: m.LiveFeedPage })));
@@ -268,6 +274,12 @@ const ROUTE_MAP: Record<string, PageComponent> = {
   '/components/empty': EmptyPage,
   '/components/statistic': StatisticPage,
   '/components/config-provider': ConfigProviderPage,
+  '/components/textarea': TextareaPage,
+  '/components/field': FieldPage,
+  '/components/combobox': ComboBoxPage,
+  '/components/code': CodePage,
+  '/components/splitter': SplitterPage,
+  '/components/descriptions': DescriptionsPage,
   // ── Real-Time routes ──────────────────────────────────────────────────────
   '/live-feed': LiveFeedPage,
   '/live-metrics': LiveMetricsPage,
