@@ -5,6 +5,42 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.28.0] — 2026-07-08
+
+### Added — `useVariableVirtualList` + TreeView & MessageThread virtualization
+
+A variable-height windowing hook (exported from the root and
+`tekivex-ui/headless`) — the harder sibling of `useVirtualList`. Measures row
+heights via a `ResizeObserver` and caches them keyed by a **stable item id** (so
+a measured height survives index shifts from tree expand/collapse or message
+prepend), builds prefix-sum offsets with binary-search windowing, and owns
+scroll-anchoring internally (pin-to-bottom, pixel-stable on prepend).
+
+Applied to:
+
+- **`TkxTreeView`** — windows the flattened visible-node list above ~50 nodes
+  (small trees keep the exact previous all-rendered path). `aria-setsize`/
+  `aria-posinset` are now computed **per sibling group** (they previously
+  miscounted every node at the same depth), and off-window keyboard focus
+  scrolls the target into view before focusing.
+- **`TkxMessageThread`** — windows threads above 40 messages, preserving
+  scroll-to-bottom pinning (stays pinned on append, pixel-stable on prepend),
+  with a "N new ↓" pill and an `sr-only` live region that announces the latest
+  message even when it's outside the window.
+
+This shipped through an adversarial-review workflow; two real defects the
+reviewers caught were fixed before release: a TreeView roving-tabindex bug where
+collapsing an ancestor of the focused node dropped the whole tree out of the tab
+order (now falls back to the first row; regression-tested), and a MessageThread
+a11y bug where the windowed container kept `aria-live` and announced old
+messages as they scrolled into view (the container is now a plain labelled
+region; the `sr-only` mirror owns announcements).
+
+> Known tradeoff (documented, not a regression to hide): in a virtualized
+> `TkxMessageThread`, per-message action buttons on messages **outside** the
+> current window are not in the DOM, so they aren't Tab-reachable until scrolled
+> into view — inherent to virtualization. Short threads (≤40) are unaffected.
+
 ## [3.27.0] — 2026-06-18
 
 ### Added — `useVirtualList` list-virtualization primitive
