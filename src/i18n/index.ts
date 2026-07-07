@@ -102,6 +102,14 @@ export interface LocaleStrings {
 
   // RichTextDisplay
   richTextContent?: string;
+
+  // Region / control a11y labels — optional, English fallback at the call site.
+  selectNoOptions?: string;
+  dropdownMenu?: string;
+  commandPalette?: string;
+  dataGrid?: string;
+  pagination?: string;
+  dismiss?: string;
 }
 
 // ── Helper — build a locale without having to re-type every key ─────────────
@@ -138,6 +146,12 @@ export const enUS = locale({
   filterPlaceholder: 'Filter...',
   exportCsv: 'Export CSV',
   rowsSelected: (n) => `${n} row${n === 1 ? '' : 's'} selected`,
+  selectNoOptions: 'No options found',
+  dropdownMenu: 'Dropdown menu',
+  commandPalette: 'Command palette',
+  dataGrid: 'Data grid',
+  pagination: 'Pagination',
+  dismiss: 'Dismiss',
 });
 
 // Spanish (Spain)

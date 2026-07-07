@@ -339,7 +339,7 @@ function DropdownMenu({
       ref={menuRef as React.RefObject<HTMLDivElement>}
       id={menuId}
       role="menu"
-      aria-label="Dropdown menu"
+      aria-label={t.dropdownMenu ?? 'Dropdown menu'}
       tabIndex={-1}
       style={menuStyle}
       onKeyDown={handleKeyDown}
@@ -387,7 +387,7 @@ function DropdownMenu({
             textAlign: 'center',
           }}
         >
-          No results found
+          {t.noResults ?? 'No results found'}
         </div>
       )}
 

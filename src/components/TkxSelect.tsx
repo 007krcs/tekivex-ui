@@ -700,7 +700,7 @@ export function TkxSelect({
                       right: 0,
                     }}
                   >
-                    {isLoading ? 'Loading\u2026' : 'No options found'}
+                    {isLoading ? (t.loading ?? 'Loading\u2026') : (t.selectNoOptions ?? 'No options found')}
                   </div>
                 )}
               </div>
@@ -849,7 +849,7 @@ export function TkxSelect({
                   textAlign: 'center',
                 }}
               >
-                {isLoading ? 'Loading…' : 'No options found'}
+                {isLoading ? (t.loading ?? 'Loading…') : (t.selectNoOptions ?? 'No options found')}
               </div>
             )}
             </>

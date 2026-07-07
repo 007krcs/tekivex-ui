@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useLocale } from '../i18n';
 import { sanitizeString } from '../engine/security';
 import { useReducedMotion } from '../hooks';
 import { tkx } from '../engine/tkx';
@@ -118,6 +119,7 @@ export function TkxSnackbar({
   icon,
 }: TkxSnackbarProps) {
   const theme = useTheme();
+  const t = useLocale();
   const reduced = useReducedMotion();
   const labelId = useId();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -286,7 +288,7 @@ export function TkxSnackbar({
         {/* Close button */}
         {onClose && (
           <button
-            aria-label="Dismiss snackbar"
+            aria-label={t.dismiss ?? t.close ?? 'Dismiss'}
             onClick={onClose}
             className={tkx(
               'bg-transparent border-none cursor-pointer rounded p-[2px] ml-1',

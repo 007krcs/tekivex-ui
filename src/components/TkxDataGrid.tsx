@@ -1522,7 +1522,7 @@ export function TkxDataGrid<T = any>({
   return (
     <div
       role={isTreeMode ? 'treegrid' : 'grid'}
-      aria-label="Data grid" /* a11y label not yet localised — pending broader sweep */
+      aria-label={t.dataGrid ?? 'Data grid'}
       aria-rowcount={totalRows}
       id={gridId}
       className={tkx('font-sans rounded-lg overflow-hidden')}

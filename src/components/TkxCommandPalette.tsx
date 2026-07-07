@@ -40,6 +40,7 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocale } from '../i18n';
 
 // ── Public types ────────────────────────────────────────────────────────────
 
@@ -167,6 +168,7 @@ export function TkxCommandPalette({
   emptyState,
   className,
 }: TkxCommandPaletteProps) {
+  const t = useLocale();
   const [internalOpen, setInternalOpen] = useState(false);
   const open = controlledOpen ?? internalOpen;
   const setOpen = useCallback(
@@ -329,7 +331,7 @@ export function TkxCommandPalette({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Command palette"
+      aria-label={t.commandPalette ?? 'Command palette'}
       className={className}
       onClick={() => setOpen(false)}
       data-testid="tkx-command-palette"
