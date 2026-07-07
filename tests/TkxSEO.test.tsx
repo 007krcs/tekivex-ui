@@ -118,4 +118,40 @@ describe('TkxSEO', () => {
     });
     expect((s as any).aggregateRating.ratingValue).toBe(4.5);
   });
+
+  it('emits article:* Open Graph tags for an article', () => {
+    render(
+      <TkxSEO
+        ogType="article"
+        title="Post"
+        articleAuthor="Ada"
+        articlePublishedTime="2026-01-01T00:00:00Z"
+        articleModifiedTime="2026-02-01T00:00:00Z"
+        articleSection="Engineering"
+        articleTags={['react', 'ui']}
+      />,
+    );
+    expect(document.querySelector('meta[property="article:author"]')?.getAttribute('content')).toBe('Ada');
+    expect(document.querySelector('meta[property="article:published_time"]')?.getAttribute('content')).toBe('2026-01-01T00:00:00Z');
+    expect(document.querySelector('meta[property="article:modified_time"]')?.getAttribute('content')).toBe('2026-02-01T00:00:00Z');
+    expect(document.querySelector('meta[property="article:section"]')?.getAttribute('content')).toBe('Engineering');
+    expect(document.querySelectorAll('meta[property="article:tag"]').length).toBe(2);
+  });
+
+  it('does NOT emit article:* tags for a plain website page', () => {
+    render(<TkxSEO ogType="website" title="Plain" />);
+    expect(document.querySelector('meta[property="article:published_time"]')).toBeNull();
+    expect(document.querySelector('meta[property="article:author"]')).toBeNull();
+  });
+
+  it('a structurally-equal but referentially-new schema does not multiply tags', () => {
+    const { rerender } = render(
+      <TkxSEO title="X" schema={{ '@type': 'Thing', name: 'A' }} />,
+    );
+    const first = document.querySelectorAll('script[data-tkx-seo]').length;
+    rerender(<TkxSEO title="X" schema={{ '@type': 'Thing', name: 'A' }} />);
+    const second = document.querySelectorAll('script[data-tkx-seo]').length;
+    expect(second).toBe(first);
+    expect(second).toBe(1);
+  });
 });

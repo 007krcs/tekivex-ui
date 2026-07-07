@@ -1,25 +1,32 @@
 'use client';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// TkxSEO — head injector for meta + Open Graph + JSON-LD schema.
+// TkxSEO — CLIENT-SIDE head injector for meta + Open Graph + JSON-LD schema.
 //
-// Why a component (not a head plugin):
-//   - Frameworks (Next, Remix, Astro) all have their own <head> patterns
-//     and we don't want to choose one. TkxSEO writes directly to
-//     document.head via DOM, idempotent across renders.
-//   - Each instance owns the <meta>/<script> tags it wrote and removes
-//     them on unmount or re-render — no stale tags accumulate.
+// ⚠️ THIS RUNS CLIENT-SIDE ONLY. It writes to document.head from a useEffect,
+// so the tags do NOT exist in the first-byte HTML. Crawlers that don't execute
+// JavaScript (and some social-preview scrapers) will NOT see them. For an
+// SSR/SSG app, put your canonical SEO in the framework's native head API
+// (Next `export const metadata` / `generateMetadata`, Astro `<head>`, Remix
+// `meta`) and treat TkxSEO as a *supplement* for surfaces the framework can't
+// pre-render: SPA client-route changes, dashboards behind auth, embedded views.
 //
-// Supported schema types: SoftwareApplication, Article, Product,
-// LocalBusiness, FAQPage, Organization, Person, BreadcrumbList,
-// VideoObject, Event. Pass a JSON object via `schema` and we serialise it.
+// Where TkxSEO IS the right tool: a plain client-rendered React SPA (Vite/CRA)
+// with no SSR — there is no server head to write to, so this is your best option.
 //
-// SSR note: in server-side rendering this component is a no-op (returns
-// null). Frameworks should hydrate it client-side, OR mirror the same
-// values in their native head API for first-byte SEO.
+// Behaviour:
+//   - Writes directly to document.head; idempotent across renders. Each render
+//     removes the tags it previously wrote (data-tkx-seo) before re-writing —
+//     no stale accumulation. The effect keys on a stable serialization of its
+//     props, so an unmemoized `schema={{...}}` object no longer rewrites the
+//     head on every parent render.
+//   - SSR: no-op (returns null).
+//
+// Supported schema factories (seoSchema.*): SoftwareApplication, Article,
+// Product, FAQPage, BreadcrumbList. Pass any JSON-LD object(s) via `schema`.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export interface TkxSEOProps {
   /** Page title — sets document.title and og:title. */
@@ -44,6 +51,18 @@ export interface TkxSEOProps {
   robots?: string;
   /** Optional JSON-LD schema. Pass a single object or an array. */
   schema?: object | object[];
+
+  // ── Article Open Graph (emitted only when ogType='article' or set) ──────────
+  /** article:author — author name or profile URL. */
+  articleAuthor?: string;
+  /** article:published_time — ISO 8601 timestamp. */
+  articlePublishedTime?: string;
+  /** article:modified_time — ISO 8601 timestamp. */
+  articleModifiedTime?: string;
+  /** article:section — the high-level section (e.g. "Engineering"). */
+  articleSection?: string;
+  /** article:tag — one tag meta is emitted per entry. */
+  articleTags?: string[];
 }
 
 const TAG_FLAG = 'data-tkx-seo';
@@ -96,7 +115,17 @@ export function TkxSEO({
   locale,
   robots = 'index, follow, max-snippet:-1, max-image-preview:large',
   schema,
+  articleAuthor,
+  articlePublishedTime,
+  articleModifiedTime,
+  articleSection,
+  articleTags,
 }: TkxSEOProps) {
+  // Stable serialization so an unmemoized `schema`/`articleTags` object doesn't
+  // retrigger the effect (and rewrite the whole head) on every parent render.
+  const schemaKey = useMemo(() => (schema ? JSON.stringify(schema) : ''), [schema]);
+  const tagsKey = useMemo(() => (articleTags ? articleTags.join('') : ''), [articleTags]);
+
   useEffect(() => {
     if (typeof document === 'undefined') return;
     clearOwnedTags();
@@ -118,6 +147,15 @@ export function TkxSEO({
     }
     if (locale) setMeta('og:locale', locale, 'property');
 
+    // Article Open Graph — only meaningful for article pages.
+    if (ogType === 'article' || articleAuthor || articlePublishedTime || articleModifiedTime || articleSection || (articleTags && articleTags.length)) {
+      if (articleAuthor) setMeta('article:author', articleAuthor, 'property');
+      if (articlePublishedTime) setMeta('article:published_time', articlePublishedTime, 'property');
+      if (articleModifiedTime) setMeta('article:modified_time', articleModifiedTime, 'property');
+      if (articleSection) setMeta('article:section', articleSection, 'property');
+      (articleTags ?? []).forEach((tag) => setMeta('article:tag', tag, 'property'));
+    }
+
     // Twitter
     setMeta('twitter:card', image ? 'summary_large_image' : 'summary');
     if (title) setMeta('twitter:title', title);
@@ -133,7 +171,10 @@ export function TkxSEO({
     if (schema) setSchema(schema);
 
     return () => clearOwnedTags();
-  }, [title, description, canonical, keywords, image, twitterSite, twitterCreator, ogType, locale, robots, schema]);
+    // schemaKey/tagsKey are stable serializations of schema/articleTags so
+    // referentially-new-but-equal objects don't rewrite the head every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, description, canonical, keywords, image, twitterSite, twitterCreator, ogType, locale, robots, schemaKey, tagsKey, articleAuthor, articlePublishedTime, articleModifiedTime, articleSection]);
 
   return null;
 }

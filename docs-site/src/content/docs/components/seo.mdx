@@ -1,59 +1,119 @@
 ---
 title: TkxSEO
-description: Imperative SEO helpers — JSON-LD structured data, OpenGraph, Twitter Cards. Mounts and cleans up on unmount.
+description: Client-side head injector for meta, Open Graph, Twitter, and JSON-LD. Best for SPAs — SSR apps should use their framework's head API.
 ---
 
+import { Aside } from '@astrojs/starlight/components';
+
+`TkxSEO` writes `<meta>`, Open Graph, Twitter Card, and JSON-LD tags to
+`document.head` from a React component.
+
+<Aside type="danger" title="Client-side only — read this first">
+TkxSEO writes tags in a `useEffect`, so they **do not exist in the first-byte
+HTML**. Crawlers and social scrapers that don't execute JavaScript will **not**
+see them. If your app is server-rendered or statically generated, put your
+canonical SEO in the framework's native head API and use TkxSEO only as a
+client-side supplement.
+</Aside>
+
+## When to use it
+
+| Situation | Use |
+|---|---|
+| Plain client-rendered SPA (Vite/CRA, no SSR) | ✅ **TkxSEO is the right tool** — there's no server head to write to |
+| Client route changes / dashboards behind auth / embedded views | ✅ Supplement — update tags as the SPA navigates |
+| Next.js, Remix, Astro pages | ❌ Use the framework's head API for crawlable SEO |
+
+### Mirror in your framework (SSR/SSG)
+
 ```tsx
-import { TkxSEO, articleSchema } from 'tekivex-ui';
+// Next.js App Router — crawlable, server-rendered
+export const metadata = {
+  title: 'My Page',
+  description: 'A description',
+  openGraph: { images: ['/og.png'] },
+};
+```
+
+```astro
+---
+// Astro — in the page frontmatter / layout <head>
+---
+<head>
+  <title>My Page</title>
+  <meta name="description" content="A description" />
+  <meta property="og:image" content="/og.png" />
+</head>
+```
+
+```tsx
+// Plain React SPA — TkxSEO IS your best option
+import { TkxSEO } from 'tekivex-ui';
 
 <TkxSEO
-  title="My article"
-  description="Why React 19 is great"
-  ogImage="/cover.png"
-  schema={articleSchema({
-    headline: 'Why React 19 is great',
-    author: { name: 'Aisha' },
-    datePublished: '2026-04-27',
-  })}
+  title="My Page"
+  description="A description"
+  image="https://example.com/og.png"
+  canonical="https://example.com/page"
 />
 ```
 
-Imperative SEO. Mount the component anywhere in your tree; it injects
-the right `<title>`, `<meta>`, and JSON-LD `<script>` tags into `<head>`,
-and cleans them up on unmount. SSR-safe.
+## Article pages
 
-## Schema factories
+Set `ogType="article"` and the article props to emit `article:*` Open Graph tags:
 
-| Factory | Schema.org type |
-|---|---|
-| `articleSchema` | `Article` |
-| `productSchema` | `Product` |
-| `organizationSchema` | `Organization` |
-| `websiteSchema` | `WebSite` |
-| `breadcrumbSchema` | `BreadcrumbList` |
-| `faqSchema` | `FAQPage` |
-| `personSchema` | `Person` |
-| `eventSchema` | `Event` |
-| `recipeSchema` | `Recipe` |
-| `videoSchema` | `VideoObject` |
+```tsx
+<TkxSEO
+  ogType="article"
+  title="Shipping a design system"
+  description="How we built it"
+  articleAuthor="Ada Lovelace"
+  articlePublishedTime="2026-01-01T00:00:00Z"
+  articleModifiedTime="2026-02-01T00:00:00Z"
+  articleSection="Engineering"
+  articleTags={['react', 'design-systems']}
+/>
+```
 
-Each factory takes a typed object and returns a JSON-LD-ready record.
-Pass it to the `schema` prop.
+## JSON-LD helpers
+
+`seoSchema` builds common structured-data objects: `softwareApplication`,
+`article`, `product`, `faqPage`, `breadcrumbList`.
+
+```tsx
+import { TkxSEO, seoSchema } from 'tekivex-ui';
+
+<TkxSEO
+  title="tekivex-ui"
+  schema={seoSchema.softwareApplication({ name: 'tekivex-ui', description: '…', url: 'https://ui.tekivex.com' })}
+/>
+```
+
+<Aside type="tip">
+You no longer need to memoize the `schema` object — TkxSEO keys its effect on a
+stable serialization internally, so passing a fresh `{...}` literal each render
+won't rewrite the head or accumulate duplicate tags.
+</Aside>
 
 ## Props
 
-| Prop | Type |
-|---|---|
-| `title` | `string` |
-| `description` | `string` |
-| `canonical` | `string` |
-| `ogImage` | `string` |
-| `ogType` | `'website' \| 'article' \| 'profile' \| 'product' \| ...` |
-| `twitterCard` | `'summary' \| 'summary_large_image' \| 'app' \| 'player'` |
-| `schema` | `Record<string, unknown>` (from a factory) |
-| `noindex` | `boolean` |
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string` | — | `document.title` + og/twitter title. |
+| `description` | `string` | — | description / og / twitter description. |
+| `canonical` | `string` | — | Canonical URL + og:url. |
+| `keywords` | `string` | — | Comma-separated keywords meta. |
+| `image` | `string` | — | og:image / twitter:image (1200×630). |
+| `twitterSite` / `twitterCreator` | `string` | — | Twitter handles. |
+| `ogType` | `'website' \| 'article' \| 'product' \| 'profile'` | `'website'` | og:type. |
+| `locale` | `string` | — | og:locale (e.g. `en_US`). |
+| `robots` | `string` | `index, follow, …` | Robots directive. |
+| `schema` | `object \| object[]` | — | JSON-LD payload(s). |
+| `articleAuthor` | `string` | — | article:author (article pages). |
+| `articlePublishedTime` | `string` | — | article:published_time (ISO 8601). |
+| `articleModifiedTime` | `string` | — | article:modified_time (ISO 8601). |
+| `articleSection` | `string` | — | article:section. |
+| `articleTags` | `string[]` | — | One article:tag meta per entry. |
 
-## Testing
-
-See `tests/TkxSEO.test.tsx` — 13 tests covering each factory and the
-mount/unmount lifecycle.
+Each render removes the tags it previously wrote (`data-tkx-seo`) before
+re-writing, and cleans them all up on unmount — no stale accumulation.
