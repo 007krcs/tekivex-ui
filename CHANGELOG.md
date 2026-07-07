@@ -5,6 +5,30 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.25.0] — 2026-06-18
+
+### Fixed — the calendar finally speaks your locale
+
+- **`TkxDatePicker`**: weekday and month labels were hardcoded English
+  constants — every one of the 44 advertised locales saw English calendar
+  headers. Labels are now derived from `Intl.DateTimeFormat` for the active
+  locale (default `en`, unchanged output for English users). Also added:
+  - `weekStartsOn` (0–6) — start the week on Monday (or any day); header row,
+    grid layout, and keyboard navigation all follow.
+  - `name` — a hidden input so the picker submits in plain HTML forms
+    (ISO date; `start/end` joined for ranges).
+  - Ref forwarding to the text input.
+- **`TkxTooltip`**: now renders in a portal (`document.body`) with viewport
+  collision flip/shift — no more clipping inside `overflow: hidden` or
+  transformed ancestors. `content` widened to `ReactNode` (strings still
+  sanitized), plus controlled `open`/`onOpenChange` and `disabled`. Public
+  API is fully back-compatible.
+
+### Demo
+
+- The playground app gains live pages for the six newest components:
+  Textarea, Field, ComboBox, Code, Splitter, Descriptions.
+
 ## [3.24.0] — 2026-06-18
 
 ### Added — layout primitives (Tier 2 gap closure)
