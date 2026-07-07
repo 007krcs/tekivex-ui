@@ -4,15 +4,22 @@ import {
   useState,
   useMemo,
   useCallback,
+  useEffect,
   useId,
   useRef,
   type CSSProperties,
   type KeyboardEvent,
+  type ReactNode,
 } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
-import { useReducedMotion } from '../hooks';
+import { useReducedMotion, useVirtualList } from '../hooks';
 import { tkx } from '../engine/tkx';
+
+// Approx uniform row height (text-sm row + vertical padding). Lists longer than
+// VIRTUAL_THRESHOLD window their rows so a 10k-option panel stays cheap.
+const ITEM_H = 33;
+const VIRTUAL_THRESHOLD = 60;
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -159,6 +166,47 @@ function ListPanel({
       ? focusedValue
       : filtered[0]?.value;
 
+  // Virtualization — only for long lists. Short lists render every row, so the
+  // roving-tabindex/keyboard behaviour is byte-for-byte the previous one.
+  const listRef = useRef<HTMLUListElement>(null);
+  const virtualize = filtered.length > VIRTUAL_THRESHOLD;
+  const v = useVirtualList({
+    itemCount: filtered.length,
+    itemHeight: ITEM_H,
+    enabled: virtualize,
+    overscan: 6,
+    containerRef: listRef,
+  });
+
+  // When keyboard nav targets a row outside the rendered window, scroll it into
+  // view first, then focus once it renders (a windowed row has no DOM node yet).
+  const pendingFocus = useRef<string | null>(null);
+  useEffect(() => {
+    const val = pendingFocus.current;
+    if (!val) return;
+    const el = optionRefs.current.get(val);
+    if (el) {
+      el.focus();
+      pendingFocus.current = null;
+    }
+  });
+
+  const focusIndex = (idx: number) => {
+    const nextValue = filtered[idx]?.value;
+    if (!nextValue) return;
+    setFocusedValue(nextValue);
+    const existing = optionRefs.current.get(nextValue);
+    if (existing) {
+      existing.focus();
+      return;
+    }
+    // Off-window: scroll to it, defer focus to the post-render effect.
+    if (listRef.current) {
+      listRef.current.scrollTop = Math.max(0, idx * ITEM_H - ITEM_H * 3);
+    }
+    pendingFocus.current = nextValue;
+  };
+
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>, value: string) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -185,9 +233,56 @@ function ListPanel({
       } else if (e.key === 'End') {
         nextIdx = filtered.length - 1;
       }
-      const nextValue = filtered[nextIdx]?.value;
-      if (nextValue) optionRefs.current.get(nextValue)?.focus();
+      focusIndex(nextIdx);
     }
+  };
+
+  const renderRow = (item: TransferItem, absoluteIndex: number): ReactNode => {
+    const isChecked = selected.has(item.value);
+    const safeLabel = sanitizeString(item.label);
+    return (
+      <li
+        key={item.value}
+        ref={(el) => {
+          if (el) optionRefs.current.set(item.value, el);
+          else optionRefs.current.delete(item.value);
+        }}
+        role="option"
+        aria-selected={isChecked}
+        aria-disabled={item.disabled || undefined}
+        aria-setsize={filtered.length}
+        aria-posinset={absoluteIndex + 1}
+        tabIndex={rovingValue === item.value ? 0 : -1}
+        onFocus={() => setFocusedValue(item.value)}
+        onClick={() => !item.disabled && onToggle(item.value)}
+        onKeyDown={(e) => handleKeyDown(e, item.value)}
+        className={tkx(
+          'flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-sm',
+          'outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
+          item.disabled ? 'opacity-50 cursor-not-allowed' : '',
+        )}
+        style={{
+          height: ITEM_H,
+          boxSizing: 'border-box',
+          color: item.disabled ? theme.textMuted : theme.text,
+          backgroundColor: isChecked ? `${theme.primary}10` : 'transparent',
+          transition: reducedMotion ? 'none' : 'background-color 100ms ease',
+        }}
+        onMouseEnter={(e) => {
+          if (!item.disabled && !isChecked) {
+            (e.currentTarget as HTMLElement).style.backgroundColor = theme.surfaceAlt;
+          }
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.backgroundColor = isChecked
+            ? `${theme.primary}10`
+            : 'transparent';
+        }}
+      >
+        <Checkbox checked={isChecked} primaryColor={theme.primary} borderColor={theme.border} />
+        <span className={tkx('truncate')}>{safeLabel}</span>
+      </li>
+    );
   };
 
   return (
@@ -251,11 +346,13 @@ function ListPanel({
       {/* Items list */}
       <ul
         id={listId}
+        ref={listRef}
         role="listbox"
         aria-label={safeTitle}
         aria-multiselectable="true"
         className={tkx('list-none m-0 p-1 overflow-y-auto')}
         style={{ height, minHeight: 100 }}
+        onScroll={virtualize ? v.onScroll : undefined}
       >
         {filtered.length === 0 ? (
           <li
@@ -265,55 +362,21 @@ function ListPanel({
           >
             No items
           </li>
+        ) : virtualize ? (
+          <>
+            {/* Top spacer keeps the scroll offset correct for the window. */}
+            <li aria-hidden="true" style={{ height: v.offsetY }} />
+            {filtered
+              .slice(v.startIndex, v.endIndex)
+              .map((item, i) => renderRow(item, v.startIndex + i))}
+            {/* Bottom spacer accounts for the rows below the window. */}
+            <li
+              aria-hidden="true"
+              style={{ height: Math.max(0, v.totalHeight - v.offsetY - (v.endIndex - v.startIndex) * ITEM_H) }}
+            />
+          </>
         ) : (
-          filtered.map((item) => {
-            const isChecked = selected.has(item.value);
-            const safeLabel = sanitizeString(item.label);
-
-            return (
-              <li
-                key={item.value}
-                ref={(el) => {
-                  if (el) optionRefs.current.set(item.value, el);
-                  else optionRefs.current.delete(item.value);
-                }}
-                role="option"
-                aria-selected={isChecked}
-                aria-disabled={item.disabled || undefined}
-                tabIndex={rovingValue === item.value ? 0 : -1}
-                onFocus={() => setFocusedValue(item.value)}
-                onClick={() => !item.disabled && onToggle(item.value)}
-                onKeyDown={(e) => handleKeyDown(e, item.value)}
-                className={tkx(
-                  'flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-sm',
-                  'outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
-                  item.disabled ? 'opacity-50 cursor-not-allowed' : '',
-                )}
-                style={{
-                  color: item.disabled ? theme.textMuted : theme.text,
-                  backgroundColor: isChecked ? `${theme.primary}10` : 'transparent',
-                  transition: reducedMotion ? 'none' : 'background-color 100ms ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (!item.disabled && !isChecked) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = theme.surfaceAlt;
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = isChecked
-                    ? `${theme.primary}10`
-                    : 'transparent';
-                }}
-              >
-                <Checkbox
-                  checked={isChecked}
-                  primaryColor={theme.primary}
-                  borderColor={theme.border}
-                />
-                <span className={tkx('truncate')}>{safeLabel}</span>
-              </li>
-            );
-          })
+          filtered.map((item, i) => renderRow(item, i))
         )}
       </ul>
     </div>

@@ -19,7 +19,9 @@ export {
   useAnnounce,
   useEscapeKey,
   useClickOutside,
+  useVirtualList,
 } from '../hooks';
+export type { VirtualListOptions, VirtualListResult } from '../hooks';
 
 // ── Form primitives ──────────────────────────────────────────────────────────
 export { useTkxForm } from '../components/TkxForm';
