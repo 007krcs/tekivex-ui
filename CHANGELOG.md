@@ -5,6 +5,31 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.26.0] — 2026-06-18
+
+### Fixed — runtime quality
+
+- **`TkxToast`** used a module-level singleton store, so a second
+  `TkxToastProvider` (or two at different positions) double-rendered every
+  toast. Refactored into a store factory: default providers share one global
+  store but only the first renders it (extras dev-warn); a new `isolated` prop
+  gives a provider its own private store for an independent second region.
+  `useToast()` reads the nearest provider's store (falls back to the global
+  store — back-compatible). Adds a module-level **`toast()`** export for firing
+  from non-React code, **pause-on-hover** (banks the remaining time, not a
+  reset), and a per-toast **`onDismiss`** callback.
+- **i18n:** `TkxSelect`, `TkxDropdown`, `TkxSnackbar`, `TkxCommandPalette`, and
+  `TkxDataGrid` hardcoded English UI strings/aria-labels despite the 44-locale
+  system. They now read from `useLocale()` (new optional keys, English
+  fallback) so translations actually apply. English output is byte-identical.
+- **`TkxSEO`:** the client-only limitation is now stated loudly in the JSDoc and
+  the doc page (crawlers that don't run JS won't see the tags — use your
+  framework's head API for SSR/SSG). Added `article:*` Open Graph props
+  (`articleAuthor`, `articlePublishedTime`, `articleModifiedTime`,
+  `articleSection`, `articleTags`), and the effect now keys on a stable
+  serialization so an unmemoized `schema` object no longer rewrites the head
+  every render.
+
 ## [3.25.0] — 2026-06-18
 
 ### Fixed — the calendar finally speaks your locale
