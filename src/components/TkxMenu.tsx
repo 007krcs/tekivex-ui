@@ -630,6 +630,7 @@ function MenuPanel({
                   aria-checked={isSelected}
                   aria-disabled={isDisabled || undefined}
                   data-midx={myFlatIdx}
+                  id={`${panelId}-item-${myFlatIdx}`}
                   tabIndex={-1}
                   style={itemStyle}
                   onClick={() => !isDisabled && item.onChange?.(opt.value)}
@@ -686,6 +687,7 @@ function MenuPanel({
             aria-checked={item.checked}
             aria-disabled={isDisabled || undefined}
             data-midx={myFlatIdx}
+            id={`${panelId}-item-${myFlatIdx}`}
             tabIndex={-1}
             style={itemStyle}
             onClick={() => !isDisabled && item.onChange?.(!item.checked)}
@@ -733,6 +735,7 @@ function MenuPanel({
               aria-expanded={isSubmenuOpen}
               aria-disabled={isDisabled || undefined}
               data-midx={myFlatIdx}
+              id={`${panelId}-item-${myFlatIdx}`}
               tabIndex={-1}
               style={itemStyle}
               onMouseEnter={(e) => {
@@ -803,6 +806,7 @@ function MenuPanel({
           role="menuitem"
           aria-disabled={isDisabled || undefined}
           data-midx={myFlatIdx}
+          id={`${panelId}-item-${myFlatIdx}`}
           tabIndex={-1}
           style={itemStyle}
           onClick={() => {
@@ -880,6 +884,10 @@ function MenuPanel({
         id={panelId}
         role="menu"
         tabIndex={-1}
+        // The panel holds DOM focus and arrowing moves a visual highlight
+        // (activeIdx); expose that highlight to assistive tech so screen readers
+        // announce each traversed item (label/role/checked/expanded state).
+        aria-activedescendant={activeIdx >= 0 ? `${panelId}-item-${activeIdx}` : undefined}
         className="tkx-menu-panel"
         onKeyDown={handleKeyDown}
         style={{

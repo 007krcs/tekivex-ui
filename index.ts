@@ -1,5 +1,7 @@
 // ── TekiVex UI — Root Barrel Export ─────────────────────────────────────────
-// Quantum-Class Component Framework | WCAG 2.1 AAA | WAI-ARIA 1.2
+// Component framework targeting WCAG 2.1 AA, with WAI-ARIA patterns throughout.
+// AAA is an aspiration, not a blanket guarantee — an internal APG audit
+// (docs/A11Y-AUDIT.md) tracks known gaps being cleared release by release.
 
 import './src/styles/global.css';
 

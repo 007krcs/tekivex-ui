@@ -6,6 +6,7 @@ import {
   useEffect,
   useCallback,
   useId,
+  isValidElement,
   type ReactNode,
   type CSSProperties,
   type KeyboardEvent,
@@ -783,11 +784,44 @@ export function TkxDropdown({
     />
   ) : null;
 
+  // A trigger is "interactive" (and thus already keyboard-operable) if it's a
+  // native button/anchor or carries its own onClick/role=button/tabIndex.
+  const triggerProps = isValidElement(trigger)
+    ? ((trigger as { props?: Record<string, unknown> }).props ?? {})
+    : {};
+  const triggerType = isValidElement(trigger) ? (trigger as { type?: unknown }).type : undefined;
+  const triggerIsInteractive =
+    triggerType === 'button' ||
+    triggerType === 'a' ||
+    'onClick' in triggerProps ||
+    triggerProps.role === 'button' ||
+    triggerProps.tabIndex !== undefined;
+
   return (
     <div style={{ display: 'inline-block', position: 'relative' }}>
       <div
         ref={triggerRef}
         onClick={toggleOpen}
+        // Menu-button APG keyboard support. If the consumer passed a real
+        // interactive trigger (a <button>/<a>), it is already keyboard-operable
+        // (native Enter/Space -> click bubbles to this onClick), and adding
+        // role="button"/tabIndex here would duplicate the control — so we leave
+        // the wrapper as a passthrough. Only when the trigger is NON-interactive
+        // (icon, text, span) do we promote the wrapper to a focusable button so
+        // keyboard users can open the menu at all (was a bare div → WCAG 2.1.1).
+        role={triggerIsInteractive ? undefined : 'button'}
+        tabIndex={triggerIsInteractive ? undefined : disabled ? -1 : 0}
+        onKeyDown={
+          triggerIsInteractive
+            ? undefined
+            : (e) => {
+                if (disabled || e.target !== e.currentTarget) return;
+                if (e.key === 'Enter' || e.key === ' ' || (e.key === 'ArrowDown' && !isOpen)) {
+                  e.preventDefault();
+                  toggleOpen();
+                }
+              }
+        }
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}

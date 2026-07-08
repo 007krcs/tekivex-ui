@@ -186,6 +186,10 @@ export function TkxCascader({
                     aria-selected={isSelected}
                     aria-disabled={opt.disabled || undefined}
                     aria-expanded={opt.children?.length ? isSelected : undefined}
+                    // Keyboard operability (WCAG 2.1.1): the tree was previously
+                    // mouse-only. Enter/Space selects, ArrowRight drills into a
+                    // node with children, ArrowLeft steps back a column.
+                    tabIndex={opt.disabled ? -1 : 0}
                     className={tkx('flex items-center justify-between px-3 py-2 cursor-pointer text-sm')}
                     style={{
                       backgroundColor: isSelected ? theme.surfaceAlt : 'transparent',
@@ -194,6 +198,19 @@ export function TkxCascader({
                       cursor: opt.disabled ? 'not-allowed' : 'pointer',
                     }}
                     onClick={() => handleSelect(colIdx, opt)}
+                    onKeyDown={(e) => {
+                      if (opt.disabled) return;
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelect(colIdx, opt);
+                      } else if (e.key === 'ArrowRight' && opt.children?.length) {
+                        e.preventDefault();
+                        setHoverPath((prev) => [...prev.slice(0, colIdx), opt.value]);
+                      } else if (e.key === 'ArrowLeft' && colIdx > 0) {
+                        e.preventDefault();
+                        setHoverPath((prev) => prev.slice(0, colIdx));
+                      }
+                    }}
                     onMouseEnter={() => {
                       if (!opt.disabled) {
                         setHoverPath((prev) => [...prev.slice(0, colIdx), opt.value]);

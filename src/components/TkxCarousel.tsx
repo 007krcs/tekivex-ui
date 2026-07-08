@@ -344,6 +344,26 @@ export function TkxCarousel({
       aria-roledescription="carousel"
       aria-label="Content carousel"
     >
+      {/* WCAG 2.2.2 (Pause, Stop, Hide): an auto-advancing carousel must offer a
+          persistent, keyboard-reachable way to stop the motion. Pause-on-hover
+          alone doesn't help keyboard/AT users. */}
+      {autoPlay && count > 1 && (
+        <button
+          type="button"
+          onClick={() => setPaused((p) => !p)}
+          aria-label={paused ? 'Start automatic slide show' : 'Stop automatic slide show'}
+          className={tkx('self-start inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium cursor-pointer border-none')}
+          style={{ backgroundColor: theme.surfaceAlt, color: theme.text }}
+        >
+          {paused ? (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
+          )}
+          {paused ? 'Play' : 'Pause'}
+        </button>
+      )}
+
       {/* Main carousel row */}
       <div
         className={tkx('flex items-center gap-2')}
