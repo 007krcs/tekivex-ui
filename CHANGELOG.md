@@ -5,6 +5,34 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.29.0] — 2026-07-08
+
+### Fixed — accessibility (HIGH findings from an APG audit)
+
+An adversarially-verified audit of the interactive components against their
+WAI-ARIA Authoring Practices pattern found **35 confirmed violations** (recorded
+in `docs/A11Y-AUDIT.md`). This release fixes the 4 HIGH ones and honestly walks
+back the unqualified "WCAG 2.1 AAA" header to "targeting AA, with a tracked path
+to AAA":
+
+- **`TkxDropdown`** — a non-interactive trigger (icon/text) left the menu
+  impossible to open by keyboard (bare `<div onClick>`; WCAG 2.1.1). The wrapper
+  is now promoted to a focusable menu button (Enter/Space/ArrowDown) **only when
+  the trigger isn't already interactive**, so passing a real `<button>` is
+  unchanged (no duplicate control).
+- **`TkxMenu`** — arrowing moved only a visual highlight; the panel held DOM
+  focus with no `aria-activedescendant`, so screen readers announced nothing.
+  Each item now has a stable id and the panel exposes `aria-activedescendant`.
+- **`TkxCascader`** — the option tree was mouse-only. Items are now focusable
+  with Enter/Space to select and Arrow keys to drill in/out (WCAG 2.1.1).
+- **`TkxCarousel`** — auto-advancing slides had no keyboard-reachable pause
+  (hover-only). Adds a persistent Play/Pause toggle when `autoPlay` is on
+  (WCAG 2.2.2 Pause, Stop, Hide).
+
+6 regression tests in `tests/a11y-high-fixes.test.tsx`. The 26 medium + 5 low
+findings are tracked in `docs/A11Y-AUDIT.md` for subsequent cycles — this is an
+honest, multi-release effort, not a solved claim.
+
 ## [3.28.0] — 2026-07-08
 
 ### Added — `useVariableVirtualList` + TreeView & MessageThread virtualization
