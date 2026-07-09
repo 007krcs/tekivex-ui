@@ -1679,16 +1679,42 @@ describe('TkxDataGrid', () => {
     });
   });
 
-  // ── Grid keyboard navigation (A11Y-AUDIT MEDIUM #22, partial APG model) ────
+  // ── Grid keyboard navigation (A11Y-AUDIT MEDIUM #22, full APG model) ───────
 
   describe('grid keyboard navigation', () => {
-    it('grid container is a single Tab stop that forwards focus to the first cell', () => {
+    // v3.30 shipped an interim model where the CONTAINER was the tab stop
+    // (tabIndex=0) and every cell was -1. The full roving-tabindex model
+    // replaces it: the container is only a programmatic-focus fallback
+    // (tabIndex=-1) and exactly one cell carries tabIndex=0.
+    it('grid container is NOT a Tab stop but grid.focus() still forwards to the first cell', () => {
       render(<TkxDataGrid columns={columns} data={data} rowKey="id" />, { wrapper: Wrapper });
       const grid = screen.getByRole('grid');
-      expect(grid.getAttribute('tabindex')).toBe('0');
+      expect(grid.getAttribute('tabindex')).toBe('-1');
       grid.focus();
       const cells = screen.getAllByRole('gridcell');
       expect(document.activeElement).toBe(cells[0]);
+    });
+
+    it('roving tabindex: exactly one cell has tabIndex=0 (initially the first)', () => {
+      render(<TkxDataGrid columns={columns} data={data} rowKey="id" />, { wrapper: Wrapper });
+      const cells = screen.getAllByRole('gridcell');
+      const tabStops = cells.filter(c => c.getAttribute('tabindex') === '0');
+      expect(tabStops).toHaveLength(1);
+      expect(tabStops[0]).toBe(cells[0]);
+      cells.slice(1).forEach(c => expect(c.getAttribute('tabindex')).toBe('-1'));
+    });
+
+    it('roving tabindex moves with arrow-key navigation', () => {
+      render(<TkxDataGrid columns={columns} data={data} rowKey="id" />, { wrapper: Wrapper });
+      const cells = screen.getAllByRole('gridcell');
+      cells[0].focus();
+      fireEvent.keyDown(cells[0], { key: 'ArrowDown' });
+      // Tab stop followed focus to cells[2] (Bob's name); the old stop
+      // reverted to -1 so the grid still has exactly one Tab stop.
+      expect(document.activeElement).toBe(cells[2]);
+      expect(cells[2].getAttribute('tabindex')).toBe('0');
+      expect(cells[0].getAttribute('tabindex')).toBe('-1');
+      expect(cells.filter(c => c.getAttribute('tabindex') === '0')).toHaveLength(1);
     });
 
     it('arrow keys move cell focus in all four directions', () => {
@@ -1720,10 +1746,34 @@ describe('TkxDataGrid', () => {
       expect(document.activeElement).toBe(cells[3]);
     });
 
-    it('non-editable gridcells are programmatically focusable (tabIndex=-1)', () => {
+    it('non-active gridcells are programmatically focusable (tabIndex=-1)', () => {
+      // Under the roving model only the active cell is 0 — every other
+      // cell (editable or not) must stay reachable via element.focus().
       render(<TkxDataGrid columns={columns} data={data} rowKey="id" />, { wrapper: Wrapper });
       const cells = screen.getAllByRole('gridcell');
-      cells.forEach(c => expect(c.getAttribute('tabindex')).toBe('-1'));
+      cells.slice(1).forEach(c => expect(c.getAttribute('tabindex')).toBe('-1'));
+      cells[3].focus();
+      expect(document.activeElement).toBe(cells[3]);
+    });
+
+    it('PageDown moves down a page of rows and clamps at the last row; PageUp mirrors', () => {
+      const manyRows: Row[] = Array.from({ length: 15 }, (_, i) => ({
+        id: String(i + 1),
+        name: `User${i + 1}`,
+        age: 20 + i,
+      }));
+      render(<TkxDataGrid columns={columns} data={manyRows} rowKey="id" />, { wrapper: Wrapper });
+      const cells = screen.getAllByRole('gridcell');
+      // 15 rows x 2 cols. Non-virtual page step is ~10 rows.
+      cells[0].focus(); // row 0, col 0
+      fireEvent.keyDown(cells[0], { key: 'PageDown' });
+      expect(document.activeElement).toBe(cells[10 * 2]); // row 10
+      fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+      expect(document.activeElement).toBe(cells[14 * 2]); // clamped at row 14
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(document.activeElement).toBe(cells[4 * 2]); // row 14 - 10 = 4
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+      expect(document.activeElement).toBe(cells[0]); // clamped at row 0
     });
 
     it('treegrid: ArrowRight expands and ArrowLeft collapses from the tree cell', () => {
@@ -1759,6 +1809,105 @@ describe('TkxDataGrid', () => {
       // Editor still mounted and focused — grid nav did not steal focus
       expect(screen.getByLabelText('Edit Name')).toBeInTheDocument();
       expect(document.activeElement).toBe(input);
+    });
+  });
+
+  // ── Virtualization-aware keyboard navigation ───────────────────────────────
+  // jsdom has no layout, so clientHeight reads 0 unless mocked: the initial
+  // rendered window is rows [0, OVERSCAN) = 0..9 and programmatic scrolls are
+  // driven through the component's own scrollTop state (same technique as the
+  // virtual-list hook tests).
+
+  describe('grid keyboard navigation — virtual scrolling', () => {
+    const virtualData: Row[] = Array.from({ length: 100 }, (_, i) => ({
+      id: String(i + 1),
+      name: `User${i + 1}`,
+      age: 20 + i,
+    }));
+
+    function renderVirtualGrid() {
+      return render(
+        <TkxDataGrid
+          columns={columns}
+          data={virtualData}
+          rowKey="id"
+          maxHeight={200}
+          virtualScroll
+        />,
+        { wrapper: Wrapper },
+      );
+    }
+
+    it('sanity: only a window of rows is rendered', () => {
+      renderVirtualGrid();
+      expect(screen.getByText('User1')).toBeInTheDocument();
+      expect(screen.queryByText('User100')).not.toBeInTheDocument();
+    });
+
+    it('Ctrl+End reaches the true last row even when it is not rendered', () => {
+      renderVirtualGrid();
+      const firstCell = screen.getAllByRole('gridcell')[0];
+      firstCell.focus();
+      fireEvent.keyDown(firstCell, { key: 'End', ctrlKey: true });
+      // The viewport scrolled so the last row rendered, and focus moved to
+      // the LAST cell of the last row (User100, age 20 + 99 = 119).
+      const active = document.activeElement as HTMLElement;
+      expect(active.getAttribute('role')).toBe('gridcell');
+      expect(active.closest('tr')!.textContent).toContain('User100');
+      expect(active.textContent).toBe('119');
+      // The roving tab stop followed the focus move.
+      expect(active.getAttribute('tabindex')).toBe('0');
+      // Rows at the top of the list left the rendered window.
+      expect(screen.queryByText('User1')).not.toBeInTheDocument();
+    });
+
+    it('ArrowDown past the rendered window scrolls the viewport and focuses the target row', () => {
+      renderVirtualGrid();
+      const rows = screen
+        .getAllByRole('row')
+        .filter(r => within(r).queryAllByRole('gridcell').length > 0);
+      const lastRendered = rows[rows.length - 1];
+      expect(lastRendered.textContent).toContain('User10');
+      expect(screen.queryByText('User11')).not.toBeInTheDocument();
+      const cell = within(lastRendered).getAllByRole('gridcell')[0];
+      cell.focus();
+      fireEvent.keyDown(cell, { key: 'ArrowDown' });
+      const active = document.activeElement as HTMLElement;
+      expect(active.getAttribute('role')).toBe('gridcell');
+      expect(active.closest('tr')!.textContent).toContain('User11');
+    });
+
+    it('PageDown pages by the virtualization viewport row count when measurable', () => {
+      // Mock layout: 200px viewport / 40px rows → 5 rows per page.
+      const spy = vi
+        .spyOn(HTMLElement.prototype, 'clientHeight', 'get')
+        .mockReturnValue(200);
+      try {
+        renderVirtualGrid();
+        const firstCell = screen.getAllByRole('gridcell')[0];
+        firstCell.focus();
+        fireEvent.keyDown(firstCell, { key: 'PageDown' });
+        const active = document.activeElement as HTMLElement;
+        expect(active.closest('tr')!.textContent).toContain('User6'); // row index 5
+        fireEvent.keyDown(active, { key: 'PageUp' });
+        expect(
+          (document.activeElement as HTMLElement).closest('tr')!.textContent,
+        ).toContain('User1');
+      } finally {
+        spy.mockRestore();
+      }
+    });
+
+    it('Ctrl+Home returns to the first cell from a scrolled-away window', () => {
+      renderVirtualGrid();
+      const firstCell = screen.getAllByRole('gridcell')[0];
+      firstCell.focus();
+      fireEvent.keyDown(firstCell, { key: 'End', ctrlKey: true });
+      expect(screen.queryByText('User1')).not.toBeInTheDocument();
+      fireEvent.keyDown(document.activeElement!, { key: 'Home', ctrlKey: true });
+      const active = document.activeElement as HTMLElement;
+      expect(active.textContent).toBe('User1');
+      expect(active.getAttribute('tabindex')).toBe('0');
     });
   });
 

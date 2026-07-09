@@ -87,6 +87,12 @@ export function TkxCascader({
   // so the trigger's aria-activedescendant can point at the active option.
   const treeId = useId();
   const treeItemId = (colIdx: number, rowIdx: number) => `${treeId}-item-${colIdx}-${rowIdx}`;
+  // Tree-structure semantics (APG Tree View): columns render as *sibling*
+  // role="group" lists under the tree rather than nested inside their parent
+  // treeitem, so the DOM alone cannot convey hierarchy. Each column gets a
+  // deterministic id so an expanded parent can claim its child column via
+  // aria-owns, letting AT reconstruct the parent→children relationship.
+  const groupId = (colIdx: number) => `${treeId}-group-${colIdx}`;
 
   const safeLabel = label ? sanitizeString(label) : undefined;
   const safePlaceholder = sanitizeString(placeholder);
@@ -184,6 +190,7 @@ export function TkxCascader({
           {columns.map((col, colIdx) => (
             <ul
               key={colIdx}
+              id={groupId(colIdx)}
               role="group"
               className={tkx('m-0 p-0 overflow-auto')}
               style={{
@@ -195,6 +202,12 @@ export function TkxCascader({
             >
               {col.map((opt, rowIdx) => {
                 const isSelected = hoverPath[colIdx] === opt.value;
+                const hasChildren = Boolean(opt.children?.length);
+                // A parent is expanded exactly when it sits on hoverPath at
+                // this depth: getColumns() then renders its child column,
+                // which the parent claims via aria-owns (see groupId note).
+                const isExpanded = hasChildren && isSelected;
+                const childColumnShown = isExpanded && colIdx + 1 < columns.length;
                 const safeOptLabel = sanitizeString(opt.label);
                 return (
                   <li
@@ -203,7 +216,14 @@ export function TkxCascader({
                     role="treeitem"
                     aria-selected={isSelected}
                     aria-disabled={opt.disabled || undefined}
-                    aria-expanded={opt.children?.length ? isSelected : undefined}
+                    aria-expanded={hasChildren ? isExpanded : undefined}
+                    // APG Tree View structure props: sibling columns mean the
+                    // DOM carries no nesting, so level/setsize/posinset must be
+                    // stated explicitly per treeitem.
+                    aria-level={colIdx + 1}
+                    aria-setsize={col.length}
+                    aria-posinset={rowIdx + 1}
+                    aria-owns={childColumnShown ? groupId(colIdx + 1) : undefined}
                     // Keyboard operability (WCAG 2.1.1): the tree was previously
                     // mouse-only. Enter/Space selects, ArrowRight drills into a
                     // node with children, ArrowLeft steps back a column.

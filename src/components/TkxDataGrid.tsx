@@ -1499,22 +1499,40 @@ export function TkxDataGrid<T = any>({
     [rowKey, onCellEditCancel, exitEditWithFocus],
   );
 
-  // ── Grid keyboard navigation (partial APG grid/treegrid model) ─────────
-  // The grid container is a single Tab stop that forwards focus into the
-  // last-focused (or first) gridcell; Arrow keys then move cell focus,
-  // Home/End jump to row start/end, Ctrl+Home/Ctrl+End to the grid corners,
-  // and in treegrid mode ArrowRight/ArrowLeft on the tree column expand/
-  // collapse the focused row. All gridcells are programmatically focusable
-  // (tabIndex=-1; editable cells keep tabIndex=0).
-  //
-  // DEFERRED (honest scope note, tracked in docs/A11Y-AUDIT.md MEDIUM #22):
-  // a full per-cell roving-tabindex model (one cell with tabIndex=0 instead
-  // of a focusable container), PageUp/PageDown paging, and
-  // virtualization-aware navigation beyond the rendered row window are left
-  // for a follow-up cycle. The model shipped here is complete and
-  // self-consistent for the rendered rows — no half-broken states.
+  // ── Grid keyboard navigation (APG grid/treegrid model) ─────────────────
+  // Full roving-tabindex model (A11Y-AUDIT MEDIUM #22, deferral resolved):
+  // exactly ONE gridcell/rowheader — the last-focused cell, initially the
+  // first — carries tabIndex=0 and is the grid's single Tab stop; every
+  // other cell is tabIndex=-1. Tab lands directly on that cell and Tab out
+  // leaves the grid (no focus trap). Arrow keys move cell focus in all four
+  // directions, PageUp/PageDown move by a viewport page of rows (clamped at
+  // the grid edges), Home/End jump to row start/end, Ctrl+Home/Ctrl+End to
+  // the grid corners, and in treegrid mode ArrowRight/ArrowLeft on the tree
+  // column expand/collapse the focused row. Navigation is virtualization-
+  // aware: moving to a row outside the rendered window scrolls the virtual
+  // viewport, waits for the target row to render, then moves focus onto it
+  // — so Ctrl+End reaches the true last row even when it is unrendered.
+  // The container keeps a focus-forwarding FALLBACK (tabIndex=-1, so it is
+  // NOT a Tab stop) for programmatic grid.focus() calls. Editors, carets,
+  // checkboxes and filter inputs are never hijacked.
   const gridRootRef = useRef<HTMLDivElement>(null);
   const lastFocusedCellRef = useRef<HTMLTableCellElement | null>(null);
+  // Last-focused cell coordinates in ABSOLUTE row space (index into the
+  // full logical row list — virtualSource when virtual — not just the
+  // rendered window). Lets the roving tab stop survive virtual-window
+  // shifts and data changes that unmount the remembered cell.
+  const activeCoordsRef = useRef<{ row: number; col: number }>({ row: 0, col: 0 });
+  // A focus request targeting a row that is not yet rendered (virtual
+  // mode). The completion effect below fires once the row enters the
+  // rendered window.
+  const [pendingFocus, setPendingFocus] = useState<{
+    row: number;
+    col: number;
+    colMode: 'same' | 'first' | 'last';
+  } | null>(null);
+
+  // Absolute index of the first rendered navigable row.
+  const renderedRowOffset = isVirtual ? startIndex : 0;
 
   const getNavigableCells = useCallback(
     (tr: HTMLTableRowElement): HTMLTableCellElement[] =>
@@ -1536,11 +1554,154 @@ export function TkxDataGrid<T = any>({
     );
   }, []);
 
-  const focusCell = useCallback((cell: HTMLTableCellElement | null | undefined) => {
-    if (!cell) return;
-    lastFocusedCellRef.current = cell;
-    cell.focus();
-  }, []);
+  const focusCell = useCallback(
+    (cell: HTMLTableCellElement | null | undefined) => {
+      if (!cell) return;
+      // Roving tabindex: the tab stop follows focus. Demote whichever cell
+      // currently holds tabIndex=0 in the DOM (not just the remembered ref
+      // — focus may have been placed natively, bypassing focusCell).
+      const root = gridRootRef.current;
+      if (root) {
+        root
+          .querySelectorAll<HTMLTableCellElement>(
+            'td[role="gridcell"][tabindex="0"], td[role="rowheader"][tabindex="0"]',
+          )
+          .forEach(other => {
+            if (other !== cell) other.tabIndex = -1;
+          });
+      }
+      lastFocusedCellRef.current = cell;
+      cell.tabIndex = 0;
+      // Record absolute coordinates so the roving stop can be restored
+      // after the cell unmounts (virtual scroll / data changes).
+      const tr = cell.closest('tr') as HTMLTableRowElement | null;
+      if (tr) {
+        const rows = getNavigableRows();
+        const rowIdx = rows.indexOf(tr);
+        const colIdx = getNavigableCells(tr).indexOf(cell);
+        if (rowIdx !== -1 && colIdx !== -1) {
+          activeCoordsRef.current = { row: renderedRowOffset + rowIdx, col: colIdx };
+        }
+      }
+      cell.focus();
+    },
+    [getNavigableRows, getNavigableCells, renderedRowOffset],
+  );
+
+  // Scroll the virtual viewport so an absolute row index is rendered and
+  // visible, updating the virtual-window state directly (a programmatic
+  // scrollTop assignment does not reliably fire a scroll event, and jsdom
+  // never does).
+  const scrollVirtualRowIntoView = useCallback(
+    (absRow: number) => {
+      const el = scrollContainerRef.current;
+      if (!el) return;
+      const viewH = el.clientHeight || containerHeight;
+      const top = absRow * rowHeight;
+      let next = el.scrollTop;
+      if (viewH > 0) {
+        if (top < next) next = top;
+        else if (top + rowHeight > next + viewH) next = top + rowHeight - viewH;
+      } else {
+        // No layout information (e.g. jsdom) — jump straight to the row.
+        next = top;
+      }
+      if (next !== el.scrollTop) el.scrollTop = next;
+      setScrollTop(next);
+    },
+    [containerHeight, rowHeight],
+  );
+
+  // Move cell focus to an absolute row index. If the row is rendered,
+  // focus synchronously; otherwise (virtual mode) scroll it into view and
+  // defer to the pending-focus completion effect.
+  const moveFocusToRow = useCallback(
+    (absRow: number, col: number, colMode: 'same' | 'first' | 'last' = 'same') => {
+      const rows = getNavigableRows();
+      const domIdx = absRow - renderedRowOffset;
+      if (domIdx >= 0 && domIdx < rows.length) {
+        const cells = getNavigableCells(rows[domIdx]);
+        const idx =
+          colMode === 'first'
+            ? 0
+            : colMode === 'last'
+              ? cells.length - 1
+              : Math.min(col, cells.length - 1);
+        if (isVirtual) scrollVirtualRowIntoView(absRow);
+        focusCell(cells[idx]);
+        return;
+      }
+      if (!isVirtual) return; // row genuinely doesn't exist
+      setPendingFocus({ row: absRow, col, colMode });
+      scrollVirtualRowIntoView(absRow);
+    },
+    [
+      getNavigableRows,
+      getNavigableCells,
+      renderedRowOffset,
+      isVirtual,
+      scrollVirtualRowIntoView,
+      focusCell,
+    ],
+  );
+
+  // Completes a virtual-mode focus move once the target row has rendered.
+  useEffect(() => {
+    if (!pendingFocus) return;
+    const rows = getNavigableRows();
+    const domIdx = pendingFocus.row - renderedRowOffset;
+    if (domIdx < 0 || domIdx >= rows.length) {
+      // Target not rendered. In virtual mode wait for the next window
+      // shift; otherwise the target can never appear — drop the request.
+      if (!isVirtual) setPendingFocus(null);
+      return;
+    }
+    const cells = getNavigableCells(rows[domIdx]);
+    const idx =
+      pendingFocus.colMode === 'first'
+        ? 0
+        : pendingFocus.colMode === 'last'
+          ? cells.length - 1
+          : Math.min(pendingFocus.col, cells.length - 1);
+    setPendingFocus(null);
+    focusCell(cells[idx]);
+  }, [pendingFocus, renderedRowOffset, isVirtual, getNavigableRows, getNavigableCells, focusCell]);
+
+  // Rows per PageUp/PageDown step: the virtualization viewport row count
+  // when it is measurable, else ~10 rows.
+  const pageRowStep = useMemo(() => {
+    if (isVirtual && containerHeight > 0) {
+      const n = Math.floor(containerHeight / rowHeight);
+      if (n >= 1) return n;
+    }
+    return 10;
+  }, [isVirtual, containerHeight, rowHeight]);
+
+  // Enforce the roving tabindex after every render: JSX renders all
+  // navigable cells with tabIndex=-1; this effect promotes exactly one —
+  // the last-focused cell, or its nearest coordinate match after the
+  // remembered cell unmounted, or the first cell — to tabIndex=0.
+  useEffect(() => {
+    const root = gridRootRef.current;
+    if (!root) return;
+    const rows = getNavigableRows();
+    if (rows.length === 0) return;
+    let target: HTMLTableCellElement | null = null;
+    const remembered = lastFocusedCellRef.current;
+    if (remembered && root.contains(remembered)) {
+      target = remembered;
+    } else {
+      const { row, col } = activeCoordsRef.current;
+      const domIdx = Math.min(Math.max(row - renderedRowOffset, 0), rows.length - 1);
+      const cells = getNavigableCells(rows[domIdx]);
+      target = cells[Math.min(col, Math.max(cells.length - 1, 0))] ?? null;
+    }
+    for (const tr of rows) {
+      for (const cell of getNavigableCells(tr)) {
+        cell.tabIndex = cell === target ? 0 : -1;
+      }
+    }
+  });
 
   const handleGridFocus = useCallback(
     (e: React.FocusEvent<HTMLDivElement>) => {
@@ -1581,6 +1742,12 @@ export function TkxDataGrid<T = any>({
       const expandedAttr = tr.getAttribute('aria-expanded');
       const isTreeCell = cell.hasAttribute('data-tree-cell');
 
+      // Absolute row coordinates: in virtual mode the DOM only holds a
+      // window of the logical row list, so vertical navigation targets the
+      // full list and lets moveFocusToRow scroll unrendered rows in.
+      const absRow = renderedRowOffset + rowIdx;
+      const totalNavRows = isVirtual ? virtualSource.length : rows.length;
+
       switch (e.key) {
         case 'ArrowRight': {
           e.preventDefault();
@@ -1604,25 +1771,34 @@ export function TkxDataGrid<T = any>({
         }
         case 'ArrowDown': {
           e.preventDefault();
-          const nextRow = rows[rowIdx + 1];
-          if (!nextRow) return;
-          const nc = getNavigableCells(nextRow);
-          focusCell(nc[Math.min(colIdx, nc.length - 1)]);
+          if (absRow + 1 >= totalNavRows) return;
+          moveFocusToRow(absRow + 1, colIdx);
           return;
         }
         case 'ArrowUp': {
           e.preventDefault();
-          const prevRow = rows[rowIdx - 1];
-          if (!prevRow) return;
-          const pc = getNavigableCells(prevRow);
-          focusCell(pc[Math.min(colIdx, pc.length - 1)]);
+          if (absRow === 0) return;
+          moveFocusToRow(absRow - 1, colIdx);
+          return;
+        }
+        case 'PageDown': {
+          e.preventDefault();
+          const target = Math.min(absRow + pageRowStep, totalNavRows - 1);
+          if (target === absRow) return;
+          moveFocusToRow(target, colIdx);
+          return;
+        }
+        case 'PageUp': {
+          e.preventDefault();
+          const target = Math.max(absRow - pageRowStep, 0);
+          if (target === absRow) return;
+          moveFocusToRow(target, colIdx);
           return;
         }
         case 'Home': {
           e.preventDefault();
           if (e.ctrlKey) {
-            const first = rows[0];
-            if (first) focusCell(getNavigableCells(first)[0]);
+            moveFocusToRow(0, 0, 'first');
           } else {
             focusCell(cells[0]);
           }
@@ -1631,10 +1807,8 @@ export function TkxDataGrid<T = any>({
         case 'End': {
           e.preventDefault();
           if (e.ctrlKey) {
-            const last = rows[rows.length - 1];
-            if (last) {
-              const lc = getNavigableCells(last);
-              focusCell(lc[lc.length - 1]);
+            if (totalNavRows > 0) {
+              moveFocusToRow(totalNavRows - 1, colIdx, 'last');
             }
           } else {
             focusCell(cells[cells.length - 1]);
@@ -1645,7 +1819,18 @@ export function TkxDataGrid<T = any>({
           return;
       }
     },
-    [isTreeMode, toggleRowExpand, getNavigableRows, getNavigableCells, focusCell],
+    [
+      isTreeMode,
+      toggleRowExpand,
+      getNavigableRows,
+      getNavigableCells,
+      focusCell,
+      moveFocusToRow,
+      renderedRowOffset,
+      isVirtual,
+      virtualSource,
+      pageRowStep,
+    ],
   );
 
   // ── Cell sizing ─────────────────────────────────────────────────────────
@@ -1676,9 +1861,11 @@ export function TkxDataGrid<T = any>({
       aria-rowcount={totalRows}
       aria-colcount={totalCols}
       id={gridId}
-      // Single Tab stop for the grid: focusing the container forwards focus
-      // into the last-focused (or first) cell; arrow keys then navigate.
-      tabIndex={0}
+      // The grid's single Tab stop is the roving-tabindex cell, not the
+      // container. tabIndex=-1 keeps a programmatic grid.focus() fallback
+      // that forwards into the last-focused (or first) cell without adding
+      // a second Tab stop.
+      tabIndex={-1}
       onFocus={handleGridFocus}
       onKeyDown={handleGridKeyDown}
       className={tkx('font-sans rounded-lg overflow-hidden')}
@@ -1983,7 +2170,9 @@ export function TkxDataGrid<T = any>({
                               data-editing={isEditing ? '' : undefined}
                               data-saving={isSaving ? '' : undefined}
                               aria-readonly={editableHere ? 'false' : undefined}
-                              tabIndex={editableHere ? 0 : -1}
+                              // Roving tabindex: all cells render -1; the roving effect
+                              // promotes exactly one (the active cell) to 0.
+                              tabIndex={-1}
                               ref={el => {
                                 if (el) cellRefs.current.set(cellKey, el);
                                 else cellRefs.current.delete(cellKey);
@@ -2290,7 +2479,9 @@ export function TkxDataGrid<T = any>({
                               data-editing={isEditing ? '' : undefined}
                               data-saving={isSaving ? '' : undefined}
                               aria-readonly={editableHere ? 'false' : undefined}
-                              tabIndex={editableHere ? 0 : -1}
+                              // Roving tabindex: all cells render -1; the roving effect
+                              // promotes exactly one (the active cell) to 0.
+                              tabIndex={-1}
                               ref={el => {
                                 if (el) cellRefs.current.set(cellKey, el);
                                 else cellRefs.current.delete(cellKey);
@@ -2452,7 +2643,9 @@ export function TkxDataGrid<T = any>({
                               data-editing={isEditing ? '' : undefined}
                               data-saving={isSaving ? '' : undefined}
                               aria-readonly={editableHere ? 'false' : undefined}
-                              tabIndex={editableHere ? 0 : -1}
+                              // Roving tabindex: all cells render -1; the roving effect
+                              // promotes exactly one (the active cell) to 0.
+                              tabIndex={-1}
                               ref={el => {
                                 if (el) cellRefs.current.set(cellKey, el);
                                 else cellRefs.current.delete(cellKey);

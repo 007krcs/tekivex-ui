@@ -5,6 +5,37 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.32.0] — 2026-07-09
+
+### Fixed — accessibility: the APG audit is now fully closed (zero deferrals)
+
+Completes the two remainders that v3.30.0 shipped as documented partial fixes.
+Every one of the 35 confirmed findings in `docs/A11Y-AUDIT.md` is now fully
+fixed.
+
+- **`TkxDataGrid`** — the keyboard model is complete per APG Grid:
+  - True per-cell **roving tabindex**: exactly one cell carries `tabIndex=0`
+    (initially the first; it follows arrow-key focus, survives virtual-window
+    unmounts via remembered coordinates, and editable cells join the roving
+    model instead of holding a permanent tab stop). The grid container is no
+    longer a Tab stop — Tab enters directly on the active cell and Tab leaves
+    the grid.
+  - **PageUp/PageDown** move by a viewport-sized page of rows (measured from
+    the virtualization viewport when virtual, ~10 rows otherwise), clamped.
+  - **Virtualization-aware navigation**: Arrow/Page/Ctrl+Home/Ctrl+End work in
+    absolute row space — navigating past the rendered window scrolls the
+    virtual viewport and focuses the target once it renders; Ctrl+End reaches
+    the true last row even when unrendered.
+- **`TkxCascader`** — full tree-structure semantics on the flat-column DOM:
+  `aria-level`/`aria-setsize`/`aria-posinset` on every treeitem,
+  `aria-expanded` on parents tracking the drill-in path, and `aria-owns` from
+  each expanded parent to its child column's `role="group"` (guarded so no
+  dangling idrefs).
+
+New regression tests in both suites (DataGrid 95, Cascader 8). Two DataGrid
+tests that pinned the interim v3.30 container-tab-stop model were revised to
+the final roving contract, with in-test justification.
+
 ## [3.31.0] — 2026-07-09
 
 ### Fixed — accessibility (all 5 LOW findings; APG audit now fully addressed)

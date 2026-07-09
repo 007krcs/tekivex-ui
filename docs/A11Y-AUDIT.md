@@ -35,24 +35,26 @@ baseline until these are cleared. Fixed items are struck through as cycles land.
 
 ## MEDIUM
 
-> **All 26 MEDIUM items addressed in v3.30.0**, each with regression tests in the
-> component's test file. 24 are fixed in full. Two are fixed with an honestly
-> deferred remainder:
-> - **#6 TkxCascader** — combobox↔tree wiring shipped (`aria-controls` while
->   open, `aria-activedescendant` tracking the deepest active treeitem, stable
->   treeitem ids). Deferred: nesting child groups inside parent treeitems /
->   `aria-owns`, and `aria-level`/`aria-setsize`/`aria-posinset`.
-> - **#22 TkxDataGrid** — coherent keyboard model shipped (grid root as single
->   Tab stop forwarding into the last-focused cell; Arrow keys in all four
->   directions; Home/End + Ctrl+Home/Ctrl+End; treegrid ArrowRight/ArrowLeft
->   expand/collapse; editors/checkboxes/filters not hijacked; `aria-colcount`).
->   Deferred (comment-tracked at the nav block): true per-cell roving tabindex,
->   PageUp/PageDown paging, virtualization-aware nav past the rendered window.
+> **All 26 MEDIUM items fixed** — 24 in full in v3.30.0, and the two that
+> shipped with deferred remainders were completed in v3.32.0:
+> - **#6 TkxCascader** — v3.30.0 shipped the combobox↔tree wiring
+>   (`aria-controls` while open, `aria-activedescendant`, stable treeitem ids);
+>   v3.32.0 added the full tree-structure semantics: `aria-level`/
+>   `aria-setsize`/`aria-posinset` on every treeitem, `aria-expanded` on
+>   parents tracking the drill-in path, and `aria-owns` from each expanded
+>   parent to its child column's `role="group"` (guarded against dangling
+>   idrefs).
+> - **#22 TkxDataGrid** — v3.30.0 shipped the coherent keyboard model (Arrow
+>   keys in four directions, Home/End + Ctrl variants, treegrid
+>   expand/collapse, editors not hijacked, `aria-colcount`); v3.32.0 completed
+>   it: true per-cell roving tabindex (exactly one cell tabIndex=0, surviving
+>   virtual-window unmounts), PageUp/PageDown paging sized to the virtual
+>   viewport, and virtualization-aware navigation (Ctrl+End scrolls to and
+>   focuses the true last row even when unrendered).
 >
-> Also intentionally skipped in #15 (TkxDatePicker): `role="grid"` markup — the
+> Intentionally skipped in #15 (TkxDatePicker): `role="grid"` markup — the
 > DOM is a flat 42-button CSS grid, and `role="grid"` without real row structure
-> would be invalid ARIA; the audit listed it as optional. The 5 LOW findings
-> remain for a later cycle.
+> would be invalid ARIA; the audit listed it as optional.
 
 ### 1. TkxSelect trigger — multi-select tag remove
 - **Violation:** WCAG 2.1.1 (Keyboard) + invalid HTML content model: interactive span role=&quot;button&quot; tabIndex=-1 controls (per-tag ✕ and Clear all) are rendered as descendants of the native &lt;button&gt; trigger. Nesting interactive content inside a button is invalid HTML, and tabIndex=-1 keeps both out of the tab order. handleTriggerKeyDown (lines 364-404) has no Backspace/Delete or clear key handling, so there is no keyboard path to Clear all at all; individual tags can only be removed by reopening the listbox and toggling each option off.
@@ -166,9 +168,8 @@ baseline until these are cleared. Fixed items are struck through as cycles land.
 > (`headingLevel` prop, redundant `role="button"` removed), NumberInput
 > `role="spinbutton"` (+ `aria-valuetext`/`aria-readonly`), Slider visible-label
 > → thumb association via `aria-labelledby`, and Field `aria-describedby`
-> idrefs aligned with the actual render gates. With this, **all 35 confirmed
-> findings from this audit are addressed** (two documented partial deferrals
-> remain under MEDIUM #6 and #22).
+> idrefs aligned with the actual render gates. As of v3.32.0, **all 35
+> confirmed findings from this audit are fully fixed — nothing deferred.**
 
 ### 1. TkxCommandPalette
 - **Violation:** The role="combobox" search <input> (src/components/TkxCommandPalette.tsx lines 379-402) has no robust accessible name: no aria-label/aria-labelledby, no associated <label>/htmlFor (no <label> element exists in the component), and the adjacent 🔍 icon (line 378) is aria-hidden="true". It relies solely on the placeholder ('Type a command…'). The parent role="dialog" aria-label (line 334) names the dialog, not the combobox.
