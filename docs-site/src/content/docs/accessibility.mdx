@@ -1,0 +1,182 @@
+---
+title: Accessibility
+description: How tekivex-ui approaches WCAG and WAI-ARIA — an adversarially-verified APG audit, 35 confirmed findings, all fixed across v3.29–v3.32, with regression tests.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+`tekivex-ui` targets **WCAG 2.1 AA**, with WAI-ARIA Authoring Practices (APG)
+patterns implemented throughout. AAA is an aspiration we work toward, not a
+blanket guarantee — this page explains exactly what that means, what we found
+when we audited ourselves, and what we changed.
+
+## The audit (July 2026)
+
+We ran an internal, adversarially-verified audit of every interactive
+component against its WAI-ARIA APG pattern: five independent reviewers
+proposed findings, and each finding was then re-verified against the source
+with a default verdict of *refuted* — only confirmed defects were kept.
+
+The result was **35 confirmed violations** (4 high, 26 medium, 5 low). We
+published the full findings in
+[`docs/A11Y-AUDIT.md`](https://github.com/007krcs/tekivex-ui/blob/master/docs/A11Y-AUDIT.md)
+and walked back the library's earlier unqualified "WCAG 2.1 AAA" claim, because
+it wasn't true. As of **v3.32.0, all 35 findings are fixed — nothing
+deferred** — each with regression tests.
+
+<Aside type="note">
+Honesty policy: when a claim and reality diverge, we fix the claim first and
+then the code. The audit document keeps the original violation text for every
+finding so you can verify the fixes yourself.
+</Aside>
+
+## What changed, release by release
+
+### v3.29.0 — the 4 HIGH findings (keyboard-only users were blocked)
+
+| Component | What was broken | What changed |
+|---|---|---|
+| `TkxDropdown` | A non-interactive trigger (icon/text) made the menu impossible to open by keyboard (WCAG 2.1.1) | The trigger wrapper is promoted to a focusable menu button (Enter / Space / ArrowDown) — but **only when the trigger isn't already interactive**, so passing a real `<button>` never produces a duplicate control |
+| `TkxMenu` | Arrow keys moved only a visual highlight; screen readers announced nothing | Every item has a stable id and the menu panel exposes `aria-activedescendant`, so AT announces each traversed item |
+| `TkxCascader` | The option tree was completely mouse-only | Tree items are focusable; Enter/Space selects, ArrowRight drills in, ArrowLeft steps back |
+| `TkxCarousel` | Auto-advancing slides had no keyboard-reachable pause (hover-only) — WCAG 2.2.2 Pause, Stop, Hide | A persistent, keyboard-accessible Play/Pause toggle renders whenever `autoPlay` is on |
+
+### v3.30.0 — all 26 MEDIUM findings, across 20 components
+
+**Dialog focus management**
+
+- `TkxCommandPalette` and `TkxColorPicker` now trap Tab inside their dialogs
+  and restore focus to the opener on **every** close path — Escape, selecting
+  an item, backdrop or outside click.
+- `TkxDrawer` gained an accessible-name fallback: a new `ariaLabel` prop, with
+  a `"Drawer"` default, so an untitled drawer is never a nameless dialog.
+
+**Keyboard-operable custom controls**
+
+- `TkxColorPicker`'s saturation/brightness area, hue track, and alpha track —
+  previously mouse-only `<div>`s — are real ARIA sliders: `role="slider"`,
+  `aria-valuemin/max/now/valuetext`, Arrow keys (Shift+Arrow and
+  PageUp/PageDown step by 10, Home/End jump), and a visible focus ring. The
+  2D area maps ArrowLeft/Right to saturation and ArrowUp/Down to brightness.
+- `TkxStepper`'s clickable steps and `TkxPopover`'s non-interactive triggers
+  are focusable and Enter/Space-operable (real `<button>` triggers stay
+  untouched — no duplicate controls).
+- `TkxSpeedDial` returns focus to the FAB when closed from the keyboard, and
+  its `aria-controls` now points at the real, visible `role="menu"` (the
+  hidden duplicate menu is gone).
+
+**Combobox contracts**
+
+- Searchable `TkxSelect` moves the full combobox contract (`aria-expanded`,
+  `aria-controls`, `aria-activedescendant`, `aria-autocomplete`) onto the
+  search input that actually holds focus — previously it sat on a button the
+  user had already left. Multi-select tag ✕ and Clear-all are real sibling
+  `<button>`s (no invalid interactive-in-interactive nesting), and Backspace
+  on the trigger removes the last tag.
+- `TkxMentions` exposes the active suggestion via `aria-activedescendant`.
+- `TkxDatePicker` wires `aria-controls` to its dialog and ships a **full
+  roving-tabindex calendar keyboard model**: focus enters the grid on open (or
+  ArrowDown from the input), Arrow keys move the focused day — including
+  across month boundaries — Enter/Space selects, Escape returns focus to the
+  input.
+- `TkxRating` exposes arrow-key changes via `aria-activedescendant` on the
+  radio group.
+
+**Correct semantics**
+
+- `TkxDropdown` selectable items dropped the invalid `aria-selected` (not a
+  supported state on `menuitem`) for the APG-correct `menuitemradio` /
+  `menuitemcheckbox` + `aria-checked`.
+- `TkxCarousel` hidden and cloned slides are `inert` — keyboard focus can no
+  longer land on off-screen slides — and the thumbnail strip dropped its fake
+  `tablist`/`tab` roles for a labeled group of buttons with `aria-current`.
+- `TkxAccordion` collapsed panels leave the accessibility tree
+  (`aria-hidden` + `inert` once the collapse animation ends), so content
+  behind a closed disclosure is neither read nor Tab-reachable.
+- `TkxTag`'s remove button is a **sibling** of the clickable body, not a
+  descendant — two independent tab stops, no nested interactive elements.
+
+**Widget plumbing**
+
+- `TkxTabs` derives its tab count from the actual tabs — arrow navigation no
+  longer silently no-ops unless a consumer hand-passed `tabCount` — and arrow
+  keys, Home, and End all skip disabled tabs.
+- `TkxSlider` sets `aria-valuetext` from your `formatValue`, so AT announces
+  "$50" rather than "50".
+- `TkxTable` sets `aria-rowcount` in virtual mode so windowed `aria-rowindex`
+  values have a declared total.
+- `TkxDataGrid` gained its keyboard model (completed in v3.32.0, below).
+
+### v3.31.0 — the 5 LOW findings + localized a11y labels
+
+- `TkxCommandPalette`'s search combobox has a real accessible name (was
+  placeholder-only), localizable via the new `searchCommands` locale key.
+- `TkxAccordion` wraps each trigger in `role="heading"` with a new
+  `headingLevel` prop (default 3) for screen-reader heading navigation, and
+  the redundant `role="button"` on the native button was removed.
+- `TkxNumberInput` is a proper `role="spinbutton"` — its
+  `aria-valuemin/max/now` previously sat on a textbox role where AT ignores
+  them entirely. Adds `aria-valuetext` for formatted values and
+  `aria-readonly`.
+- `TkxSlider`'s visible label now actually names the thumb via
+  `aria-labelledby` (a `label[for]` can't activate a `role="slider"` div, so
+  the old association was dangling). Range thumbs keep distinguishable
+  "start"/"end" names.
+- `TkxField` no longer emits dangling `aria-describedby` idrefs (hint id while
+  an error is shown; error id when `isInvalid` has no error string).
+
+Also in v3.31.0: the seven a11y label keys — `selectNoOptions`,
+`dropdownMenu`, `commandPalette`, `dataGrid`, `pagination`, `dismiss`,
+`searchCommands` — got native translations in **all 44 locales**, using
+platform-conventional terminology per language.
+
+### v3.32.0 — the last two deferrals, closed
+
+- **`TkxDataGrid`** — the complete APG Grid keyboard model:
+  - True per-cell **roving tabindex**: exactly one cell holds `tabIndex=0`;
+    Tab enters the grid directly on the active cell and Tab leaves it (the
+    container is no longer a tab stop). The active cell survives
+    virtual-window unmounts via remembered coordinates.
+  - **PageUp/PageDown** move by a viewport-sized page of rows.
+  - **Virtualization-aware navigation**: Arrow/Page/Ctrl+Home/Ctrl+End work in
+    absolute row space — moving past the rendered window scrolls the virtual
+    viewport and focuses the target once it renders. Ctrl+End reaches the
+    true last row even when it isn't rendered.
+  - Plus, from v3.30.0: four-direction arrows, Home/End + Ctrl variants,
+    treegrid ArrowRight/ArrowLeft expand/collapse, `aria-colcount`, and
+    editors/checkboxes/filters are never hijacked.
+- **`TkxCascader`** — full tree-structure semantics on its flat-column DOM:
+  `aria-level`/`aria-setsize`/`aria-posinset` on every treeitem,
+  `aria-expanded` on parents tracking the drill-in path, and `aria-owns` from
+  each expanded parent to its child column's `role="group"` (guarded against
+  dangling idrefs).
+
+## One deliberate non-change
+
+`TkxDatePicker` does **not** use `role="grid"` markup for its calendar: the
+DOM is a flat 42-button CSS grid, and `role="grid"` without real row structure
+would be *invalid* ARIA. The audit listed it as optional; the calendar is
+fully keyboard-operable and each day button is individually labeled, which is
+the part that matters to users.
+
+## How it's kept honest
+
+- Every fix has regression tests — the suite grew from 2,058 to **2,168
+  tests** across the four releases (`tests/a11y-high-fixes.test.tsx`,
+  `tests/a11y-low-fixes.test.tsx`, and per-component suites).
+- The [audit document](https://github.com/007krcs/tekivex-ui/blob/master/docs/A11Y-AUDIT.md)
+  preserves the original violation text of all 35 findings alongside what
+  shipped, so the fixes are independently checkable.
+- This was an internal audit. It is thorough, but it is not a substitute for
+  testing with real assistive-technology users, and we don't claim
+  third-party certification. External audit-firm outreach is in progress.
+
+## New props from this work
+
+| Component | Prop | Default | Purpose |
+|---|---|---|---|
+| `TkxDrawer` | `ariaLabel?: string` | `"Drawer"` | Accessible name when no `title` is set |
+| `TkxAccordion` | `headingLevel?: number` | `3` | ARIA heading level wrapping each item trigger |
+
+Both are additive — no breaking changes were introduced by any of the four
+releases.

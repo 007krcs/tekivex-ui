@@ -8,7 +8,7 @@ export function ChatBasic() {
   const [msgs, setMsgs] = useState<Msg[]>([
     { id: '1', role: 'system',    content: 'You are a helpful assistant.' },
     { id: '2', role: 'user',      content: 'What is TekiVex UI?',                                                           timestamp: new Date() },
-    { id: '3', role: 'assistant', content: 'A production-grade React component library with 116 components, WCAG 2.1 AAA, and a published security threat model.', timestamp: new Date() },
+    { id: '3', role: 'assistant', content: 'A production-grade React component library with 116 components, WCAG 2.1 AA with WAI-ARIA APG patterns, and a published security threat model.', timestamp: new Date() },
   ]);
   return (
     <Preview label="LLM-style chat — type below to send" style={{ flexDirection: 'column', alignItems: 'stretch' }}>

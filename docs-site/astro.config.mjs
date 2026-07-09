@@ -170,6 +170,7 @@ export default defineConfig({
           items: [
             { label: 'Companion packages', link: '/ecosystem/' },
             { label: 'Security model', link: '/security/' },
+            { label: 'Accessibility', link: '/accessibility/' },
             { label: 'License', link: '/license/' },
           ],
         },

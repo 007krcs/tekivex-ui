@@ -13,7 +13,7 @@ WCAG 2.1 AAA target (third-party audit on roadmap, not yet completed) · WAI-ARI
 [![License: MIT](https://img.shields.io/badge/License-MIT-00f5d4.svg)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18+-61dafb.svg?logo=react&logoColor=white)](https://react.dev/)
-[![WCAG 2.1 AAA](https://img.shields.io/badge/WCAG-2.1%20AAA-00c853.svg)](https://www.w3.org/TR/WCAG21/)
+[![WCAG 2.1 AA + APG](https://img.shields.io/badge/WCAG-2.1%20AA%20%2B%20APG-00c853.svg)](https://www.w3.org/TR/WCAG21/)
 [![Tests](https://img.shields.io/badge/Tests-1798%20passing-00c853.svg)](#testing)
 [![SecurityCore](https://img.shields.io/badge/SecurityCore-v3.0-f72585.svg)](./docs/SECURITY-THREAT-MODEL.md)
 [![Socket.dev](https://socket.dev/api/badge/npm/package/tekivex-ui)](https://socket.dev/npm/package/tekivex-ui)
@@ -564,12 +564,14 @@ const aaa   = meetsAAA('#00f5d4', '#0a0a1a');       // → true  (≥ 7:1)
 
 ## Accessibility
 
-We target **WCAG 2.1 AAA** — the highest accessibility standard. Self-tested against the criteria below; **a third-party audit is on the roadmap and has not been completed.** Treat this section as our internal compliance target, not a certification.
+We ship **WCAG 2.1 AA with WAI-ARIA APG patterns throughout**, and work toward AAA as a tracked aspiration. **A third-party audit is on the roadmap and has not been completed** — treat this section as our internal compliance target, not a certification.
+
+In July 2026 we ran an adversarially-verified internal audit of every interactive component against its APG pattern. It confirmed **35 violations** (4 high, 26 medium, 5 low) — published in full in [`docs/A11Y-AUDIT.md`](docs/A11Y-AUDIT.md) — and **all 35 were fixed across v3.29.0–v3.32.0** with regression tests (suite: 2,058 → 2,168 tests). Highlights: focus traps + focus restore in every dialog surface, full keyboard models for DataGrid (roving tabindex, virtualization-aware navigation) and DatePicker (roving calendar grid), real ARIA sliders in ColorPicker, correct menu semantics in Dropdown, and `inert` off-screen carousel slides. Details on the [Accessibility docs page](https://ui.tekivex.com/docs/accessibility/).
 
 - ✅ Contrast ratio ≥ **7:1** for all text (AAA, not just AA's 4.5:1) — verified via internal `meetsAAA()` helper
-- ✅ Full **keyboard navigation** — Tab, Enter, Space, Arrow keys, Escape
-- ✅ Correct **ARIA roles, states & properties** (WAI-ARIA 1.2)
-- ✅ **Focus management** — focus trap in modals, visible focus rings
+- ✅ Full **keyboard navigation** — Tab, Enter, Space, Arrow keys, Escape (APG-audited)
+- ✅ Correct **ARIA roles, states & properties** (WAI-ARIA 1.2, APG-audited)
+- ✅ **Focus management** — focus trap + focus restore in modals, drawers, palettes, pickers; visible focus rings
 - ✅ **Reduced-motion** — all animations respect `prefers-reduced-motion`
 - ✅ **Screen reader** tested — live regions, `sr-only` text, meaningful `alt`
 - ✅ **RTL support** — layout mirrors automatically for Arabic, Hebrew, Persian
