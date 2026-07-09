@@ -521,4 +521,85 @@ describe('TkxSelect', () => {
       expect(screen.getAllByRole('option')).toHaveLength(2);
     });
   });
+
+  // ── A11y regressions (MEDIUM audit fixes) ────────────────────────────────
+  describe('a11y regressions (medium audit fixes)', () => {
+    it('searchable: search input owns the combobox contract and aria-activedescendant follows ArrowDown', () => {
+      render(<TkxSelect options={options} searchable />, { wrapper: Wrapper });
+      fireEvent.click(getCombobox());
+      const input = screen.getByLabelText(/search options/i);
+      expect(input).toHaveAttribute('role', 'combobox');
+      expect(input).toHaveAttribute('aria-expanded', 'true');
+      expect(input).toHaveAttribute('aria-autocomplete', 'list');
+      expect(input.getAttribute('aria-controls')).toBe(getListbox()!.id);
+      // Open sets activeIndex 0 → apple
+      expect(input.getAttribute('aria-activedescendant')).toMatch(/-opt-apple$/);
+      fireEvent.keyDown(input, { key: 'ArrowDown' });
+      const activeId = input.getAttribute('aria-activedescendant')!;
+      expect(activeId).toMatch(/-opt-banana$/);
+      expect(document.getElementById(activeId)).toHaveAttribute('role', 'option');
+    });
+
+    it('searchable: trigger is downgraded while open, so exactly one combobox exists', () => {
+      render(<TkxSelect options={options} searchable />, { wrapper: Wrapper });
+      fireEvent.click(getCombobox());
+      const comboboxes = screen.getAllByRole('combobox');
+      expect(comboboxes).toHaveLength(1);
+      expect(comboboxes[0].tagName).toBe('INPUT');
+    });
+
+    it('tag remove and clear-all are real buttons, not nested inside another interactive element', () => {
+      render(
+        <TkxSelect options={options} multiple clearable defaultValue={['apple']} />,
+        { wrapper: Wrapper },
+      );
+      const remove = screen.getByLabelText('Remove Apple');
+      const clear = screen.getByLabelText(/clear selection/i);
+      expect(remove.tagName).toBe('BUTTON');
+      expect(clear.tagName).toBe('BUTTON');
+      // No interactive ancestor (previously nested inside the trigger <button>)
+      expect(remove.parentElement?.closest('button, [role="button"]')).toBeNull();
+      expect(clear.parentElement?.closest('button, [role="button"]')).toBeNull();
+    });
+
+    it('tag remove is keyboard-operable (focusable, Enter activates)', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      render(
+        <TkxSelect options={options} multiple defaultValue={['apple', 'banana']} onChange={onChange} />,
+        { wrapper: Wrapper },
+      );
+      const remove = screen.getByLabelText('Remove Apple');
+      remove.focus();
+      expect(document.activeElement).toBe(remove);
+      await user.keyboard('{Enter}');
+      expect(onChange).toHaveBeenLastCalledWith(['banana']);
+      // Activation must not toggle the dropdown open
+      expect(getListbox()).not.toBeInTheDocument();
+    });
+
+    it('clear-all is keyboard-operable (focusable, Enter activates)', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      render(
+        <TkxSelect options={options} multiple clearable defaultValue={['apple']} onChange={onChange} />,
+        { wrapper: Wrapper },
+      );
+      const clear = screen.getByLabelText(/clear selection/i);
+      clear.focus();
+      expect(document.activeElement).toBe(clear);
+      await user.keyboard('{Enter}');
+      expect(onChange).toHaveBeenLastCalledWith([]);
+    });
+
+    it('Backspace on the trigger removes the last selected tag (multiple)', () => {
+      const onChange = vi.fn();
+      render(
+        <TkxSelect options={options} multiple defaultValue={['apple', 'banana']} onChange={onChange} />,
+        { wrapper: Wrapper },
+      );
+      fireEvent.keyDown(getCombobox(), { key: 'Backspace' });
+      expect(onChange).toHaveBeenLastCalledWith(['apple']);
+    });
+  });
 });

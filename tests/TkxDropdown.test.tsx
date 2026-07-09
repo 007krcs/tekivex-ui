@@ -197,7 +197,9 @@ describe('Selection', () => {
     expect(onSelect).toHaveBeenCalledWith('paste', basicItems[1]);
   });
 
-  it('selectedKeys highlights the selected item with aria-selected', () => {
+  // aria-selected is not a supported state on menu items (APG). Single-select
+  // selectable items are now role="menuitemradio" with aria-checked.
+  it('selectedKeys marks the selected item as menuitemradio with aria-checked', () => {
     render(
       <TkxDropdown
         trigger={<button>Open</button>}
@@ -207,8 +209,8 @@ describe('Selection', () => {
       { wrapper: Wrapper },
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    const copyItem = screen.getAllByRole('menuitem').find(
-      (el) => el.getAttribute('aria-selected') === 'true',
+    const copyItem = screen.getAllByRole('menuitemradio').find(
+      (el) => el.getAttribute('aria-checked') === 'true',
     );
     expect(copyItem).toBeTruthy();
   });
@@ -225,11 +227,11 @@ describe('Selection', () => {
       { wrapper: Wrapper },
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getAllByRole('menuitem')[0]);
+    fireEvent.click(screen.getAllByRole('menuitemcheckbox')[0]);
     expect(screen.getByRole('menu')).toBeInTheDocument();
   });
 
-  it('multiSelect shows aria-checked on selected items', () => {
+  it('multiSelect shows aria-checked on selected menuitemcheckbox items', () => {
     render(
       <TkxDropdown
         trigger={<button>Open</button>}
@@ -240,10 +242,39 @@ describe('Selection', () => {
       { wrapper: Wrapper },
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    const checkedItems = screen.getAllByRole('menuitem').filter(
+    const checkedItems = screen.getAllByRole('menuitemcheckbox').filter(
       (el) => el.getAttribute('aria-checked') === 'true',
     );
     expect(checkedItems).toHaveLength(2);
+  });
+
+  // Regression (a11y MEDIUM): aria-selected must never appear on menu items,
+  // and plain action menus (no selection props) stay role="menuitem" with no
+  // checked state.
+  it('never emits aria-selected; action-only menus keep plain menuitem role', () => {
+    const { unmount } = render(
+      <TkxDropdown
+        trigger={<button>Open</button>}
+        items={basicItems}
+        selectedKeys={['copy']}
+      />,
+      { wrapper: Wrapper },
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(document.querySelector('[role="menu"] [aria-selected]')).toBeNull();
+    unmount();
+
+    render(
+      <TkxDropdown trigger={<button>Open</button>} items={basicItems} />,
+      { wrapper: Wrapper },
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    const plainItems = screen.getAllByRole('menuitem');
+    expect(plainItems.length).toBeGreaterThan(0);
+    plainItems.forEach((el) => {
+      expect(el).not.toHaveAttribute('aria-checked');
+      expect(el).not.toHaveAttribute('aria-selected');
+    });
   });
 });
 

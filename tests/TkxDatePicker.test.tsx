@@ -1051,4 +1051,169 @@ describe('TkxDatePicker', () => {
       expect((TkxDatePicker as { displayName?: string }).displayName).toBe('TkxDatePicker');
     });
   });
+
+  // ── A11y: combobox → dialog wiring (audit MEDIUM #14) ────────────────────
+  describe('a11y: aria-controls / dialog wiring', () => {
+    it('input has no aria-controls while closed', () => {
+      const { container } = wrap(<TkxDatePicker label="X" />);
+      expect(getInput(container).getAttribute('aria-controls')).toBeNull();
+    });
+
+    it('open input aria-controls points at the dialog id', () => {
+      const { container } = wrap(<TkxDatePicker label="X" />);
+      const input = getInput(container);
+      openPicker(input);
+      const dlg = getDialog()!;
+      expect(dlg.id).toBeTruthy();
+      expect(input.getAttribute('aria-controls')).toBe(dlg.id);
+    });
+
+    it('dialog has role="dialog" and an accessible name (label used when present)', () => {
+      const { container } = wrap(<TkxDatePicker label="Birthday" />);
+      openPicker(getInput(container));
+      const dlg = getDialog()!;
+      expect(dlg.getAttribute('role')).toBe('dialog');
+      expect(dlg.getAttribute('aria-label')).toBe('Birthday');
+    });
+
+    it('dialog falls back to "Date picker" accessible name without a label', () => {
+      const { container } = wrap(<TkxDatePicker />);
+      openPicker(getInput(container));
+      expect(getDialog()!.getAttribute('aria-label')).toBe('Date picker');
+    });
+  });
+
+  // ── A11y: calendar keyboard operability (audit MEDIUM #15) ───────────────
+  describe('a11y: calendar grid keyboard operability', () => {
+    function openViaToggle(container: HTMLElement) {
+      const toggle = container.querySelector('button[aria-label="Open calendar"]') as HTMLButtonElement;
+      fireEvent.click(toggle);
+    }
+
+    it('exactly one day cell is in the Tab order (roving tabindex)', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={() => {}} label="X" />,
+      );
+      openPicker(getInput(container));
+      const tabbable = document.body.querySelectorAll('[data-tkx-day][tabindex="0"]');
+      expect(tabbable.length).toBe(1);
+      expect(getDayByLabel(2026, 4, 15).tabIndex).toBe(0);
+      expect(getDayByLabel(2026, 4, 16).tabIndex).toBe(-1);
+    });
+
+    it('dual-month view still exposes exactly one tabbable day cell', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={() => {}} numberOfMonths={2} label="X" />,
+      );
+      openPicker(getInput(container));
+      const tabbable = document.body.querySelectorAll('[data-tkx-day][tabindex="0"]');
+      expect(tabbable.length).toBe(1);
+    });
+
+    it('opening via the toggle button moves DOM focus into the grid (selected day)', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={() => {}} label="X" />,
+      );
+      openViaToggle(container);
+      expect(document.activeElement).toBe(getDayByLabel(2026, 4, 15));
+    });
+
+    it('ArrowDown on the input moves focus into the grid when open', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={() => {}} label="X" />,
+      );
+      const input = getInput(container);
+      openPicker(input);
+      fireEvent.keyDown(input, { key: 'ArrowDown' });
+      expect(document.activeElement).toBe(getDayByLabel(2026, 4, 15));
+    });
+
+    it('ArrowDown on the input opens the dialog and focuses the grid when closed', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={() => {}} label="X" />,
+      );
+      fireEvent.keyDown(getInput(container), { key: 'ArrowDown' });
+      expect(getDialog()).not.toBeNull();
+      expect(document.activeElement).toBe(getDayByLabel(2026, 4, 15));
+    });
+
+    it('Arrow keys move DOM focus between day cells (roving tabindex follows)', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={() => {}} label="X" />,
+      );
+      openViaToggle(container);
+      const day15 = getDayByLabel(2026, 4, 15);
+      fireEvent.keyDown(day15, { key: 'ArrowRight' });
+      const day16 = getDayByLabel(2026, 4, 16);
+      expect(document.activeElement).toBe(day16);
+      expect(day16.tabIndex).toBe(0);
+      expect(getDayByLabel(2026, 4, 15).tabIndex).toBe(-1);
+      fireEvent.keyDown(day16, { key: 'ArrowDown' });
+      expect(document.activeElement).toBe(getDayByLabel(2026, 4, 23));
+    });
+
+    it('Arrow navigation across a month boundary moves the view and keeps DOM focus', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 31)} onChange={() => {}} label="X" />,
+      );
+      openViaToggle(container);
+      fireEvent.keyDown(getDayByLabel(2026, 4, 31), { key: 'ArrowRight' });
+      // View flips to June 2026 and focus lands on June 1.
+      expect(within(getDialog()!).getByText('June')).toBeInTheDocument();
+      expect(document.activeElement).toBe(getDayByLabel(2026, 5, 1));
+    });
+
+    it('Enter on the focused day cell selects it', () => {
+      const onChange = vi.fn();
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={onChange} label="X" />,
+      );
+      openViaToggle(container);
+      fireEvent.keyDown(getDayByLabel(2026, 4, 15), { key: 'ArrowRight' });
+      fireEvent.keyDown(getDayByLabel(2026, 4, 16), { key: 'Enter' });
+      const arg = onChange.mock.calls[onChange.mock.calls.length - 1][0] as Date;
+      expect(arg.getDate()).toBe(16);
+    });
+
+    it('Space on the focused day cell selects it', () => {
+      const onChange = vi.fn();
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={onChange} label="X" />,
+      );
+      openViaToggle(container);
+      fireEvent.keyDown(getDayByLabel(2026, 4, 15), { key: 'ArrowRight' });
+      fireEvent.keyDown(getDayByLabel(2026, 4, 16), { key: ' ' });
+      const arg = onChange.mock.calls[onChange.mock.calls.length - 1][0] as Date;
+      expect(arg.getDate()).toBe(16);
+    });
+
+    it('Escape while focus is inside the grid closes and returns focus to the input', () => {
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={() => {}} label="X" />,
+      );
+      openViaToggle(container);
+      expect(document.activeElement).toBe(getDayByLabel(2026, 4, 15));
+      act(() => {
+        document.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+        );
+      });
+      expect(getDialog()).toBeNull();
+      expect(document.activeElement).toBe(getInput(container));
+    });
+
+    it('keys on footer buttons are not hijacked by the grid handler', () => {
+      const onChange = vi.fn();
+      const { container } = wrap(
+        <TkxDatePicker value={new Date(2026, 4, 15)} onChange={onChange} label="X" />,
+      );
+      openViaToggle(container);
+      // Focus a day so focusedDate is set, then press Enter on the footer
+      // "Today" button — the grid handler must NOT select the focused day.
+      fireEvent.keyDown(getDayByLabel(2026, 4, 15), { key: 'ArrowRight' });
+      const todayBtn = within(getDialog()!).getAllByText('Today')[0];
+      fireEvent.keyDown(todayBtn, { key: 'Enter' });
+      expect(onChange).not.toHaveBeenCalled();
+    });
+  });
 });

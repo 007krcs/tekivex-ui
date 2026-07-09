@@ -515,6 +515,15 @@ interface CalendarMonthProps {
   locale: string;
   weekdayLabels: string[];
   weekStartsOn: WeekStartsOn;
+  /** The single date whose cell is in the Tab order (roving tabindex). */
+  rovingDate: Date;
+  /** Registers current-month day-cell buttons so the parent can move DOM focus. */
+  registerDayRef: (key: string, el: HTMLButtonElement | null) => void;
+}
+
+/** Stable per-day key for the day-cell ref map. */
+function dayKey(d: Date): string {
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 }
 
 function CalendarMonth({
@@ -535,6 +544,8 @@ function CalendarMonth({
   locale,
   weekdayLabels,
   weekStartsOn,
+  rovingDate,
+  registerDayRef,
 }: CalendarMonthProps) {
   const cells = getCalendarGrid(year, month, weekStartsOn);
 
@@ -626,10 +637,18 @@ function CalendarMonth({
             day: 'numeric',
           });
 
+          // Roving tabindex: exactly one current-month cell (the roving date)
+          // sits in the Tab order; Arrow keys move real DOM focus between
+          // cells (WAI-ARIA APG date-picker grid keyboard model).
+          const isRoving = isCurrentMonth && isSameDay(cell, rovingDate);
+
           return (
             <button
               key={idx}
               type="button"
+              ref={isCurrentMonth ? (el) => registerDayRef(dayKey(cell), el) : undefined}
+              data-tkx-day=""
+              tabIndex={isRoving ? 0 : -1}
               aria-label={ariaLabel}
               aria-pressed={isFullySelected}
               aria-disabled={disabled}
@@ -812,6 +831,25 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
   // input.focus() that follows doesn't immediately re-open via onFocus.
   // Cleared on the next user-initiated click.
   const suppressNextFocusOpen = useRef(false);
+
+  // ── A11y: dialog id + calendar grid focus management ─────────────────────
+  //
+  // The trigger input references the popup via aria-controls, and the day
+  // grid follows the APG roving-tabindex model: exactly one day cell is in
+  // the Tab order, Arrow keys move real DOM focus between cells.
+  const dialogId = `${id}-dialog`;
+  const dayRefs = useRef(new Map<string, HTMLButtonElement>());
+  const registerDayRef = useCallback((key: string, el: HTMLButtonElement | null) => {
+    if (el) dayRefs.current.set(key, el);
+    else dayRefs.current.delete(key);
+  }, []);
+  // Set by the arrow-key handler so the post-render effect moves DOM focus
+  // to the newly focused day cell (which may live in a freshly rendered month).
+  const pendingGridFocus = useRef(false);
+  // Set when the calendar is opened explicitly (toggle button / ArrowDown on
+  // the input) so focus moves into the grid once the popup has rendered.
+  // Opening via plain input focus keeps focus in the input to preserve typing.
+  const focusGridOnOpen = useRef(false);
 
   const POPUP_ESTIMATED_HEIGHT = showPresets ? 420 : showTime ? 480 : 360;
 
@@ -1031,6 +1069,11 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
 
   const handleCalendarKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (calView !== 'day') return;
+    // Only handle keys aimed at the dialog itself or a day cell, so the
+    // footer/preset/time-column buttons keep their native key behavior
+    // (e.g. Enter on "Apply" must click Apply, not select a day).
+    const target = e.target as HTMLElement;
+    if (target !== e.currentTarget && !target.hasAttribute('data-tkx-day')) return;
     const base = focusedDate ?? selectedDate ?? today;
     let next: Date | null = null;
 
@@ -1038,11 +1081,18 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
     else if (e.key === 'ArrowLeft') next = new Date(base.getFullYear(), base.getMonth(), base.getDate() - 1);
     else if (e.key === 'ArrowDown') next = new Date(base.getFullYear(), base.getMonth(), base.getDate() + 7);
     else if (e.key === 'ArrowUp') next = new Date(base.getFullYear(), base.getMonth(), base.getDate() - 7);
-    else if (e.key === 'Enter' && focusedDate) { selectDate(focusedDate); return; }
+    else if ((e.key === 'Enter' || e.key === ' ') && focusedDate) {
+      // preventDefault so the focused day <button>'s native Enter/Space click
+      // doesn't fire selectDate a second time (range/multiple would toggle).
+      e.preventDefault();
+      selectDate(focusedDate);
+      return;
+    }
 
     if (next) {
       e.preventDefault();
       setFocusedDate(next);
+      pendingGridFocus.current = true;
       if (next.getMonth() !== viewMonth || next.getFullYear() !== viewYear) {
         setViewMonth(next.getMonth());
         setViewYear(next.getFullYear());
@@ -1081,6 +1131,35 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
   const year2 = viewMonth === 11 ? viewYear + 1 : viewYear;
 
   const dualView = numberOfMonths >= 2;
+
+  // ── Roving-tabindex target ──────────────────────────────────────────────────
+  //
+  // The one day cell that participates in the Tab order. Prefers the cell the
+  // user last navigated to, then the selection, then today; falls back to the
+  // 1st of the visible month when none of those is currently rendered.
+  const rovingBase = focusedDate ?? selectedDate ?? selectedRange[0] ?? multiDates[0] ?? today;
+  const rovingInView =
+    (rovingBase.getFullYear() === viewYear && rovingBase.getMonth() === viewMonth) ||
+    (dualView && rovingBase.getFullYear() === year2 && rovingBase.getMonth() === month2);
+  const rovingDate = rovingInView ? rovingBase : new Date(viewYear, viewMonth, 1);
+
+  // Move DOM focus to the day cell matching focusedDate after arrow-key
+  // navigation (post-render, so cells in a freshly rendered month exist).
+  useEffect(() => {
+    if (!pendingGridFocus.current) return;
+    pendingGridFocus.current = false;
+    if (focusedDate) dayRefs.current.get(dayKey(focusedDate))?.focus();
+  }, [focusedDate]);
+
+  // When the calendar is opened explicitly (toggle button / ArrowDown on the
+  // input), move focus into the grid so Arrow keys work immediately.
+  useEffect(() => {
+    if (open && focusGridOnOpen.current) {
+      dayRefs.current.get(dayKey(rovingDate))?.focus();
+    }
+    focusGridOnOpen.current = false;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   // ── Sanitize strings ──────────────────────────────────────────────────────────
 
@@ -1128,8 +1207,9 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
   const popupContent = (
     <div
       ref={popupRef}
+      id={dialogId}
       role="dialog"
-      aria-label="Date picker"
+      aria-label={safeLabel ?? 'Date picker'}
       aria-modal="false"
       onKeyDown={handleCalendarKeyDown}
       style={{
@@ -1370,6 +1450,8 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
               locale={locale}
               weekdayLabels={weekdayLabels}
               weekStartsOn={weekStartsOn}
+              rovingDate={rovingDate}
+              registerDayRef={registerDayRef}
             />
             {dualView && (
               <CalendarMonth
@@ -1390,6 +1472,8 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                 locale={locale}
                 weekdayLabels={weekdayLabels}
                 weekStartsOn={weekStartsOn}
+                rovingDate={rovingDate}
+                registerDayRef={registerDayRef}
               />
             )}
           </div>
@@ -1666,8 +1750,22 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
           aria-invalid={isInvalid}
           aria-haspopup="dialog"
           aria-expanded={open}
+          aria-controls={open ? dialogId : undefined}
           readOnly={mode === 'range' || mode === 'multiple'}
           onChange={(e) => handleInputChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (isDisabled) return;
+            if (e.key === 'ArrowDown') {
+              // Enter the calendar grid from the input (APG combobox+dialog).
+              e.preventDefault();
+              if (open) {
+                dayRefs.current.get(dayKey(rovingDate))?.focus();
+              } else {
+                focusGridOnOpen.current = true;
+                setOpen(true);
+              }
+            }
+          }}
           onFocus={() => {
             if (isDisabled) return;
             if (suppressNextFocusOpen.current) {
@@ -1726,6 +1824,9 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
           disabled={isDisabled}
           onClick={() => {
             if (!isDisabled) {
+              // Explicit open via the calendar button moves focus into the
+              // grid (APG: dialog opens → focus lands on the current date).
+              if (!open) focusGridOnOpen.current = true;
               setOpen((o) => !o);
             }
           }}

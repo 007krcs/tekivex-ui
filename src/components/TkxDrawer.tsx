@@ -22,6 +22,12 @@ export interface TkxDrawerProps {
   placement?: DrawerPlacement;
   size?: DrawerSize;
   title?: ReactNode;
+  /**
+   * Accessible name for the dialog when no `title` is rendered. Falls back to
+   * a sensible default so an untitled drawer still has an accessible name
+   * (WCAG 4.1.2). Ignored when `title` is set (the heading names the dialog).
+   */
+  ariaLabel?: string;
   children: ReactNode;
   footer?: ReactNode;
   closeOnOverlayClick?: boolean;
@@ -102,6 +108,7 @@ export function TkxDrawer({
   placement = 'right',
   size = 'md',
   title,
+  ariaLabel,
   children,
   footer,
   closeOnOverlayClick = true,
@@ -167,7 +174,8 @@ export function TkxDrawer({
         ref={trapRef as React.RefObject<HTMLDivElement>}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
+        aria-labelledby={title !== undefined ? titleId : undefined}
+        aria-label={title !== undefined ? undefined : (ariaLabel ?? 'Drawer')}
         className={tkx('absolute flex flex-col font-sans')}
         style={{
           ...panelPositionStyle,

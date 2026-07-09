@@ -60,4 +60,38 @@ describe('TkxDrawer', () => {
     );
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
   });
+
+  // ── A11y: dialog accessible name (a11y-audit MEDIUM #16) ──────────────────
+
+  it('has a default accessible name when no title is provided', () => {
+    render(
+      <TkxDrawer isOpen onClose={() => {}}>
+        <p>Untitled content</p>
+      </TkxDrawer>,
+      { wrapper: Wrapper },
+    );
+    expect(screen.getByRole('dialog')).toHaveAccessibleName('Drawer');
+  });
+
+  it('uses the ariaLabel prop as the accessible name when untitled', () => {
+    render(
+      <TkxDrawer isOpen onClose={() => {}} ariaLabel="Filter options">
+        <p>Untitled content</p>
+      </TkxDrawer>,
+      { wrapper: Wrapper },
+    );
+    expect(screen.getByRole('dialog')).toHaveAccessibleName('Filter options');
+  });
+
+  it('is labelled by the title (ignoring ariaLabel) when a title is set', () => {
+    render(
+      <TkxDrawer isOpen onClose={() => {}} title="Settings" ariaLabel="ignored">
+        <p>Body</p>
+      </TkxDrawer>,
+      { wrapper: Wrapper },
+    );
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAccessibleName('Settings');
+    expect(dialog).not.toHaveAttribute('aria-label');
+  });
 });

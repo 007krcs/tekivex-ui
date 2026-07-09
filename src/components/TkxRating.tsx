@@ -207,6 +207,15 @@ export function TkxRating({
 
   const safeLabel = label ? sanitizeString(label) : 'Rating';
 
+  // Expose the active radio to AT: the radiogroup holds a single tab stop, so
+  // aria-activedescendant must point at the radio matching the current value
+  // for arrow-key changes to be announced (APG radiogroup, WCAG 4.1.2).
+  const activeRadioIndex = Math.ceil(activeValue) - 1;
+  const activeDescendant =
+    activeValue > 0 && activeRadioIndex >= 0 && activeRadioIndex < max
+      ? `${groupId}-${activeRadioIndex}`
+      : undefined;
+
   return (
     <div
       className={cx(
@@ -220,6 +229,7 @@ export function TkxRating({
         aria-label={safeLabel}
         aria-disabled={isDisabled}
         aria-readonly={isReadOnly}
+        aria-activedescendant={activeDescendant}
         tabIndex={isInteractive ? 0 : -1}
         onKeyDown={handleKeyDown}
         onMouseLeave={handleMouseLeave}
@@ -236,6 +246,7 @@ export function TkxRating({
           return (
             <span
               key={i}
+              id={uid}
               role="radio"
               aria-checked={
                 precision === 0.5

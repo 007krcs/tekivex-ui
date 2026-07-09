@@ -123,10 +123,76 @@ export function TkxTag({
     clickable && !reducedMotion && 'transition-opacity duration-150',
   );
 
+  const tagBody = (
+    <>
+      {leftIcon && <span aria-hidden="true" className={tkx('shrink-0 flex items-center')}>{leftIcon}</span>}
+      <span>{safeLabel}</span>
+    </>
+  );
+
+  const removeButton = onRemove && !isDisabled && (
+    <button
+      type="button"
+      aria-label={`Remove ${typeof children === 'string' ? children : 'tag'}`}
+      onClick={(e) => { e.stopPropagation(); onRemove(); }}
+      className={tkx('shrink-0 flex items-center justify-center rounded-full cursor-pointer')}
+      style={{
+        width: removeSize + 4,
+        height: removeSize + 4,
+        color: colors.color,
+        backgroundColor: 'transparent',
+        border: 'none',
+        padding: 0,
+      }}
+      tabIndex={0}
+    >
+      <svg width={removeSize} height={removeSize} viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 2l8 8M10 2L2 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    </button>
+  );
+
+  // When the tag is clickable AND removable, nesting the remove <button>
+  // inside a role="button" span puts one interactive control inside another
+  // (invalid interactive-content nesting, ambiguous focus/activation). So for
+  // clickable tags the outer span is a plain container, the tag body becomes
+  // a real inner <button>, and the remove control is its sibling.
+  if (clickable) {
+    return (
+      <span
+        className={cx(base, className)}
+        style={{
+          backgroundColor: colors.bg,
+          color: colors.color,
+          border: `1px solid ${colors.border === 'transparent' ? 'transparent' : colors.border}`,
+          ...style,
+        }}
+        {...rest}
+      >
+        <button
+          type="button"
+          disabled={isDisabled}
+          onClick={!isDisabled ? onClick : undefined}
+          className={cx(tkx('inline-flex items-center'), SIZE_GAP[size])}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            padding: 0,
+            margin: 0,
+            font: 'inherit',
+            color: 'inherit',
+            cursor: isDisabled ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {tagBody}
+        </button>
+        {removeButton}
+      </span>
+    );
+  }
+
   return (
     <span
-      role={clickable ? 'button' : undefined}
-      tabIndex={clickable && !isDisabled ? 0 : undefined}
       aria-disabled={isDisabled || undefined}
       className={cx(base, className)}
       style={{
@@ -136,36 +202,10 @@ export function TkxTag({
         ...style,
       }}
       onClick={!isDisabled ? onClick : undefined}
-      onKeyDown={
-        clickable && !isDisabled && onClick
-          ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(e as never); } }
-          : undefined
-      }
       {...rest}
     >
-      {leftIcon && <span aria-hidden="true" className={tkx('shrink-0 flex items-center')}>{leftIcon}</span>}
-      <span>{safeLabel}</span>
-      {onRemove && !isDisabled && (
-        <button
-          type="button"
-          aria-label={`Remove ${typeof children === 'string' ? children : 'tag'}`}
-          onClick={(e) => { e.stopPropagation(); onRemove(); }}
-          className={tkx('shrink-0 flex items-center justify-center rounded-full cursor-pointer')}
-          style={{
-            width: removeSize + 4,
-            height: removeSize + 4,
-            color: colors.color,
-            backgroundColor: 'transparent',
-            border: 'none',
-            padding: 0,
-          }}
-          tabIndex={0}
-        >
-          <svg width={removeSize} height={removeSize} viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M2 2l8 8M10 2L2 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-          </svg>
-        </button>
-      )}
+      {tagBody}
+      {removeButton}
     </span>
   );
 }

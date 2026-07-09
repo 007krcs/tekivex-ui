@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
 import { sanitizeString } from '../engine/security';
@@ -82,6 +82,11 @@ export function TkxCascader({
   const [open, setOpen] = useState(false);
   const [hoverPath, setHoverPath] = useState<string[]>(value);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
+  // Combobox↔tree wiring: the popup tree gets a stable id so the trigger can
+  // reference it via aria-controls, and each treeitem gets a deterministic id
+  // so the trigger's aria-activedescendant can point at the active option.
+  const treeId = useId();
+  const treeItemId = (colIdx: number, rowIdx: number) => `${treeId}-item-${colIdx}-${rowIdx}`;
 
   const safeLabel = label ? sanitizeString(label) : undefined;
   const safePlaceholder = sanitizeString(placeholder);
@@ -146,10 +151,22 @@ export function TkxCascader({
 
   const columns = getColumns(options, hoverPath);
 
+  // The active treeitem is the deepest entry of hoverPath (the option the
+  // user last hovered/navigated to). Resolve it to its column/row so the
+  // combobox can expose it via aria-activedescendant.
+  const activeColIdx = hoverPath.length - 1;
+  const activeRowIdx =
+    activeColIdx >= 0 && columns[activeColIdx]
+      ? columns[activeColIdx].findIndex((o) => o.value === hoverPath[activeColIdx])
+      : -1;
+  const activeDescendantId =
+    open && activeRowIdx >= 0 ? treeItemId(activeColIdx, activeRowIdx) : undefined;
+
   const dropdown = open
     ? createPortal(
         <div
           ref={dropdownRef}
+          id={treeId}
           role="tree"
           aria-label={safeLabel ?? 'Cascader options'}
           className={tkx('flex rounded-lg border overflow-hidden')}
@@ -176,12 +193,13 @@ export function TkxCascader({
                 borderRight: colIdx < columns.length - 1 ? `1px solid ${theme.border}` : 'none',
               }}
             >
-              {col.map((opt) => {
+              {col.map((opt, rowIdx) => {
                 const isSelected = hoverPath[colIdx] === opt.value;
                 const safeOptLabel = sanitizeString(opt.label);
                 return (
                   <li
                     key={opt.value}
+                    id={treeItemId(colIdx, rowIdx)}
                     role="treeitem"
                     aria-selected={isSelected}
                     aria-disabled={opt.disabled || undefined}
@@ -257,6 +275,10 @@ export function TkxCascader({
         role="combobox"
         aria-expanded={open}
         aria-haspopup="tree"
+        // Only reference the popup while it exists in the DOM — a dangling
+        // aria-controls idref is itself an ARIA defect.
+        aria-controls={open ? treeId : undefined}
+        aria-activedescendant={activeDescendantId}
         aria-label={safeLabel ?? 'Cascader'}
         className={tkx('w-full flex items-center justify-between rounded-lg border px-3 py-2 text-sm cursor-pointer')}
         style={{

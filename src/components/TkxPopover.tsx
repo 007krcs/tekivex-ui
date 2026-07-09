@@ -6,6 +6,7 @@ import {
   useEffect,
   useCallback,
   useId,
+  isValidElement,
   type ReactNode,
   type CSSProperties,
 } from 'react';
@@ -262,18 +263,45 @@ export function TkxPopover({
     )
   ) : null;
 
+  // A trigger is "interactive" (and thus already keyboard-operable) if it's a
+  // native button/anchor or carries its own onClick/role=button/tabIndex.
+  // Mirrors TkxDropdown's trigger promotion logic.
+  const triggerProps = isValidElement(trigger)
+    ? ((trigger as { props?: Record<string, unknown> }).props ?? {})
+    : {};
+  const triggerType = isValidElement(trigger) ? (trigger as { type?: unknown }).type : undefined;
+  const triggerIsInteractive =
+    triggerType === 'button' ||
+    triggerType === 'a' ||
+    'onClick' in triggerProps ||
+    triggerProps.role === 'button' ||
+    triggerProps.tabIndex !== undefined;
+
   return (
     <>
       <div
         ref={triggerRef}
         className={tkx('inline-flex')}
         onClick={toggle}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggle();
-          }
-        }}
+        // If the consumer passed a real interactive trigger (e.g. a <button>),
+        // it is already focusable and keyboard-operable (native Enter/Space ->
+        // click bubbles to this onClick), so the wrapper stays a passthrough.
+        // Only when the trigger is NON-interactive (span, icon, text) do we
+        // promote the wrapper to a focusable button so keyboard users can open
+        // the popover at all (was a bare div → WCAG 2.1.1).
+        role={triggerIsInteractive ? undefined : 'button'}
+        tabIndex={triggerIsInteractive ? undefined : 0}
+        onKeyDown={
+          triggerIsInteractive
+            ? undefined
+            : (e) => {
+                if (e.target !== e.currentTarget) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggle();
+                }
+              }
+        }
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={open ? popoverId : undefined}

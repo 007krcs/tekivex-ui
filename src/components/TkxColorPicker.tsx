@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../themes';
+import { useFocusTrap } from '../hooks';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -104,6 +105,17 @@ const DEFAULT_PRESETS = [
   '#475569', '#0f172a',
 ];
 
+// Keyboard step for the APG slider pattern: 1 by default, 10 with
+// Shift+Arrow or PageUp/PageDown.
+function sliderStep(e: React.KeyboardEvent): number {
+  if (e.key === 'PageUp' || e.key === 'PageDown') return 10;
+  return e.shiftKey ? 10 : 1;
+}
+
+// Visible focus ring for the custom slider tracks (double ring so it reads
+// on any hue/alpha background).
+const FOCUS_RING = '0 0 0 2px #ffffff, 0 0 0 4px #3b82f6';
+
 // ── Saturation/Brightness picker canvas ──────────────────────────────────────
 
 function SatBrightPicker({
@@ -142,10 +154,41 @@ function SatBrightPicker({
 
   const thumbX = `${sat}%`;
   const thumbY = `${100 - bright}%`;
+  const [focused, setFocused] = useState(false);
+
+  // 2D slider keyboard model (a11y-audit MEDIUM #18): Left/Right adjust
+  // saturation, Up/Down adjust brightness, Home/End jump saturation to
+  // min/max. Mirrors the mouse model, which also works in (sat, bright).
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const step = sliderStep(e);
+    const clamp = (n: number) => Math.max(0, Math.min(100, n));
+    switch (e.key) {
+      case 'ArrowRight': onChange(clamp(sat + step), bright); break;
+      case 'ArrowLeft': onChange(clamp(sat - step), bright); break;
+      case 'ArrowUp':
+      case 'PageUp': onChange(sat, clamp(bright + step)); break;
+      case 'ArrowDown':
+      case 'PageDown': onChange(sat, clamp(bright - step)); break;
+      case 'Home': onChange(0, bright); break;
+      case 'End': onChange(100, bright); break;
+      default: return;
+    }
+    e.preventDefault();
+  };
 
   return (
     <div
       ref={canvasRef}
+      role="slider"
+      tabIndex={0}
+      aria-label="Saturation and brightness"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={sat}
+      aria-valuetext={`Saturation ${sat}%, brightness ${bright}%`}
+      onKeyDown={handleKeyDown}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       style={{
         position: 'relative',
         width: '100%',
@@ -154,6 +197,8 @@ function SatBrightPicker({
         cursor: 'crosshair',
         background: `hsl(${hue}, 100%, 50%)`,
         flexShrink: 0,
+        outline: 'none',
+        boxShadow: focused ? FOCUS_RING : undefined,
       }}
       onMouseDown={(e) => { dragging.current = true; pick(e); }}
     >
@@ -210,15 +255,47 @@ function HueSlider({ hue, onChange }: { hue: number; onChange: (h: number) => vo
     };
   }, [pick]);
 
+  const [focused, setFocused] = useState(false);
+
+  // APG slider keyboard model (a11y-audit MEDIUM #18).
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const step = sliderStep(e);
+    const clamp = (n: number) => Math.max(0, Math.min(360, n));
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowUp':
+      case 'PageUp': onChange(clamp(hue + step)); break;
+      case 'ArrowLeft':
+      case 'ArrowDown':
+      case 'PageDown': onChange(clamp(hue - step)); break;
+      case 'Home': onChange(0); break;
+      case 'End': onChange(360); break;
+      default: return;
+    }
+    e.preventDefault();
+  };
+
   return (
     <div
       ref={trackRef}
+      role="slider"
+      tabIndex={0}
+      aria-label="Hue"
+      aria-valuemin={0}
+      aria-valuemax={360}
+      aria-valuenow={hue}
+      aria-valuetext={`${hue} degrees`}
+      onKeyDown={handleKeyDown}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       style={{
         position: 'relative',
         height: '12px',
         borderRadius: '6px',
         cursor: 'pointer',
         background: 'linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)',
+        outline: 'none',
+        boxShadow: focused ? FOCUS_RING : undefined,
       }}
       onMouseDown={(e) => { dragging.current = true; pick(e); }}
     >
@@ -265,6 +342,26 @@ function AlphaSlider({ alpha, hex, onChange }: { alpha: number; hex: string; onC
   }, [pick]);
 
   const [r, g, b] = hexToRgb(hex);
+  const [focused, setFocused] = useState(false);
+
+  // APG slider keyboard model (a11y-audit MEDIUM #18); exposed as 0–100%.
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const step = sliderStep(e);
+    const pct = Math.round(alpha * 100);
+    const clamp = (n: number) => Math.max(0, Math.min(100, n));
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowUp':
+      case 'PageUp': onChange(clamp(pct + step) / 100); break;
+      case 'ArrowLeft':
+      case 'ArrowDown':
+      case 'PageDown': onChange(clamp(pct - step) / 100); break;
+      case 'Home': onChange(0); break;
+      case 'End': onChange(1); break;
+      default: return;
+    }
+    e.preventDefault();
+  };
 
   return (
     <div style={{ position: 'relative' }}>
@@ -276,12 +373,24 @@ function AlphaSlider({ alpha, hex, onChange }: { alpha: number; hex: string; onC
       }} />
       <div
         ref={trackRef}
+        role="slider"
+        tabIndex={0}
+        aria-label="Alpha"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(alpha * 100)}
+        aria-valuetext={`${Math.round(alpha * 100)}%`}
+        onKeyDown={handleKeyDown}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         style={{
           position: 'relative',
           height: '12px',
           borderRadius: '6px',
           cursor: 'pointer',
           background: `linear-gradient(to right, rgba(${r},${g},${b},0), rgba(${r},${g},${b},1))`,
+          outline: 'none',
+          boxShadow: focused ? FOCUS_RING : undefined,
         }}
         onMouseDown={(e) => { dragging.current = true; pick(e); }}
       >
@@ -322,6 +431,15 @@ export function TkxColorPicker({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  // Dialog focus management (WAI-ARIA APG): while open, move focus into the
+  // popover (first focusable control — the hex input), trap Tab/Shift+Tab
+  // inside it, and restore focus to the previously-focused element (the
+  // trigger) on every close path (Escape, outside click, selection).
+  const trapRef = useFocusTrap(isOpen);
+  const setPopoverRefs = useCallback((el: HTMLDivElement | null) => {
+    popoverRef.current = el;
+    (trapRef as React.MutableRefObject<HTMLElement | null>).current = el;
+  }, [trapRef]);
 
   const controlled = value !== undefined;
   const [internalHex, setInternalHex] = useState<string>(
@@ -533,10 +651,11 @@ export function TkxColorPicker({
 
       {isOpen && createPortal(
         <div
-          ref={popoverRef}
+          ref={setPopoverRefs}
           style={popStyle}
           role="dialog"
           aria-label="Color picker"
+          tabIndex={-1}
         >
           {/* Saturation/Brightness picker */}
           <SatBrightPicker

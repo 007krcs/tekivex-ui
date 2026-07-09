@@ -1499,6 +1499,155 @@ export function TkxDataGrid<T = any>({
     [rowKey, onCellEditCancel, exitEditWithFocus],
   );
 
+  // ── Grid keyboard navigation (partial APG grid/treegrid model) ─────────
+  // The grid container is a single Tab stop that forwards focus into the
+  // last-focused (or first) gridcell; Arrow keys then move cell focus,
+  // Home/End jump to row start/end, Ctrl+Home/Ctrl+End to the grid corners,
+  // and in treegrid mode ArrowRight/ArrowLeft on the tree column expand/
+  // collapse the focused row. All gridcells are programmatically focusable
+  // (tabIndex=-1; editable cells keep tabIndex=0).
+  //
+  // DEFERRED (honest scope note, tracked in docs/A11Y-AUDIT.md MEDIUM #22):
+  // a full per-cell roving-tabindex model (one cell with tabIndex=0 instead
+  // of a focusable container), PageUp/PageDown paging, and
+  // virtualization-aware navigation beyond the rendered row window are left
+  // for a follow-up cycle. The model shipped here is complete and
+  // self-consistent for the rendered rows — no half-broken states.
+  const gridRootRef = useRef<HTMLDivElement>(null);
+  const lastFocusedCellRef = useRef<HTMLTableCellElement | null>(null);
+
+  const getNavigableCells = useCallback(
+    (tr: HTMLTableRowElement): HTMLTableCellElement[] =>
+      Array.from(
+        tr.querySelectorAll<HTMLTableCellElement>(
+          'td[role="gridcell"], td[role="rowheader"]',
+        ),
+      ),
+    [],
+  );
+
+  const getNavigableRows = useCallback((): HTMLTableRowElement[] => {
+    const root = gridRootRef.current;
+    if (!root) return [];
+    return Array.from(root.querySelectorAll<HTMLTableRowElement>('tbody tr')).filter(
+      tr =>
+        !tr.hasAttribute('aria-hidden') &&
+        tr.querySelector('td[role="gridcell"], td[role="rowheader"]') != null,
+    );
+  }, []);
+
+  const focusCell = useCallback((cell: HTMLTableCellElement | null | undefined) => {
+    if (!cell) return;
+    lastFocusedCellRef.current = cell;
+    cell.focus();
+  }, []);
+
+  const handleGridFocus = useCallback(
+    (e: React.FocusEvent<HTMLDivElement>) => {
+      // Only forward when the container ITSELF receives focus (Tab into the
+      // grid) — not when focus lands on inner controls (React onFocus bubbles).
+      if (e.target !== gridRootRef.current) return;
+      const remembered = lastFocusedCellRef.current;
+      if (remembered && gridRootRef.current?.contains(remembered)) {
+        remembered.focus();
+        return;
+      }
+      const rows = getNavigableRows();
+      if (rows.length > 0) focusCell(getNavigableCells(rows[0])[0]);
+    },
+    [getNavigableRows, getNavigableCells, focusCell],
+  );
+
+  const handleGridKeyDown = useCallback(
+    (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLElement;
+      // Only act when focus is on a grid cell itself — not on editors,
+      // carets, checkboxes, filter inputs or other interactive descendants.
+      if (target.tagName !== 'TD') return;
+      const role = target.getAttribute('role');
+      if (role !== 'gridcell' && role !== 'rowheader') return;
+      const cell = target as HTMLTableCellElement;
+      const tr = cell.closest('tr') as HTMLTableRowElement | null;
+      if (!tr) return;
+
+      const rows = getNavigableRows();
+      const rowIdx = rows.indexOf(tr);
+      if (rowIdx === -1) return;
+      const cells = getNavigableCells(tr);
+      const colIdx = cells.indexOf(cell);
+      if (colIdx === -1) return;
+
+      const treeRowId = tr.getAttribute('data-row-id');
+      const expandedAttr = tr.getAttribute('aria-expanded');
+      const isTreeCell = cell.hasAttribute('data-tree-cell');
+
+      switch (e.key) {
+        case 'ArrowRight': {
+          e.preventDefault();
+          // Treegrid: expand a collapsed parent row before moving right.
+          if (isTreeMode && isTreeCell && treeRowId && expandedAttr === 'false') {
+            toggleRowExpand(treeRowId);
+            return;
+          }
+          focusCell(cells[Math.min(colIdx + 1, cells.length - 1)]);
+          return;
+        }
+        case 'ArrowLeft': {
+          e.preventDefault();
+          // Treegrid: collapse an expanded parent row before moving left.
+          if (isTreeMode && isTreeCell && treeRowId && expandedAttr === 'true') {
+            toggleRowExpand(treeRowId);
+            return;
+          }
+          focusCell(cells[Math.max(colIdx - 1, 0)]);
+          return;
+        }
+        case 'ArrowDown': {
+          e.preventDefault();
+          const nextRow = rows[rowIdx + 1];
+          if (!nextRow) return;
+          const nc = getNavigableCells(nextRow);
+          focusCell(nc[Math.min(colIdx, nc.length - 1)]);
+          return;
+        }
+        case 'ArrowUp': {
+          e.preventDefault();
+          const prevRow = rows[rowIdx - 1];
+          if (!prevRow) return;
+          const pc = getNavigableCells(prevRow);
+          focusCell(pc[Math.min(colIdx, pc.length - 1)]);
+          return;
+        }
+        case 'Home': {
+          e.preventDefault();
+          if (e.ctrlKey) {
+            const first = rows[0];
+            if (first) focusCell(getNavigableCells(first)[0]);
+          } else {
+            focusCell(cells[0]);
+          }
+          return;
+        }
+        case 'End': {
+          e.preventDefault();
+          if (e.ctrlKey) {
+            const last = rows[rows.length - 1];
+            if (last) {
+              const lc = getNavigableCells(last);
+              focusCell(lc[lc.length - 1]);
+            }
+          } else {
+            focusCell(cells[cells.length - 1]);
+          }
+          return;
+        }
+        default:
+          return;
+      }
+    },
+    [isTreeMode, toggleRowExpand, getNavigableRows, getNavigableCells, focusCell],
+  );
+
   // ── Cell sizing ─────────────────────────────────────────────────────────
   const py = compact ? '4px' : '8px';
   const px = compact ? '8px' : '12px';
@@ -1521,10 +1670,17 @@ export function TkxDataGrid<T = any>({
 
   return (
     <div
+      ref={gridRootRef}
       role={isTreeMode ? 'treegrid' : 'grid'}
       aria-label={t.dataGrid ?? 'Data grid'}
       aria-rowcount={totalRows}
+      aria-colcount={totalCols}
       id={gridId}
+      // Single Tab stop for the grid: focusing the container forwards focus
+      // into the last-focused (or first) cell; arrow keys then navigate.
+      tabIndex={0}
+      onFocus={handleGridFocus}
+      onKeyDown={handleGridKeyDown}
       className={tkx('font-sans rounded-lg overflow-hidden')}
       style={{ border: `1px solid ${theme.border}`, backgroundColor: theme.bg }}
     >
@@ -1750,6 +1906,7 @@ export function TkxDataGrid<T = any>({
                         key={id}
                         role="row"
                         data-tree-row=""
+                        data-row-id={id}
                         data-tree-depth={depth}
                         aria-level={depth + 1}
                         aria-setsize={siblingCount}
@@ -1770,6 +1927,7 @@ export function TkxDataGrid<T = any>({
                         {selectable && (
                           <td
                             role="gridcell"
+                            tabIndex={-1}
                             style={{
                               borderBottom: `1px solid ${theme.border}`,
                               borderRight,
@@ -1825,7 +1983,7 @@ export function TkxDataGrid<T = any>({
                               data-editing={isEditing ? '' : undefined}
                               data-saving={isSaving ? '' : undefined}
                               aria-readonly={editableHere ? 'false' : undefined}
-                              tabIndex={editableHere ? 0 : undefined}
+                              tabIndex={editableHere ? 0 : -1}
                               ref={el => {
                                 if (el) cellRefs.current.set(cellKey, el);
                                 else cellRefs.current.delete(cellKey);
@@ -1989,6 +2147,7 @@ export function TkxDataGrid<T = any>({
                               <td
                                 key={col.key}
                                 role={isFirstCol ? 'rowheader' : 'gridcell'}
+                                tabIndex={-1}
                                 data-pinned={pinnedOffsets[col.key]?.side}
                                 aria-expanded={isFirstCol ? isExpanded : undefined}
                                 aria-controls={isFirstCol ? groupRowsId : undefined}
@@ -2076,6 +2235,7 @@ export function TkxDataGrid<T = any>({
                         {selectable && (
                           <td
                             role="gridcell"
+                            tabIndex={-1}
                             style={{
                               borderBottom: `1px solid ${theme.border}`,
                               borderRight,
@@ -2130,7 +2290,7 @@ export function TkxDataGrid<T = any>({
                               data-editing={isEditing ? '' : undefined}
                               data-saving={isSaving ? '' : undefined}
                               aria-readonly={editableHere ? 'false' : undefined}
-                              tabIndex={editableHere ? 0 : undefined}
+                              tabIndex={editableHere ? 0 : -1}
                               ref={el => {
                                 if (el) cellRefs.current.set(cellKey, el);
                                 else cellRefs.current.delete(cellKey);
@@ -2234,6 +2394,7 @@ export function TkxDataGrid<T = any>({
                         {selectable && (
                           <td
                             role="gridcell"
+                            tabIndex={-1}
                             style={{
                               borderBottom: `1px solid ${theme.border}`,
                               borderRight,
@@ -2291,7 +2452,7 @@ export function TkxDataGrid<T = any>({
                               data-editing={isEditing ? '' : undefined}
                               data-saving={isSaving ? '' : undefined}
                               aria-readonly={editableHere ? 'false' : undefined}
-                              tabIndex={editableHere ? 0 : undefined}
+                              tabIndex={editableHere ? 0 : -1}
                               ref={el => {
                                 if (el) cellRefs.current.set(cellKey, el);
                                 else cellRefs.current.delete(cellKey);

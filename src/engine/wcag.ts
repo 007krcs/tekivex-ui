@@ -155,38 +155,58 @@ export function handleTabsKeyboard(
   currentIndex: number,
   tabCount: number,
   onSelect: (index: number) => void,
+  isDisabled?: (index: number) => boolean,
 ): void {
-  let next = currentIndex;
+  // Enter/Space activate the current tab regardless of the count math.
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    onSelect(currentIndex);
+    return;
+  }
+
+  // Defensive guard: with an unknown/empty tab count the arrow math would
+  // target non-existent indices (e.g. -1) and lose keyboard focus.
+  if (tabCount <= 0) return;
+
+  const enabled = (i: number) => !isDisabled?.(i);
+  const wrap = (i: number) => ((i % tabCount) + tabCount) % tabCount;
+  // Step from `from` by `delta` (wrapping), skipping disabled tabs.
+  // Returns null when every candidate is disabled (avoids an infinite loop).
+  const step = (from: number, delta: number): number | null => {
+    let next = wrap(from + delta);
+    for (let guard = 0; guard < tabCount; guard++) {
+      if (enabled(next)) return next;
+      next = wrap(next + delta);
+    }
+    return null;
+  };
+
+  let next: number | null = null;
 
   switch (e.key) {
     case 'ArrowLeft':
     case 'ArrowUp':
       e.preventDefault();
-      next = currentIndex === 0 ? tabCount - 1 : currentIndex - 1;
+      next = step(currentIndex, -1);
       break;
     case 'ArrowRight':
     case 'ArrowDown':
       e.preventDefault();
-      next = currentIndex === tabCount - 1 ? 0 : currentIndex + 1;
+      next = step(currentIndex, 1);
       break;
     case 'Home':
       e.preventDefault();
-      next = 0;
+      next = enabled(0) ? 0 : step(0, 1);
       break;
     case 'End':
       e.preventDefault();
-      next = tabCount - 1;
+      next = enabled(tabCount - 1) ? tabCount - 1 : step(tabCount - 1, -1);
       break;
-    case 'Enter':
-    case ' ':
-      e.preventDefault();
-      onSelect(currentIndex);
-      return;
     default:
       return;
   }
 
-  onSelect(next);
+  if (next != null) onSelect(next);
 }
 
 export function handleMenuKeyboard(

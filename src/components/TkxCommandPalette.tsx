@@ -41,6 +41,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocale } from '../i18n';
+import { useFocusTrap } from '../hooks';
 
 // ── Public types ────────────────────────────────────────────────────────────
 
@@ -185,6 +186,12 @@ export function TkxCommandPalette({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
   const idBase = useId();
+  // Modal dialog focus management (WAI-ARIA APG): trap Tab/Shift+Tab inside
+  // the panel while open, and restore focus to the previously-focused element
+  // on every close path (Escape, backdrop click, hotkey toggle, command run).
+  // useFocusTrap records document.activeElement on activation and restores it
+  // on teardown, which runs when the portal unmounts on close.
+  const trapRef = useFocusTrap(open);
 
   // Open / close hotkey
   useEffect(() => {
@@ -348,6 +355,7 @@ export function TkxCommandPalette({
       }}
     >
       <div
+        ref={trapRef as React.RefObject<HTMLDivElement>}
         onClick={(e) => e.stopPropagation()}
         onKeyDown={onKeyDown}
         style={{

@@ -175,6 +175,14 @@ function AnimatedPanel({ isOpen, reduced, children, id, triggerId }: AnimatedPan
   const innerRef = useRef<HTMLDivElement>(null);
   const prevOpenRef = useRef(isOpen);
   const isAnimatingRef = useRef(false);
+  // A collapsed panel is only visually clipped (height:0 + overflow:hidden),
+  // which leaves its content in the accessibility tree and tab order. Once the
+  // collapse animation finishes (or immediately for reduced motion / initial
+  // render) the panel is marked aria-hidden + inert so AT users neither hear
+  // nor can focus content behind a closed disclosure. We use inert+aria-hidden
+  // rather than `hidden`/display:none so scrollHeight stays measurable for the
+  // height animation.
+  const [fullyClosed, setFullyClosed] = useState(!isOpen);
 
   // Initial render — set immediately without animation
   useEffect(() => {
@@ -201,8 +209,15 @@ function AnimatedPanel({ isOpen, reduced, children, id, triggerId }: AnimatedPan
     if (reduced) {
       el.style.height = isOpen ? 'auto' : '0px';
       el.style.overflow = isOpen ? 'visible' : 'hidden';
+      // No transition event will fire — sync the AT-hidden state directly.
+      setFullyClosed(!isOpen);
       return;
     }
+
+    // Opening: un-hide from AT/tab order immediately so content is exposed as
+    // it becomes visible. Closing keeps fullyClosed=false until the collapse
+    // transition ends (see handleTransitionEnd).
+    if (isOpen) setFullyClosed(false);
 
     if (isAnimatingRef.current) {
       // Cancel mid-animation: snapshot current rendered height
@@ -247,6 +262,9 @@ function AnimatedPanel({ isOpen, reduced, children, id, triggerId }: AnimatedPan
       el.style.overflow = 'visible';
     } else {
       el.style.overflow = 'hidden';
+      // Collapse finished — now remove the panel content from the
+      // accessibility tree and tab order.
+      setFullyClosed(true);
     }
   };
 
@@ -256,6 +274,8 @@ function AnimatedPanel({ isOpen, reduced, children, id, triggerId }: AnimatedPan
       id={id}
       role="region"
       aria-labelledby={triggerId}
+      aria-hidden={fullyClosed || undefined}
+      inert={fullyClosed || undefined}
       onTransitionEnd={handleTransitionEnd}
       style={{ willChange: 'height' }}
     >

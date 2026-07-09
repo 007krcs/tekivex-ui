@@ -70,12 +70,18 @@ interface ThumbProps {
   ariaLabel: string;
   tooltipMode: false | 'hover' | 'always';
   formatValue: (v: number) => string;
+  /**
+   * When the consumer supplied a custom `formatValue`, this mirrors it so
+   * the thumb can expose the formatted label via `aria-valuetext`.
+   * Undefined when no custom formatter exists (raw aria-valuenow suffices).
+   */
+  formatValueText?: (v: number) => string;
   orientation: 'horizontal' | 'vertical';
   onChange: (v: number) => void;
   onChangeEnd?: () => void;
 }
 
-function Thumb({ value, min, max, step, isDisabled, trackColor, surfaceColor, disabledColor, thumbSize, ariaLabel, tooltipMode, formatValue, orientation, onChange, onChangeEnd }: ThumbProps) {
+function Thumb({ value, min, max, step, isDisabled, trackColor, surfaceColor, disabledColor, thumbSize, ariaLabel, tooltipMode, formatValue, formatValueText, orientation, onChange, onChangeEnd }: ThumbProps) {
   const [focused, setFocused] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -163,6 +169,7 @@ function Thumb({ value, min, max, step, isDisabled, trackColor, surfaceColor, di
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={value}
+        aria-valuetext={formatValueText ? formatValueText(value) : undefined}
         aria-disabled={isDisabled}
         aria-orientation={orientation}
         onKeyDown={handleKeyDown}
@@ -408,6 +415,7 @@ export function TkxSlider({
               ariaLabel={safeLabel ?? 'Slider'}
               tooltipMode={tooltipMode}
               formatValue={formatVal}
+              formatValueText={formatValueProp}
               orientation={orientation}
               onChange={setSingleValue}
               onChangeEnd={onChangeEnd ? () => onChangeEnd(singleValueRef.current) : undefined}
@@ -428,6 +436,7 @@ export function TkxSlider({
                 ariaLabel={`${safeLabel ?? 'Range'} start`}
                 tooltipMode={tooltipMode}
                 formatValue={formatVal}
+                formatValueText={formatValueProp}
                 orientation={orientation}
                 onChange={setRangeStart}
                 onChangeEnd={onRangeChangeEnd ? () => onRangeChangeEnd(rangeValRef.current) : undefined}
@@ -446,6 +455,7 @@ export function TkxSlider({
                 ariaLabel={`${safeLabel ?? 'Range'} end`}
                 tooltipMode={tooltipMode}
                 formatValue={formatVal}
+                formatValueText={formatValueProp}
                 orientation={orientation}
                 onChange={setRangeEnd}
                 onChangeEnd={onRangeChangeEnd ? () => onRangeChangeEnd(rangeValRef.current) : undefined}

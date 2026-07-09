@@ -1679,6 +1679,89 @@ describe('TkxDataGrid', () => {
     });
   });
 
+  // ── Grid keyboard navigation (A11Y-AUDIT MEDIUM #22, partial APG model) ────
+
+  describe('grid keyboard navigation', () => {
+    it('grid container is a single Tab stop that forwards focus to the first cell', () => {
+      render(<TkxDataGrid columns={columns} data={data} rowKey="id" />, { wrapper: Wrapper });
+      const grid = screen.getByRole('grid');
+      expect(grid.getAttribute('tabindex')).toBe('0');
+      grid.focus();
+      const cells = screen.getAllByRole('gridcell');
+      expect(document.activeElement).toBe(cells[0]);
+    });
+
+    it('arrow keys move cell focus in all four directions', () => {
+      render(<TkxDataGrid columns={columns} data={data} rowKey="id" />, { wrapper: Wrapper });
+      // 2 rows x 2 cols: [0]=Alice [1]=30 / [2]=Bob [3]=25
+      const cells = screen.getAllByRole('gridcell');
+      cells[0].focus();
+      fireEvent.keyDown(cells[0], { key: 'ArrowRight' });
+      expect(document.activeElement).toBe(cells[1]);
+      fireEvent.keyDown(cells[1], { key: 'ArrowDown' });
+      expect(document.activeElement).toBe(cells[3]);
+      fireEvent.keyDown(cells[3], { key: 'ArrowLeft' });
+      expect(document.activeElement).toBe(cells[2]);
+      fireEvent.keyDown(cells[2], { key: 'ArrowUp' });
+      expect(document.activeElement).toBe(cells[0]);
+    });
+
+    it('Home/End move to row start/end; Ctrl+Home/Ctrl+End to grid corners', () => {
+      render(<TkxDataGrid columns={columns} data={data} rowKey="id" />, { wrapper: Wrapper });
+      const cells = screen.getAllByRole('gridcell');
+      cells[3].focus(); // last cell (Bob's age)
+      fireEvent.keyDown(cells[3], { key: 'Home' });
+      expect(document.activeElement).toBe(cells[2]);
+      fireEvent.keyDown(cells[2], { key: 'End' });
+      expect(document.activeElement).toBe(cells[3]);
+      fireEvent.keyDown(cells[3], { key: 'Home', ctrlKey: true });
+      expect(document.activeElement).toBe(cells[0]);
+      fireEvent.keyDown(cells[0], { key: 'End', ctrlKey: true });
+      expect(document.activeElement).toBe(cells[3]);
+    });
+
+    it('non-editable gridcells are programmatically focusable (tabIndex=-1)', () => {
+      render(<TkxDataGrid columns={columns} data={data} rowKey="id" />, { wrapper: Wrapper });
+      const cells = screen.getAllByRole('gridcell');
+      cells.forEach(c => expect(c.getAttribute('tabindex')).toBe('-1'));
+    });
+
+    it('treegrid: ArrowRight expands and ArrowLeft collapses from the tree cell', () => {
+      interface TRow { id: string; name: string; children?: TRow[] }
+      const tData: TRow[] = [
+        { id: 'p1', name: 'parent', children: [{ id: 'c1', name: 'child' }] },
+      ];
+      const tCols: DataGridColumn<TRow>[] = [{ key: 'name', header: 'Name', tree: true }];
+      render(
+        <TkxDataGrid columns={tCols} data={tData} rowKey="id" childRowsKey="children" />,
+        { wrapper: Wrapper },
+      );
+      const parentCell = screen.getByText('parent').closest('td')!;
+      parentCell.focus();
+      expect(screen.queryByText('child')).not.toBeInTheDocument();
+      fireEvent.keyDown(parentCell, { key: 'ArrowRight' });
+      expect(screen.getByText('child')).toBeInTheDocument();
+      fireEvent.keyDown(parentCell, { key: 'ArrowLeft' });
+      expect(screen.queryByText('child')).not.toBeInTheDocument();
+    });
+
+    it('arrow keys inside a cell editor are NOT hijacked by grid navigation', () => {
+      const cols: DataGridColumn<Row>[] = [
+        { key: 'name', header: 'Name', editable: true },
+        { key: 'age', header: 'Age' },
+      ];
+      render(<TkxDataGrid columns={cols} data={data} rowKey="id" />, { wrapper: Wrapper });
+      const cell = screen.getAllByRole('gridcell')[0];
+      fireEvent.doubleClick(cell);
+      const input = screen.getByLabelText('Edit Name') as HTMLInputElement;
+      input.focus();
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      // Editor still mounted and focused — grid nav did not steal focus
+      expect(screen.getByLabelText('Edit Name')).toBeInTheDocument();
+      expect(document.activeElement).toBe(input);
+    });
+  });
+
   // ── Edge cases ─────────────────────────────────────────────────────────────
 
   describe('edge cases', () => {

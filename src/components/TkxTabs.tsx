@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useRef, useId, type ReactNode, type HTMLAttributes } from 'react';
+import { createContext, useContext, useState, useRef, useId, useCallback, useEffect, useMemo, type ReactNode, type HTMLAttributes } from 'react';
 import { useTheme } from '../themes';
 import { handleTabsKeyboard } from '../engine/wcag';
 import { tkx, cx } from '../engine/tkx';
@@ -10,6 +10,9 @@ interface TabsContextValue {
   setActiveIndex: (i: number) => void;
   baseId: string;
   tabCount: number;
+  isTabDisabled: (i: number) => boolean;
+  /** Registers a tab's index + disabled state; returns an unregister fn. */
+  registerTab: (index: number, disabled: boolean) => () => void;
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null);
@@ -19,6 +22,10 @@ export interface TkxTabsProps {
   activeIndex?: number;
   onChange?: (i: number) => void;
   children: ReactNode;
+  /**
+   * Optional override for the number of tabs. Normally NOT needed — the
+   * count is derived from the mounted TkxTab children automatically.
+   */
   tabCount?: number;
   style?: React.CSSProperties;
   className?: string;
@@ -30,8 +37,50 @@ export function TkxTabs({ defaultIndex = 0, activeIndex: controlled, onChange, c
   const active = controlled !== undefined ? controlled : internal;
   const setActive = (i: number) => { if (controlled === undefined) setInternal(i); onChange?.(i); };
 
+  // Registry of mounted tabs: index → disabled. Keyboard navigation derives
+  // its bounds and disabled-skipping from this, so Arrow/Home/End work
+  // without consumers hand-passing a `tabCount` prop.
+  const [registry, setRegistry] = useState<Map<number, boolean>>(() => new Map());
+
+  const registerTab = useCallback((index: number, disabled: boolean) => {
+    setRegistry(prev => {
+      if (prev.has(index) && prev.get(index) === disabled) return prev;
+      const next = new Map(prev);
+      next.set(index, disabled);
+      return next;
+    });
+    return () => {
+      setRegistry(prev => {
+        if (!prev.has(index)) return prev;
+        const next = new Map(prev);
+        next.delete(index);
+        return next;
+      });
+    };
+  }, []);
+
+  const derivedTabCount = useMemo(() => {
+    let max = -1;
+    for (const i of registry.keys()) if (i > max) max = i;
+    return max + 1;
+  }, [registry]);
+
+  // Explicit prop (legacy) wins when supplied; otherwise use the derived count.
+  const effectiveTabCount = tabCount > 0 ? tabCount : derivedTabCount;
+
+  const isTabDisabled = useCallback((i: number) => registry.get(i) === true, [registry]);
+
   return (
-    <TabsContext.Provider value={{ activeIndex: active, setActiveIndex: setActive, baseId, tabCount }}>
+    <TabsContext.Provider
+      value={{
+        activeIndex: active,
+        setActiveIndex: setActive,
+        baseId,
+        tabCount: effectiveTabCount,
+        isTabDisabled,
+        registerTab,
+      }}
+    >
       <div className={className} style={style}>{children}</div>
     </TabsContext.Provider>
   );
@@ -61,6 +110,16 @@ export function TkxTab({ index, children, disabled = false, className, style }: 
   // throwing and white-screening the tree.
   const ctx = useContext(TabsContext);
   const tabRef = useRef<HTMLButtonElement>(null);
+
+  // Register this tab (index + disabled state) with the parent TkxTabs so
+  // keyboard navigation can derive the tab count and skip disabled tabs.
+  // Must run before the ctx-null early return to keep hook order stable.
+  const registerTab = ctx?.registerTab;
+  useEffect(() => {
+    if (!registerTab) return;
+    return registerTab(index ?? 0, disabled);
+  }, [registerTab, index, disabled]);
+
   if (!ctx) {
     return (
       <button
@@ -75,7 +134,7 @@ export function TkxTab({ index, children, disabled = false, className, style }: 
       </button>
     );
   }
-  const { activeIndex, setActiveIndex, baseId, tabCount } = ctx;
+  const { activeIndex, setActiveIndex, baseId, tabCount, isTabDisabled } = ctx;
   const safeIndex = index ?? 0;
   const isActive = activeIndex === safeIndex;
 
@@ -104,10 +163,19 @@ export function TkxTab({ index, children, disabled = false, className, style }: 
         ...style,
       }}
       onClick={() => !disabled && setActiveIndex(safeIndex)}
-      onKeyDown={(e) => handleTabsKeyboard(e as unknown as KeyboardEvent, safeIndex, tabCount, (ni) => {
-        setActiveIndex(ni);
-        document.getElementById(`${baseId}-tab-${ni}`)?.focus();
-      })}
+      onKeyDown={(e) => handleTabsKeyboard(
+        e as unknown as KeyboardEvent,
+        safeIndex,
+        tabCount,
+        (ni) => {
+          // Defense in depth: never select a disabled tab even if the
+          // keyboard handler's skipping missed it.
+          if (isTabDisabled(ni)) return;
+          setActiveIndex(ni);
+          document.getElementById(`${baseId}-tab-${ni}`)?.focus();
+        },
+        isTabDisabled,
+      )}
     >
       {children}
     </button>

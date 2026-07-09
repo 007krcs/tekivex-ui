@@ -175,6 +175,10 @@ interface DropdownMenuProps {
   minWidth: number;
   selectedKeys: string[];
   multiSelect: boolean;
+  /** True when the consumer drives single-select selection via selectedKeys —
+   *  selectable items then render as role="menuitemradio" with aria-checked
+   *  (aria-selected is NOT a supported state on menu items). */
+  singleSelect: boolean;
   searchable: boolean;
   searchPlaceholder: string | undefined;
   onSelect: (key: string, item: DropdownItem) => void;
@@ -192,6 +196,7 @@ function DropdownMenu({
   minWidth: propMinWidth,
   selectedKeys,
   multiSelect,
+  singleSelect,
   searchable,
   searchPlaceholder,
   onSelect,
@@ -448,10 +453,22 @@ function DropdownMenu({
                   ref={(el) => {
                     itemRefs.current[currentNavIdx] = el;
                   }}
-                  role="menuitem"
+                  // aria-selected is not a supported state on menu items; per
+                  // the APG, selectable items are menuitemradio (single) /
+                  // menuitemcheckbox (multi) with aria-checked. Submenu parents
+                  // and plain action items stay role="menuitem" with no
+                  // checked/selected state.
+                  role={
+                    hasSubmenu
+                      ? 'menuitem'
+                      : multiSelect
+                        ? 'menuitemcheckbox'
+                        : singleSelect
+                          ? 'menuitemradio'
+                          : 'menuitem'
+                  }
                   aria-disabled={item.disabled}
-                  aria-checked={multiSelect ? isSelected : undefined}
-                  aria-selected={!multiSelect ? isSelected : undefined}
+                  aria-checked={!hasSubmenu && (multiSelect || singleSelect) ? isSelected : undefined}
                   aria-haspopup={hasSubmenu ? 'menu' : undefined}
                   aria-expanded={hasSubmenu ? isSubmenuOpen : undefined}
                   tabIndex={item.disabled ? -1 : 0}
@@ -512,9 +529,15 @@ function DropdownMenu({
                             ref={(el) => {
                               submenuItemRefs.current[ci] = el;
                             }}
-                            role="menuitem"
+                            role={
+                              multiSelect
+                                ? 'menuitemcheckbox'
+                                : singleSelect
+                                  ? 'menuitemradio'
+                                  : 'menuitem'
+                            }
                             aria-disabled={child.disabled}
-                            aria-selected={isChildSelected}
+                            aria-checked={multiSelect || singleSelect ? isChildSelected : undefined}
                             tabIndex={child.disabled ? -1 : 0}
                             style={{ cursor: child.disabled ? 'not-allowed' : 'pointer', opacity: child.disabled ? 0.5 : 1 }}
                             onClick={(e) => {
@@ -773,6 +796,7 @@ export function TkxDropdown({
       minWidth={minWidth}
       selectedKeys={selectedKeys}
       multiSelect={multiSelect}
+      singleSelect={!multiSelect && controlledSelectedKeys !== undefined}
       searchable={searchable}
       searchPlaceholder={searchPlaceholder}
       onSelect={handleSelect}

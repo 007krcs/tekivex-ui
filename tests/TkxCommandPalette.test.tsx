@@ -146,4 +146,62 @@ describe('TkxCommandPalette', () => {
     );
     expect(screen.queryByTestId('cmdk-item-secret')).not.toBeInTheDocument();
   });
+
+  // ── A11y: modal focus trap + focus restore (a11y-audit MEDIUM #4 / #5) ────
+
+  it('moves focus into the dialog (search input) on open', () => {
+    render(<TkxCommandPalette commands={COMMANDS} open onOpenChange={() => {}} />);
+    expect(document.activeElement).toBe(screen.getByTestId('cmdk-input'));
+  });
+
+  it('Tab keeps focus inside the dialog', () => {
+    render(<TkxCommandPalette commands={COMMANDS} open onOpenChange={() => {}} />);
+    const input = screen.getByTestId('cmdk-input');
+    input.focus();
+    fireEvent.keyDown(input, { key: 'Tab' });
+    expect(screen.getByTestId('tkx-command-palette').contains(document.activeElement)).toBe(true);
+    fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
+    expect(screen.getByTestId('tkx-command-palette').contains(document.activeElement)).toBe(true);
+  });
+
+  function OpenerHarness() {
+    const [open, setOpen] = useState(false);
+    return (
+      <>
+        <button data-testid="opener" onClick={() => setOpen(true)}>open palette</button>
+        <TkxCommandPalette commands={COMMANDS} open={open} onOpenChange={setOpen} />
+      </>
+    );
+  }
+
+  it('restores focus to the opener when closed via Escape', () => {
+    render(<OpenerHarness />);
+    const opener = screen.getByTestId('opener');
+    opener.focus();
+    fireEvent.click(opener);
+    expect(screen.getByTestId('tkx-command-palette')).toBeInTheDocument();
+    fireEvent.keyDown(screen.getByTestId('cmdk-input'), { key: 'Escape' });
+    expect(screen.queryByTestId('tkx-command-palette')).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(opener);
+  });
+
+  it('restores focus to the opener when a command is run', () => {
+    render(<OpenerHarness />);
+    const opener = screen.getByTestId('opener');
+    opener.focus();
+    fireEvent.click(opener);
+    fireEvent.keyDown(screen.getByTestId('cmdk-input'), { key: 'Enter' });
+    expect(screen.queryByTestId('tkx-command-palette')).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(opener);
+  });
+
+  it('restores focus to the opener when closed via backdrop click', () => {
+    render(<OpenerHarness />);
+    const opener = screen.getByTestId('opener');
+    opener.focus();
+    fireEvent.click(opener);
+    fireEvent.click(screen.getByTestId('tkx-command-palette'));
+    expect(screen.queryByTestId('tkx-command-palette')).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(opener);
+  });
 });

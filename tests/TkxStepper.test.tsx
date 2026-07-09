@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { TkxStepper, type Step } from '../src/components/TkxStepper';
 import { ThemeProvider, quantumDark } from '../src/themes';
 
@@ -65,5 +65,32 @@ describe('TkxStepper', () => {
       const hasImage = Boolean(inline.backgroundImage && inline.backgroundImage !== '');
       expect(hasShorthand && hasImage).toBe(false);
     });
+  });
+
+  // ── MEDIUM a11y regression: clickable steps are keyboard-operable ──────────
+
+  it('exposes clickable steps as focusable buttons and activates on Enter/Space', () => {
+    const onStepClick = vi.fn();
+    render(
+      <TkxStepper steps={steps} activeStep={0} clickable onStepClick={onStepClick} />,
+      { wrapper: Wrapper },
+    );
+    const stepButtons = screen.getAllByRole('button');
+    expect(stepButtons).toHaveLength(steps.length);
+    stepButtons.forEach((b) => expect(b.getAttribute('tabindex')).toBe('0'));
+
+    const second = screen.getByRole('button', { name: 'Two' });
+    second.focus();
+    expect(document.activeElement).toBe(second);
+    fireEvent.keyDown(second, { key: 'Enter' });
+    expect(onStepClick).toHaveBeenCalledWith(1);
+
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Three' }), { key: ' ' });
+    expect(onStepClick).toHaveBeenCalledWith(2);
+  });
+
+  it('does not expose button semantics when not clickable', () => {
+    render(<TkxStepper steps={steps} activeStep={0} />, { wrapper: Wrapper });
+    expect(screen.queryByRole('button')).toBeNull();
   });
 });

@@ -176,6 +176,7 @@ export function TkxSelect({
   const typeaheadTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const controlRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -296,8 +297,9 @@ export function TkxSelect({
   // ── Positioning ───────────────────────────────────────────────────────────
 
   const updatePosition = useCallback(() => {
-    if (!triggerRef.current || !isOpen) return;
-    setDropdownRect(calcDropdownRect(triggerRef.current, maxMenuHeight));
+    const anchor = controlRef.current ?? triggerRef.current;
+    if (!anchor || !isOpen) return;
+    setDropdownRect(calcDropdownRect(anchor, maxMenuHeight));
   }, [isOpen, maxMenuHeight]);
 
   useEffect(() => {
@@ -318,7 +320,7 @@ export function TkxSelect({
     const handler = (e: PointerEvent) => {
       const target = e.target as Node;
       if (
-        triggerRef.current?.contains(target) ||
+        controlRef.current?.contains(target) ||
         dropdownRef.current?.contains(target)
       )
         return;
@@ -394,6 +396,15 @@ export function TkxSelect({
       case 'End':
         e.preventDefault();
         if (isOpen) setActiveIndex(flatEnabled.length - 1);
+        break;
+      case 'Backspace':
+        // Keyboard convenience: remove the last selected tag in multi-select
+        if (multiple && selectedValues.length > 0) {
+          e.preventDefault();
+          const next = selectedValues.slice(0, -1);
+          if (!isControlled) setInternalValue(next);
+          onChange?.(next);
+        }
         break;
       default:
         if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
@@ -475,6 +486,12 @@ export function TkxSelect({
       ? `${id}-opt-${flatEnabled[activeIndex].value}`
       : undefined;
 
+  // In searchable mode the search <input> holds DOM focus while the menu is
+  // open, so it must own the combobox contract (APG editable combobox). The
+  // trigger button is downgraded to a plain button while that is the case to
+  // avoid two competing combobox nodes.
+  const searchOwnsCombobox = searchable && isOpen;
+
   const describedBy =
     [hint && hintId, hasError && errorId].filter(Boolean).join(' ') ||
     undefined;
@@ -539,6 +556,12 @@ export function TkxSelect({
               <input
                 ref={searchInputRef}
                 type="text"
+                role="combobox"
+                aria-expanded={true}
+                aria-haspopup="listbox"
+                aria-controls={listboxId}
+                aria-activedescendant={activeOptionId}
+                aria-autocomplete="list"
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
@@ -885,210 +908,230 @@ export function TkxSelect({
         </label>
       )}
 
-      <div style={{ position: 'relative', width: '100%', opacity: isDisabled ? 0.55 : 1 }}>
-        <button
-          ref={triggerRef}
-          id={id}
-          type="button"
-          role="combobox"
-          aria-haspopup="listbox"
-          aria-expanded={isOpen}
-          aria-controls={listboxId}
-          aria-activedescendant={activeOptionId}
-          aria-invalid={hasError || undefined}
-          aria-describedby={describedBy}
-          aria-multiselectable={multiple}
-          disabled={isDisabled}
-          onClick={() => (isOpen ? setIsOpen(false) : openDropdown())}
-          onKeyDown={handleTriggerKeyDown}
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 8,
-            padding: multiple && selectedValues.length > 0
-              ? `4px ${sz.px}`
-              : `${sz.py} ${sz.px}`,
-            fontSize: sz.fontSize,
-            fontFamily: 'inherit',
-            backgroundColor: theme.surface,
-            color: selectedValues.length > 0 ? theme.text : theme.textMuted,
-            border: `1.5px solid ${borderColor}`,
-            borderRadius: 8,
-            boxSizing: 'border-box',
-            transition: 'border-color 150ms',
-            textAlign: 'left',
-            cursor: isDisabled ? 'not-allowed' : 'pointer',
-            outline: 'none',
-            minHeight: size === 'sm' ? 34 : size === 'lg' ? 50 : 42,
-            flexWrap: 'wrap',
-            touchAction: 'manipulation',
-          }}
-        >
-          {/* Multi-select tags or single label */}
-          <span
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 4,
-              flex: 1,
-              minWidth: 0,
-            }}
-          >
-            {multiple && selectedOptionObjects.length > 0
-              ? selectedOptionObjects.map((opt) => (
-                  <span
-                    key={opt.value}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 4,
-                      padding: `${sz.tagPy} ${sz.tagPx}`,
-                      fontSize: `calc(${sz.fontSize} - 1px)`,
-                      fontFamily: 'inherit',
-                      backgroundColor: `${theme.primary}22`,
-                      color: theme.primary,
-                      borderRadius: 6,
-                      border: `1px solid ${theme.primary}44`,
-                      lineHeight: 1.4,
-                      maxWidth: 150,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    <span
-                      style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        maxWidth: 110,
-                      }}
-                    >
-                      {sanitizeString(opt.label)}
-                    </span>
-                    <span
-                      role="button"
-                      aria-label={`Remove ${sanitizeString(opt.label)}`}
-                      tabIndex={-1}
-                      onClick={(e) => removeTag(opt.value, e)}
-                      style={{
-                        cursor: 'pointer',
-                        flexShrink: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        opacity: 0.8,
-                      }}
-                    >
-                      <svg
-                        width="10"
-                        height="10"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        aria-hidden="true"
-                      >
-                        <path d="M18 6L6 18M6 6l12 12" />
-                      </svg>
-                    </span>
-                  </span>
-                ))
-              : !multiple && selectedValues.length > 0
-              ? (() => {
-                  const sel = options.find((o) => o.value === selectedValues[0]);
-                  return (
-                    <span
-                      style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 6,
-                      }}
-                    >
-                      {sel?.icon && (
-                        <span style={{ flexShrink: 0, display: 'flex' }}>
-                          {sel.icon}
-                        </span>
-                      )}
-                      {sel ? sanitizeString(sel.label) : ''}
-                    </span>
-                  );
-                })()
-              : (
-                <span style={{ opacity: 0.6 }}>
-                  {sanitizeString(resolvedPlaceholder)}
-                </span>
-              )}
-          </span>
-
-          {/* Right icons: clear + loading + chevron */}
-          <span
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              flexShrink: 0,
-              color: theme.textMuted,
-            }}
-          >
-            {isLoading && <Spinner size={sz.iconSize} color={theme.primary} />}
-            {hasClearable && !isLoading && (
+      <div
+        ref={controlRef}
+        onClick={() => {
+          if (isDisabled) return;
+          if (isOpen) setIsOpen(false);
+          else openDropdown();
+        }}
+        style={{
+          position: 'relative',
+          width: '100%',
+          opacity: isDisabled ? 0.55 : 1,
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 4,
+          padding: multiple && selectedValues.length > 0
+            ? `4px ${sz.px}`
+            : `${sz.py} ${sz.px}`,
+          fontSize: sz.fontSize,
+          fontFamily: 'inherit',
+          backgroundColor: theme.surface,
+          border: `1.5px solid ${borderColor}`,
+          borderRadius: 8,
+          boxSizing: 'border-box',
+          transition: 'border-color 150ms',
+          cursor: isDisabled ? 'not-allowed' : 'pointer',
+          minHeight: size === 'sm' ? 34 : size === 'lg' ? 50 : 42,
+          touchAction: 'manipulation',
+        }}
+      >
+        {/* Multi-select tags: siblings of the trigger button so each remove
+            control is a real, keyboard-reachable <button> and no interactive
+            element is nested inside another (WCAG 2.1.1 / content model). */}
+        {multiple &&
+          selectedOptionObjects.map((opt) => (
+            <span
+              key={opt.value}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                padding: `${sz.tagPy} ${sz.tagPx}`,
+                fontSize: `calc(${sz.fontSize} - 1px)`,
+                fontFamily: 'inherit',
+                backgroundColor: `${theme.primary}22`,
+                color: theme.primary,
+                borderRadius: 6,
+                border: `1px solid ${theme.primary}44`,
+                lineHeight: 1.4,
+                maxWidth: 150,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               <span
-                role="button"
-                aria-label={t.clearSelection}
-                tabIndex={-1}
-                onClick={clearAll}
+                style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: 110,
+                }}
+              >
+                {sanitizeString(opt.label)}
+              </span>
+              <button
+                type="button"
+                aria-label={`Remove ${sanitizeString(opt.label)}`}
+                disabled={isDisabled}
+                onClick={(e) => removeTag(opt.value, e)}
                 style={{
                   cursor: 'pointer',
+                  flexShrink: 0,
                   display: 'flex',
                   alignItems: 'center',
-                  lineHeight: 1,
-                  opacity: 0.7,
-                  transition: 'opacity 120ms',
+                  opacity: 0.8,
+                  background: 'transparent',
+                  border: 'none',
+                  padding: 0,
+                  color: 'inherit',
                 }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.opacity = '1')
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.opacity = '0.7')
-                }
               >
                 <svg
-                  width={sz.iconSize}
-                  height={sz.iconSize}
+                  width="10"
+                  height="10"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="2.5"
                   aria-hidden="true"
                 >
                   <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
-              </span>
-            )}
-            <svg
-              width={sz.iconSize}
-              height={sz.iconSize}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-              style={{
-                transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                transition: 'transform 150ms',
-                flexShrink: 0,
-              }}
-            >
-              <path d="M6 9l6 6 6-6" />
-            </svg>
-          </span>
+              </button>
+            </span>
+          ))}
+
+        <button
+          ref={triggerRef}
+          id={id}
+          type="button"
+          role={searchOwnsCombobox ? undefined : 'combobox'}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-controls={searchOwnsCombobox ? undefined : listboxId}
+          aria-activedescendant={searchOwnsCombobox ? undefined : activeOptionId}
+          aria-invalid={hasError || undefined}
+          aria-describedby={describedBy}
+          aria-multiselectable={searchOwnsCombobox ? undefined : multiple}
+          disabled={isDisabled}
+          onKeyDown={handleTriggerKeyDown}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: 0,
+            margin: 0,
+            fontSize: sz.fontSize,
+            fontFamily: 'inherit',
+            backgroundColor: 'transparent',
+            color: selectedValues.length > 0 ? theme.text : theme.textMuted,
+            border: 'none',
+            textAlign: 'left',
+            cursor: 'inherit',
+            outline: 'none',
+          }}
+        >
+          {!multiple && selectedValues.length > 0 ? (
+            (() => {
+              const sel = options.find((o) => o.value === selectedValues[0]);
+              return (
+                <span
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                  }}
+                >
+                  {sel?.icon && (
+                    <span style={{ flexShrink: 0, display: 'flex' }}>
+                      {sel.icon}
+                    </span>
+                  )}
+                  {sel ? sanitizeString(sel.label) : ''}
+                </span>
+              );
+            })()
+          ) : multiple && selectedOptionObjects.length > 0 ? null : (
+            <span style={{ opacity: 0.6 }}>
+              {sanitizeString(resolvedPlaceholder)}
+            </span>
+          )}
         </button>
+
+        {/* Right icons: clear + loading + chevron */}
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            flexShrink: 0,
+            color: theme.textMuted,
+          }}
+        >
+          {isLoading && <Spinner size={sz.iconSize} color={theme.primary} />}
+          {hasClearable && !isLoading && (
+            <button
+              type="button"
+              aria-label={t.clearSelection}
+              onClick={clearAll}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                lineHeight: 1,
+                opacity: 0.7,
+                transition: 'opacity 120ms',
+                background: 'transparent',
+                border: 'none',
+                padding: 0,
+                color: 'inherit',
+              }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.opacity = '1')
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.opacity = '0.7')
+              }
+            >
+              <svg
+                width={sz.iconSize}
+                height={sz.iconSize}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+          <svg
+            width={sz.iconSize}
+            height={sz.iconSize}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
+            style={{
+              transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 150ms',
+              flexShrink: 0,
+            }}
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </span>
       </div>
 
       {hint && !hasError && (

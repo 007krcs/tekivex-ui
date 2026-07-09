@@ -5,7 +5,7 @@
 > and LLMs to ingest the complete documentation in one fetch. The curated
 > link map is at https://ui.tekivex.com/llms.txt. Canonical HTML docs at https://ui.tekivex.com/.
 
-Generated from 125 documentation pages. Source of truth:
+Generated from 148 documentation pages. Source of truth:
 https://github.com/007krcs/tekivex-ui (docs-site/src/content/docs).
 
 ================================================================================
@@ -1166,7 +1166,7 @@ cold load even with the init script wired up.
 
 ## Async field validation with debounced server checks
 URL: https://ui.tekivex.com/recipes/async-field-validation/
-"Is this username available?" / "Does this email already have an account?" — without rate-limiting your auth API, without race conditions, without leaking the in-flight state.
+Debounced, race-condition-safe "is this username available?" checks — without hammering your auth API or leaking the in-flight request state.
 
 Naive async validation fires a `fetch` on every keystroke, hammers your auth
 API, races itself, and ends up showing the user a stale result that
@@ -1826,7 +1826,7 @@ function buildComplianceExport(window: { from: number; to: number }) {
 
 ## DataGrid with hierarchical (tree) rows
 URL: https://ui.tekivex.com/recipes/data-grid-with-tree-data/
-Render an org chart, file-system view, or accounts hierarchy as a sortable, editable grid with disclosure carets and indented children. v3.19 — treegrid ARIA built-in.
+Render an org chart, file tree, or accounts hierarchy as a sortable, editable grid with disclosure carets and indented children. treegrid ARIA built in.
 
 You have data that's tree-shaped — a reporting structure, a chart of
 accounts, a folder hierarchy — but you also need columns, sort, filter,
@@ -2220,7 +2220,7 @@ If a recipe overpromises, it's a bug — open an issue.
 
 ## India address form — Country → State → District → Sub-district → PIN
 URL: https://ui.tekivex.com/recipes/india-address-form/
-Cascading address picker for Indian forms, with region-correct sub-district labels (Taluka / Tehsil / Mandal / Block) and India Post PIN lookup. Bring your own data or use the bundled LGD snapshot.
+Cascading Country → State → District → Sub-district picker for Indian forms with region-correct labels (Taluka/Tehsil/Mandal/Block) + India Post PIN lookup.
 
 ## The problem
 
@@ -2497,7 +2497,7 @@ logos, and insignia (per GODL § 7).
 
 ## Peer-to-peer chat with media, reactions, and typing indicators
 URL: https://ui.tekivex.com/recipes/peer-chat-with-media/
-Real-people messaging — not LLM conversations. TkxPeerChat with image / file / audio / video attachments (magic-byte verified), one-level reply threading, edit/delete, delivery states, and consumer-wired typing indicator.
+Real-people messaging (not LLM chat): TkxPeerChat with magic-byte-verified media attachments, reply threading, edit/delete, delivery states, and typing.
 
 There's a recurring confusion in the issue tracker: "I tried to build a
 support-agent chat with `TkxChat` and got stuck — there's no name on the
@@ -2967,7 +2967,7 @@ network is yours:
 
 ## PII redaction before sending to an LLM
 URL: https://ui.tekivex.com/recipes/pii-redaction-before-llm/
-Strip SSN, Luhn-validated credit cards, email, phone, and API keys from text before it crosses the boundary to OpenAI, Anthropic, or any third-party service. Regex + mod-10 — no false positives on 13-digit order IDs.
+Strip SSN, Luhn-validated cards, email, phone, and API keys from text before it reaches OpenAI / Anthropic / any third party. Regex + mod-10 validation.
 
 You're about to ship a feature that puts user-supplied text into a prompt
 and sends it to a third-party model. Compliance is going to ask: "How do
@@ -3181,7 +3181,7 @@ but only ~1 in 10 will pass Verhoeff.
 
 ## Secure file upload with magic-byte verification
 URL: https://ui.tekivex.com/recipes/secure-file-upload/
-Verify file uploads against their real signature bytes, not their Content-Type header. Defends against polyglots, Content-Type spoofing, and double-extension tricks.
+Verify uploads by their real magic-byte signature, not the Content-Type header — defends against polyglots, spoofing, and double-extension tricks.
 
 The browser file picker reports whatever MIME type the OS guesses from the
 file extension. An attacker who renames `payload.exe` to `invoice.pdf` and
@@ -3398,7 +3398,7 @@ theme; consumer themes need their own check via `meetsAAA` from
 
 ## HIPAA-aligned patient intake form
 URL: https://ui.tekivex.com/blueprints/healthtech-patient-intake/
-A multi-step React intake form that addresses several 45 CFR § 164.312 technical safeguards — audit controls, integrity, and transmission security at the UI layer. Honest about what this covers and what your organization is still responsible for.
+HIPAA-aligned React patient-intake form mapping tekivex-ui primitives to 45 CFR § 164.312 technical safeguards, with an honest scope-limits section.
 
 This blueprint shows how tekivex-ui primitives help a React application
   satisfy the **technical safeguards** clause of HIPAA (45 CFR § 164.312).
@@ -4050,7 +4050,7 @@ Security Rule from § 164.312, and tekivex-ui addresses **none** of it:
 
 ## Industry blueprints — production-shaped patterns for regulated verticals
 URL: https://ui.tekivex.com/blueprints/
-Outcome-driven walkthroughs scoped to a specific industry's compliance and workflow shape. Honest about scope — these blueprints show how the primitives compose, not that the library is certified.
+Industry-scoped walkthroughs showing how tekivex-ui primitives compose for regulated verticals. Honest about scope — composition, not certification.
 
 Industry blueprints show how tekivex-ui primitives help an application
   address specific technical requirements in regulated verticals. They do
@@ -4226,7 +4226,7 @@ const [open, setOpen] = useState<string[]>([]);
 
 ## TkxAddressInput
 URL: https://ui.tekivex.com/components/address-input/
-Indian-address input with two complementary pickers — type a 6-digit PIN and India Post auto-fills city / state / country, OR opt into a Country → State → District → Sub-district cascade with region-correct labels (Taluka / Tehsil / Mandal / Block).
+Indian-address input: type a 6-digit PIN for India Post auto-fill, or use the cascading Country → State → District → Sub-district picker (Taluka/Tehsil).
 
 `TkxAddressInput` is a single component with two complementary input
 modes that can coexist in the same form:
@@ -4592,6 +4592,92 @@ Implementation in [`src/components/TkxAppBar.tsx`](https://ui.tekivex.com).
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/app-bar).
+
+--------------------------------------------------------------------------------
+
+
+## TkxAutoForm
+URL: https://ui.tekivex.com/components/auto-form/
+Render a complete accessible form from a declarative schema — validation, error summary, themed controls, and built-in input sanitisation.
+
+`TkxAutoForm` renders a complete, working form from a declarative `FormSchema`
+— no manual field wiring. It is the runtime counterpart to `TkxFormBuilder`:
+the builder *designs* a schema (and emits it as JSON), `TkxAutoForm` *renders*
+one. Author the schema by hand, fetch it from an API, or pipe it straight out
+of the builder. You get validation, an accessible error summary, themed
+controls, and kernel-grade input sanitisation on submit.
+
+```tsx
+
+const schema = {
+  title: 'Contact',
+  fields: [
+    { id: '1', type: 'text',  name: 'name',  label: 'Name', required: true },
+    { id: '2', type: 'email', name: 'email', label: 'Email', required: true },
+    { id: '3', type: 'textarea', name: 'note', label: 'Message' },
+  ],
+};
+
+ console.log(data)} />
+```
+
+`FormSchema`, `FormField`, `FormFieldType`, `FormFieldOption`, and
+`validateField` are re-exported from the package root — import them from
+`'tekivex-ui'` alongside `TkxAutoForm`.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `schema` | `FormSchema` | — | The form definition (`{ title?, description?, fields }`). |
+| `defaultValues` | `Record<string, unknown>` | — | Initial values, keyed by field `name`. |
+| `onSubmit` | `(data: Record<string, unknown>) => void` | — | Called with validated (and by default sanitised) values. |
+| `onChange` | `(values: Record<string, unknown>) => void` | — | Called on every change with the current raw values. |
+| `submitLabel` | `string` | `'Submit'` | Submit button text. |
+| `sanitize` | `boolean` | `true` | Run string values through the security kernel before `onSubmit`. |
+| `redactPII` | `boolean` | `false` | Additionally redact PII (email, cards, SSN, phone, API keys) from strings. |
+| `validateOnBlur` | `boolean` | `true` | Validate a field on blur, not only on submit. |
+| `className` | `string` | — | Class on the `<form>` element. |
+| `style` | `CSSProperties` | — | Inline style merged onto the `<form>`. |
+
+### FormField shape
+
+Each entry in `schema.fields` is a `FormField`:
+
+| Key | Type | Description |
+|---|---|---|
+| `id` | `string` | Stable React key. |
+| `type` | `'text' \| 'email' \| 'number' \| 'textarea' \| 'select' \| 'radio' \| 'checkbox' \| 'date'` | Control to render. |
+| `name` | `string` | Key in the submitted data object. |
+| `label` | `string` | Field label. |
+| `placeholder` | `string?` | Placeholder / checkbox inline label. |
+| `helpText` | `string?` | Hint rendered under the control. |
+| `required` | `boolean?` | Marks the field required (renders `*`). |
+| `options` | `FormFieldOption[]?` | `{ label, value }[]` for select / radio. |
+| `min` / `max` | `number?` | Min/max for number & date; min/maxLength for text. |
+| `pattern` | `string?` | Regex (text inputs), authored as a string for JSON safety. |
+
+## Behaviour notes
+
+- **Security on submit**: when `sanitize` is on (the default), every string
+  value is run through `sanitizeUnicode → sanitizeString` before it reaches
+  `onSubmit`. With `redactPII` on, values additionally pass through `scrubPII`
+  — useful when the payload is forwarded to an LLM. Non-string values pass
+  through untouched. These kernel primitives emit `SecurityEvent`s, so a
+  `TkxSecurityDashboard` on the page reacts as users submit.
+- **Accessible error summary**: on a failed submit, an error summary with
+  `role="alert"` is rendered and focused, and each entry links to (and focuses)
+  the offending field. Field anchors are derived from `name` as
+  `#tkx-af-<name>`, so field names must be unique within the form.
+- The `<form>` uses `noValidate`; validation is driven entirely by
+  `validateField`, not the browser. `validateOnBlur` controls whether a field
+  is re-checked on blur in addition to the submit pass.
+- `onChange` reports the **raw** (un-sanitised) values; only the `onSubmit`
+  payload is hardened.
+
+## Source
+
+[`src/components/TkxAutoForm.tsx`](https://ui.tekivex.com)
 
 --------------------------------------------------------------------------------
 
@@ -5034,6 +5120,62 @@ remains visible to screen readers; the spinner is `aria-hidden`.
 | `iconLeft` / `iconRight` | `ReactNode` | — | Icon slots |
 | `pressed` | `boolean` | — | Adds `aria-pressed` for toggle buttons |
 | `as` | `'button' \| 'a'` | `'button'` | Render as anchor when navigating |
+
+--------------------------------------------------------------------------------
+
+
+## TkxCalendarHeatmap
+URL: https://ui.tekivex.com/components/calendar-heatmap/
+GitHub-style activity calendar heatmap. Pass date/value points for a year grid with intensity colors, tooltips, and keyboard cell navigation.
+
+`TkxCalendarHeatmap` is the date-driven, GitHub-style activity heatmap. Pass an
+array of `{ date, value }` and get a week × day grid (a rolling year by
+default) where each cell's intensity reflects its value. Use it for
+contributions, streaks, deploys, logins, or any per-day activity. For a
+categorical matrix instead, use [`TkxHeatmap`](/components/heatmap).
+
+```tsx
+
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `HeatmapDataPoint[]` | — | Entries: `{ date, value }`. Same-day entries are summed. |
+| `endDate` | `Date \| string` | today | Inclusive end of the range. |
+| `startDate` | `Date \| string` | `endDate − 365d` | Inclusive start of the range. |
+| `colors` | `[string, string, string, string, string]` | theme spectrum | 5-stop scale, low → high (index 0 = empty). |
+| `cellSize` | `number` | `11` | Cell side length in px. |
+| `gap` | `number` | `3` | Gap between cells in px. |
+| `showMonthLabels` | `boolean` | `true` | Month labels along the top. |
+| `showWeekdayLabels` | `boolean` | `true` | Mon/Wed/Fri labels on the left. |
+| `onCellClick` | `(point: { date, value }) => void` | — | Click handler for a cell. |
+| `formatTooltip` | `(point: { date, value }) => string` | auto | Format the tooltip + cell `aria-label`. |
+| `ariaLabel` | `string` | auto | Accessible name for the whole grid. |
+| `className` | `string` | — | Class on the root. |
+| `style` | `CSSProperties` | — | Inline style merged onto the root. |
+
+## Behaviour notes
+
+- **Intensity bucketing**: a cell's colour is chosen by its value as a ratio of
+  the dataset's max — `>75%`, `>50%`, `>25%`, else the lowest non-empty shade;
+  zero/negative maps to the empty colour (scale index 0). It is *not* a
+  continuous gradient.
+- Weeks are Sunday-based (matching GitHub). All date maths runs in UTC, so a
+  `date` string is bucketed by its UTC day regardless of the viewer's timezone.
+- **Keyboard navigation**: cells are focusable; arrow keys move within the grid
+  (←/→ across weeks, ↑/↓ within a week), and Enter or Space activates
+  `onCellClick`. Only the first cell is in the tab order (roving tabindex).
+- A tooltip follows hover and focus; its transition respects
+  `prefers-reduced-motion`.
+- The grid uses `role="grid"` with `role="row"` / `role="gridcell"`; each cell's
+  `aria-label` comes from `formatTooltip` (default: `"<value> on <date>"` or
+  `"No activity on <date>"`).
+
+## Source
+
+[`src/components/TkxCalendarHeatmap.tsx`](https://ui.tekivex.com)
 
 --------------------------------------------------------------------------------
 
@@ -5545,6 +5687,112 @@ the rendered component update in real time, open the
 --------------------------------------------------------------------------------
 
 
+## TkxCode
+URL: https://ui.tekivex.com/components/code/
+Zero-dependency syntax-highlighted code block. Line numbers, line highlighting, copy button, filename header — token colours from your theme.
+
+A syntax-highlighted code block for docs and dev-tool UIs — with **zero
+dependencies**. Where [`TkxMarkdown`](/components/markdown/) renders code
+plainly, `TkxCode` tokenizes it with a small built-in regex highlighter and
+colours tokens from your active theme (keywords → `primary`, strings →
+`success`, comments → `textMuted`, numbers → `warning`, …). No hardcoded hex,
+so it follows every theme automatically.
+
+Highlighting output is React `<span>` text nodes — never
+`dangerouslySetInnerHTML` — so untrusted snippets can't inject markup.
+
+```tsx
+
+ {
+  // template literals work too
+  return \`Hello, \${name}!\`;
+};`}
+/>
+```
+
+## Line numbers & line highlighting
+
+`showLineNumbers` adds an `aria-hidden` gutter. `highlightLines` (1-based)
+tints the given rows with a subtle `primary`-coloured background and edge
+marker — great for "look at this line" moments in docs.
+
+```tsx
+
+```
+
+## Copy button & filename header
+
+The copy button is on by default (`copyable`) and writes the *original* code
+string via `navigator.clipboard` (guarded — it's a no-op where the API is
+unavailable). Pass `filename` to render a header bar; the copy button moves
+into it.
+
+```tsx
+
+```
+
+## Long code
+
+By default long lines scroll horizontally; set `wrap` to soft-wrap instead.
+`maxHeight` caps the block and scrolls vertically.
+
+```tsx
+
+```
+
+## Supported languages
+
+| Value | Highlights |
+|---|---|
+| `ts` / `js` | keywords, strings (incl. template literals), comments, numbers, booleans/`null`/`undefined`, function calls |
+| `tsx` / `jsx` | everything above, plus JSX tag names and attribute names |
+| `json` | object keys, string/number values, `true`/`false`/`null` |
+| `bash` | comments, strings, `$variables`, `--flags`, builtins/keywords |
+| `css` | selectors, at-rules, property names, numbers/units, hex colours, comments |
+| `html` | comments, tag names, attribute names, attribute-value strings |
+| `python` | keywords, strings (incl. `'''`/`"""` and `f`/`r` prefixes), decorators, comments, numbers, `True`/`False`/`None` |
+| `text` | none — plain rendering (the default) |
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `code` | `string` | `''` | The source to display. A bare mount never crashes. |
+| `language` | `TkxCodeLanguage` | `'text'` | One of the languages above; `'text'` disables highlighting. |
+| `showLineNumbers` | `boolean` | `false` | Render an `aria-hidden` line-number gutter. |
+| `highlightLines` | `number[]` | — | 1-based lines to emphasise with a `primary`-tinted row. |
+| `copyable` | `boolean` | `true` | Show the copy button (`aria-label="Copy code"`). |
+| `filename` | `string` | — | Header bar with the filename; also feeds the code's `aria-label`. |
+| `wrap` | `boolean` | `false` | Soft-wrap long lines instead of horizontal scrolling. |
+| `maxHeight` | `number \| string` | — | Cap the code area's height (number = px). |
+| `className` / `style` | — | — | Applied to the root container. |
+
+The component forwards its `ref` to the root `<div>`. The code renders inside
+semantic `<pre><code>` with an `aria-label` derived from `filename` or
+`language`.
+
+## Limitations
+
+  `TkxCode` is a **lightweight regex highlighter for snippets**, not a
+  grammar-accurate parser. Know what it doesn't do:
+
+  - No template-literal interpolation nesting — `` `a ${b} c` `` is one string
+    token, the `${b}` inside is not re-highlighted.
+  - No regex-literal detection in JS/TS (`/foo/g` is treated as plain code, or
+    as a comment opener if it starts with `//`).
+  - TSX generics like `Array<string>` can be mistaken for JSX tags, and plain
+    words in JSX text content may match keywords.
+  - No bash heredocs, CSS nesting-aware selector logic, or HTML entities.
+
+  Comment/string precedence *is* correct (a keyword inside a string stays
+  string-coloured), and multi-line `/* … */`, `<!-- … -->` and Python
+  triple-quoted strings carry across lines. For full-fidelity highlighting of
+  large files, use a dedicated highlighter — this component is tuned for
+  docs-scale snippets with zero added bundle weight.
+
+--------------------------------------------------------------------------------
+
+
 ## TkxColorPicker
 URL: https://ui.tekivex.com/components/color-picker/
 TkxColorPicker — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
@@ -5573,6 +5821,189 @@ TkxColorPicker — accessible React component from tekivex-ui. Live demos, props
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/color-picker).
+
+--------------------------------------------------------------------------------
+
+
+## TkxComboBox
+URL: https://ui.tekivex.com/components/combo-box/
+Multi-select combobox with token chips. Type to filter, Enter to toggle, chips for selected values — recipients, tags, filters.
+
+A **multi-select** combobox: selected values render as removable token chips
+before the text input, typing filters the option list, and selecting keeps the
+list open so you can pick several values in a row. Built for recipients, tags,
+and filter pickers.
+
+Same accessible `label` / `hint` / `error` / `isRequired` chrome as
+[`TkxInput`](/components/input/).
+
+```tsx
+
+ console.log(values, selected)}
+/>
+```
+
+## Controlled and uncontrolled
+
+`value` (a `string[]`) makes the selection controlled; `defaultValue` seeds an
+uncontrolled one. `onChange` always receives both the value array and the
+matching option objects.
+
+```tsx
+const [tags, setTags] = useState<string[]>([]);
+
+```
+
+## Capping the selection
+
+`maxSelected` caps how many values can be picked. Once the cap is reached the
+remaining options are visibly muted, marked `aria-disabled`, and cannot be
+selected — but already-selected options stay interactive so they can be
+deselected.
+
+```tsx
+
+```
+
+## Plain form posts
+
+Pass `name` to render a hidden input that joins the selected values with `,`,
+so the component works in a plain `<form>` post without JavaScript glue.
+
+```tsx
+
+// posts: categories=bug,docs
+```
+
+## Keyboard model
+
+Focus stays on the text input the whole time — the active option is conveyed
+via `aria-activedescendant`, not roving DOM focus.
+
+| Key | Action |
+|---|---|
+| Type | Filters options (case-insensitive substring) and opens the list. |
+| `ArrowDown` / `ArrowUp` | Move the active option; disabled options are skipped. |
+| `Enter` | Toggles the active option. The list **stays open** (multi-select convention) and the query is cleared. |
+| `Escape` | Closes the list. |
+| `Backspace` (empty input) | Removes the last chip. |
+
+Each chip's remove control is a real `<button>` labelled `Remove <label>`.
+Clicking outside closes the list.
+
+## Validation
+
+```tsx
+
+```
+
+`error` sets `aria-invalid`, renders a `role="alert"` message, and links it via
+`aria-describedby` — the same wiring as `TkxInput`.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | — | **Required.** Accessible label. |
+| `options` | `ComboBoxOption[]` | `[]` | `{ value, label, disabled? }` items. Safe to omit — a bare mount renders an empty list. |
+| `value` | `string[]` | — | Controlled selection. |
+| `defaultValue` | `string[]` | — | Uncontrolled initial selection. |
+| `onChange` | `(values: string[], selectedOptions: ComboBoxOption[]) => void` | — | Fires on every selection change. |
+| `placeholder` | `string` | — | Shown while nothing is selected. |
+| `hint` | `string` | — | Helper text below the field. |
+| `error` | `string` | — | Error message; sets `aria-invalid` + `role="alert"`. |
+| `isInvalid` | `boolean` | `false` | Force the invalid style without an error string. |
+| `isRequired` | `boolean` | `false` | Adds `aria-required` + asterisk. |
+| `disabled` | `boolean` | `false` | Disables the input and chip removal. |
+| `clearable` | `boolean` | `true` | Show a "Clear all" affordance when something is selected. |
+| `maxSelected` | `number` | — | Cap the number of selected values. |
+| `id` | `string` | auto | Id for the inner input (label association). |
+| `name` | `string` | — | Renders a hidden input with comma-joined values for form posts. |
+| `className` / `style` | — | — | Applied to the outer wrapper. |
+
+The component forwards its `ref` to the inner `<input>`.
+
+  `TkxComboBox` is **multi-select**. For picking a single value, use
+  [`TkxAutocomplete`](/components/autocomplete/) (type-ahead) or
+  [`TkxSelect`](/components/select/) (fixed list).
+
+--------------------------------------------------------------------------------
+
+
+## TkxCommandPalette
+URL: https://ui.tekivex.com/components/command-palette/
+Zero-dependency Cmd-K command palette with built-in fuzzy search, sections, recents, keyboard navigation, and ARIA combobox semantics.
+
+`TkxCommandPalette` is a keyboard-first command launcher in the Linear /
+Raycast / GitHub style. It opens on a hotkey (Cmd-K / Ctrl-K by default),
+fuzzy-matches as you type, groups commands into sections, floats your recent
+picks to the top, and renders into a portal so it is never trapped by a
+clipped ancestor. It is headless about side effects: your parent owns the
+command list and the `onSelect` behaviour.
+
+```tsx
+
+ openSettings() },
+    { id: 'docs', title: 'Search docs', subtitle: 'Find anything',
+      section: 'Help', onSelect: () => openDocs() },
+  ]}
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `commands` | `CommandPaletteCommand[]` | — | The full command list (required). |
+| `hotkey` | `CommandHotkey \| null` | `{ ctrl: true, key: 'k' }` | Key to toggle open. `null` disables the hotkey. |
+| `open` | `boolean` | — | Controlled open state. Omit for uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | — | Fires on open/close (controlled and uncontrolled). |
+| `placeholder` | `string` | `'Type a command…'` | Search input placeholder. |
+| `onSelect` | `(cmd) => void` | — | Global selection callback (in addition to a command's own `onSelect`). |
+| `recents` | `boolean` | `true` | Show a "Recents" group at the top when the query is empty. |
+| `maxRecents` | `number` | `5` | Max recent commands retained. |
+| `emptyState` | `ReactNode` | `No matches for "…"` | Node shown when nothing matches. |
+| `className` | `string` | — | Class on the overlay. |
+
+### Command shape
+
+| Key | Type | Description |
+|---|---|---|
+| `id` | `string` | Stable identifier; also the recents key. |
+| `title` | `string` | Primary label. |
+| `subtitle` | `string?` | One-line description under the title (also fuzzy-matched). |
+| `section` | `string?` | Group header. Defaults to `'Commands'`. |
+| `icon` | `ReactNode?` | Emoji or short text icon. |
+| `shortcut` | `string[]?` | Right-aligned keyboard hint, rendered as kbd pills. |
+| `data` | `unknown?` | Free-form payload returned to your callback. |
+| `hidden` | `boolean?` | Hide this command without removing it from the list. |
+| `onSelect` | `(cmd) => void?` | Per-command override of the global `onSelect`. |
+
+## Behaviour notes
+
+- **Hotkey is platform-aware**: with `ctrl: true`, it matches `metaKey` on
+  Mac (Cmd) and `ctrlKey` elsewhere. `shift`/`alt` must match exactly (both
+  default to `false`).
+- **Keyboard model**: type to search, ↑/↓ to move, Enter to run, Esc to close,
+  Home/End jump to the first/last result. Hovering or moving the mouse over a
+  row also makes it active.
+- **Fuzzy scoring** requires a case-insensitive subsequence match; prefix hits,
+  word-boundary hits, and contiguous runs score higher, and long titles are
+  slightly penalised so short exact matches win. The `fuzzyScore(query, text)`
+  helper is exported if you want to reuse the same ranking. A subtitle match
+  scores 4 points lower than the same match on the title.
+- Running a command bumps it to the front of recents (capped at `maxRecents`)
+  and closes the palette. Recents are component-local state — they are not
+  persisted across reloads.
+- Filter commands with `hidden: true` rather than recreating the list, so
+  recents and identities stay stable.
+- Renders via `createPortal` into `document.body`; returns `null` when closed
+  or during SSR (no `document`). Uses `role="dialog"` / `aria-modal` with an
+  ARIA combobox + listbox and `aria-activedescendant` for the active option.
+
+## Source
+
+[`src/components/TkxCommandPalette.tsx`](https://ui.tekivex.com)
 
 --------------------------------------------------------------------------------
 
@@ -6301,6 +6732,82 @@ The implementation lives at [`src/components/TkxQuantumForm.tsx`](https://ui.tek
 --------------------------------------------------------------------------------
 
 
+## TkxField
+URL: https://ui.tekivex.com/components/field/
+Standalone form-control wrapper — gives any control the accessible label, hint, and error chrome with automatic aria wiring.
+
+`TkxInput` and `TkxTextarea` ship label/hint/error chrome built in — but every
+*other* control (a custom widget, a third-party input, a plain `<select>`) had
+to re-implement that wiring by hand. `TkxField` extracts it into a standalone
+wrapper: the child automatically receives `id`, `aria-describedby`,
+`aria-invalid`, and `aria-required`.
+
+```tsx
+
+  
+
+```
+
+## How the child is wired
+
+**Element child** — the props are injected via `cloneElement`:
+
+```tsx
+
+  <select>
+    <option>India</option>
+  </select>
+
+```
+
+**Function child** — receive the props and spread them wherever you want
+(useful when the focusable element is nested):
+
+```tsx
+
+  {(field) => (
+    <div className="editor-shell">
+      <textarea {...field} />
+    </div>
+  )}
+
+```
+
+If the child already carries an `id`, TkxField respects it (the label's
+`htmlFor` points at it) instead of generating one.
+
+## Validation
+
+```tsx
+
+  <input type="email" />
+
+```
+
+- `error` renders a `role="alert"` message, links it via `aria-describedby`,
+  and sets `aria-invalid` on the child.
+- `hint` is hidden while an error is showing (single message at a time).
+- `isRequired` adds `aria-required` plus a visual, `aria-hidden` asterisk.
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | — | **Required.** Visible label, wired via `htmlFor`. |
+| `id` | `string` | auto | Explicit control id (else child's own id, else auto). |
+| `hint` | `string` | — | Helper text (suppressed while `error` shows). |
+| `error` | `string` | — | Error message; sets `aria-invalid` + `role="alert"`. |
+| `isInvalid` | `boolean` | `false` | Invalid state without an error string. |
+| `isRequired` | `boolean` | `false` | `aria-required` + asterisk. |
+| `children` | `ReactElement \| (field) => ReactNode` | — | The control; receives the injected field props. |
+| `className` / `style` | — | — | Root wrapper styling. |
+
+  Prefer `TkxInput` / `TkxTextarea` for plain text fields — they include this
+  chrome already. Reach for `TkxField` when wrapping anything else.
+
+--------------------------------------------------------------------------------
+
+
 ## TkxFileUpload
 URL: https://ui.tekivex.com/components/file-upload/
 Drag-and-drop file uploader with validation, previews, simulated progress, and full keyboard support.
@@ -6403,6 +6910,133 @@ files. Wire your own POST/PUT to the server:
 --------------------------------------------------------------------------------
 
 
+## TkxFlowChart
+URL: https://ui.tekivex.com/components/flow-chart/
+Headless node-edge graph editor — pan, zoom, drag nodes, draw edges, inline rename, and an inspector. Parent owns the nodes and edges arrays.
+
+```tsx
+
+```
+
+`TkxFlowChart` is a controlled, headless 2D graph editor: a pannable / zoomable
+canvas with draggable nodes, cubic-Bezier edges, click-to-select, keyboard
+navigation, inline rename, a right-click context menu, and a property inspector.
+Use it for flow diagrams, pipeline builders, state machines, or any
+node-and-edge surface where **you own the data** and the component only emits
+changes.
+
+## Usage
+
+You must hold `data` in state and apply every `onChange` payload back — the
+component never mutates anything implicitly.
+
+```tsx
+
+function Demo() {
+  const [graph, setGraph] = useState({
+    nodes: [
+      { id: 'a', x: 40,  y: 60, label: 'Start', color: '#00f5d4' },
+      { id: 'b', x: 320, y: 60, label: 'Process' },
+    ],
+    edges: [{ id: 'a-b', from: 'a', to: 'b' }],
+  });
+
+  return (
+     console.log('selected', id)}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `FlowChartData` | required | Controlled `{ nodes, edges }` graph state. |
+| `onChange` | `(next: FlowChartData) => void` | required | Fired on every mutation (drag, edge add, rename, delete, inspector edits). You must persist it. |
+| `selectedId` | `string \| null` | — | Controlled selected node id. Omit to let the component own selection internally. |
+| `onSelect` | `(id: string \| null) => void` | — | Fired on selection change. |
+| `initialViewport` | `Viewport` | `{ x: 0, y: 0, scale: 1 }` | Initial pan/zoom. Uncontrolled after mount. |
+| `draggable` | `boolean` | `true` | Allow node drag. |
+| `pannable` | `boolean` | `true` | Allow canvas pan (drag empty space). |
+| `zoomable` | `boolean` | `true` | Allow wheel + pinch zoom. |
+| `minZoom` | `number` | `0.25` | Min zoom factor. |
+| `maxZoom` | `number` | `3` | Max zoom factor. |
+| `height` | `number` | `480` | Canvas height in px. Width is always 100% of the parent. |
+| `showGrid` | `boolean` | `true` | Render the background dot grid. |
+| `showControls` | `boolean` | `true` | Show the zoom-in / fit / zoom-out / inspector toolbar. |
+| `renderNode` | `(node: FlowNode, isSelected: boolean) => ReactNode` | — | Custom node body renderer. **Disables inline double-click rename** (see gotchas). |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the container. |
+
+## Data shape
+
+```ts
+interface FlowNode {
+  id: string;
+  x: number;          // top-left corner in graph-space
+  y: number;
+  width?: number;     // default 160
+  height?: number;    // default 60
+  label: string;
+  color?: string;     // accent for border + ports + edges
+  data?: unknown;     // free-form payload echoed back to you
+}
+
+interface FlowEdge {
+  id: string;
+  from: string;       // source node id
+  to: string;         // target node id
+  label?: string;     // drawn at the edge midpoint
+  color?: string;     // defaults to the source node's color
+}
+
+interface FlowChartData {
+  nodes: FlowNode[];
+  edges: FlowEdge[];
+}
+
+interface Viewport { x: number; y: number; scale: number }
+```
+
+Coordinates are **graph-space** (not screen pixels). The viewport translate +
+scale maps them to the screen. Edges always route from the right port of the
+source to the left port of the target (left-to-right reading flow).
+
+## Behavior / gotchas
+
+- **Fully controlled data.** `data` + `onChange` are required. Nothing moves,
+  connects, or deletes unless you write the new state back. Dropping the
+  `onChange` result on the floor makes the editor appear frozen.
+- **Selection can be controlled or uncontrolled.** Pass `selectedId` to control
+  it; omit it and the component tracks selection internally while still firing
+  `onSelect`.
+- **Creating edges:** drag from a node's right-hand `+` port onto another node.
+  A live dashed draft line tracks the cursor; dropping on a valid target node
+  appends a new edge. Duplicate `from→to` edges are silently ignored. Edge
+  endpoints are not draggable and edges cannot be re-routed — delete and redraw.
+- **Inline rename:** double-click a node to edit its label (Enter commits, Esc
+  cancels). This only works with the **default** renderer — passing `renderNode`
+  suppresses it because your custom body owns the double-click.
+- **Keyboard model** (focus the canvas first):
+  - `Tab` / `Shift+Tab` — cycle node selection (Tab with nothing selected
+    selects the first node).
+  - Arrow keys — nudge the selected node by 1px; `Shift` + arrow = 10px.
+  - `Delete` / `Backspace` — if an **edge** is selected, removes just that
+    edge; otherwise removes the selected **node** and all connected edges.
+- **Edge selection takes Delete priority.** Click an edge to select it (node
+  selection is cleared) so `Delete` targets the edge, not a node.
+- **Context menu:** right-click a node for Rename / Duplicate / Bring-to-front /
+  Delete. All actions go through `onChange`.
+- **Zoom anchoring:** wheel and pinch zoom keep the point under the
+  cursor/pinch-center fixed. The fit button (`⤢`) frames all nodes.
+- `touchAction` is set to `none` when pan or zoom is enabled, so the component
+  owns touch gestures inside its bounds.
+```
+
+--------------------------------------------------------------------------------
+
+
 ## TkxFontProvider
 URL: https://ui.tekivex.com/components/font-provider/
 FontProvider — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
@@ -6443,6 +7077,109 @@ The implementation lives at [`src/components/TkxFontProvider.tsx`](https://ui.te
 --------------------------------------------------------------------------------
 
 
+## TkxFormBuilder
+URL: https://ui.tekivex.com/components/form-builder/
+Visual form designer with a palette, canvas, inspector, live preview, and JSON view. Edits a small JSON-serialisable FormSchema you own.
+
+```tsx
+
+```
+
+`TkxFormBuilder` is a three-pane visual form designer (palette · canvas ·
+inspector) with tabs for **Design**, **Preview** (renders the real form with
+validation), and **JSON**. It edits a compact, JSON-serialisable `FormSchema`
+that you own — persist it, version it, or feed it to a code generator. Use it
+when you need end users or designers to assemble forms without touching code.
+
+## Usage
+
+The schema is controlled: hold it in state and write back every `onChange`.
+
+```tsx
+
+function Demo() {
+  const [schema, setSchema] = useState({
+    title: 'Contact us',
+    fields: [
+      { id: 'f1', type: 'text',  name: 'full_name', label: 'Full name', required: true },
+      { id: 'f2', type: 'email', name: 'email',     label: 'Email',     required: true },
+    ],
+  });
+
+  return ;
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `schema` | `FormSchema` | required | Controlled schema. |
+| `onChange` | `(next: FormSchema) => void` | required | Fired on add / remove / reorder / edit. You must persist it. |
+| `allowedTypes` | `FormFieldType[]` | all 8 types | Restricts the field types shown in the palette. |
+| `defaultTab` | `'design' \| 'preview' \| 'json'` | `'design'` | Initially active tab. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the outer container (fixed 600px tall by default). |
+
+## Data shape
+
+```ts
+type FormFieldType =
+  | 'text' | 'email' | 'number' | 'textarea'
+  | 'select' | 'radio' | 'checkbox' | 'date';
+
+interface FormFieldOption { label: string; value: string }
+
+interface FormField {
+  id: string;            // stable internal id
+  type: FormFieldType;
+  name: string;          // key in the submitted data object
+  label: string;
+  placeholder?: string;
+  helpText?: string;
+  required?: boolean;
+  options?: FormFieldOption[]; // select / radio only
+  min?: number;          // number range, or date min
+  max?: number;
+  pattern?: string;      // regex string (text/email), authored as a string for JSON safety
+}
+
+interface FormSchema {
+  title?: string;
+  description?: string;
+  fields: FormField[];
+}
+```
+
+A `validateField(field, value)` helper is also exported so you can run the same
+validation logic outside the Preview tab (returns an error string or `null`).
+
+## Behavior / gotchas
+
+- **Controlled schema only.** `schema` + `onChange` are both required; the
+  builder never holds the field data itself. Only the *selected field* and
+  *active tab* are internal UI state.
+- **Adding fields:** click a type in the palette to **append** it (touch-first;
+  there is no drag-from-palette). New `select` / `radio` fields get two starter
+  options.
+- **Reordering is button-based, not drag.** Each canvas field has ↑ / ↓ buttons
+  (keyboard reachable). There is intentionally no drag DSL.
+- **`name` is sanitised on edit.** The inspector strips anything outside
+  `[A-Za-z0-9_]` from the field name as you type, since it becomes the data key.
+  Keep names unique yourself — duplicates collide in the submitted object.
+- **Inspector fields are conditional:** options editor shows only for
+  `select` / `radio`; min/max only for `number`; regex pattern only for
+  `text` / `email`.
+- **Preview validation** runs `required`, email format, number min/max, and the
+  regex `pattern` on submit; a bad regex is ignored (so the form still works)
+  rather than throwing. Successful submit dumps the collected values as JSON.
+- **Canvas selection** is reachable via keyboard (Enter / Space selects the
+  focused field row).
+```
+
+--------------------------------------------------------------------------------
+
+
 ## TkxForm
 URL: https://ui.tekivex.com/components/form/
 TkxForm — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
@@ -6469,6 +7206,276 @@ TkxForm — accessible React component from tekivex-ui. Live demos, props, and a
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/form).
+
+--------------------------------------------------------------------------------
+
+
+## TkxFunnelChart
+URL: https://ui.tekivex.com/components/funnel-chart/
+Zero-dependency SVG conversion funnel. Trapezoid stages encode value as width, with automatic drop-off percentages between steps.
+
+`TkxFunnelChart` renders a conversion funnel as a stack of trapezoids whose
+width tapers from one stage to the next, encoding each stage's value as
+horizontal extent. Drop-off percentages render between stages so leaks are
+obvious at a glance. Use it for sales funnels, signup flows, or any
+multi-step conversion.
+
+```tsx
+
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `TkxFunnelStage[]` | — | Stages: `{ label, value, color? }`, largest first by convention. |
+| `width` | `number` | `400` | SVG width in px. |
+| `height` | `number` | `300` | SVG height in px. |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Stack top-to-bottom or left-to-right. |
+| `colors` | `string[]` | brand cycle | Colour cycle used when a stage omits `color`. |
+| `showValues` | `boolean` | `true` | Render the value inside each stage. |
+| `showPercentages` | `boolean` | `true` | Render drop-off % between consecutive stages. |
+| `formatValue` | `(v: number) => string` | `String(v)` | Format stage and tooltip values. |
+| `gap` | `number` | `4` | Gap in px between stages. |
+| `ariaLabel` | `string` | auto | Accessible name; auto-summarises stages and total drop-off. |
+| `onStageClick` | `(stage, index) => void` | — | Fires when a stage is clicked. |
+
+All other `div` attributes (except `onClick`) are spread onto the root.
+
+## Behaviour notes
+
+- Stage widths are normalised against the **first** stage's value (treated as
+  100%), so the funnel always starts full-width regardless of the absolute
+  numbers.
+- Stages with zero or negative values do not vanish: width is clamped to a 4%
+  minimum so the stage stays visible and clickable.
+- Drop-off labels render as `−23%` when the next stage is smaller; if a later
+  stage grows (negative drop), it shows `+N%` instead.
+- A single-stage funnel degenerates to a rectangle (no taper).
+- In-stage value text auto-picks black or white for contrast against the
+  stage fill (WCAG luminance), so it stays legible on any colour.
+
+## Source
+
+[`src/components/TkxFunnelChart.tsx`](https://ui.tekivex.com)
+
+--------------------------------------------------------------------------------
+
+
+## TkxGantt
+URL: https://ui.tekivex.com/components/gantt/
+Day-resolution project timeline with dependency arrows, progress bars, and UTC-safe date math. Reschedule tasks via keyboard; parent owns the data.
+
+```tsx
+
+```
+
+`TkxGantt` renders a project timeline: a task-label column on the left and a
+scrollable day-resolution timeline on the right, with SVG dependency arrows,
+in-bar progress fills, and weekend striping. It auto-fits the scale to the
+date range of your tasks. All date math runs in **UTC**, so a task never slides
+a day when the user's timezone changes. Use it for schedules, roadmaps, and
+project plans.
+
+## Usage
+
+`tasks` is your data; rescheduling is emitted via `onTaskChange` for you to
+commit.
+
+```tsx
+
+function Demo() {
+  const [tasks, setTasks] = useState([
+    { id: 'a', label: 'Design',  start: '2026-05-01', end: '2026-05-05', progress: 1 },
+    { id: 'b', label: 'Build',   start: '2026-05-06', end: '2026-05-14', progress: 0.4, dependencies: ['a'] },
+    { id: 'c', label: 'Ship',    start: '2026-05-15', end: '2026-05-16', dependencies: ['b'] },
+  ]);
+
+  return (
+    
+        setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, ...next } : t)))
+      }
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `tasks` | `GanttTask[]` | required | The task list. |
+| `dayWidth` | `number` | `28` | Pixels per day on the timeline. |
+| `rowHeight` | `number` | `40` | Height of each task row in px. |
+| `labelColumnWidth` | `number` | `220` | Width of the left task-label column in px. |
+| `selectedId` | `string \| null` | — | Controlled selected task id. Omit for internal selection (defaults to the first task). |
+| `onSelect` | `(id: string, task: GanttTask) => void` | — | Fired on row click and keyboard navigation. |
+| `onTaskChange` | `(id, next: { start: string; end: string }, task) => void` | — | Fired on keyboard reschedule. You must commit it. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the outer container. |
+
+## Data shape
+
+```ts
+interface GanttTask {
+  id: string;
+  label: string;
+  start: string | Date;     // 'YYYY-MM-DD' (inclusive start day) or a Date
+  end: string | Date;       // inclusive end day; must be >= start
+  progress?: number;        // 0..1, default 0 — fills the bar
+  dependencies?: string[];  // ids this task depends on; draws an arrow from each
+  color?: string;           // bar accent
+  data?: unknown;           // free-form payload echoed to callbacks
+}
+```
+
+Exported date helpers: `parseDay`, `formatDay`, `dayDiff` (all UTC-safe).
+
+## Behavior / gotchas
+
+- **Strict date format.** String dates must match `YYYY-MM-DD`; anything else
+  throws `TkxGantt: invalid date "..."`. Pass a `Date` object if you have one —
+  it is normalised to UTC midnight.
+- **Inclusive day ranges.** `start` and `end` are both inclusive, so a 1-day
+  task has `start === end`. The bar width is `(dayDiff(start, end) + 1)` days.
+- **Selection is controlled-or-uncontrolled.** Pass `selectedId` to control it;
+  omit it and the component selects the first task and tracks selection
+  internally while still firing `onSelect`.
+- **Rescheduling is keyboard-only and headless.** Focus the chart, then:
+  - ↑ / ↓ — select previous / next task.
+  - ← / → — shift the **selected** task one day earlier / later. This emits
+    `onTaskChange` with the new `{ start, end }`; the chart does **not** move the
+    bar until you commit the change back into `tasks`. There is no drag-to-move.
+- **Dependency arrows** route orthogonally from the right edge of the source bar
+  into the left edge of the target. A dependency on an unknown id is skipped
+  silently.
+- **Auto-fit range** pads one day on each side of the min start / max end for
+  breathing room; an empty `tasks` array shows a 7-day window from today.
+- **Progress** is clamped to `0..1` and rendered as a fill overlay inside the
+  bar.
+```
+
+--------------------------------------------------------------------------------
+
+
+## TkxGauge
+URL: https://ui.tekivex.com/components/gauge/
+Zero-dependency SVG gauge with arc and speedometer variants, color thresholds, ticks, and animated fill. WAI-ARIA meter role.
+
+`TkxGauge` renders a circular progress gauge as a single self-contained SVG.
+Use it for KPIs, utilisation dials, scores, or any single bounded value you
+want shown as a fill arc. Two shapes are available: a 270° `arc` and a 180°
+top-half `speedometer`.
+
+```tsx
+
+```
+
+## Thresholds
+
+Pass an array of `{ at, color }` stops to segment the arc by value band. The
+filled arc is split at each boundary, and the centre value text adopts the
+colour of the band the current value falls into.
+
+```tsx
+
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `value` | `number` | — | Current value (required). Clamped into `[min, max]`. |
+| `min` | `number` | `0` | Range start. |
+| `max` | `number` | `100` | Range end. |
+| `size` | `number` | `200` | Width/height of the square SVG in px. Drives the value font size. |
+| `thickness` | `number` | `16` | Stroke width of the arc in px. |
+| `variant` | `'arc' \| 'speedometer'` | `'arc'` | `arc` = 270° sweep with a gap at the bottom; `speedometer` = 180° top half. |
+| `thresholds` | `GaugeThreshold[]` | — | `{ at: number; color: string }[]` color bands. The largest `at` ≤ value wins. |
+| `label` | `string` | — | Caption rendered below the gauge. |
+| `showValue` | `boolean` | `true` | Render the value in the centre. |
+| `showTicks` | `boolean` | `false` | Render 11 major + 4 minor tick marks per segment. |
+| `formatValue` | `(v: number) => string` | `String(v)` | Format the centre value and `aria-valuetext`. |
+| `ariaLabel` | `string` | `label` ?? `'Gauge'` | Accessible name for the meter. |
+
+All other `div` attributes are spread onto the root element.
+
+## Behaviour notes
+
+- The fill animates from its previous value to the new value over ~400ms with
+  an ease-out cubic curve, driven by `requestAnimationFrame`. When the user
+  has `prefers-reduced-motion: reduce` set, the gauge snaps to the value with
+  no animation.
+- If `min > max` is passed, the two are swapped internally (`safeMin` /
+  `safeMax`), so the gauge never renders an inverted range.
+- The root element uses `role="meter"` with `aria-valuenow/min/max/valuetext`.
+  The inner SVG is `aria-hidden`, so the accessible value comes entirely from
+  these attributes — provide `formatValue` if you want screen readers to hear
+  units (for example, a function that appends a percent sign to the value).
+- `thresholds` are sorted ascending internally; you do not need to pre-sort
+  them. A threshold whose `at` falls outside `[min, max]` does not create a
+  visible boundary.
+
+## Source
+
+[`src/components/TkxGauge.tsx`](https://ui.tekivex.com)
+
+--------------------------------------------------------------------------------
+
+
+## TkxHeatmap
+URL: https://ui.tekivex.com/components/heatmap/
+Zero-dependency SVG matrix heatmap for cohorts, confusion and correlation matrices. Sequential or diverging scales, legend, auto-contrast labels.
+
+`TkxHeatmap` is a matrix-style heatmap: categorical x and y axes with
+colour-coded cells. Reach for it for cohort retention, confusion matrices,
+correlation matrices, or hourly-traffic grids. For the date-driven
+GitHub-style activity calendar, use [`TkxCalendarHeatmap`](/components/calendar-heatmap)
+instead.
+
+```tsx
+
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `TkxHeatmapCell[]` | — | Cells: `{ x, y, value, label? }`. `x`/`y` are `string \| number`. |
+| `xLabels` | `Array<string \| number>` | derived | X-axis order; if omitted, sorted unique values from `data`. |
+| `yLabels` | `Array<string \| number>` | derived | Y-axis order; if omitted, sorted unique values from `data`. |
+| `cellSize` | `number` | `32` | Cell side length in px. |
+| `gap` | `number` | `2` | Spacing between cells in px. |
+| `colorScale` | `'sequential' \| 'diverging' \| string[]` | `'sequential'` | Built-in scale or custom hex stop array. |
+| `domain` | `[number, number]` | derived | `[min, max]` for colour mapping; defaults to data min/max. |
+| `showValues` | `boolean` | `false` | Render the value text inside each cell. |
+| `showLegend` | `boolean` | `true` | Render the colour legend. |
+| `legendPosition` | `'right' \| 'bottom'` | `'right'` | Legend placement. |
+| `formatValue` | `(v: number) => string` | `String(v)` | Format cell and tooltip values. |
+| `emptyCellColor` | `string` | `theme.surfaceAlt` | Fill for an (x, y) pair with no datapoint. |
+| `ariaLabel` | `string` | auto | Accessible name; auto-generated from grid size and range. |
+| `onCellClick` | `(cell: TkxHeatmapCell) => void` | — | Fires when a cell that has data is clicked. |
+
+All other `div` attributes (except `onClick`) are spread onto the root.
+
+## Behaviour notes
+
+- **Scales**: `'sequential'` lerps from a near-white tint to the theme primary;
+  `'diverging'` is a fixed red → white → blue ramp ideal for correlation
+  matrices in `[-1, 1]`. A custom `string[]` is interpolated evenly across its
+  stops.
+- Axis labels with mixed numeric/string values are sorted numerically only when
+  *every* value parses as a number; otherwise they sort by `localeCompare`.
+- Long x-axis labels (wider than a cell) are automatically rotated -45°.
+- In-cell value text picks black or white per WCAG luminance for contrast, so
+  it stays readable on any cell colour.
+- A degenerate domain (all values identical) maps every cell to the mid-colour.
+- `onCellClick` only fires for cells that have a datapoint — empty cells are
+  not interactive.
+
+## Source
+
+[`src/components/TkxHeatmap.tsx`](https://ui.tekivex.com)
 
 --------------------------------------------------------------------------------
 
@@ -6740,6 +7747,122 @@ All other props are forwarded to the underlying `<input>` element.
 ## Source
 
 [`src/components/TkxInput.tsx`](https://ui.tekivex.com)
+
+--------------------------------------------------------------------------------
+
+
+## TkxKanban
+URL: https://ui.tekivex.com/components/kanban/
+Headless drag-drop kanban board with pointer + full keyboard reordering, WIP limits, and a WAI-ARIA grid model. Parent owns the columns array.
+
+```tsx
+
+```
+
+`TkxKanban` is a headless, accessible drag-drop board. It handles pointer drag
+(mouse / touch / pen) **and** full keyboard reordering, announces moves to
+screen readers, and emits a single `onReorder` event with the from/to
+coordinates. You apply the move to your own data and re-pass `columns`. Use it
+for task boards, pipelines, triage queues — anywhere cards move between columns.
+
+## Usage
+
+The board is controlled: compute the new card order from each `onReorder` event
+and write it back to `columns`.
+
+```tsx
+
+function Demo() {
+  const [columns, setColumns] = useState([
+    { id: 'todo',  title: 'To do', cards: [{ id: '1', title: 'Spec the API' }] },
+    { id: 'doing', title: 'Doing', wipLimit: 2, cards: [] },
+    { id: 'done',  title: 'Done',  cards: [] },
+  ]);
+
+  function handleReorder(e: KanbanReorderEvent) {
+    setColumns((cols) => {
+      const next = cols.map((c) => ({ ...c, cards: [...c.cards] }));
+      const from = next.find((c) => c.id === e.fromColumnId)!;
+      const [card] = from.cards.splice(e.fromIndex, 1);
+      next.find((c) => c.id === e.toColumnId)!.cards.splice(e.toIndex, 0, card);
+      return next;
+    });
+  }
+
+  return ;
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `columns` | `KanbanColumn[]` | required | Controlled column + card data, in display order. |
+| `onReorder` | `(e: KanbanReorderEvent) => void` | required | Fired once on drop / keyboard commit. You apply the move. |
+| `renderCard` | `(card, column) => ReactNode` | — | Custom card body. Replaces the default badge/title/assignee renderer. |
+| `onCardClick` | `(card, column) => void` | — | Fired on click — **suppressed while a drag is in progress**. |
+| `maxHeight` | `number \| string` | `720` | Board max height; cards scroll inside columns above it. |
+| `minColumnWidth` | `number` | `280` | Min column width before columns wrap to the next row. |
+| `isDragDisabled` | `boolean` | `false` | Disable all drag (board-wide). |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the board grid. |
+
+## Data shape
+
+```ts
+interface KanbanCard {
+  id: string;
+  title: string;
+  description?: string;
+  badges?: { label: string; color?: string }[];
+  assignee?: { name: string; avatarUrl?: string };
+  isDragDisabled?: boolean;   // lock just this card
+  data?: unknown;
+}
+
+interface KanbanColumn {
+  id: string;
+  title: string;
+  cards: KanbanCard[];        // in display order
+  wipLimit?: number;          // count badge turns "danger" at/above this
+  color?: string;             // header accent + drop highlight
+}
+
+interface KanbanReorderEvent {
+  cardId: string;
+  fromColumnId: string;
+  fromIndex: number;
+  toColumnId: string;
+  toIndex: number;
+}
+```
+
+`KanbanCard` / `KanbanColumn` / `KanbanReorderEvent` are also re-exported as
+`TkxKanbanCard`, `TkxKanbanColumn`, `TkxKanbanReorderEvent`.
+
+## Behavior / gotchas
+
+- **Controlled data, one event.** The board never mutates `columns`. On drop it
+  fires exactly one `onReorder`; you splice the card out of the source and into
+  the target yourself. If from and to are identical, no event fires.
+- **Keyboard reordering** (focus a card, then):
+  - Space / Enter — pick up the card (and drop it when held).
+  - ↑ / ↓ — move within the column; ← / → — move to the adjacent column.
+  - Esc — cancel and return to the original spot.
+  - Every move is announced via an `aria-live` region.
+- **`onCardClick` vs drag.** A click that follows a drag is swallowed, so you
+  won't accidentally open a card you just dropped.
+- **WIP limits are advisory.** Exceeding `wipLimit` turns the column's count
+  badge red but does **not** block drops — enforce limits in your `onReorder`
+  handler if you need a hard cap.
+- **Pointer drags use capture + a transl-transform ghost** and respect
+  `prefers-reduced-motion` (the ghost transform/transition is dropped).
+- **Per-card locking:** set `card.isDragDisabled` to pin a single card while the
+  rest of the board stays draggable; `isDragDisabled` on the component locks
+  everything.
+- ARIA: the board is `role="grid"` with `role="row"` columns and
+  `role="gridcell"` cards exposing `aria-grabbed` during drag.
+```
 
 --------------------------------------------------------------------------------
 
@@ -7274,6 +8397,240 @@ Disabled items skip during keyboard navigation and don't fire `onSelect`.
 --------------------------------------------------------------------------------
 
 
+## TkxMessageThread
+URL: https://ui.tekivex.com/components/message-thread/
+Headless chat thread UI — bubbles, replies, reactions, edits, attachments, typing indicators, and delivery states. You wire it to any backend.
+
+```tsx
+
+```
+
+`TkxMessageThread` is a headless chat-thread UI primitive: grouped message
+bubbles, day separators, reply previews, reactions, inline edit/delete,
+attachment rendering, a typing indicator, and per-message delivery states. It
+owns **no** transport — you push `messages` in and handle send / react / edit /
+delete / attach via callbacks. Use it as the view layer over any realtime
+backend (Pusher, Socket.io, Ably, custom WebSocket).
+
+> Also exported as **`TkxPeerChat`** (the stabilised name as of v3.19);
+> `TkxMessageThread` is the original, now a deprecated alias.
+
+## Usage
+
+```tsx
+
+const senders: Record<string, PeerSender> = {
+  me:   { id: 'me',   name: 'You' },
+  ada:  { id: 'ada',  name: 'Ada Lovelace', presence: 'online' },
+};
+
+function Demo() {
+  const [messages, setMessages] = useState([
+    { id: 'm1', senderId: 'ada', text: 'Hey!', timestamp: new Date() },
+  ]);
+
+  return (
+    
+        setMessages((m) => [
+          ...m,
+          { id: crypto.randomUUID(), senderId: 'me', text, replyTo, timestamp: new Date(), delivery: 'sent' },
+        ])
+      }
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `messages` | `PeerMessage[]` | required | The thread, oldest-first. |
+| `senders` | `Record<string, PeerSender>` | required | Sender lookup keyed by sender id. |
+| `currentUserId` | `string` | required | Which sender is "me" (right-aligned, own-message actions). |
+| `onSend` | `(text, replyTo?) => void \| Promise<void>` | — | Send a new message. Without it, the composer can't send. |
+| `onReact` | `(messageId, emoji) => void \| Promise<void>` | — | Toggle a reaction. |
+| `onEdit` | `(messageId, newText) => void \| Promise<void>` | — | Edit own message (Edit action only shows when provided). |
+| `onDelete` | `(messageId) => void \| Promise<void>` | — | Delete own message (confirms via `window.confirm`). |
+| `onAttach` | `(files: File[]) => void \| Promise<void>` | — | Handle picked files. Enables the attach button. |
+| `height` | `string \| number` | `520` | Thread height. |
+| `placeholder` | `string` | `'Type a message…'` | Composer placeholder. |
+| `showTimeSeparators` | `boolean` | `true` | Render Today / Yesterday / date separators. |
+| `groupConsecutive` | `boolean` | `true` | Collapse avatar/header for consecutive messages from the same sender within 5 min. |
+| `emojiPickerOptions` | `string[]` | `['👍','❤️','😂','🎉','😢','👀']` | Emojis offered in the react picker. |
+| `typingUserIds` | `string[]` | — | Sender ids currently typing (drives the indicator). |
+| `onTypingStart` | `() => void` | — | Local user began a typing session (fires on first keystroke). |
+| `onTypingStop` | `() => void` | — | Local user idle 3s, or blurred / sent. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the outer container. |
+
+## Data shape
+
+```ts
+type PeerPresence = 'online' | 'offline' | 'away' | 'unknown';
+type MessageDeliveryState = 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
+type AttachmentKind = 'image' | 'file' | 'audio' | 'video';
+
+interface PeerSender {
+  id: string; name: string;
+  avatar?: string; presence?: PeerPresence; role?: string;
+}
+
+interface PeerAttachment {
+  id: string; kind: AttachmentKind; name: string; url: string; mimeType: string;
+  size?: number; width?: number; height?: number; duration?: number; thumbnail?: string;
+}
+
+interface PeerReaction { emoji: string; by: string[] }  // `by` = sender ids
+
+interface PeerMessage {
+  id: string;
+  senderId: string;
+  text?: string;
+  attachments?: PeerAttachment[];
+  reactions?: PeerReaction[];
+  replyTo?: string;                 // id of the message being replied to
+  timestamp: Date | string;
+  editedAt?: Date | string;         // shows an "(edited)" marker
+  deletedAt?: Date | string;        // renders "Message deleted"
+  delivery?: MessageDeliveryState;  // own messages show a delivery icon
+}
+```
+
+## Behavior / gotchas
+
+- **Headless transport.** The component never sends, stores, or mutates
+  messages. Realtime arrival, delivery-state transitions, presence updates, and
+  attachment upload progress are **all your job** — update the `messages` /
+  `senders` props from your backend.
+- **Composer is uncontrolled** (it holds its own draft). `Enter` sends;
+  `Shift+Enter` inserts a newline. The textarea auto-grows up to ~6 lines. Send
+  is disabled while the draft is empty.
+- **Typing indicator is consumer-driven and not a debounce.** `onTypingStart`
+  fires once on the **first** keystroke of a session; subsequent keystrokes just
+  reset a 3-second idle timer. `onTypingStop` fires on idle, blur, send, or when
+  the composer is cleared. Display is driven separately by `typingUserIds`
+  (1 → "X is typing", 2 → "X and Y", 3+ → "Several people are typing"; unknown
+  ids fall back to "Unknown").
+- **Attachments are content-sniffed.** `onAttach` only receives files whose
+  sniffed MIME major type matches the declared one; mismatches are refused with
+  an inline alert (`File type does not match its content…`). The component does
+  not upload — it hands you `File[]`.
+- **All user-visible text is sanitised** with `sanitizeString` (message bodies,
+  names, reply previews, placeholders) to strip control/bidi characters.
+- **Own-message actions** (Edit, Delete) only appear for `currentUserId` **and**
+  only when the matching callback is provided. Delete prompts `window.confirm`.
+- **Grouping + separators:** consecutive same-sender messages within 5 minutes
+  hide the repeated avatar/header (toggle with `groupConsecutive`); day
+  separators render Today / Yesterday / locale date (toggle with
+  `showTimeSeparators`).
+- **Out of scope:** message search, reply nesting deeper than one level, and
+  end-to-end encryption — this is a UI primitive.
+- Auto-scrolls to the newest message; respects `prefers-reduced-motion` (jumps
+  instead of smooth-scrolling, and stills the typing dots).
+```
+
+--------------------------------------------------------------------------------
+
+
+## TkxMindMap
+URL: https://ui.tekivex.com/components/mind-map/
+Collapsible horizontal tidy-tree with SVG links, full keyboard navigation, and controlled-or-uncontrolled selection and collapse state. Zero deps.
+
+```tsx
+
+```
+
+`TkxMindMap` renders a recursive tree as a horizontal tidy layout (root on the
+left, children fanning out right) with cubic-Bezier SVG links and
+HTML-rendered, focusable nodes. It supports expand/collapse, full keyboard
+navigation, and either internal or controlled selection + collapse state. Use it
+for mind maps, outlines, taxonomies, decision trees — any hierarchy you want to
+browse and fold.
+
+## Usage
+
+Pass a single `root` node; children nest via `children`.
+
+```tsx
+
+const root: MindMapNode = {
+  id: 'root',
+  label: 'Product',
+  children: [
+    { id: 'a', label: 'Frontend', children: [
+      { id: 'a1', label: 'Components' },
+      { id: 'a2', label: 'Theming' },
+    ]},
+    { id: 'b', label: 'Backend', collapsed: true, children: [
+      { id: 'b1', label: 'API' },
+    ]},
+  ],
+};
+
+ console.log('selected', id)}
+  onToggle={(id, collapsed) => console.log(id, collapsed)}
+/>;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `root` | `MindMapNode` | required | The tree's root node. |
+| `selectedId` | `string \| null` | — | Controlled selected node id. Omit for internal selection (defaults to the root). |
+| `collapsedIds` | `Set<string>` | — | Controlled set of collapsed ids. Omit to use internal collapse state. |
+| `onSelect` | `(id: string, node: MindMapNode) => void` | — | Fired on click and keyboard move. |
+| `onToggle` | `(id: string, nextCollapsed: boolean) => void` | — | Fired when a node is expanded/collapsed. |
+| `leafHeight` | `number` | `44` | Vertical px reserved per leaf. |
+| `levelWidth` | `number` | `200` | Horizontal px between depth levels. |
+| `nodeWidth` | `number` | `160` | Node card width in px. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the scroll container. |
+
+## Data shape
+
+```ts
+interface MindMapNode {
+  id: string;
+  label: string;
+  children?: MindMapNode[];  // omit or [] for a leaf
+  color?: string;            // accent for border, toggle dot, and the incoming link
+  collapsed?: boolean;       // pre-collapsed at first render (seeds internal state)
+  data?: unknown;            // free-form payload echoed to callbacks
+}
+```
+
+## Behavior / gotchas
+
+- **Two independently controllable states.** Selection (`selectedId`) and
+  collapse (`collapsedIds`) are each separately controlled-or-uncontrolled. Omit
+  either prop to let the component own that piece while still firing the matching
+  callback.
+- **`node.collapsed` only seeds internal state.** It is read once to build the
+  initial collapsed set; in controlled mode, drive folding via `collapsedIds`
+  instead.
+- **Keyboard model** (focus the tree — it is `role="tree"`):
+  - → — if the node is collapsed, expands it; otherwise moves to the first
+    child.
+  - ← — moves to the parent; at the root, collapses it.
+  - ↑ / ↓ — move between siblings.
+  - Enter / Space — toggle expand/collapse of the selected node.
+- **Double-click** a node with children to toggle it; the inline `+` / `−`
+  button on each parent also toggles (and stops propagation so it doesn't also
+  select).
+- **Labels are sanitised** with `sanitizeString` before render (and as the
+  `title` tooltip), so untrusted labels can't smuggle control characters.
+- **Layout is leaf-count proportional:** each subtree reserves vertical space by
+  its visible leaf count and the parent sits at the centroid of its children —
+  collapsing a branch reflows the whole map.
+- Nodes are absolutely positioned inside a scrollable box; the SVG link layer is
+  `aria-hidden` and shifted so negative `y` positions stay in view.
+```
+
+--------------------------------------------------------------------------------
+
+
 ## TkxModal
 URL: https://ui.tekivex.com/components/modal/
 Accessible modal dialog with focus trap, scrim, escape-to-close, and full keyboard support.
@@ -7615,6 +8972,87 @@ TkxPhoneInput — accessible React component from tekivex-ui. Live demos, props,
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/phone-input).
+
+--------------------------------------------------------------------------------
+
+
+## TkxPivotTable
+URL: https://ui.tekivex.com/components/pivot-table/
+Group and aggregate a flat record array into a pivot table with multi-level row/column groups, five aggregators, and grand totals. Zero deps.
+
+```tsx
+
+```
+
+`TkxPivotTable` takes a flat array of records and pivots it: you declare which
+fields become **row groups**, which become **column groups**, and which fields
+**aggregate**. It supports multi-level groups on both axes, five built-in
+aggregators, deterministic ordering, and grand totals. Use it for summarising
+tabular data — sales by region × quarter, counts by category, etc. — without a
+charting or BI dependency.
+
+## Usage
+
+```tsx
+
+const sales = [
+  { region: 'West', quarter: 'Q1', amount: 100 },
+  { region: 'West', quarter: 'Q2', amount: 140 },
+  { region: 'East', quarter: 'Q1', amount: 90  },
+];
+
+;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `PivotRecord[]` | required | Flat list of records to pivot. |
+| `rows` | `string[]` | required | Row group fields, outermost first. |
+| `cols` | `string[]` | `[]` | Column group fields, outermost first. `[]` = no column grouping. |
+| `values` | `PivotValue[]` | required | Aggregations. **At least one is required — throws otherwise.** |
+| `sortRows` | `(a: string, b: string, level: number) => number` | lexicographic | Comparator for row group keys per level. |
+| `sortCols` | `(a: string, b: string, level: number) => number` | lexicographic | Comparator for column group keys per level. |
+| `showTotals` | `boolean` | `true` | Render grand-total row, column, and corner cell. |
+| `formatNumber` | `(n: number) => string` | 4-decimal trim | Cell number formatter. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the scroll container. |
+
+## Data shape
+
+```ts
+type PivotRecord = Record<string, unknown>;
+
+type PivotAggregator = 'sum' | 'avg' | 'min' | 'max' | 'count';
+
+interface PivotValue {
+  field?: string;          // field on each record to aggregate; ignored for 'count'
+  agg: PivotAggregator;
+  label?: string;          // header label; default `${agg}(${field})`, or 'count'
+}
+```
+
+## Behavior / gotchas
+
+- **`values` must be non-empty** — the component throws
+  `TkxPivotTable: values must contain at least one entry` if you pass `[]`.
+- **Non-numeric values are skipped** for `sum` / `avg` / `min` / `max`. Only
+  fields whose value is an actual `number` contribute; strings/null are ignored
+  rather than coerced. Empty aggregations render as a blank cell (`null`), not
+  `0`.
+- **`count` ignores `field`** and counts every contributing record in the group.
+- **Group keys are stringified.** Each grouping field's value is coerced with
+  `String(value ?? '')`, so `1` and `'1'` collapse into the same group and
+  `null`/`undefined` become the empty-string group.
+- **Default sort is lexicographic** on the stringified keys — so months sort
+  alphabetically (`Apr`, `Aug`, …), not calendar order. Pass `sortRows` /
+  `sortCols` (you get the level index) to impose a custom order.
+- **Multiple `values`** add a sub-column per value under each column group; the
+  value-label row always renders, even with no column grouping.
+- Rendering is pure and memoised on `data` / `rows` / `cols` / `values` /
+  sort comparators — stable references avoid recompute.
+```
 
 --------------------------------------------------------------------------------
 
@@ -8015,6 +9453,107 @@ For the full interactive sandbox, open the
 --------------------------------------------------------------------------------
 
 
+## TkxRichEditor
+URL: https://ui.tekivex.com/components/rich-editor/
+Accessible contenteditable rich-text editor with a sanitising HTML/Markdown/text output, paste scrubbing, and an imperative ref handle.
+
+```tsx
+
+```
+
+`TkxRichEditor` is a dependency-light rich-text editor built on
+`contenteditable`. Every output (and every paste) is run through tekivex's HTML
+sanitiser — no `<script>`, no `javascript:` URLs, no Trojan-Source unicode. It
+exposes an **imperative ref** for reading HTML / Markdown / plain text and
+setting content. Use it for comment boxes, article bodies, or any rich input
+where you don't want to ship Slate/TipTap/Lexical (~100 KB each).
+
+## Usage
+
+The editor is **uncontrolled**: seed it with `initialValue`, listen to
+`onChange` for the sanitised HTML, and use a ref to pull other formats.
+
+```tsx
+
+function Demo() {
+  const ref = useRef(null);
+
+  return (
+    <>
+      Hello <strong>world</strong></p>"
+        placeholder="Write something…"
+        onChange={(html) => console.log(html)}
+      />
+      <button onClick={() => console.log(ref.current?.getMarkdown())}>
+        Export Markdown
+      </button>
+    </>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `initialValue` | `string` | `''` | Initial HTML, sanitised on mount. Read once — not a controlled value. |
+| `onChange` | `(html: string) => void` | — | Fired on every edit with **sanitised** HTML. |
+| `placeholder` | `string` | `'Start writing…'` | Shown when empty. |
+| `tools` | `Tool[]` | all | Subset/order of toolbar buttons to show. |
+| `maxHeight` | `number \| string` | — | Max content height before scrolling. |
+| `minHeight` | `number \| string` | `200` | Min content height. |
+| `label` | `string` | `'Rich text editor'` | `aria-label` for the editor textbox. |
+| `isDisabled` | `boolean` | `false` | Content shown but not editable. |
+| `topSlot` | `ReactNode` | — | Rendered above the toolbar (e.g. word count). |
+| `bottomSlot` | `ReactNode` | — | Rendered below the editor. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the wrapper. |
+
+### Imperative handle (`TkxRichEditorHandle`)
+
+```ts
+interface TkxRichEditorHandle {
+  getHTML: () => string;        // current sanitised HTML
+  getMarkdown: () => string;    // lossy Markdown of the supported subset
+  getText: () => string;        // plain textContent
+  setHTML: (html: string) => void; // replace content (sanitised first)
+  focus: () => void;
+}
+```
+
+### Tool ids
+
+`'bold' | 'italic' | 'underline' | 'strike' | 'h1' | 'h2' | 'h3' | 'ul' | 'ol' | 'quote' | 'code' | 'codeblock' | 'link' | 'image' | 'hr'`
+
+## Behavior / gotchas
+
+- **Uncontrolled by design.** `initialValue` is read **once on mount** — later
+  changes to that prop are ignored. To replace content programmatically, call
+  `ref.current.setHTML(...)`. There is no `value` prop.
+- **Everything is sanitised.** Output HTML, pasted HTML, and `setHTML` input all
+  pass the inline sanitiser. Disallowed tags are unwrapped (text kept);
+  `<script>`/`<style>`/`<iframe>`/form elements are dropped **with their
+  content**; `on*` and non-allowlisted attributes are stripped; links are forced
+  to `rel="noopener noreferrer" target="_blank"`; image `src` is limited to
+  `http(s):` or `data:image/`.
+- **Links and images prompt.** The link (⌘K) and image tools use `window.prompt`
+  for the URL and reject `javascript:` / `data:` (links) or non-image sources
+  (images) with a `window.alert`. Image alt text is also prompted.
+- **Keyboard shortcuts:** ⌘/Ctrl + B / I / U for formatting, ⌘/Ctrl + K for
+  link. Toolbar buttons are a roving-tabindex `role="toolbar"` — Arrow
+  Left/Right, Home/End move focus between them.
+- **Markdown export is lossy** (~98% fidelity for the supported subset);
+  underline becomes `<u>` since Markdown has no native underline.
+- **execCommand-based.** Formatting relies on `document.execCommand`; active-tool
+  highlighting uses `queryCommandState`, which can be flaky on non-Chromium
+  engines (failures are swallowed, not thrown).
+- **SSR-safe:** sanitisation no-ops when `document` is undefined, so server
+  renders don't crash — content is sanitised again on the client.
+```
+
+--------------------------------------------------------------------------------
+
+
 ## TkxRichTextDisplay
 URL: https://ui.tekivex.com/components/rich-text-display/
 Schema-typed rich-text renderer. Block-based, sanitised, supports paragraphs, headings, lists, quotes, code, images, embeds.
@@ -8096,6 +9635,141 @@ sandbox attribute. Other providers render as a fallback link.
 ## Source
 
 [`src/components/TkxRichTextDisplay.tsx`](https://ui.tekivex.com)
+
+--------------------------------------------------------------------------------
+
+
+## TkxSecurityDashboard
+URL: https://ui.tekivex.com/components/security-dashboard/
+Live view of the security kernel — XSS, Trojan-Source, PII, audit, rate-limit, and MIME events. JSON export for SIEM.
+
+The tekivex-ui security kernel blocks XSS, Trojan-Source unicode, PII
+leaks, clickjacking, rate-limit abuse, and MIME forgery — but it does so
+**silently**. `TkxSecurityDashboard` makes that invisible work visible:
+it subscribes to the kernel's event stream and renders a live log,
+severity-coloured counts, and a one-click JSON export for a SIEM or
+incident report.
+
+```tsx
+
+// Zero config — it self-subscribes to the kernel. No provider needed.
+
+```
+
+## Live demo
+
+Click a button to make the kernel block a **real** threat — each button
+calls the same primitive (`sanitizeString`, `sanitizeUnicode`,
+`scrubPII`, `audit`, `createRateLimiter`) your app calls. Watch the event
+appear below.
+
+  Nothing in this demo is faked. The buttons run the actual kernel
+  functions; the dashboard renders whatever they emit. In your app the
+  events come from your inputs, file uploads, and audit calls — no wiring
+  required.
+
+## How it works
+
+Every defensive primitive emits a `SecurityEvent` when — and only when —
+it actually blocks something. The dashboard's hook subscribes via
+`onSecurityEvent`, seeds from a bounded 500-entry ring buffer on mount,
+and re-renders as events arrive.
+
+| Event type | Emitted by | Severity |
+|---|---|---|
+| `xss-sanitized` | `sanitizeString` | `warning` |
+| `unicode-stripped` | `sanitizeUnicode` (Trojan-Source / CVE-2021-42574) | `critical` |
+| `pii-redacted` | `scrubPII` | `warning` |
+| `audit` | `audit()` | `info` |
+| `clickjacking-detected` | `installFrameBuster` | `critical` |
+| `rate-limited` | `createRateLimiter` | `warning` |
+| `mime-rejected` | `sniffMimeType` | `critical` |
+
+Emission is **zero-overhead** when no listener is attached and nothing is
+blocked, and a throwing listener can never break the primitive that
+emitted it.
+
+## Compact mode
+
+Drop the scrolling log and the export button for a small status widget —
+summary tiles only.
+
+```tsx
+
+```
+
+## The hook
+
+`useSecurityEvents()` is the engine under the dashboard. It is
+self-subscribing — no provider required — and returns everything you need
+to build your own UI.
+
+```tsx
+
+function SecurityBadge() {
+  const { events, counts, bySeverity, clear, toJSON } = useSecurityEvents();
+  return (
+    <span>
+      {bySeverity.critical} critical · {bySeverity.warning} warning
+    </span>
+  );
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `events` | `readonly SecurityEvent[]` | The buffered events, oldest first. |
+| `counts` | `Record` | Count per event type. |
+| `bySeverity` | `Record` | Count per severity. |
+| `clear()` | `() => void` | Clear the in-memory buffer (does **not** touch the SHA-256 audit chain). |
+| `toJSON()` | `() => string` | Serialise the buffer to JSON for download / SIEM. |
+
+## App-wide aggregation (optional)
+
+By default every dashboard keeps its own buffer. Wrap your app in
+`SecurityProvider` to share one buffer across multiple widgets so they
+stay in sync.
+
+```tsx
+
+  
+  {/* every dashboard / badge inside now reads the same buffer */}
+  
+
+```
+
+## Forwarding to a SIEM
+
+The raw `onSecurityEvent` subscription is public — pipe events anywhere
+(Datadog, Splunk, your own `/security/events` endpoint) without rendering
+any UI.
+
+```tsx
+
+const unsubscribe = onSecurityEvent((evt) => {
+  if (evt.severity === 'critical') {
+    fetch('/security/events', {
+      method: 'POST',
+      body: JSON.stringify(evt),
+    });
+  }
+});
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `maxEvents` | `number` | `200` | Max events retained in the log. |
+| `hideExport` | `boolean` | `false` | Hide the JSON export button. |
+| `compact` | `boolean` | `false` | Summary tiles only — no event log. |
+| `className` | `string` | — | Class on the root `<section>`. |
+| `style` | `CSSProperties` | — | Inline style merged onto the card. |
+
+  The dashboard is **read-only** — it never modifies what the kernel
+  does, only reports it. Clearing the dashboard clears the in-memory
+  event buffer; the tamper-evident SHA-256 audit chain (`getAuditLog`,
+  `verifyAuditIntegrity`) is untouched.
 
 --------------------------------------------------------------------------------
 
@@ -8521,6 +10195,55 @@ For the full interactive sandbox, open the
 --------------------------------------------------------------------------------
 
 
+## TkxSparkline
+URL: https://ui.tekivex.com/components/sparkline/
+Tiny zero-dependency inline SVG sparkline with line, area, and bar variants, optional smoothing, last-point marker, and trailing value.
+
+`TkxSparkline` is a compact, inline trend chart for tables, cards, and stat
+rows — no axes, just the shape of a series. It renders inside a `<span>` so it
+flows with text. Three variants are available: `line`, `area`, and `bar`.
+
+```tsx
+
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `number[]` | — | The series to plot (required). |
+| `variant` | `'line' \| 'area' \| 'bar'` | `'line'` | Render style. |
+| `width` | `number` | `120` | SVG width in px. |
+| `height` | `number` | `32` | SVG height in px. |
+| `color` | `string` | `theme.primary` | Stroke / fill colour. |
+| `showPoints` | `boolean` | `false` | Draw a dot at every data point (line/area only). |
+| `showLastPoint` | `boolean` | `true` | Draw a dot at the final point (suppressed when `showPoints` is on). |
+| `showValue` | `boolean` | `false` | Render the last value as text beside the chart. |
+| `smooth` | `boolean` | `false` | Use a Catmull-Rom smoothed curve instead of straight segments (line/area only). |
+| `ariaLabel` | `string` | auto | Accessible name; auto-describes count and trend. |
+
+All other `span` attributes are spread onto the root.
+
+## Behaviour notes
+
+- The auto-generated `aria-label` describes the trend direction (up / down /
+  flat) by comparing the first and last value, e.g. *"Sparkline showing 7
+  values, trending up"*. Override it via `ariaLabel`.
+- `showLastPoint` is ignored when `showPoints` is `true` (the full set of
+  points already includes the last one).
+- `smooth` only affects `line` and `area` — the `bar` variant ignores it.
+- A single-value series renders centred; an empty array renders an empty SVG
+  with an accessible "no data" label.
+- The inner SVG is `aria-hidden`; the accessible description lives on the root
+  `span` with `role="img"`.
+
+## Source
+
+[`src/components/TkxSparkline.tsx`](https://ui.tekivex.com)
+
+--------------------------------------------------------------------------------
+
+
 ## TkxSpeedDial
 URL: https://ui.tekivex.com/components/speed-dial/
 TkxSpeedDial — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
@@ -8580,6 +10303,110 @@ TkxSpin — accessible React component from tekivex-ui. Live demos, props, and a
 For the full interactive sandbox where you can change every prop and watch
 the rendered component update in real time, open the
 [playground](/playground/#/components/spin).
+
+--------------------------------------------------------------------------------
+
+
+## TkxSpreadsheet
+URL: https://ui.tekivex.com/components/spreadsheet/
+Editable cell grid with a built-in formula evaluator (SUM, AVG, IF, ranges, cell refs) and circular-reference detection. You own the cell map.
+
+```tsx
+
+```
+
+`TkxSpreadsheet` is an editable grid with a real formula engine. Cells hold
+literal numbers/strings or `=`-prefixed formulas supporting arithmetic, cell
+references, ranges, and functions. The evaluator detects circular references and
+surfaces error sentinels. Use it for editable tabular input, lightweight
+calculators, or anywhere users expect spreadsheet-style entry — without pulling
+in a heavyweight grid dependency.
+
+## Usage
+
+Cell data is a flat `Record<address, rawString>` you hold in state.
+
+```tsx
+
+function Demo() {
+  const [data, setData] = useState({
+    cells: {
+      A1: 'Qty',  B1: 'Price', C1: 'Total',
+      A2: '3',    B2: '4.50',  C2: '=A2*B2',
+      C3: '=SUM(C2:C2)',
+    },
+  });
+
+  return ;
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `SpreadsheetData` | required | Controlled cell map. |
+| `onChange` | `(next: SpreadsheetData) => void` | required | Fired when a cell is committed or cleared. |
+| `cols` | `number` | `8` | Number of columns (A, B, C, …). |
+| `rows` | `number` | `20` | Number of rows. |
+| `colWidth` | `number` | `96` | Column width in px. |
+| `rowHeight` | `number` | `28` | Row height in px. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the grid container. |
+
+## Data shape
+
+```ts
+interface SpreadsheetData {
+  /** address → raw content. "A1": "42", "B2": "=A1*2", "C3": "hello" */
+  cells: Record<string, string>;
+}
+```
+
+- A value beginning with `=` is a **formula**; anything else is a literal
+  (numeric if it parses as a finite number, otherwise a string).
+- Empty cells are simply absent from the map — clearing a cell deletes its key.
+
+### Formula language
+
+| Feature | Examples |
+|---|---|
+| Arithmetic | `=1 + 2*3`, `=(A1+B1)/2`, `=2^10` (power), unary `=-A1` |
+| Cell refs | `=A1 + B2` |
+| Ranges (inside functions) | `=SUM(A1:A10)`, `=AVG(B1:B5)` |
+| Functions | `SUM`, `AVG` (alias `AVERAGE`), `MIN`, `MAX`, `COUNT`, `ROUND(v, d)`, `IF(cond, t, f)` |
+
+Error sentinels shown in-cell (rendered in the danger color): `#CYCLE!`
+(circular reference), `#REF!` (bad range), `#DIV/0!`, `#NAME?` (unknown
+function), `#ERROR!` (malformed formula), `#NUM!`.
+
+The evaluator is exported standalone as `evaluate(address, cells)` for reuse
+(e.g. a formula bar in a different layout). Address helpers `colLetter`,
+`colIndex`, `addr`, `parseAddr`, plus `spreadsheetToRecords` /
+`recordsToSpreadsheet` converters, are also exported.
+
+## Behavior / gotchas
+
+- **Controlled cells.** `data` + `onChange` are required; the grid holds only
+  cursor + edit-draft state. Commits replace the whole `cells` map via
+  `onChange`.
+- **Keyboard model** (grid focused, not editing):
+  - Arrow keys / `Tab` (`Shift+Tab` reverse) — move the active cell.
+  - `Enter` or `F2` — start editing the active cell.
+  - Any printable key — starts editing with that character as the first input.
+  - `Delete` / `Backspace` — clear the active cell.
+- **While editing:** `Enter` commits and moves down; `Tab` commits and moves
+  right; `Esc` cancels; blur commits.
+- **Single-cell only:** there is no multi-cell selection, range fill, or
+  multi-cell clipboard paste — paste lands in the single active cell.
+- **No string literals inside formulas** (`="hello"` is unsupported), and **no
+  cross-sheet refs** (`Sheet2!A1`) — single sheet by design.
+- **Formula display vs raw:** a cell shows its *computed* value; the underlying
+  `=formula` is only visible while editing that cell. Formula cells render in
+  the accent color.
+- **Memoised eval per render** shares work across cross-referencing cells, so a
+  column of `=A2*B2`-style formulas stays cheap.
+```
 
 --------------------------------------------------------------------------------
 
@@ -9083,6 +10910,76 @@ Components. `TkxTagInput` is interactive and requires `'use client'`.
 --------------------------------------------------------------------------------
 
 
+## TkxTextarea
+URL: https://ui.tekivex.com/components/textarea/
+Multi-line text input — the textarea counterpart to TkxInput. Label/hint/error, auto-grow, character counter, Unicode-safe.
+
+The multi-line counterpart to [`TkxInput`](/components/input/). Same
+accessible `label` / `hint` / `error` / `isRequired` surface, plus the things a
+textarea actually needs: **auto-grow**, a **character counter**, and
+Trojan-Source Unicode stripping on input.
+
+```tsx
+
+```
+
+## Auto-grow
+
+Set `autoResize` to grow the field with its content, bounded by `minRows` and
+`maxRows` (it scrolls past `maxRows`). Manual drag-resize is disabled while
+auto-growing.
+
+```tsx
+
+```
+
+## Character counter
+
+`showCount` renders a live `n / max` counter; it turns `danger`-coloured at the
+limit. Works in both controlled and uncontrolled mode.
+
+```tsx
+
+```
+
+## Validation
+
+```tsx
+
+```
+
+`error` sets `aria-invalid`, renders a `role="alert"` message, and links it via
+`aria-describedby`. `isRequired` adds `aria-required` and a visual asterisk
+(the asterisk is `aria-hidden`).
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `label` | `string` | — | **Required.** Accessible label. |
+| `hint` | `string` | — | Helper text below the field. |
+| `error` | `string` | — | Error message; sets `aria-invalid` + `role="alert"`. |
+| `isInvalid` | `boolean` | `false` | Force the invalid style without an error string. |
+| `isRequired` | `boolean` | `false` | Adds `aria-required` + asterisk. |
+| `autoResize` | `boolean` | `false` | Grow with content between `minRows`/`maxRows`. |
+| `minRows` | `number` | `3` | Minimum visible rows. |
+| `maxRows` | `number` | `8` | Max rows before scrolling (auto-resize only). |
+| `showCount` | `boolean` | `false` | Show a live character counter. |
+| `maxLength` | `number` | — | Hard character cap; powers the counter colour. |
+| `unicodeSafe` | `boolean` | `true` | Strip zero-width / bidi-override Unicode on input. |
+| `value` / `defaultValue` | `string` | — | Controlled / uncontrolled value. |
+| `...rest` | `TextareaHTMLAttributes` | — | `onChange`, `placeholder`, `name`, `disabled`, etc. |
+
+The component forwards its `ref` to the underlying `<textarea>`.
+
+  `unicodeSafe` strips homograph / Trojan-Source characters (zero-width joiners,
+  RTL overrides) on input by default — the same defence `TkxInput` applies.
+  Disable it only for fields that legitimately need such characters (e.g. a
+  translation UI).
+
+--------------------------------------------------------------------------------
+
+
 ## TkxThemeBuilder
 URL: https://ui.tekivex.com/components/theme-builder/
 Visual theme editor — pick colors, see live preview across 80+ components, export as JSON or .ts file.
@@ -9131,6 +11028,86 @@ export const myTheme: ThemeTokens = { bg: '#0a0a0f', ... };
 
 The theme builder is mounted at https://ui.tekivex.com/theme-builder/.
 The same component is reusable inside your own admin UI.
+
+--------------------------------------------------------------------------------
+
+
+## TkxThemeStudio
+URL: https://ui.tekivex.com/components/theme-studio/
+Visual theme editor — pick token colors, see a live component preview with real-time WCAG contrast badges, and export as TypeScript, JSON, or CSS.
+
+```tsx
+
+```
+
+`TkxThemeStudio` is a two-pane visual theme editor: edit the design tokens on the
+left with native color pickers, watch a live component preview re-render on the
+right, and read a real-time WCAG contrast badge on every token that should meet
+a threshold. Export the result as TypeScript, JSON, or CSS variables. Use it to
+let designers tune brand colors without filing PRs, and to verify per-token
+contrast for accessibility claims.
+
+## Usage
+
+It seeds from the ambient `ThemeProvider` by default; pass `initialTheme` to
+start from a specific token set.
+
+```tsx
+
+ console.log('live tokens', tokens)}
+  onExport={(format, text) => download(`theme.${format}`, text)}
+/>;
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `initialTheme` | `ThemeTokens` | ambient theme | Token set to load initially. |
+| `onChange` | `(tokens: ThemeTokens) => void` | — | Fired on every token edit and on Reset. |
+| `onExport` | `(format: 'json' \| 'ts' \| 'css', text: string) => void` | — | Fired when the user clicks **Save…**. The button is disabled if this is omitted. |
+| `preview` | `ReactNode` | sample components | Custom preview content rendered inside a `ThemeProvider` with the live tokens. |
+| `exportName` | `string` | `'myTheme'` | Variable name used in the TypeScript export. |
+| `className` | `string` | — | — |
+| `style` | `CSSProperties` | — | Merged onto the grid wrapper. |
+
+## Data shape
+
+The component edits a `ThemeTokens` object (imported from `tekivex-ui`). The
+editor groups its editable tokens as:
+
+| Group | Tokens |
+|---|---|
+| Surfaces | `bg`, `surface`, `surfaceAlt`, `border` |
+| Text | `text` (vs `bg`, target 7:1), `textMuted` (vs `bg`, 4.5:1) |
+| Brand | `primary`, `secondary` (each vs `bg`, 4.5:1) |
+| Status | `success`, `warning`, `danger`, `info` (each vs `bg`, 4.5:1) |
+
+Each contrast-checked token shows a live ratio + grade badge (AAA ≥ 7, AA ≥ 4.5,
+AA Large ≥ 3, otherwise **fail**), computed with the WCAG relative-luminance
+formula. The badge turns to the fail color when the token misses its threshold.
+
+## Behavior / gotchas
+
+- **Internal working copy.** Tokens are edited in the component's own state
+  (seeded from `initialTheme` or the ambient theme). `onChange` reports each
+  change, but the studio is not a controlled input — there is no `value` prop to
+  push edits back in.
+- **Reset** restores the original seed (`initialTheme` ?? ambient) and fires
+  `onChange` with it.
+- **Color inputs expect 6-digit hex.** Both the native `<input type="color">`
+  and the hex text field work in `#rrggbb`; the text field only accepts edits
+  matching `#[0-9a-f]{0,6}`. Contrast math returns 0 luminance for non-hex
+  values, so non-hex tokens read as failing.
+- **The preview re-themes live.** The right pane wraps `preview` (or the default
+  sample components) in a nested `ThemeProvider` using the in-progress tokens, so
+  you see real components, not swatches. Replace it via the `preview` prop to
+  preview your own UI.
+- **Export tabs** switch between `ts` (default), `json`, and `css`. **Copy**
+  writes the current export text to the clipboard; **Save…** is only enabled when
+  you pass `onExport`.
+- **Responsive:** collapses to a single column under ~760px.
+```
 
 --------------------------------------------------------------------------------
 
@@ -9592,6 +11569,60 @@ TkxTreeView — accessible React component from tekivex-ui. Live demos, props, a
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/tree-view).
+
+--------------------------------------------------------------------------------
+
+
+## TkxTreemap
+URL: https://ui.tekivex.com/components/treemap/
+Zero-dependency squarified SVG treemap with nesting. Rectangles sized by value, auto-contrast labels, and per-node click handlers.
+
+`TkxTreemap` lays out hierarchical data as nested rectangles sized
+proportionally to value, using the squarified algorithm (Bruls / Huijsen /
+van Wijk, 1999) so each rectangle stays as close to square as possible. Use it
+for disk usage, budget breakdowns, portfolio weights, or any part-of-whole
+data where relative size matters.
+
+```tsx
+
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `data` | `TkxTreemapNode[]` | — | Nodes: `{ label, value, color?, children? }`. |
+| `width` | `number` | `600` | SVG width in px. |
+| `height` | `number` | `400` | SVG height in px. |
+| `colors` | `string[]` | brand cycle | Colour cycle when a node omits `color`. |
+| `showLabels` | `boolean` | `true` | Render text labels inside rectangles. |
+| `showValues` | `boolean` | `false` | Render the value below the label (leaf nodes only). |
+| `minLabelSize` | `number` | `80` | Skip labels for rects smaller than this area in px². |
+| `formatValue` | `(v: number) => string` | `String(v)` | Format value and tooltip text. |
+| `ariaLabel` | `string` | auto | Accessible name; auto-summarises node count and total. |
+| `onNodeClick` | `(node, path) => void` | — | Fires on click; `path` is the index path from the root. |
+
+All other `div` attributes (except `onClick`) are spread onto the root.
+
+## Behaviour notes
+
+- **Nesting**: a node with a `children` array is laid out as a sub-treemap
+  inside its own rectangle, recursively. Children are inset slightly so the
+  parent border (and parent label, when shown) stays visible.
+- Nodes with zero or negative values are filtered out before layout — they
+  occupy no space.
+- Colours cycle by each node's **original input index**, so re-sorting for the
+  squarified pass does not change which colour a node gets.
+- Labels are suppressed when a rectangle's area drops below `minLabelSize`;
+  `showValues` additionally requires the area to exceed `minLabelSize * 1.5`
+  and applies only to leaf nodes.
+- `onNodeClick` calls `stopPropagation`, so clicking a deeply nested child does
+  not also fire its ancestors' handlers.
+- Cell text auto-picks black or white for contrast (WCAG luminance).
+
+## Source
+
+[`src/components/TkxTreemap.tsx`](https://ui.tekivex.com)
 
 --------------------------------------------------------------------------------
 

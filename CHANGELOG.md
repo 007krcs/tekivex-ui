@@ -5,6 +5,58 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.30.0] — 2026-07-09
+
+### Fixed — accessibility (all 26 MEDIUM findings from the APG audit)
+
+Burns down the entire MEDIUM tier of `docs/A11Y-AUDIT.md` across 20 components
+(~90 new regression tests; suite grew 2058 → 2148, all green):
+
+- **Dialog focus management** — `TkxCommandPalette` and `TkxColorPicker` now
+  trap Tab inside their dialogs and restore focus to the opener on every close
+  path (Escape, selection, backdrop/outside click) via the shared
+  `useFocusTrap`. `TkxDrawer` gains an accessible-name fallback (`ariaLabel`
+  prop, default "Drawer") when untitled.
+- **Keyboard-operable custom controls** — `TkxColorPicker`'s sat/bright area,
+  hue track, and alpha track are now real ARIA sliders (`role="slider"`,
+  value min/max/now/text, Arrow/Shift+Arrow/PageUp/PageDown/Home/End, visible
+  focus ring) instead of mouse-only divs. `TkxStepper` clickable steps and
+  `TkxPopover` non-interactive triggers are focusable and Enter/Space-operable
+  (real `<button>` triggers stay untouched — no duplicate controls).
+  `TkxSpeedDial` returns focus to the FAB on close and its `aria-controls` now
+  points at the real visible `role="menu"` (the hidden duplicate is gone).
+- **Combobox contracts** — searchable `TkxSelect` moves the combobox contract
+  (`aria-expanded/controls/activedescendant/autocomplete`) onto the search
+  input that actually holds focus; multi-select tag ✕ / Clear-all are real
+  sibling buttons (no interactive-in-interactive nesting) with
+  Backspace-removes-last-tag. `TkxMentions` exposes the active suggestion via
+  `aria-activedescendant`. `TkxCascader` wires `aria-controls` +
+  `aria-activedescendant` from the trigger to the tree. `TkxDatePicker` wires
+  `aria-controls` to its dialog **and ships a full roving-tabindex calendar
+  keyboard model** (focus enters the grid on open/ArrowDown, Arrow keys move
+  the focused day across month boundaries, Enter/Space selects, Escape returns
+  to the input).
+- **Correct semantics** — `TkxDropdown` selectable items drop the invalid
+  `aria-selected` for `menuitemradio`/`menuitemcheckbox` + `aria-checked`.
+  `TkxCarousel` hidden/cloned slides are `inert` (no more tabbing into
+  off-screen slides) and the thumbnail strip drops fake `tablist` roles for a
+  labeled group with `aria-current`. `TkxAccordion` collapsed panels are
+  removed from the accessibility tree (`aria-hidden` + `inert`) after the
+  collapse animation. `TkxTag`'s remove button is a sibling of — not nested
+  inside — the clickable body. `TkxRating` exposes arrow-key changes via
+  `aria-activedescendant`.
+- **Widget plumbing** — `TkxTabs` derives its tab count from the actual tabs
+  (arrow nav no longer silently no-ops without `tabCount`) and skips disabled
+  tabs, including Home/End. `TkxSlider` sets `aria-valuetext` from
+  `formatValue`. `TkxTable` virtual mode sets `aria-rowcount`. `TkxDataGrid`
+  gains a keyboard model: single Tab stop on the grid, Arrow-key cell focus,
+  Home/End + Ctrl variants, treegrid expand/collapse, `aria-colcount`.
+
+Honest deferrals (tracked in `docs/A11Y-AUDIT.md`): Cascader `aria-owns`/
+`aria-level`/`aria-setsize`; DataGrid per-cell roving tabindex, PageUp/PageDown
+paging, and virtualization-aware nav; DatePicker `role="grid"` markup (would be
+invalid ARIA on its flat 42-button grid). The 5 LOW findings remain.
+
 ## [3.29.0] — 2026-07-08
 
 ### Fixed — accessibility (HIGH findings from an APG audit)

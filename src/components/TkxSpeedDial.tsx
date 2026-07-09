@@ -125,6 +125,7 @@ export function TkxSpeedDial({
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const mainButtonRef = useRef<HTMLButtonElement>(null);
   const actionRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
 
   const toggle = useCallback(() => {
@@ -133,8 +134,14 @@ export function TkxSpeedDial({
   }, []);
 
   const close = useCallback(() => {
+    // If focus is inside the dial (e.g. on an action button that is about to
+    // unmount), return it to the main FAB so it doesn't fall to <body>
+    // (WCAG 2.4.3 Focus Order). Outside-click/backdrop closes, where focus is
+    // elsewhere, must NOT steal focus — hence the containment guard.
+    const hadFocus = containerRef.current?.contains(document.activeElement) ?? false;
     setIsOpen(false);
     setFocusedIndex(-1);
+    if (hadFocus) mainButtonRef.current?.focus();
   }, []);
 
   useEscapeKey(close, isOpen);
@@ -246,9 +253,12 @@ export function TkxSpeedDial({
           ...style,
         }}
       >
-        {/* Action buttons */}
-        {isOpen &&
-          actions.map((action, index) => {
+        {/* Action buttons — this is the real menu the FAB's aria-controls
+            points at (the previous display:none duplicate "menu" was removed
+            because it never entered the accessibility tree). */}
+        {isOpen && (
+        <div id={menuId} role="menu" aria-label="Speed dial actions">
+          {actions.map((action, index) => {
             const safeLabel = sanitizeString(action.label);
             const offsetStyle = getActionOffset(direction, index, SPACING);
             const tooltipStyle = getTooltipPlacement(direction);
@@ -291,6 +301,7 @@ export function TkxSpeedDial({
                       else actionRefs.current.delete(index);
                     }}
                     type="button"
+                    role="menuitem"
                     aria-label={safeLabel}
                     tabIndex={isOpen ? 0 : -1}
                     onClick={() => {
@@ -327,14 +338,17 @@ export function TkxSpeedDial({
               </div>
             );
           })}
+        </div>
+        )}
 
         {/* Main FAB */}
         <button
+          ref={mainButtonRef}
           type="button"
           aria-label={isOpen ? 'Close actions menu' : 'Open actions menu'}
           aria-expanded={isOpen}
-          aria-controls={menuId}
-          aria-haspopup="true"
+          aria-controls={isOpen ? menuId : undefined}
+          aria-haspopup="menu"
           onClick={toggle}
           onKeyDown={handleMainKeyDown}
           className={tkx(
@@ -371,14 +385,6 @@ export function TkxSpeedDial({
           )}
         </button>
 
-        {/* Hidden menu region for a11y */}
-        <div id={menuId} role="menu" aria-label="Speed dial actions" style={{ display: 'none' }}>
-          {actions.map((action) => (
-            <div key={action.id} role="menuitem">
-              {sanitizeString(action.label)}
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Keyframes */}

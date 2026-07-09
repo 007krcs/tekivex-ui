@@ -42,4 +42,45 @@ describe('TkxRating', () => {
     render(<TkxRating value={4} showValue />, { wrapper: Wrapper });
     expect(screen.getByText('4 / 5')).toBeInTheDocument();
   });
+
+  // A11y regression (MEDIUM audit fix): the radiogroup holds a single tab
+  // stop, so aria-activedescendant must track the active radio as arrow keys
+  // change the value.
+  it('exposes the active radio via aria-activedescendant as arrow keys change the value', () => {
+    render(<TkxRating />, { wrapper: Wrapper });
+    const group = screen.getByRole('radiogroup');
+    const radios = screen.getAllByRole('radio');
+    radios.forEach((r) => expect(r.id).toBeTruthy());
+
+    // No selection yet → no active descendant
+    expect(group).not.toHaveAttribute('aria-activedescendant');
+
+    fireEvent.keyDown(group, { key: 'ArrowRight' });
+    expect(group.getAttribute('aria-activedescendant')).toBe(radios[0].id);
+    expect(radios[0]).toHaveAttribute('aria-checked', 'true');
+
+    fireEvent.keyDown(group, { key: 'ArrowRight' });
+    expect(group.getAttribute('aria-activedescendant')).toBe(radios[1].id);
+
+    fireEvent.keyDown(group, { key: 'ArrowLeft' });
+    expect(group.getAttribute('aria-activedescendant')).toBe(radios[0].id);
+
+    fireEvent.keyDown(group, { key: 'End' });
+    expect(group.getAttribute('aria-activedescendant')).toBe(radios[4].id);
+
+    fireEvent.keyDown(group, { key: 'Home' });
+    expect(group).not.toHaveAttribute('aria-activedescendant');
+  });
+
+  it('half precision maps the active descendant to the containing radio', () => {
+    render(<TkxRating precision={0.5} defaultValue={0} />, { wrapper: Wrapper });
+    const group = screen.getByRole('radiogroup');
+    const radios = screen.getAllByRole('radio');
+    fireEvent.keyDown(group, { key: 'ArrowRight' }); // 0.5
+    expect(group.getAttribute('aria-activedescendant')).toBe(radios[0].id);
+    fireEvent.keyDown(group, { key: 'ArrowRight' }); // 1.0
+    expect(group.getAttribute('aria-activedescendant')).toBe(radios[0].id);
+    fireEvent.keyDown(group, { key: 'ArrowRight' }); // 1.5
+    expect(group.getAttribute('aria-activedescendant')).toBe(radios[1].id);
+  });
 });

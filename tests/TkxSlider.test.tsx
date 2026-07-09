@@ -44,4 +44,29 @@ describe('TkxSlider', () => {
     render(<TkxSlider value={50} label="Brightness" />, { wrapper: Wrapper });
     expect(screen.getByRole('slider')).toHaveAttribute('aria-label', 'Brightness');
   });
+
+  // ── aria-valuetext (A11Y-AUDIT MEDIUM #21) ─────────────────────────────────
+
+  it('sets aria-valuetext from formatValue when provided', () => {
+    render(<TkxSlider value={50} formatValue={(v) => `$${v}`} />, { wrapper: Wrapper });
+    const slider = screen.getByRole('slider');
+    expect(slider).toHaveAttribute('aria-valuetext', '$50');
+    expect(slider).toHaveAttribute('aria-valuenow', '50');
+  });
+
+  it('omits aria-valuetext when no formatValue is supplied', () => {
+    render(<TkxSlider value={50} />, { wrapper: Wrapper });
+    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-valuetext');
+  });
+
+  it('range slider thumbs each expose their formatted aria-valuetext', () => {
+    render(
+      <TkxSlider isRange rangeValue={[10, 80]} formatValue={(v) => `${v}%`} />,
+      { wrapper: Wrapper },
+    );
+    const sliders = screen.getAllByRole('slider');
+    expect(sliders).toHaveLength(2);
+    expect(sliders[0]).toHaveAttribute('aria-valuetext', '10%');
+    expect(sliders[1]).toHaveAttribute('aria-valuetext', '80%');
+  });
 });

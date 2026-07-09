@@ -132,4 +132,28 @@ describe('TkxTable', () => {
     const allRows = container.querySelectorAll('[role="row"], tr');
     expect(allRows.length).toBeGreaterThan(1);
   });
+
+  // ── aria-rowcount in virtual mode (A11Y-AUDIT MEDIUM #25) ─────────────────
+
+  it('virtual mode sets aria-rowcount to the FULL (unwindowed) row count', () => {
+    const bigRows: Row[] = Array.from({ length: 100 }, (_, i) => ({
+      id: i + 1,
+      name: `Name${i + 1}`,
+      age: 20 + (i % 40),
+      role: 'Eng',
+    }));
+    const { container } = wrap(
+      <TkxTable columns={cols} data={bigRows} maxHeight={200} virtualScroll />,
+    );
+    const table = container.querySelector('table');
+    expect(table?.getAttribute('aria-rowcount')).toBe('100');
+    // Sanity: virtualization actually windows the rows (fewer than 100 in DOM)
+    const bodyRows = container.querySelectorAll('tbody tr:not([aria-hidden])');
+    expect(bodyRows.length).toBeLessThan(100);
+  });
+
+  it('non-virtual mode does not set aria-rowcount', () => {
+    const { container } = wrap(<TkxTable columns={cols} data={rows} />);
+    expect(container.querySelector('table')?.hasAttribute('aria-rowcount')).toBe(false);
+  });
 });

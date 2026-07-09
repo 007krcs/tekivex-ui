@@ -13,8 +13,8 @@ baseline until these are cleared. Fixed items are struck through as cycles land.
 > **All 4 HIGH items fixed in v3.29.0** (Dropdown menu-button keyboard support,
 > Menu `aria-activedescendant`, Cascader keyboard operability, Carousel WCAG
 > 2.2.2 pause control), each with a regression test in
-> `tests/a11y-high-fixes.test.tsx`. The 26 medium + 5 low remain, tracked below
-> for subsequent cycles.
+> `tests/a11y-high-fixes.test.tsx`. The 26 medium were addressed in v3.30.0
+> (see the MEDIUM banner below for the two partial deferrals); the 5 low remain.
 
 
 ### 1. TkxDropdown trigger wrapper
@@ -34,6 +34,25 @@ baseline until these are cleared. Fixed items are struck through as cycles land.
 - **Fix:** Add a keyboard-accessible pause/play toggle button inside the carousel controls that toggles the existing `paused` state, with an aria-label like "Pause automatic slide rotation" / "Resume automatic slide rotation" (only render it when autoPlay is true). Additionally, add onFocus/onBlur (or focusin/focusout) handlers on the container div at line 340 that call setPaused(true) on focus-in and setPaused(false) on focus-out, mirroring the existing hover behavior so moving keyboard focus into the carousel pauses rotation. Optionally, do not auto-start when useReducedMotion() is true. This satisfies SC 2.2.2 by giving keyboard and AT users a reachable mechanism to stop the motion.
 
 ## MEDIUM
+
+> **All 26 MEDIUM items addressed in v3.30.0**, each with regression tests in the
+> component's test file. 24 are fixed in full. Two are fixed with an honestly
+> deferred remainder:
+> - **#6 TkxCascader** — combobox↔tree wiring shipped (`aria-controls` while
+>   open, `aria-activedescendant` tracking the deepest active treeitem, stable
+>   treeitem ids). Deferred: nesting child groups inside parent treeitems /
+>   `aria-owns`, and `aria-level`/`aria-setsize`/`aria-posinset`.
+> - **#22 TkxDataGrid** — coherent keyboard model shipped (grid root as single
+>   Tab stop forwarding into the last-focused cell; Arrow keys in all four
+>   directions; Home/End + Ctrl+Home/Ctrl+End; treegrid ArrowRight/ArrowLeft
+>   expand/collapse; editors/checkboxes/filters not hijacked; `aria-colcount`).
+>   Deferred (comment-tracked at the nav block): true per-cell roving tabindex,
+>   PageUp/PageDown paging, virtualization-aware nav past the rendered window.
+>
+> Also intentionally skipped in #15 (TkxDatePicker): `role="grid"` markup — the
+> DOM is a flat 42-button CSS grid, and `role="grid"` without real row structure
+> would be invalid ARIA; the audit listed it as optional. The 5 LOW findings
+> remain for a later cycle.
 
 ### 1. TkxSelect trigger — multi-select tag remove
 - **Violation:** WCAG 2.1.1 (Keyboard) + invalid HTML content model: interactive span role=&quot;button&quot; tabIndex=-1 controls (per-tag ✕ and Clear all) are rendered as descendants of the native &lt;button&gt; trigger. Nesting interactive content inside a button is invalid HTML, and tabIndex=-1 keeps both out of the tab order. handleTriggerKeyDown (lines 364-404) has no Backspace/Delete or clear key handling, so there is no keyboard path to Clear all at all; individual tags can only be removed by reopening the listbox and toggling each option off.

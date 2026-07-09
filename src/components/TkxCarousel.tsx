@@ -433,18 +433,29 @@ export function TkxCarousel({
 
           {/* Track */}
           <div ref={trackRef} style={trackStyle} onTransitionEnd={handleTransitionEnd}>
-            {renderSlides.map((slide, idx) => (
-              <div
-                key={`${slide.id}-${idx}`}
-                style={slideStyle}
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`Slide ${((idx - (loop ? 1 : 0) + count) % count) + 1} of ${count}`}
-                aria-hidden={((idx - (loop ? 1 : 0) + count) % count) !== currentIdx}
-              >
-                {slide.content}
-              </div>
-            ))}
+            {renderSlides.map((slide, idx) => {
+              // A slide is hidden when it is not the current real slide — this
+              // covers both off-screen slides and the cloned first/last slides
+              // used for the seamless loop.
+              const isHidden = ((idx - (loop ? 1 : 0) + count) % count) !== currentIdx;
+              return (
+                <div
+                  key={`${slide.id}-${idx}`}
+                  style={slideStyle}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`Slide ${((idx - (loop ? 1 : 0) + count) % count) + 1} of ${count}`}
+                  aria-hidden={isHidden}
+                  // aria-hidden alone leaves focusable descendants (links,
+                  // buttons) in the tab order — axe "aria-hidden-focus"
+                  // (WCAG 4.1.2). `inert` removes hidden/cloned slides from
+                  // both the tab order and the accessibility tree.
+                  inert={isHidden || undefined}
+                >
+                  {slide.content}
+                </div>
+              );
+            })}
           </div>
 
           {/* Dot indicators (inside) */}
@@ -502,10 +513,16 @@ export function TkxCarousel({
         )}
       </div>
 
-      {/* Thumbnail strip */}
+      {/* Thumbnail strip.
+          Deliberately NOT role="tablist"/"tab": the ARIA Tabs pattern demands
+          aria-controls→tabpanel wiring and arrow-key roving focus, none of
+          which fit a carousel whose slides are role="group" and whose arrow
+          keys already move slides. A plain labelled group of buttons with
+          aria-current mirrors the dot indicators and is the smaller correct
+          option per the APG carousel pattern. */}
       {showThumbnails && (
         <div
-          role="tablist"
+          role="group"
           aria-label="Slide thumbnails"
           style={{
             display: 'flex',
@@ -519,8 +536,7 @@ export function TkxCarousel({
             <button
               key={slide.id}
               type="button"
-              role="tab"
-              aria-selected={idx === currentIdx}
+              aria-current={idx === currentIdx ? 'true' : undefined}
               aria-label={`Thumbnail for slide ${idx + 1}`}
               onClick={() => goTo(idx)}
               style={{

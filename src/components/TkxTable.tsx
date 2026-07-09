@@ -224,6 +224,11 @@ export function TkxTable<T extends Record<string, unknown>>({
       >
         <table
           className={tkx('w-full font-sans text-sm')}
+          // In virtual mode off-window rows are removed from the DOM and the
+          // rendered rows carry aria-rowindex, so declare the FULL row count
+          // to let AT compute total size/position. Omitted when all rows are
+          // in the DOM (no windowing → count is self-evident).
+          aria-rowcount={isVirtual ? sorted.length : undefined}
           style={{ borderCollapse: 'collapse', color: theme.text }}
         >
           {caption && (

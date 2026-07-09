@@ -66,4 +66,41 @@ describe('TkxAccordion', () => {
     fireEvent.click(screen.getByText('Disabled'));
     expect(screen.getByText('Disabled').closest('button')).toHaveAttribute('aria-expanded', 'false');
   });
+
+  // Regression (a11y MEDIUM): a collapsed panel was only visually clipped
+  // (height:0 + overflow:hidden) but stayed in the accessibility tree and tab
+  // order. It must be aria-hidden + inert while collapsed, and exposed again
+  // when opened.
+  it('hides collapsed panel content from AT and tab order', () => {
+    render(<TkxAccordion items={items} />, { wrapper: Wrapper });
+
+    const trigger = screen.getByText('Section One').closest('button')!;
+    const panelId = trigger.getAttribute('aria-controls')!;
+    const panel = document.getElementById(panelId)!;
+
+    // Initially collapsed → hidden from AT and inert (unfocusable content).
+    expect(panel).toHaveAttribute('aria-hidden', 'true');
+    expect(panel.hasAttribute('inert')).toBe(true);
+
+    // Open → panel content exposed again.
+    fireEvent.click(trigger);
+    expect(panel).not.toHaveAttribute('aria-hidden');
+    expect(panel.hasAttribute('inert')).toBe(false);
+  });
+
+  it('re-hides the panel once the collapse transition finishes', () => {
+    render(<TkxAccordion items={items} defaultOpen="1" />, { wrapper: Wrapper });
+
+    const trigger = screen.getByText('Section One').closest('button')!;
+    const panelId = trigger.getAttribute('aria-controls')!;
+    const panel = document.getElementById(panelId)!;
+    expect(panel).not.toHaveAttribute('aria-hidden');
+
+    // Collapse; while the height transition runs the panel stays measurable,
+    // and only on transitionend does it become hidden/inert.
+    fireEvent.click(trigger);
+    fireEvent.transitionEnd(panel, { propertyName: 'height' });
+    expect(panel).toHaveAttribute('aria-hidden', 'true');
+    expect(panel.hasAttribute('inert')).toBe(true);
+  });
 });

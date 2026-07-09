@@ -2,6 +2,7 @@
 
 import {
   type CSSProperties,
+  type KeyboardEvent,
   type ReactNode,
 } from 'react';
 import { useTheme } from '../themes';
@@ -313,6 +314,23 @@ export function TkxStepper({
           if (clickable) onStepClick?.(i);
         };
 
+        // When steps are clickable, expose each step node as a real,
+        // keyboard-operable control (was a plain <div onClick> → WCAG 2.1.1).
+        // Non-clickable steppers keep purely presentational nodes.
+        const interactiveProps = clickable
+          ? {
+              role: 'button' as const,
+              tabIndex: 0,
+              'aria-label': step.title,
+              onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onStepClick?.(i);
+                }
+              },
+            }
+          : {};
+
         const circle = (
           <StepCircle
             status={status}
@@ -393,6 +411,7 @@ export function TkxStepper({
             >
               {/* Step node */}
               <div
+                {...interactiveProps}
                 onClick={handleClick}
                 style={{
                   display: 'flex',
@@ -446,6 +465,7 @@ export function TkxStepper({
               }}
             >
               <div
+                {...interactiveProps}
                 onClick={handleClick}
                 style={{ cursor: clickable ? 'pointer' : 'default' }}
                 aria-current={status === 'active' ? 'step' : undefined}

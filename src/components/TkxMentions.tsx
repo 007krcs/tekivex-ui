@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useState, useRef, useCallback, useEffect } from 'react';
+import { type ReactNode, useState, useRef, useCallback, useEffect, useId } from 'react';
 import { useTheme } from '../themes';
 import { sanitizeString, sanitizeUnicode } from '../engine/security';
 import { useReducedMotion } from '../hooks';
@@ -35,6 +35,8 @@ export function TkxMentions({
 }: TkxMentionsProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
+  const listboxId = useId();
+  const optionId = (i: number) => `${listboxId}-opt-${i}`;
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const dropdownRef = useRef<HTMLUListElement>(null);
   const [text, setText] = useState(value);
@@ -137,6 +139,12 @@ export function TkxMentions({
         aria-expanded={showDropdown}
         aria-haspopup="listbox"
         aria-autocomplete="list"
+        aria-controls={showDropdown && filtered.length > 0 ? listboxId : undefined}
+        aria-activedescendant={
+          showDropdown && filtered.length > 0 && filtered[activeIdx]
+            ? optionId(activeIdx)
+            : undefined
+        }
         aria-label={safeLabel ?? 'Mentions input'}
         value={text}
         placeholder={safePlaceholder}
@@ -157,6 +165,7 @@ export function TkxMentions({
       {showDropdown && filtered.length > 0 && (
         <ul
           ref={dropdownRef}
+          id={listboxId}
           role="listbox"
           aria-label="Mention suggestions"
           className={tkx('absolute left-0 right-0 z-50 rounded-lg border overflow-auto')}
@@ -175,6 +184,7 @@ export function TkxMentions({
           {filtered.map((opt, idx) => (
             <li
               key={opt.value}
+              id={optionId(idx)}
               role="option"
               aria-selected={idx === activeIdx}
               className={tkx('flex items-center gap-3 px-3 py-2 cursor-pointer text-sm')}
