@@ -40,9 +40,9 @@ describe('TkxSlider', () => {
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '25');
   });
 
-  it('renders with custom label via aria-label', () => {
+  it('names the thumb from the visible label (via aria-labelledby)', () => {
     render(<TkxSlider value={50} label="Brightness" />, { wrapper: Wrapper });
-    expect(screen.getByRole('slider')).toHaveAttribute('aria-label', 'Brightness');
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Brightness');
   });
 
   // ── aria-valuetext (A11Y-AUDIT MEDIUM #21) ─────────────────────────────────

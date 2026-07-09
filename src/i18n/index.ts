@@ -110,6 +110,7 @@ export interface LocaleStrings {
   dataGrid?: string;
   pagination?: string;
   dismiss?: string;
+  searchCommands?: string;
 }
 
 // ── Helper — build a locale without having to re-type every key ─────────────
@@ -152,6 +153,7 @@ export const enUS = locale({
   dataGrid: 'Data grid',
   pagination: 'Pagination',
   dismiss: 'Dismiss',
+  searchCommands: 'Search commands',
 });
 
 // Spanish (Spain)
@@ -205,6 +207,13 @@ export const esES = locale({
   maxValue: (n) => `Máximo ${n}`,
   noRows: 'Sin filas',
   resetFilters: 'Restablecer filtros',
+  selectNoOptions: 'No se encontraron opciones',
+  dropdownMenu: 'Menú desplegable',
+  commandPalette: 'Paleta de comandos',
+  dataGrid: 'Cuadrícula de datos',
+  pagination: 'Paginación',
+  dismiss: 'Descartar',
+  searchCommands: 'Buscar comandos',
 });
 
 // Portuguese (Brazil)
@@ -258,6 +267,13 @@ export const ptBR = locale({
   maxValue: (n) => `Máximo ${n}`,
   noRows: 'Sem linhas',
   resetFilters: 'Redefinir filtros',
+  selectNoOptions: 'Nenhuma opção encontrada',
+  dropdownMenu: 'Menu suspenso',
+  commandPalette: 'Paleta de comandos',
+  dataGrid: 'Grade de dados',
+  pagination: 'Paginação',
+  dismiss: 'Dispensar',
+  searchCommands: 'Pesquisar comandos',
 });
 
 // Portuguese (Portugal)
@@ -311,6 +327,13 @@ export const ptPT = locale({
   maxValue: (n) => `Máximo ${n}`,
   noRows: 'Sem linhas',
   resetFilters: 'Repor filtros',
+  selectNoOptions: 'Nenhuma opção encontrada',
+  dropdownMenu: 'Menu pendente',
+  commandPalette: 'Paleta de comandos',
+  dataGrid: 'Grelha de dados',
+  pagination: 'Paginação',
+  dismiss: 'Dispensar',
+  searchCommands: 'Pesquisar comandos',
 });
 
 // French (France)
@@ -364,6 +387,13 @@ export const frFR = locale({
   maxValue: (n) => `Au plus ${n}`,
   noRows: 'Aucune ligne',
   resetFilters: 'Réinitialiser les filtres',
+  selectNoOptions: 'Aucune option trouvée',
+  dropdownMenu: 'Menu déroulant',
+  commandPalette: 'Palette de commandes',
+  dataGrid: 'Grille de données',
+  pagination: 'Pagination',
+  dismiss: 'Ignorer',
+  searchCommands: 'Rechercher des commandes',
 });
 
 // German (Germany)
@@ -417,6 +447,13 @@ export const deDE = locale({
   maxValue: (n) => `Höchstens ${n}`,
   noRows: 'Keine Zeilen',
   resetFilters: 'Filter zurücksetzen',
+  selectNoOptions: 'Keine Optionen gefunden',
+  dropdownMenu: 'Dropdown-Menü',
+  commandPalette: 'Befehlspalette',
+  dataGrid: 'Datenraster',
+  pagination: 'Seitennummerierung',
+  dismiss: 'Verwerfen',
+  searchCommands: 'Befehle suchen',
 });
 
 // Italian (Italy)
@@ -470,6 +507,13 @@ export const itIT = locale({
   maxValue: (n) => `Massimo ${n}`,
   noRows: 'Nessuna riga',
   resetFilters: 'Reimposta filtri',
+  selectNoOptions: 'Nessuna opzione trovata',
+  dropdownMenu: 'Menu a discesa',
+  commandPalette: 'Palette dei comandi',
+  dataGrid: 'Griglia dati',
+  pagination: 'Paginazione',
+  dismiss: 'Ignora',
+  searchCommands: 'Cerca comandi',
 });
 
 // Dutch (Netherlands)
@@ -523,6 +567,13 @@ export const nlNL = locale({
   maxValue: (n) => `Maximaal ${n}`,
   noRows: 'Geen rijen',
   resetFilters: 'Filters herstellen',
+  selectNoOptions: 'Geen opties gevonden',
+  dropdownMenu: 'Vervolgkeuzemenu',
+  commandPalette: 'Opdrachtenpalet',
+  dataGrid: 'Gegevensraster',
+  pagination: 'Paginering',
+  dismiss: 'Negeren',
+  searchCommands: 'Opdrachten zoeken',
 });
 
 // Polish (Poland)
@@ -576,6 +627,13 @@ export const plPL = locale({
   maxValue: (n) => `Maksymalnie ${n}`,
   noRows: 'Brak wierszy',
   resetFilters: 'Resetuj filtry',
+  selectNoOptions: 'Nie znaleziono opcji',
+  dropdownMenu: 'Menu rozwijane',
+  commandPalette: 'Paleta poleceń',
+  dataGrid: 'Siatka danych',
+  pagination: 'Paginacja',
+  dismiss: 'Odrzuć',
+  searchCommands: 'Wyszukaj polecenia',
 });
 
 // Russian (Russia)
@@ -629,6 +687,13 @@ export const ruRU = locale({
   maxValue: (n) => `Не более ${n}`,
   noRows: 'Нет строк',
   resetFilters: 'Сбросить фильтры',
+  selectNoOptions: 'Варианты не найдены',
+  dropdownMenu: 'Раскрывающееся меню',
+  commandPalette: 'Палитра команд',
+  dataGrid: 'Сетка данных',
+  pagination: 'Пагинация',
+  dismiss: 'Скрыть',
+  searchCommands: 'Поиск команд',
 });
 
 // Ukrainian (Ukraine)
@@ -682,6 +747,13 @@ export const ukUA = locale({
   maxValue: (n) => `Не більше ${n}`,
   noRows: 'Немає рядків',
   resetFilters: 'Скинути фільтри',
+  selectNoOptions: 'Варіанти не знайдено',
+  dropdownMenu: 'Розкривне меню',
+  commandPalette: 'Палітра команд',
+  dataGrid: 'Сітка даних',
+  pagination: 'Пагінація',
+  dismiss: 'Приховати',
+  searchCommands: 'Пошук команд',
 });
 
 // Turkish (Turkey)
@@ -735,6 +807,13 @@ export const trTR = locale({
   maxValue: (n) => `En fazla ${n}`,
   noRows: 'Satır yok',
   resetFilters: 'Filtreleri sıfırla',
+  selectNoOptions: 'Seçenek bulunamadı',
+  dropdownMenu: 'Açılır menü',
+  commandPalette: 'Komut paleti',
+  dataGrid: 'Veri tablosu',
+  pagination: 'Sayfalandırma',
+  dismiss: 'Kapat',
+  searchCommands: 'Komut ara',
 });
 
 // Swedish (Sweden)
@@ -788,6 +867,13 @@ export const svSE = locale({
   maxValue: (n) => `Högst ${n}`,
   noRows: 'Inga rader',
   resetFilters: 'Återställ filter',
+  selectNoOptions: 'Inga alternativ hittades',
+  dropdownMenu: 'Rullgardinsmeny',
+  commandPalette: 'Kommandopalett',
+  dataGrid: 'Datarutnät',
+  pagination: 'Sidnumrering',
+  dismiss: 'Avfärda',
+  searchCommands: 'Sök kommandon',
 });
 
 // Danish (Denmark)
@@ -841,6 +927,13 @@ export const daDK = locale({
   maxValue: (n) => `Højst ${n}`,
   noRows: 'Ingen rækker',
   resetFilters: 'Nulstil filtre',
+  selectNoOptions: 'Ingen valgmuligheder fundet',
+  dropdownMenu: 'Rullemenu',
+  commandPalette: 'Kommandopalet',
+  dataGrid: 'Datagitter',
+  pagination: 'Sidenummerering',
+  dismiss: 'Afvis',
+  searchCommands: 'Søg efter kommandoer',
 });
 
 // Czech (Czech Republic)
@@ -894,6 +987,13 @@ export const csCZ = locale({
   maxValue: (n) => `Maximálně ${n}`,
   noRows: 'Žádné řádky',
   resetFilters: 'Resetovat filtry',
+  selectNoOptions: 'Žádné možnosti nenalezeny',
+  dropdownMenu: 'Rozbalovací nabídka',
+  commandPalette: 'Paleta příkazů',
+  dataGrid: 'Datová mřížka',
+  pagination: 'Stránkování',
+  dismiss: 'Zavřít',
+  searchCommands: 'Hledat příkazy',
 });
 
 // Hungarian (Hungary)
@@ -947,6 +1047,13 @@ export const huHU = locale({
   maxValue: (n) => `Legfeljebb ${n}`,
   noRows: 'Nincsenek sorok',
   resetFilters: 'Szűrők visszaállítása',
+  selectNoOptions: 'Nincsenek opciók',
+  dropdownMenu: 'Legördülő menü',
+  commandPalette: 'Parancspaletta',
+  dataGrid: 'Adatrács',
+  pagination: 'Lapozás',
+  dismiss: 'Elvetés',
+  searchCommands: 'Parancsok keresése',
 });
 
 // Arabic (Saudi Arabia) — RTL
@@ -1000,6 +1107,13 @@ export const arSA = locale({
   maxValue: (n) => `الحد الأقصى ${n}`,
   noRows: 'لا توجد صفوف',
   resetFilters: 'إعادة ضبط الفلاتر',
+  selectNoOptions: 'لم يتم العثور على خيارات',
+  dropdownMenu: 'قائمة منسدلة',
+  commandPalette: 'لوحة الأوامر',
+  dataGrid: 'شبكة بيانات',
+  pagination: 'ترقيم الصفحات',
+  dismiss: 'تجاهل',
+  searchCommands: 'البحث عن الأوامر',
 });
 
 // Hebrew (Israel) — RTL
@@ -1053,6 +1167,13 @@ export const heIL = locale({
   maxValue: (n) => `מקסימום ${n}`,
   noRows: 'אין שורות',
   resetFilters: 'איפוס מסננים',
+  selectNoOptions: 'לא נמצאו אפשרויות',
+  dropdownMenu: 'תפריט נפתח',
+  commandPalette: 'לוח פקודות',
+  dataGrid: 'רשת נתונים',
+  pagination: 'עימוד',
+  dismiss: 'סגור',
+  searchCommands: 'חיפוש פקודות',
 });
 
 // Persian / Farsi (Iran) — RTL
@@ -1106,6 +1227,13 @@ export const faIR = locale({
   maxValue: (n) => `حداکثر ${n}`,
   noRows: 'هیچ ردیفی نیست',
   resetFilters: 'بازنشانی فیلترها',
+  selectNoOptions: 'گزینه‌ای یافت نشد',
+  dropdownMenu: 'منوی کشویی',
+  commandPalette: 'پالت دستورات',
+  dataGrid: 'شبکه داده‌ها',
+  pagination: 'صفحه‌بندی',
+  dismiss: 'رد کردن',
+  searchCommands: 'جستجوی دستورات',
 });
 
 // Japanese (Japan)
@@ -1159,6 +1287,13 @@ export const jaJP = locale({
   maxValue: (n) => `${n}以下`,
   noRows: '行がありません',
   resetFilters: 'フィルターをリセット',
+  selectNoOptions: 'オプションが見つかりません',
+  dropdownMenu: 'ドロップダウンメニュー',
+  commandPalette: 'コマンドパレット',
+  dataGrid: 'データグリッド',
+  pagination: 'ページネーション',
+  dismiss: '閉じる',
+  searchCommands: 'コマンドを検索',
 });
 
 // Korean (South Korea)
@@ -1212,6 +1347,13 @@ export const koKR = locale({
   maxValue: (n) => `최대 ${n}`,
   noRows: '행 없음',
   resetFilters: '필터 재설정',
+  selectNoOptions: '옵션을 찾을 수 없음',
+  dropdownMenu: '드롭다운 메뉴',
+  commandPalette: '명령 팔레트',
+  dataGrid: '데이터 그리드',
+  pagination: '페이지 매김',
+  dismiss: '닫기',
+  searchCommands: '명령 검색',
 });
 
 // Chinese Simplified (China)
@@ -1265,6 +1407,13 @@ export const zhCN = locale({
   maxValue: (n) => `最大 ${n}`,
   noRows: '无数据',
   resetFilters: '重置筛选',
+  selectNoOptions: '未找到选项',
+  dropdownMenu: '下拉菜单',
+  commandPalette: '命令面板',
+  dataGrid: '数据网格',
+  pagination: '分页',
+  dismiss: '关闭',
+  searchCommands: '搜索命令',
 });
 
 // Chinese Traditional (Taiwan)
@@ -1318,6 +1467,13 @@ export const zhTW = locale({
   maxValue: (n) => `最大 ${n}`,
   noRows: '無資料',
   resetFilters: '重設篩選',
+  selectNoOptions: '找不到選項',
+  dropdownMenu: '下拉式選單',
+  commandPalette: '命令面板',
+  dataGrid: '資料網格',
+  pagination: '分頁',
+  dismiss: '關閉',
+  searchCommands: '搜尋命令',
 });
 
 // Thai (Thailand)
@@ -1371,6 +1527,13 @@ export const thTH = locale({
   maxValue: (n) => `ไม่เกิน ${n}`,
   noRows: 'ไม่มีแถว',
   resetFilters: 'รีเซ็ตตัวกรอง',
+  selectNoOptions: 'ไม่พบตัวเลือก',
+  dropdownMenu: 'เมนูแบบเลื่อนลง',
+  commandPalette: 'แผงคำสั่ง',
+  dataGrid: 'ตารางข้อมูล',
+  pagination: 'การแบ่งหน้า',
+  dismiss: 'ปิด',
+  searchCommands: 'ค้นหาคำสั่ง',
 });
 
 // Vietnamese (Vietnam)
@@ -1424,6 +1587,13 @@ export const viVN = locale({
   maxValue: (n) => `Tối đa ${n}`,
   noRows: 'Không có hàng',
   resetFilters: 'Đặt lại bộ lọc',
+  selectNoOptions: 'Không tìm thấy tùy chọn',
+  dropdownMenu: 'Menu thả xuống',
+  commandPalette: 'Bảng lệnh',
+  dataGrid: 'Lưới dữ liệu',
+  pagination: 'Phân trang',
+  dismiss: 'Bỏ qua',
+  searchCommands: 'Tìm kiếm lệnh',
 });
 
 // Indonesian (Indonesia)
@@ -1477,6 +1647,13 @@ export const idID = locale({
   maxValue: (n) => `Maksimal ${n}`,
   noRows: 'Tidak ada baris',
   resetFilters: 'Atur ulang filter',
+  selectNoOptions: 'Tidak ada opsi ditemukan',
+  dropdownMenu: 'Menu dropdown',
+  commandPalette: 'Palet perintah',
+  dataGrid: 'Kisi data',
+  pagination: 'Paginasi',
+  dismiss: 'Tutup',
+  searchCommands: 'Cari perintah',
 });
 
 // Romanian (Romania)
@@ -1530,6 +1707,13 @@ export const roRO = locale({
   maxValue: (n) => `Maxim ${n}`,
   noRows: 'Niciun rând',
   resetFilters: 'Resetare filtre',
+  selectNoOptions: 'Nu s-au găsit opțiuni',
+  dropdownMenu: 'Meniu derulant',
+  commandPalette: 'Paletă de comenzi',
+  dataGrid: 'Grilă de date',
+  pagination: 'Paginare',
+  dismiss: 'Închidere',
+  searchCommands: 'Căutare comenzi',
 });
 
 // ── South Asian locales (v2.7) ─────────────────────────────────────────────
@@ -1588,6 +1772,13 @@ export const hiIN = locale({
   maxValue: (n) => `${n} या उससे कम होना चाहिए`,
   noRows: 'कोई पंक्ति नहीं',
   resetFilters: 'फ़िल्टर रीसेट करें',
+  selectNoOptions: 'कोई विकल्प नहीं मिला',
+  dropdownMenu: 'ड्रॉपडाउन मेनू',
+  commandPalette: 'कमांड पैलेट',
+  dataGrid: 'डेटा ग्रिड',
+  pagination: 'पृष्ठांकन',
+  dismiss: 'खारिज करें',
+  searchCommands: 'कमांड खोजें',
 });
 
 // Marathi (India)
@@ -1641,6 +1832,13 @@ export const mrIN = locale({
   maxValue: (n) => `कमाल ${n}`,
   noRows: 'कोणत्याही पंक्ती नाहीत',
   resetFilters: 'फिल्टर रीसेट करा',
+  selectNoOptions: 'कोणतेही पर्याय सापडले नाहीत',
+  dropdownMenu: 'ड्रॉपडाउन मेनू',
+  commandPalette: 'आदेश पॅलेट',
+  dataGrid: 'डेटा ग्रिड',
+  pagination: 'पृष्ठांकन',
+  dismiss: 'डिसमिस करा',
+  searchCommands: 'आदेश शोधा',
 });
 
 // Bengali (India / Bangladesh)
@@ -1694,6 +1892,13 @@ export const bnIN = locale({
   maxValue: (n) => `সর্বাধিক ${n}`,
   noRows: 'কোনো সারি নেই',
   resetFilters: 'ফিল্টার রিসেট',
+  selectNoOptions: 'কোনো বিকল্প পাওয়া যায়নি',
+  dropdownMenu: 'ড্রপডাউন মেনু',
+  commandPalette: 'কমান্ড প্যালেট',
+  dataGrid: 'ডেটা গ্রিড',
+  pagination: 'পেজিনেশন',
+  dismiss: 'খারিজ করুন',
+  searchCommands: 'কমান্ড খুঁজুন',
 });
 
 // Tamil (India / Sri Lanka / Singapore / Malaysia)
@@ -1747,6 +1952,13 @@ export const taIN = locale({
   maxValue: (n) => `அதிகபட்சம் ${n}`,
   noRows: 'வரிசைகள் இல்லை',
   resetFilters: 'வடிகட்டிகளை மீட்டமை',
+  selectNoOptions: 'விருப்பங்கள் இல்லை',
+  dropdownMenu: 'கீழ்தோன்றும் மெனு',
+  commandPalette: 'கட்டளை பலகை',
+  dataGrid: 'தரவு கட்டம்',
+  pagination: 'பக்கமாக்கல்',
+  dismiss: 'நிராகரி',
+  searchCommands: 'கட்டளைகளைத் தேடு',
 });
 
 // Telugu (India)
@@ -1800,6 +2012,13 @@ export const teIN = locale({
   maxValue: (n) => `గరిష్టంగా ${n}`,
   noRows: 'వరుసలు లేవు',
   resetFilters: 'ఫిల్టర్‌లను రీసెట్ చేయండి',
+  selectNoOptions: 'ఎంపికలు కనుగొనబడలేదు',
+  dropdownMenu: 'డ్రాప్‌డౌన్ మెనూ',
+  commandPalette: 'ఆదేశ ప్యాలెట్',
+  dataGrid: 'డేటా గ్రిడ్',
+  pagination: 'పేజినేషన్',
+  dismiss: 'విస్మరించండి',
+  searchCommands: 'ఆదేశాలను శోధించండి',
 });
 
 // Gujarati (India)
@@ -1853,6 +2072,13 @@ export const guIN = locale({
   maxValue: (n) => `વધુમાં વધુ ${n}`,
   noRows: 'કોઈ પંક્તિ નથી',
   resetFilters: 'ફિલ્ટર્સ રીસેટ કરો',
+  selectNoOptions: 'કોઈ વિકલ્પ મળ્યો નથી',
+  dropdownMenu: 'ડ્રોપડાઉન મેનૂ',
+  commandPalette: 'આદેશ પેલેટ',
+  dataGrid: 'ડેટા ગ્રિડ',
+  pagination: 'પેજિનેશન',
+  dismiss: 'બંધ કરો',
+  searchCommands: 'આદેશો શોધો',
 });
 
 // Punjabi / Gurmukhi (India)
@@ -1906,6 +2132,13 @@ export const paIN = locale({
   maxValue: (n) => `ਵੱਧ ਤੋਂ ਵੱਧ ${n}`,
   noRows: 'ਕੋਈ ਕਤਾਰਾਂ ਨਹੀਂ',
   resetFilters: 'ਫਿਲਟਰ ਰੀਸੈੱਟ ਕਰੋ',
+  selectNoOptions: 'ਕੋਈ ਵਿਕਲਪ ਨਹੀਂ ਮਿਲਿਆ',
+  dropdownMenu: 'ਡ੍ਰੌਪਡਾਊਨ ਮੀਨੂ',
+  commandPalette: 'ਕਮਾਂਡ ਪੈਲੇਟ',
+  dataGrid: 'ਡਾਟਾ ਗਰਿੱਡ',
+  pagination: 'ਪੇਜੀਨੇਸ਼ਨ',
+  dismiss: 'ਖਾਰਜ ਕਰੋ',
+  searchCommands: 'ਕਮਾਂਡਾਂ ਖੋਜੋ',
 });
 
 // Urdu (Pakistan) — RTL. Uses Nastaliq when paired with Noto Nastaliq Urdu font.
@@ -1959,6 +2192,13 @@ export const urPK = locale({
   maxValue: (n) => `زیادہ سے زیادہ ${n}`,
   noRows: 'کوئی قطاریں نہیں',
   resetFilters: 'فلٹر دوبارہ ترتیب دیں',
+  selectNoOptions: 'کوئی آپشن نہیں ملا',
+  dropdownMenu: 'ڈراپ ڈاؤن مینو',
+  commandPalette: 'کمانڈ پیلیٹ',
+  dataGrid: 'ڈیٹا گرڈ',
+  pagination: 'صفحہ بندی',
+  dismiss: 'برخاست کریں',
+  searchCommands: 'کمانڈز تلاش کریں',
 });
 
 // ── Central / Eastern / Northern European locales (v3.20) ──────────────────
@@ -2016,6 +2256,13 @@ export const bgBG = locale({
   maxValue: (n) => `Максимум ${n}`,
   noRows: 'Няма редове',
   resetFilters: 'Нулирай филтрите',
+  selectNoOptions: 'Няма намерени опции',
+  dropdownMenu: 'Падащо меню',
+  commandPalette: 'Палитра с команди',
+  dataGrid: 'Мрежа с данни',
+  pagination: 'Странициране',
+  dismiss: 'Отхвърляне',
+  searchCommands: 'Търсене на команди',
 });
 
 // Croatian (Croatia)
@@ -2069,6 +2316,13 @@ export const hrHR = locale({
   maxValue: (n) => `Najviše ${n}`,
   noRows: 'Nema redaka',
   resetFilters: 'Poništi filtre',
+  selectNoOptions: 'Nema pronađenih opcija',
+  dropdownMenu: 'Padajući izbornik',
+  commandPalette: 'Paleta naredbi',
+  dataGrid: 'Mreža podataka',
+  pagination: 'Paginacija',
+  dismiss: 'Odbaci',
+  searchCommands: 'Pretraži naredbe',
 });
 
 // Estonian (Estonia)
@@ -2122,6 +2376,13 @@ export const etEE = locale({
   maxValue: (n) => `Maksimaalselt ${n}`,
   noRows: 'Ridu pole',
   resetFilters: 'Lähtesta filtrid',
+  selectNoOptions: 'Valikuid ei leitud',
+  dropdownMenu: 'Rippmenüü',
+  commandPalette: 'Käsupalett',
+  dataGrid: 'Andmeruudustik',
+  pagination: 'Leheküljendus',
+  dismiss: 'Loobu',
+  searchCommands: 'Otsi käske',
 });
 
 // Finnish (Finland)
@@ -2175,6 +2436,13 @@ export const fiFI = locale({
   maxValue: (n) => `Enintään ${n}`,
   noRows: 'Ei rivejä',
   resetFilters: 'Palauta suodattimet',
+  selectNoOptions: 'Vaihtoehtoja ei löytynyt',
+  dropdownMenu: 'Avattava valikko',
+  commandPalette: 'Komentopaletti',
+  dataGrid: 'Tietoruudukko',
+  pagination: 'Sivutus',
+  dismiss: 'Hylkää',
+  searchCommands: 'Hae komentoja',
 });
 
 // Lithuanian (Lithuania)
@@ -2228,6 +2496,13 @@ export const ltLT = locale({
   maxValue: (n) => `Ne daugiau kaip ${n}`,
   noRows: 'Eilučių nėra',
   resetFilters: 'Atstatyti filtrus',
+  selectNoOptions: 'Parinkčių nerasta',
+  dropdownMenu: 'Išskleidžiamasis meniu',
+  commandPalette: 'Komandų paletė',
+  dataGrid: 'Duomenų tinklelis',
+  pagination: 'Puslapiavimas',
+  dismiss: 'Atmesti',
+  searchCommands: 'Ieškoti komandų',
 });
 
 // Latvian (Latvia)
@@ -2281,6 +2556,13 @@ export const lvLV = locale({
   maxValue: (n) => `Ne vairāk kā ${n}`,
   noRows: 'Nav rindu',
   resetFilters: 'Atiestatīt filtrus',
+  selectNoOptions: 'Opcijas nav atrastas',
+  dropdownMenu: 'Nolaižamā izvēlne',
+  commandPalette: 'Komandu palete',
+  dataGrid: 'Datu režģis',
+  pagination: 'Lapošana',
+  dismiss: 'Nerādīt',
+  searchCommands: 'Meklēt komandas',
 });
 
 // Slovak (Slovakia)
@@ -2334,6 +2616,13 @@ export const skSK = locale({
   maxValue: (n) => `Maximálne ${n}`,
   noRows: 'Žiadne riadky',
   resetFilters: 'Obnoviť filtre',
+  selectNoOptions: 'Žiadne možnosti sa nenašli',
+  dropdownMenu: 'Rozbaľovacia ponuka',
+  commandPalette: 'Paleta príkazov',
+  dataGrid: 'Dátová mriežka',
+  pagination: 'Stránkovanie',
+  dismiss: 'Zavrieť',
+  searchCommands: 'Hľadať príkazy',
 });
 
 // Slovenian (Slovenia)
@@ -2387,6 +2676,13 @@ export const slSI = locale({
   maxValue: (n) => `Največ ${n}`,
   noRows: 'Ni vrstic',
   resetFilters: 'Ponastavi filtre',
+  selectNoOptions: 'Ni najdenih možnosti',
+  dropdownMenu: 'Spustni meni',
+  commandPalette: 'Paleta ukazov',
+  dataGrid: 'Podatkovna mreža',
+  pagination: 'Ostranjevanje',
+  dismiss: 'Opusti',
+  searchCommands: 'Iskanje ukazov',
 });
 
 // Norwegian Bokmål (Norway) — typical default for the "no" macrolanguage code.
@@ -2440,6 +2736,13 @@ export const nbNO = locale({
   maxValue: (n) => `Maks ${n}`,
   noRows: 'Ingen rader',
   resetFilters: 'Tilbakestill filtre',
+  selectNoOptions: 'Ingen alternativer funnet',
+  dropdownMenu: 'Rullegardinmeny',
+  commandPalette: 'Kommandopalett',
+  dataGrid: 'Datarutenett',
+  pagination: 'Sidenummerering',
+  dismiss: 'Avvis',
+  searchCommands: 'Søk etter kommandoer',
 });
 
 // ── Locale map ──────────────────────────────────────────────────────────────

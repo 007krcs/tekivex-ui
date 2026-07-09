@@ -341,15 +341,20 @@ export function TkxNumberInput({
           <input
             id={id}
             type="text"
+            // spinbutton makes the aria-value* range attributes valid — on the
+            // implicit textbox role AT ignores them entirely.
+            role="spinbutton"
             inputMode="decimal"
             value={focused ? rawInput : displayValue}
             readOnly={isReadOnly}
             disabled={isDisabled}
             aria-invalid={hasError}
+            aria-readonly={isReadOnly || undefined}
             aria-describedby={describedBy}
             aria-valuemin={min}
             aria-valuemax={max}
             aria-valuenow={numericValue}
+            aria-valuetext={!focused && displayValue !== '' ? String(displayValue) : undefined}
             style={{
               width: '100%',
               height: '100%',

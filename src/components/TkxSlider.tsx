@@ -68,6 +68,13 @@ interface ThumbProps {
   trackHeight: number;
   thumbSize: number;
   ariaLabel: string;
+  /**
+   * Id of the visible <label> element. A `label[for]` can't activate a
+   * role="slider" div, so the association is made via aria-labelledby
+   * instead. When set it wins over ariaLabel (single-thumb case); the two
+   * range thumbs keep aria-label so "start"/"end" stay distinguishable.
+   */
+  labelledById?: string;
   tooltipMode: false | 'hover' | 'always';
   formatValue: (v: number) => string;
   /**
@@ -81,7 +88,7 @@ interface ThumbProps {
   onChangeEnd?: () => void;
 }
 
-function Thumb({ value, min, max, step, isDisabled, trackColor, surfaceColor, disabledColor, thumbSize, ariaLabel, tooltipMode, formatValue, formatValueText, orientation, onChange, onChangeEnd }: ThumbProps) {
+function Thumb({ value, min, max, step, isDisabled, trackColor, surfaceColor, disabledColor, thumbSize, ariaLabel, labelledById, tooltipMode, formatValue, formatValueText, orientation, onChange, onChangeEnd }: ThumbProps) {
   const [focused, setFocused] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -165,7 +172,8 @@ function Thumb({ value, min, max, step, isDisabled, trackColor, surfaceColor, di
       <div
         role="slider"
         tabIndex={isDisabled ? -1 : 0}
-        aria-label={ariaLabel}
+        aria-label={labelledById ? undefined : ariaLabel}
+        aria-labelledby={labelledById}
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={value}
@@ -222,6 +230,7 @@ export function TkxSlider({
 }: TkxSliderProps) {
   const theme = useTheme();
   const id = useId();
+  const labelId = `${id}-label`;
   const reducedMotion = useReducedMotion();
 
   const isControlled = value !== undefined;
@@ -322,7 +331,7 @@ export function TkxSlider({
         <div className={tkx('flex items-center justify-between')}>
           {safeLabel && (
             <label
-              htmlFor={id}
+              id={labelId}
               className={tkx('text-sm font-medium')}
               style={{ color: theme.text, fontSize: sizes.fontSize }}
             >
@@ -413,6 +422,7 @@ export function TkxSlider({
               trackHeight={sizes.track}
               thumbSize={sizes.thumb}
               ariaLabel={safeLabel ?? 'Slider'}
+              labelledById={safeLabel ? labelId : undefined}
               tooltipMode={tooltipMode}
               formatValue={formatVal}
               formatValueText={formatValueProp}

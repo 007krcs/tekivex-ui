@@ -40,6 +40,8 @@ export interface TkxAccordionProps {
   iconPosition?: 'left' | 'right';
   iconStyle?: 'chevron' | 'plus' | 'arrow';
   flush?: boolean;
+  /** ARIA heading level exposed on each item's header (APG Accordion). */
+  headingLevel?: number;
   className?: string;
   style?: CSSProperties;
 }
@@ -299,6 +301,7 @@ export function TkxAccordion({
   iconPosition = 'right',
   iconStyle = 'chevron',
   flush = false,
+  headingLevel = 3,
   className,
   style,
 }: TkxAccordionProps) {
@@ -442,11 +445,13 @@ export function TkxAccordion({
             className={item.className}
             style={getItemStyle(idx, isOpen, isLast)}
           >
-            {/* Trigger button */}
+            {/* Trigger button, wrapped in a heading for SR heading navigation
+                (APG Accordion). The native <button> keeps its implicit role —
+                the redundant role="button" it used to carry is gone. */}
+            <div role="heading" aria-level={headingLevel} style={{ margin: 0 }}>
             <button
               id={triggerId}
               type="button"
-              role="button"
               aria-expanded={isOpen}
               aria-controls={panelId}
               disabled={item.disabled}
@@ -580,6 +585,7 @@ export function TkxAccordion({
                 </span>
               )}
             </button>
+            </div>
 
             {/* Animated content panel */}
             <AnimatedPanel

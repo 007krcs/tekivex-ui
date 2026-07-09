@@ -160,6 +160,16 @@ baseline until these are cleared. Fixed items are struck through as cycles land.
 
 ## LOW
 
+> **All 5 LOW items fixed in v3.31.0**, with regression tests in
+> `tests/a11y-low-fixes.test.tsx`: CommandPalette combobox accessible name
+> (localizable `searchCommands` key), Accordion heading structure
+> (`headingLevel` prop, redundant `role="button"` removed), NumberInput
+> `role="spinbutton"` (+ `aria-valuetext`/`aria-readonly`), Slider visible-label
+> → thumb association via `aria-labelledby`, and Field `aria-describedby`
+> idrefs aligned with the actual render gates. With this, **all 35 confirmed
+> findings from this audit are addressed** (two documented partial deferrals
+> remain under MEDIUM #6 and #22).
+
 ### 1. TkxCommandPalette
 - **Violation:** The role="combobox" search <input> (src/components/TkxCommandPalette.tsx lines 379-402) has no robust accessible name: no aria-label/aria-labelledby, no associated <label>/htmlFor (no <label> element exists in the component), and the adjacent 🔍 icon (line 378) is aria-hidden="true". It relies solely on the placeholder ('Type a command…'). The parent role="dialog" aria-label (line 334) names the dialog, not the combobox.
 - **Fix:** Add an explicit accessible name to the input. Simplest: aria-label={placeholder} on the <input>. Better (decouples the name from the placeholder so it persists as the field is typed into and is localizable): add aria-label={t.searchCommands ?? 'Search commands'} to the input at line 379, keeping the placeholder for the visual hint. Optionally add a matching assertion to the test, e.g. expect(screen.getByRole('combobox')).toHaveAccessibleName(...).

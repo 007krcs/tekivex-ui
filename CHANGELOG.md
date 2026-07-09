@@ -5,6 +5,38 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.31.0] — 2026-07-09
+
+### Fixed — accessibility (all 5 LOW findings; APG audit now fully addressed)
+
+Closes out the LOW tier of `docs/A11Y-AUDIT.md` — with this, **all 35 confirmed
+findings from the APG audit are addressed** (only the two documented partial
+deferrals under MEDIUM #6/#22 remain open):
+
+- **`TkxCommandPalette`** — the search combobox now has a real accessible name
+  (was placeholder-only), localizable via the new `searchCommands` locale key.
+- **`TkxAccordion`** — item triggers are wrapped in `role="heading"` with a new
+  `headingLevel` prop (default 3) so screen-reader heading navigation works;
+  the redundant `role="button"` on the native button is removed.
+- **`TkxNumberInput`** — the input is now `role="spinbutton"`, making its
+  previously-inert `aria-valuemin/max/now` actually reach AT; adds
+  `aria-valuetext` for formatted values and `aria-readonly`.
+- **`TkxSlider`** — the visible label's dangling `htmlFor` (which can't
+  activate a `role="slider"` div) is replaced with a working `aria-labelledby`
+  association; range thumbs keep distinguishable "start"/"end" names.
+- **`TkxField`** — `aria-describedby` no longer emits dangling idrefs (hint id
+  while an error is shown; error id when `isInvalid` has no error string).
+
+9 regression tests in `tests/a11y-low-fixes.test.tsx`.
+
+### Added — i18n: the 7 optional a11y label keys translated into all 44 locales
+
+`selectNoOptions`, `dropdownMenu`, `commandPalette`, `dataGrid`, `pagination`,
+`dismiss`, and the new `searchCommands` were English-fallback-only since v3.26.
+They now have native translations in all 43 non-English locales, matching each
+table's register and using platform-conventional terms (e.g. ja コマンドパレット,
+fr « Ignorer » for dismiss, transliterated loans in Indic scripts).
+
 ## [3.30.0] — 2026-07-09
 
 ### Fixed — accessibility (all 26 MEDIUM findings from the APG audit)

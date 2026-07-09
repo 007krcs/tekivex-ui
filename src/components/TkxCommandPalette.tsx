@@ -387,6 +387,7 @@ export function TkxCommandPalette({
           <input
             ref={inputRef}
             role="combobox"
+            aria-label={t.searchCommands ?? 'Search commands'}
             aria-expanded
             aria-controls={`${idBase}-list`}
             aria-activedescendant={flat.length ? activeId : undefined}

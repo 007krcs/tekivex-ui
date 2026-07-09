@@ -84,12 +84,17 @@ export function TkxField({
   const hintId = `${id}-hint`;
   const errorId = `${id}-error`;
   const hasError = isInvalid || !!error;
-  const describedBy =
-    [hint && hintId, hasError && errorId].filter(Boolean).join(' ') || undefined;
 
   const safeLabel = sanitizeString(label);
   const safeHint = hint ? sanitizeString(hint) : undefined;
   const safeError = error ? sanitizeString(error) : undefined;
+
+  // Idrefs must mirror the render gates below exactly: the hint span only
+  // renders without an error, and the error span only renders with an error
+  // string (isInvalid alone renders none) — otherwise describedBy dangles.
+  const describedBy =
+    [safeHint && !safeError && hintId, safeError && errorId].filter(Boolean).join(' ') ||
+    undefined;
 
   const fieldProps: TkxFieldChildProps = {
     id,
