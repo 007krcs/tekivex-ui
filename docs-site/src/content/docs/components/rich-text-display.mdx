@@ -3,15 +3,19 @@ title: TkxRichTextDisplay
 description: Schema-typed rich-text renderer. Block-based, sanitised, supports paragraphs, headings, lists, quotes, code, images, embeds.
 ---
 
+import { RichTextDisplayBasic } from '../../../components/demos/RichTextDisplayDemo';
+
+<RichTextDisplayBasic client:load />
+
 ```tsx
 import { TkxRichTextDisplay } from 'tekivex-ui';
 
 const blocks = [
-  { type: 'heading', level: 2, text: 'Welcome' },
-  { type: 'paragraph', text: 'This is the first paragraph with **bold** spans.' },
+  { type: 'heading', level: 2, content: 'Welcome' },
+  { type: 'paragraph', content: 'This is the first paragraph.' },
   { type: 'list', ordered: false, items: ['One', 'Two', 'Three'] },
-  { type: 'quote', text: 'A pithy quotation.', cite: 'Anonymous' },
-  { type: 'code', language: 'tsx', text: 'const hello = "world";' },
+  { type: 'blockquote', content: 'A pithy quotation.' },
+  { type: 'code', language: 'tsx', content: 'const hello = "world";' },
 ];
 
 <TkxRichTextDisplay blocks={blocks} />

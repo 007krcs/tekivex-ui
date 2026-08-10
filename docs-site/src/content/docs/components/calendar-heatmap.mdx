@@ -3,6 +3,10 @@ title: TkxCalendarHeatmap
 description: GitHub-style activity calendar heatmap. Pass date/value points for a year grid with intensity colors, tooltips, and keyboard cell navigation.
 ---
 
+import { CalendarHeatmapBasic, CalendarHeatmapCustom } from '../../../components/demos/CalendarHeatmapDemo';
+
+<CalendarHeatmapBasic client:load />
+
 `TkxCalendarHeatmap` is the date-driven, GitHub-style activity heatmap. Pass an
 array of `{ date, value }` and get a week × day grid (a rolling year by
 default) where each cell's intensity reflects its value. Use it for
@@ -20,6 +24,10 @@ import { TkxCalendarHeatmap } from 'tekivex-ui';
   ]}
 />
 ```
+
+## Custom colors
+
+<CalendarHeatmapCustom client:load />
 
 ## Props
 

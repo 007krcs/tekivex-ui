@@ -3,6 +3,10 @@ title: TkxAutoForm
 description: Render a complete accessible form from a declarative schema — validation, error summary, themed controls, and built-in input sanitisation.
 ---
 
+import { AutoFormBasic } from '../../../components/demos/AutoFormDemo';
+
+<AutoFormBasic client:load />
+
 `TkxAutoForm` renders a complete, working form from a declarative `FormSchema`
 — no manual field wiring. It is the runtime counterpart to `TkxFormBuilder`:
 the builder *designs* a schema (and emits it as JSON), `TkxAutoForm` *renders*

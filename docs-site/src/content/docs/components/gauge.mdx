@@ -3,6 +3,10 @@ title: TkxGauge
 description: Zero-dependency SVG gauge with arc and speedometer variants, color thresholds, ticks, and animated fill. WAI-ARIA meter role.
 ---
 
+import { GaugeBasic, GaugeThresholds, GaugeTicks } from '../../../components/demos/GaugeDemo';
+
+<GaugeBasic client:load />
+
 `TkxGauge` renders a circular progress gauge as a single self-contained SVG.
 Use it for KPIs, utilisation dials, scores, or any single bounded value you
 want shown as a fill arc. Two shapes are available: a 270° `arc` and a 180°
@@ -15,6 +19,8 @@ import { TkxGauge } from 'tekivex-ui';
 ```
 
 ## Thresholds
+
+<GaugeThresholds client:load />
 
 Pass an array of `{ at, color }` stops to segment the arc by value band. The
 filled arc is split at each boundary, and the centre value text adopts the
@@ -31,6 +37,10 @@ colour of the band the current value falls into.
   ]}
 />
 ```
+
+## Ticks and custom range
+
+<GaugeTicks client:load />
 
 ## Props
 

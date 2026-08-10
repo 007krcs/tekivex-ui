@@ -3,6 +3,10 @@ title: TkxHeatmap
 description: Zero-dependency SVG matrix heatmap for cohorts, confusion and correlation matrices. Sequential or diverging scales, legend, auto-contrast labels.
 ---
 
+import { HeatmapBasic, HeatmapDiverging } from '../../../components/demos/HeatmapDemo';
+
+<HeatmapBasic client:load />
+
 `TkxHeatmap` is a matrix-style heatmap: categorical x and y axes with
 colour-coded cells. Reach for it for cohort retention, confusion matrices,
 correlation matrices, or hourly-traffic grids. For the date-driven
@@ -21,6 +25,10 @@ import { TkxHeatmap } from 'tekivex-ui';
   showValues
 />
 ```
+
+## Diverging scale
+
+<HeatmapDiverging client:load />
 
 ## Props
 

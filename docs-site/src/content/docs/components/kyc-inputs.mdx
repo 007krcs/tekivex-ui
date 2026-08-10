@@ -3,6 +3,10 @@ title: TkxPanInput, TkxVoterIdInput, TkxDrivingLicenceInput
 description: Indian KYC document inputs with format validation. Each is a focused single-document component.
 ---
 
+import { KycPanVoter, KycDrivingLicence } from '../../../components/demos/KycInputsDemo';
+
+<KycPanVoter client:load />
+
 Three focused KYC components, each validating the format defined by the
 relevant authority.
 
@@ -55,6 +59,8 @@ e.g. MH-12-2010-0012345  →  normalised "MH1220100012345"
 
 The component accepts spaces and hyphens, normalises, and offers a pretty
 form via the change payload:
+
+<KycDrivingLicence client:load />
 
 ```tsx
 import { TkxDrivingLicenceInput, isValidDrivingLicence } from 'tekivex-ui';

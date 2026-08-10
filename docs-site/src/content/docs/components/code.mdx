@@ -4,6 +4,9 @@ description: Zero-dependency syntax-highlighted code block. Line numbers, line h
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { CodeBasic, CodeLineNumbers } from '../../../components/demos/CodeDemo';
+
+<CodeBasic client:load />
 
 A syntax-highlighted code block for docs and dev-tool UIs — with **zero
 dependencies**. Where [`TkxMarkdown`](/components/markdown/) renders code
@@ -29,6 +32,8 @@ import { TkxCode } from 'tekivex-ui';
 ```
 
 ## Line numbers & line highlighting
+
+<CodeLineNumbers client:load />
 
 `showLineNumbers` adds an `aria-hidden` gutter. `highlightLines` (1-based)
 tints the given rows with a subtle `primary`-coloured background and edge

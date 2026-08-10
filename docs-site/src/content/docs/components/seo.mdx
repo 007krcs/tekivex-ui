@@ -4,6 +4,7 @@ description: Client-side head injector for meta, Open Graph, Twitter, and JSON-L
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { SeoTagPreview } from '../../../components/demos/SeoDemo';
 
 `TkxSEO` writes `<meta>`, Open Graph, Twitter Card, and JSON-LD tags to
 `document.head` from a React component.
@@ -15,6 +16,16 @@ see them. If your app is server-rendered or statically generated, put your
 canonical SEO in the framework's native head API and use TkxSEO only as a
 client-side supplement.
 </Aside>
+
+## What it writes
+
+A live demo would be meaningless here — TkxSEO's output lives in
+`document.head`, and mounting it on this page would overwrite the page's own
+meta tags. The panel below is a **static illustration**: the props on top,
+and the exact tags the component would write (the JSON-LD is computed with
+the library's real `seoSchema` helper).
+
+<SeoTagPreview client:load />
 
 ## When to use it
 

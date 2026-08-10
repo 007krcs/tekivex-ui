@@ -3,6 +3,10 @@ title: TkxCalendarLunar
 description: Hindu (Tithi/Nakshatra), Hijri, Hebrew, and Buddhist calendar overlays on a standard Gregorian date picker.
 ---
 
+import { CalendarLunarBasic, CalendarLunarHindu } from '../../../components/demos/CalendarLunarDemo';
+
+<CalendarLunarBasic client:load />
+
 ```tsx
 import { TkxCalendarLunar } from 'tekivex-ui';
 
@@ -19,6 +23,8 @@ calendar (Gregorian by default) with the secondary calendar's day/month
 shown beneath each date cell.
 
 ## Supported calendars
+
+<CalendarLunarHindu client:load />
 
 | Calendar | Method | Coverage |
 |---|---|---|

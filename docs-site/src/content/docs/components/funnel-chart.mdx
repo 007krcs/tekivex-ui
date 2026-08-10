@@ -3,6 +3,10 @@ title: TkxFunnelChart
 description: Zero-dependency SVG conversion funnel. Trapezoid stages encode value as width, with automatic drop-off percentages between steps.
 ---
 
+import { FunnelBasic, FunnelHorizontal } from '../../../components/demos/FunnelChartDemo';
+
+<FunnelBasic client:load />
+
 `TkxFunnelChart` renders a conversion funnel as a stack of trapezoids whose
 width tapers from one stage to the next, encoding each stage's value as
 horizontal extent. Drop-off percentages render between stages so leaks are
@@ -21,6 +25,10 @@ import { TkxFunnelChart } from 'tekivex-ui';
   ]}
 />
 ```
+
+## Horizontal orientation
+
+<FunnelHorizontal client:load />
 
 ## Props
 

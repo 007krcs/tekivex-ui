@@ -3,8 +3,12 @@ title: TkxThemeBuilder
 description: Visual theme editor — pick colors, see live preview across 80+ components, export as JSON or .ts file.
 ---
 
+import { ThemeBuilderBasic } from '../../../components/demos/ThemeBuilderDemo';
+
+<ThemeBuilderBasic client:load />
+
 ```tsx
-import { TkxThemeBuilder } from 'tekivex-ui';
+import { TkxThemeBuilder } from 'tekivex-ui/quantum';
 
 <TkxThemeBuilder
   initialTheme={quantumDark}

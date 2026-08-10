@@ -4,6 +4,9 @@ description: Read-only key/value detail list for record-detail views. Bordered t
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { DescriptionsBasic, DescriptionsBordered, DescriptionsVertical } from '../../../components/demos/DescriptionsDemo';
+
+<DescriptionsBasic client:load />
 
 A read-only key/value detail list — the "view record" screen every admin/CRUD
 app hand-rolls. Feed it an `items` array and it lays labels and values out on
@@ -45,6 +48,8 @@ lines, labels in `textMuted`:
 <TkxDescriptions items={items} column={2} />
 ```
 
+<DescriptionsBordered client:load />
+
 `bordered` switches to a real `<table>`: label cells are `<th scope="row">`
 with a `surfaceAlt` background, value cells are `<td>`, and everything sits on
 a `border`-token grid. When `title` is set, the table also gets a
@@ -55,6 +60,8 @@ visually-hidden `<caption>` for assistive tech.
 ```
 
 ## Layout & colon
+
+<DescriptionsVertical client:load />
 
 `layout="horizontal"` (default) puts the label beside the value and appends a
 `:` after each label in the plain variant; `colon={false}` removes it.

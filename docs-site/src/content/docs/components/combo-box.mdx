@@ -4,6 +4,9 @@ description: Multi-select combobox with token chips. Type to filter, Enter to to
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { ComboBoxBasic, ComboBoxMaxSelected } from '../../../components/demos/ComboBoxDemo';
+
+<ComboBoxBasic client:load />
 
 A **multi-select** combobox: selected values render as removable token chips
 before the text input, typing filters the option list, and selecting keeps the
@@ -41,6 +44,8 @@ const [tags, setTags] = useState<string[]>([]);
 ```
 
 ## Capping the selection
+
+<ComboBoxMaxSelected client:load />
 
 `maxSelected` caps how many values can be picked. Once the cap is reached the
 remaining options are visibly muted, marked `aria-disabled`, and cannot be

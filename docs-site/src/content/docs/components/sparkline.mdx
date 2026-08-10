@@ -3,6 +3,10 @@ title: TkxSparkline
 description: Tiny zero-dependency inline SVG sparkline with line, area, and bar variants, optional smoothing, last-point marker, and trailing value.
 ---
 
+import { SparklineBasic, SparklineVariants, SparklineSmooth } from '../../../components/demos/SparklineDemo';
+
+<SparklineBasic client:load />
+
 `TkxSparkline` is a compact, inline trend chart for tables, cards, and stat
 rows — no axes, just the shape of a series. It renders inside a `<span>` so it
 flows with text. Three variants are available: `line`, `area`, and `bar`.
@@ -12,6 +16,14 @@ import { TkxSparkline } from 'tekivex-ui';
 
 <TkxSparkline data={[3, 7, 4, 9, 6, 12, 8]} showValue />
 ```
+
+## Variants
+
+<SparklineVariants client:load />
+
+## Smoothing and points
+
+<SparklineSmooth client:load />
 
 ## Props
 

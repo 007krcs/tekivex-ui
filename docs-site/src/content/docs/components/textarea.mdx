@@ -4,6 +4,9 @@ description: Multi-line text input — the textarea counterpart to TkxInput. Lab
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { TextareaBasic, TextareaAutoResize, TextareaCounter } from '../../../components/demos/TextareaDemo';
+
+<TextareaBasic client:load />
 
 The multi-line counterpart to [`TkxInput`](/components/input/). Same
 accessible `label` / `hint` / `error` / `isRequired` surface, plus the things a
@@ -18,6 +21,8 @@ import { TkxTextarea } from 'tekivex-ui';
 
 ## Auto-grow
 
+<TextareaAutoResize client:load />
+
 Set `autoResize` to grow the field with its content, bounded by `minRows` and
 `maxRows` (it scrolls past `maxRows`). Manual drag-resize is disabled while
 auto-growing.
@@ -27,6 +32,8 @@ auto-growing.
 ```
 
 ## Character counter
+
+<TextareaCounter client:load />
 
 `showCount` renders a live `n / max` counter; it turns `danger`-coloured at the
 limit. Works in both controlled and uncontrolled mode.

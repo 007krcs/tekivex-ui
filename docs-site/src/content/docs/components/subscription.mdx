@@ -3,6 +3,10 @@ title: TkxPlanSelector, TkxBillingCycleToggle, TkxProrationPreview
 description: Three composable subscription / recurring-billing components. Pure UI — pair with TkxPaymentButton for the full flow.
 ---
 
+import { SubscriptionPricingPage, SubscriptionProration } from '../../../components/demos/SubscriptionDemo';
+
+<SubscriptionPricingPage client:load />
+
 Three components for SaaS-style pricing pages and plan-change flows.
 None of them call payment providers directly — they're UI for the
 *decision*; you wire `TkxPaymentButton` for the actual charge.
@@ -75,6 +79,8 @@ const [cycle, setCycle] = useState<BillingCycle>('annual');
 
 Mid-cycle plan-change calculator. Shows credit from the current plan +
 prorated charge for the new one + amount due today.
+
+<SubscriptionProration client:load />
 
 ```tsx
 import { TkxProrationPreview, TkxButton } from 'tekivex-ui';

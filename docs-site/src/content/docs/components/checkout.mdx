@@ -3,13 +3,30 @@ title: TkxCheckout
 description: Multi-step checkout flow — address → payment → review. Composes inputs, summary, and step navigation.
 ---
 
+import { CheckoutMock } from '../../../components/demos/CheckoutDemo';
+
+<CheckoutMock client:load />
+
 ```tsx
 import { TkxCheckout } from 'tekivex-ui';
 
 <TkxCheckout
-  cart={items}
-  onComplete={(order) => console.log('paid', order)}
-  paymentProviders={['stripe', 'razorpay']}
+  items={items}
+  currency="INR"
+  taxRate={0.18}
+  shipping={49}
+  paymentConfigFor={async (address) => {
+    // Ask your server to create the order, then return the provider config.
+    const { orderId } = await fetch('/api/orders', { method: 'POST' }).then(r => r.json());
+    return {
+      provider: 'razorpay',
+      publicKey: 'rzp_live_...',
+      orderId,
+      amount: 49900,
+      currency: 'INR',
+    };
+  }}
+  onComplete={({ address, payment }) => console.log('paid', payment.id, address)}
 />
 ```
 
@@ -21,12 +38,15 @@ shows a review-and-confirm screen with line totals + tax.
 
 | Prop | Type | Notes |
 |---|---|---|
-| `cart` | `CartItem[]` | line-item array |
-| `onComplete` | `(order) => void` | fires after successful payment |
-| `paymentProviders` | `('stripe' \| 'razorpay' \| 'paypal')[]` | order = display order |
-| `currency` | `string` | ISO-4217, default `'USD'` |
-| `taxRate` | `number` | 0–1, default `0` |
-| `country` | `string` | ISO-3166, default `'IN'` |
+| `items` | `CheckoutLineItem[]` | line-item array (required) |
+| `currency` | `string` | ISO-4217 (required) |
+| `paymentConfigFor` | `(address) => PaymentConfig \| Promise<PaymentConfig>` | builds the razorpay / stripe / square config after the address step (required) |
+| `onComplete` | `({ address, payment }) => void` | fires after successful payment (required) |
+| `onCancel` | `() => void` | cancel / failure |
+| `taxRate` | `number` | 0–1, optional |
+| `shipping` | `number` | flat fee, optional |
+| `locale` | `string` | currency formatting, defaults to navigator language |
+| `initialAddress` | `Partial<AddressValue>` | pre-fill from user profile |
 
 ## What it composes
 

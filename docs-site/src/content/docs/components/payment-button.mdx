@@ -3,16 +3,23 @@ title: TkxPaymentButton
 description: Drop-in payment trigger — Stripe, Razorpay, PayPal. Loads the SDK on click, never on mount.
 ---
 
+import { PaymentButtonVariants, PaymentButtonSizes } from '../../../components/demos/PaymentButtonDemo';
+
+<PaymentButtonVariants client:load />
+
 ```tsx
 import { TkxPaymentButton } from 'tekivex-ui';
 
 <TkxPaymentButton
-  provider="razorpay"
-  amount={49900}
-  currency="INR"
-  publicKey="rzp_test_..."
-  onSuccess={(payment) => console.log(payment.id)}
-  onError={(err) => console.error(err)}
+  config={{
+    provider: 'razorpay',
+    publicKey: 'rzp_live_...',
+    orderId: 'order_...', // server-generated
+    amount: 49900,        // paise
+    currency: 'INR',
+  }}
+  onSuccess={(result) => console.log(result.id)}
+  onFailure={(err) => console.error(err.message)}
 >
   Pay ₹499
 </TkxPaymentButton>
@@ -34,6 +41,10 @@ strict. Falls back to a clear error message if the SDK fails to load
 | `onSuccess` | `(payment) => void` | required |
 | `onError` | `(err) => void` | required |
 | `disabled` | `boolean` | also disables during SDK load |
+
+## Sizes
+
+<PaymentButtonSizes client:load />
 
 ## Loading state
 

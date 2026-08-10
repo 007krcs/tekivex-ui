@@ -4,6 +4,9 @@ description: Standalone form-control wrapper — gives any control the accessibl
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { FieldBasic, FieldValidation, FieldFunctionChild } from '../../../components/demos/FieldDemo';
+
+<FieldBasic client:load />
 
 `TkxInput` and `TkxTextarea` ship label/hint/error chrome built in — but every
 *other* control (a custom widget, a third-party input, a plain `<select>`) had
@@ -34,6 +37,8 @@ import { TkxField } from 'tekivex-ui';
 **Function child** — receive the props and spread them wherever you want
 (useful when the focusable element is nested):
 
+<FieldFunctionChild client:load />
+
 ```tsx
 <TkxField label="Notes" hint="Markdown supported">
   {(field) => (
@@ -48,6 +53,8 @@ If the child already carries an `id`, TkxField respects it (the label's
 `htmlFor` points at it) instead of generating one.
 
 ## Validation
+
+<FieldValidation client:load />
 
 ```tsx
 <TkxField label="Email" isRequired error="Enter a valid email">
