@@ -171,6 +171,7 @@ export default defineConfig({
             { label: 'Companion packages', link: '/ecosystem/' },
             { label: 'Security model', link: '/security/' },
             { label: 'Accessibility', link: '/accessibility/' },
+            { label: 'Honest comparison', link: '/comparison/' },
             { label: 'License', link: '/license/' },
           ],
         },

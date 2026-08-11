@@ -1,0 +1,97 @@
+---
+title: Honest comparison
+description: tekivex-ui vs MUI, Ant Design, Mantine, Chakra, shadcn/ui, HeroUI and React Aria — with the losses stated as plainly as the wins. Numbers from primary sources, August 2026.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Most "X vs Y" pages are marketing. This one is written under the same honesty
+policy as our [accessibility page](/accessibility/): every number comes from a
+primary source (npm registry/downloads API, GitHub API, bundlephobia, official
+docs and pricing pages), collected **2026-08-10**, and we lead with where we
+lose.
+
+<Aside type="caution" title="Read this first">
+tekivex-ui is 4 months old, has ~85 npm downloads a week, and zero GitHub
+stars. Every library below beats us on adoption by four to six orders of
+magnitude. If ecosystem size, hiring familiarity, or a decade of production
+battle-testing is what you need most, pick one of them today — this page
+exists to tell you precisely when that calculus flips.
+</Aside>
+
+## The numbers
+
+| | tekivex-ui | MUI | Ant Design | Mantine | Chakra | shadcn/ui | HeroUI | React Aria |
+|---|---|---|---|---|---|---|---|---|
+| Weekly downloads | 85 | 10.15M | 3.62M | 2.33M | 1.74M | 7.8M (CLI) | 341k | 1.12M |
+| GitHub stars | 0 | 98.7k | 99.0k | 31.5k | 40.6k | 121k | 23k | 15.8k |
+| Components (own docs index) | 116 | 62 | 73 | 143 | ~128 | 79 (copy-in) | 75+ | ~50 + 40 hooks |
+| Full-import gzip | ~145 kB | 153 kB | 452 kB | modular | modular | copy-in | modular | unstyled |
+| Direct runtime deps | **0** | 12 | 48 | 5 | 7 | yours | several | few |
+| Built-in locales | 44 | 60 | 73 | 0 | Intl-based | 0 | — | — |
+| Threat model + CycloneDX SBOM | **✅ published** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Published a11y audit of itself | ✅ internal, all 35 findings fixed | ❌ | ❌ | ❌ | ❌ | inherits primitives | inherits React Aria | Adobe a11y team |
+| Paid tier | none | $299–1,399/dev/yr | none | none | $149–249 templates | free core | free | free |
+
+Component counts are each library's own docs index and are **not** a quality
+metric — MUI's 62 includes utilities, our 116 includes small primitives.
+
+## Where the incumbents beat us
+
+- **Trust and track record.** They have years of production edge cases, huge
+  communities, Stack Overflow depth, and hiring familiarity. We have none of
+  that yet.
+- **Accessibility pedigree.** Our APG audit was internal — adversarially
+  verified and fully fixed, but internal. [React Aria](https://react-aria.adobe.com)
+  is maintained by Adobe's accessibility team and tested against
+  VoiceOver/NVDA/JAWS/TalkBack; it is the benchmark our keyboard models chase,
+  not a peer we've matched.
+- **Ecosystem depth.** MUI X's commercial Data Grid, Mantine's satellite
+  packages, Ant Design's free Pro layer, shadcn's template economy — each goes
+  deeper in its specialty than our equivalent.
+- **Scale of testing.** Ant Design enforces 100% line coverage; our 2,168
+  tests are genuine but jsdom-only — no cross-browser grid or screen-reader
+  lab yet.
+
+## Where tekivex-ui genuinely wins
+
+We verified each of these against the market before claiming it:
+
+1. **A shipped security kernel — no mainstream equivalent found.** URL
+   sanitisation, Trojan-Source/homoglyph defence, PII scrubbing, and a Trusted
+   Types installer run at the prop boundary, backed by a
+   [published threat model and CycloneDX SBOM](/security/). Elsewhere these
+   exist only as app-level guides or standalone CI tools — never inside the
+   component library. No competitor on this page publishes a threat model or
+   SBOM.
+2. **The India-first form suite — unique as an integrated suite.** Validated
+   PAN / Voter ID / driving-licence inputs and a PIN-code cascading address
+   (Country → State → District → Sub-district). The pieces exist as scattered
+   npm utilities; no kit ships them as polished components.
+3. **Zero runtime dependencies.** The smallest possible supply-chain surface —
+   against 12 (MUI), 48 (antd), 7 (Chakra), 5 (Mantine).
+4. **Honest accounting.** We published our own failed accessibility audit —
+   35 confirmed APG violations — then fixed all 35 with regression tests and
+   kept the original findings public. We believe we're the only styled kit on
+   this page that has done that.
+5. **One versioned kit with unusual breadth** — charts, realtime, browser-native
+   PDF, 44 locales (incl. RTL + Indic scripts), and headless hooks under one
+   semver. (Dedicated PDF libraries like @react-pdf/renderer and PDFx do PDFs
+   too — our claim is bundling, not uniqueness.)
+
+## Our honest recommendation
+
+- Data-dense enterprise admin, free: **Ant Design** (mind its documented
+  accessibility gaps). Commercial support and SLAs: **MUI + MUI X**.
+- Batteries-included and free with tiny deps: **Mantine**. Total code
+  ownership on Tailwind: **shadcn/ui**. Audit-grade a11y primitives to style
+  yourself: **React Aria**.
+- **tekivex-ui** when the trade favors what we uniquely have: India-market
+  forms, a security/compliance posture you can hand to an auditor (threat
+  model, SBOM, zero deps), or one kit covering charts + realtime + PDF + i18n
+  without assembling five libraries — and you can accept a young project with
+  a small community.
+
+The long-form analysis, including the claims we decided we must *not* make
+about ourselves, lives in
+[docs/COMPETITIVE-ANALYSIS.md](https://github.com/007krcs/tekivex-ui/blob/master/docs/COMPETITIVE-ANALYSIS.md).
