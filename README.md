@@ -540,14 +540,18 @@ tkx('glass p-6 rounded-xl'); // uses your plugin
 TekiVex UI is the **only React component library with a built-in zero-trust security engine.** Every string that passes through the library is automatically sanitised — no configuration required.
 
 ```tsx
-import { sanitizeString, sanitizeProps, contrastRatio, meetsAA, meetsAAA } from 'tekivex-ui/headless';
+import { sanitizeString, escapeHTML, sanitizeProps, contrastRatio, meetsAA, meetsAAA } from 'tekivex-ui/headless';
 
-// XSS sanitisation (called automatically inside every component)
-sanitizeString('<script>alert("XSS")</script>Hello');
-// → 'Hello'
+// Text sanitisation (called automatically inside every component).
+// Control characters are stripped; visible text is preserved verbatim,
+// because React escapes text children and attributes when it renders.
+sanitizeString('Review & ATS');            // → 'Review & ATS'
+sanitizeString('<script>alert(1)</script>'); // → unchanged, rendered as inert text
 
-sanitizeString('<img src=x onerror="stealCookies()" />');
-// → '' (fully stripped)
+// Escaping for a real HTML sink (innerHTML, template strings, non-React
+// renderers) is a separate, explicit call — never apply it to React text.
+escapeHTML('<script>alert(1)</script>');
+// → '&lt;script&gt;alert(1)&lt;/script&gt;'
 
 // WCAG contrast checking
 const ratio = contrastRatio('#00f5d4', '#0a0a1a'); // → 8.21
@@ -556,7 +560,7 @@ const aaa   = meetsAAA('#00f5d4', '#0a0a1a');       // → true  (≥ 7:1)
 ```
 
 **What's unique:**
-- 🛡️ **String-prop sanitisation by default** — `sanitizeString` runs on string props across components without opt-in
+- 🛡️ **String-prop sanitisation by default** — `sanitizeString` runs on string props across components without opt-in (control-character stripping; React handles text escaping, and `escapeHTML` covers HTML sinks)
 - 📋 **Tamper-evident audit trail** — SHA-256 hash-chained append-only log for compliance / SIEM
 - 🎨 **Built-in WCAG checker** — `contrastRatio()`, `meetsAA()`, `meetsAAA()` available anywhere
 

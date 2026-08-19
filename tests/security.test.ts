@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {
   sanitizeString,
   sanitizeProps,
+  escapeHTML,
   validateProps,
   audit,
   getAuditLog,
@@ -22,17 +23,34 @@ import {
 } from '../src/engine/security';
 
 describe('sanitizeString', () => {
-  it('escapes <', () => expect(sanitizeString('<')).toBe('&lt;'));
-  it('escapes >', () => expect(sanitizeString('>')).toBe('&gt;'));
-  it('escapes &', () => expect(sanitizeString('&')).toBe('&amp;'));
-  it("escapes '", () => expect(sanitizeString("'")).toBe('&#39;'));
-  it('escapes "', () => expect(sanitizeString('"')).toBe('&quot;'));
+  // v4: sanitizeString is the REACT TEXT path. React escapes text children and
+  // attribute values itself, so entity-encoding here was a second pass that
+  // surfaced literal "&amp;" / "&quot;" to users. HTML-sink escaping now lives
+  // in escapeHTML(). See the double-escape regression suite.
+  it('passes < through untouched (React escapes on render)', () => expect(sanitizeString('<')).toBe('<'));
+  it('passes > through untouched', () => expect(sanitizeString('>')).toBe('>'));
+  it('passes & through untouched', () => expect(sanitizeString('&')).toBe('&'));
+  it("passes ' through untouched", () => expect(sanitizeString("'")).toBe("'"));
+  it('passes " through untouched', () => expect(sanitizeString('"')).toBe('"'));
 
-  it('escapes a complete XSS vector', () => {
+  it('preserves real-world text containing & and quotes verbatim', () => {
+    expect(sanitizeString('Review & ATS')).toBe('Review & ATS');
+    expect(sanitizeString('Terms & Conditions')).toBe('Terms & Conditions');
+    expect(sanitizeString(`He said "hi" to O'Brien`)).toBe(`He said "hi" to O'Brien`);
+  });
+
+  it('returns an XSS vector as inert text (React renders it as a text node)', () => {
     const input = '<script>alert("XSS")</script>';
-    const result = sanitizeString(input);
-    expect(result).not.toContain('<script>');
-    expect(result).toContain('&lt;script&gt;');
+    // The string is preserved; safety comes from React never parsing text
+    // children as markup. Rendering assertions live in the component suites.
+    expect(sanitizeString(input)).toBe(input);
+  });
+
+  it('strips NUL and C0 control characters', () => {
+    expect(sanitizeString('a\u0000b')).toBe('ab');
+    expect(sanitizeString('a\u0007b\u001Fc')).toBe('abc');
+    // Tab / newline / carriage return are legitimate text and survive.
+    expect(sanitizeString('a\tb\nc\rd')).toBe('a\tb\nc\rd');
   });
 
   it('leaves safe strings untouched', () => {
@@ -62,21 +80,56 @@ describe('sanitizeString', () => {
   });
 });
 
+describe('escapeHTML', () => {
+  // The HTML-sink path: innerHTML, template strings, non-React renderers.
+  // This is where the entity encoding that sanitizeString used to do belongs.
+  it('escapes <', () => expect(escapeHTML('<')).toBe('&lt;'));
+  it('escapes >', () => expect(escapeHTML('>')).toBe('&gt;'));
+  it('escapes &', () => expect(escapeHTML('&')).toBe('&amp;'));
+  it("escapes '", () => expect(escapeHTML("'")).toBe('&#39;'));
+  it('escapes "', () => expect(escapeHTML('"')).toBe('&quot;'));
+  it('escapes a backtick', () => expect(escapeHTML('`')).toBe('&#96;'));
+
+  it('neutralises a complete XSS vector for an HTML sink', () => {
+    const result = escapeHTML('<script>alert("XSS")</script>');
+    expect(result).not.toContain('<script>');
+    expect(result).toContain('&lt;script&gt;');
+  });
+
+  it('leaves safe strings untouched', () => {
+    expect(escapeHTML('Hello World')).toBe('Hello World');
+  });
+
+  it('inherits null/undefined and control-character handling', () => {
+    expect(escapeHTML(null)).toBe('');
+    expect(escapeHTML(undefined)).toBe('');
+    expect(escapeHTML('a\u0000b')).toBe('ab');
+  });
+
+  it('escaping is idempotent-unsafe by design (do not double-apply)', () => {
+    // Documents the trap that caused the original bug: applying the escaper
+    // twice yields visible entities.
+    expect(escapeHTML(escapeHTML('&'))).toBe('&amp;amp;');
+  });
+});
+
 describe('sanitizeProps', () => {
-  it('sanitizes string values in a flat object', () => {
+  // v4: values pass through as text (React escapes at render). sanitizeProps
+  // still walks every value, coerces types, and strips control characters.
+  it('passes string values through in a flat object', () => {
     const result = sanitizeProps({ label: '<b>Bold</b>', count: 5 });
-    expect(result.label).toBe('&lt;b&gt;Bold&lt;/b&gt;');
+    expect(result.label).toBe('<b>Bold</b>');
     expect(result.count).toBe(5);
   });
 
-  it('recursively sanitizes nested objects', () => {
+  it('recursively walks nested objects', () => {
     const result = sanitizeProps({ nested: { value: '<script>' } });
-    expect((result.nested as { value: string }).value).toBe('&lt;script&gt;');
+    expect((result.nested as { value: string }).value).toBe('<script>');
   });
 
-  it('sanitizes string values in arrays', () => {
+  it('walks string values in arrays', () => {
     const result = sanitizeProps({ items: ['<a>', 'safe'] });
-    expect((result.items as string[])[0]).toBe('&lt;a&gt;');
+    expect((result.items as string[])[0]).toBe('<a>');
     expect((result.items as string[])[1]).toBe('safe');
   });
 

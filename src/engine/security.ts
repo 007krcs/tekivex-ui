@@ -178,6 +178,24 @@ export function emitSecurityEvent(
   return evt;
 }
 
+/**
+ * Sanitize a value for rendering as React text — children, or attributes such
+ * as aria-label / title / placeholder / alt.
+ *
+ * Strips NUL and disallowed C0 control characters (which can smuggle payloads
+ * past naïve filters), and nothing else.
+ *
+ * It deliberately does NOT convert `& < > ' " \`` into HTML entities. React —
+ * client and server renderers alike — already escapes every text child and
+ * attribute value it emits, so entity-encoding here would be a *second* pass:
+ * the browser then displays the entity itself, turning "Review & ATS" into
+ * "Review &amp; ATS" and `He said "hi"` into `He said &quot;hi&quot;`. That
+ * double-escaping is a rendering defect, not a security control — it added no
+ * protection React was not already providing.
+ *
+ * Injecting into a real HTML sink (innerHTML, a template string, a non-React
+ * renderer)? Escaping IS required there — use {@link escapeHTML}.
+ */
 export function sanitizeString(input: unknown): string {
   // Treat null/undefined as the empty string. Without this guard,
   // String(undefined) returns the literal "undefined", which silently
@@ -186,15 +204,43 @@ export function sanitizeString(input: unknown): string {
   // the word "undefined" when the prop is absent.
   if (input == null) return "";
   let s = String(input);
+  const beforeLen = s.length;
   // Strip NUL + disallowed C0 controls (keep \t \n \r).
   // eslint-disable-next-line no-control-regex
   s = s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
+  if (s.length !== beforeLen) {
+    const stripped = beforeLen - s.length;
+    emitSecurityEvent(
+      'xss-sanitized',
+      `Stripped ${stripped} control character${stripped === 1 ? '' : 's'} before render`,
+      'warning',
+      { stripped },
+    );
+  }
+  return s;
+}
+
+/**
+ * Escape HTML-sensitive characters so a value is safe to interpolate into an
+ * actual HTML sink — `innerHTML`, a server-side template string, or any other
+ * renderer that parses its input as markup.
+ *
+ * Do NOT use this for React text children or attributes: React escapes those
+ * already, and pre-escaped text renders as visible `&amp;` / `&quot;`
+ * artifacts. Use {@link sanitizeString} there.
+ *
+ * Defense-in-depth only — it does not allow-list HTML. For rich HTML input,
+ * use {@link sanitizeHTML} or a dedicated sanitizer.
+ */
+export function escapeHTML(input: unknown): string {
+  // Control-character stripping is shared with the text path.
+  const s = sanitizeString(input);
   let escapes = 0;
   const out = s.replace(/[<>&'"`]/g, (char) => { escapes++; return HTML_ENTITIES[char] ?? char; });
   if (escapes > 0) {
     emitSecurityEvent(
       'xss-sanitized',
-      `Escaped ${escapes} HTML-sensitive character${escapes === 1 ? '' : 's'} before render`,
+      `Escaped ${escapes} HTML-sensitive character${escapes === 1 ? '' : 's'} for an HTML sink`,
       'warning',
       { escapes },
     );
@@ -455,7 +501,10 @@ const CLOBBER_NAMES = new Set([
  */
 export function sanitizeHTML(raw: unknown): string {
   if (typeof raw !== 'string') return '';
-  if (typeof DOMParser === 'undefined') return sanitizeString(raw);
+  // No DOMParser (SSR / non-DOM runtime): fall back to full entity escaping.
+  // The result IS destined for an HTML sink, so escaping is correct here —
+  // this is the one path where sanitizeString's text semantics are wrong.
+  if (typeof DOMParser === 'undefined') return escapeHTML(raw);
 
   const doc = new DOMParser().parseFromString(`<div>${raw}</div>`, 'text/html');
   const root = doc.body.firstElementChild;
@@ -885,6 +934,7 @@ export const SecurityCore = Object.freeze({
   sanitizeCSS,
   sanitizeJSON,
   sanitizeUnicode,
+  escapeHTML,
   isSafeAttrName,
   buildTkxCSP,
   installTrustedTypes,

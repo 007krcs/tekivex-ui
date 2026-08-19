@@ -18,7 +18,7 @@ No other major React UI library (MUI, Ant Design, Chakra, Mantine, Radix, HeroUI
 
 | # | Threat | Category | OWASP / CWE | Defense |
 |---|---|---|---|---|
-| T1 | Reflected / stored XSS via component props | Injection | OWASP A03, CWE-79 | `sanitizeString`, `sanitizeHTML` (allow-list DOMParser) |
+| T1 | Reflected / stored XSS via component props | Injection | OWASP A03, CWE-79 | React text escaping + `sanitizeString` (control chars), `sanitizeHTML` (allow-list DOMParser), `escapeHTML` for HTML sinks |
 | T2 | `javascript:` / `vbscript:` / `data:text/html` URL injection | Injection | CWE-601, CWE-79 | `sanitizeHref` allow-list |
 | T3 | CSS-based injection (`expression()`, `url(javascript:)`, `@import`, `-moz-binding`) | Injection | CWE-79 | `sanitizeCSS` |
 | T4 | Prototype pollution via `JSON.parse` | Injection | CWE-1321 | `sanitizeJSON` with `__proto__` / `constructor` / `prototype` reviver scrub |
@@ -73,7 +73,20 @@ import {
 
 **Attack:** `<TkxInput label="<script>alert(1)</script>" />` → script executes.
 
-**Defense:** Every string prop rendered into the DOM is escaped via `sanitizeString` (HTML-entity escape of `<`, `>`, `&`, `'`, `"`). Rich-HTML props (TkxMarkdown, TkxRichTextDisplay) go through `sanitizeHTML`, which:
+**Defense:** Text props never reach an HTML parser. They are rendered as React
+text children/attributes, which React escapes on output (client and server
+renderers alike) — a `<script>` string becomes an inert text node, never an
+element. `sanitizeString` runs on every such prop to strip NUL and C0 control
+characters, which can smuggle payloads past naïve downstream filters.
+
+> **v4.0.0 correction.** Before v4, `sanitizeString` *also* HTML-entity-escaped
+> `< > & ' " \``. Because React escapes independently, that was a second pass:
+> it produced visible `&amp;` / `&quot;` in the UI ("Review & ATS" rendering as
+> "Review &amp; ATS") and corrupted form values on their way to consumer
+> servers. It added no protection React was not already providing. Escaping now
+> lives in the explicit `escapeHTML()`, for actual HTML sinks only.
+
+Rich-HTML props (TkxMarkdown, TkxRichTextDisplay) go through `sanitizeHTML`, which:
 1. Parses through `DOMParser`
 2. Walks the tree, dropping any tag not on the allow-list (47 safe tags)
 3. Strips every `on*` event handler attribute

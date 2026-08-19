@@ -5,6 +5,61 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] — 2026-07-10
+
+### Fixed — BREAKING: `sanitizeString` no longer HTML-escapes (double-escape bug)
+
+**Symptom:** visible HTML entities in the UI. A button labelled `Review & ATS`
+rendered as **`Review &amp; ATS`**; `He said "hi"` rendered as
+`He said &quot;hi&quot;`; `R&D` as `R&amp;D`. Reported from two separate
+downstream products before the cause was found here.
+
+**Cause:** `sanitizeString()` entity-encoded `< > & ' " \`` and was applied to
+essentially every user-facing string in the library — **321 call sites across
+74 components** (labels, titles, placeholders, aria-labels, table cells, menu
+items, chat messages…). React already escapes text children and attribute
+values on render, in both the client and server renderers, so this was a
+*second* escaping pass. The browser then displayed the entity itself.
+
+It also corrupted data: `TkxAutoForm` handed entity-encoded values to
+`onSubmit`, so a user named `O'Brien` reached the consumer's server as
+`O&#39;Brien`. And it flooded the security event stream — every
+"Terms & Conditions" emitted an `xss-sanitized` warning, burying real signals.
+
+Critically, the escaping **provided no security benefit it wasn't already
+getting from React**. No component ever passed the result to
+`dangerouslySetInnerHTML`; the one genuine HTML sink (`TkxRichEditor`) uses
+`sanitizeHTML`, which is unchanged.
+
+**What changed**
+
+- `sanitizeString(value)` is now the **React text path**: it strips NUL and
+  disallowed C0 control characters and returns visible text verbatim. Safe for
+  children and for attributes (`aria-label`, `title`, `placeholder`, `alt`).
+- **New: `escapeHTML(value)`** — the previous entity-escaping behaviour, for
+  genuine HTML sinks (`innerHTML`, template strings, non-React renderers).
+  Exported from the root, `tekivex-ui/headless`, and `SecurityCore`.
+- `sanitizeHTML()`'s no-DOMParser (SSR) fallback now calls `escapeHTML`, which
+  is the one place the old semantics were correct.
+- Security events: `sanitizeString` emits only when it strips control
+  characters (`detail.stripped`); `escapeHTML` emits on escaping
+  (`detail.escapes`).
+
+**Migration.** Most apps need no change and simply stop showing `&amp;`. If you
+called `sanitizeString` yourself and fed the result into `innerHTML`, a
+template string, or any non-React renderer, switch that call to `escapeHTML` —
+that is the only breaking case, and it is why this is a major release.
+
+**Security posture is unchanged.** React escaping (text), `sanitizeHref`
+(URLs), `sanitizeHTML` (rich HTML), `sanitizeUnicode` (Trojan Source), Trusted
+Types, and CSP are all untouched. `docs/SECURITY-THREAT-MODEL.md` T1 has been
+rewritten to describe the real mechanism, and the README's sanitisation
+example — which had always been wrong, claiming stripping where the code
+escaped — is corrected.
+
+Regression coverage in `tests/double-escape-repro.test.tsx` plus rewritten
+assertions in the security, AutoForm, and MessageThread suites.
+
 ## [3.32.0] — 2026-07-09
 
 ### Fixed — accessibility: the APG audit is now fully closed (zero deferrals)

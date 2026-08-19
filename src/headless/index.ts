@@ -43,6 +43,7 @@ export { meetsAA, meetsAAA, contrastRatio } from '../engine/wcag';
 export {
   // Input sanitization
   sanitizeString,
+  escapeHTML,
   sanitizeProps,
   sanitizeUnicode,
   sanitizeJSON,

@@ -296,6 +296,7 @@ export {
   Shield,
   SecurityCore,
   sanitizeString,
+  escapeHTML,
   sanitizeHref,
   sanitizeHTML,
   sanitizeCSS,

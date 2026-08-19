@@ -68,10 +68,11 @@ describe('TkxMessageThread', () => {
       <TkxMessageThread messages={messages} senders={senders} currentUserId="me" />,
       { wrapper: Wrapper },
     );
-    // No actual <script> element should be present
+    // The real security property: the payload never becomes an element.
     expect(container.querySelector('script')).toBeNull();
-    // The escaped text should appear as content
-    expect(container.textContent).toContain('&lt;script&gt;');
+    // It renders as inert visible text — literally, not as "&lt;script&gt;".
+    expect(container.textContent).toContain('<script>');
+    expect(container.textContent).not.toContain('&lt;');
   });
 
   it('groups consecutive messages from same sender within 5 min', () => {
@@ -295,9 +296,11 @@ describe('TkxMessageThread', () => {
     fireEvent.change(input, { target: { value: '<b>hi</b>' } });
     fireEvent.keyDown(input, { key: 'Enter', shiftKey: false });
     expect(onSend).toHaveBeenCalledTimes(1);
+    // The composer hands back what the user actually typed; it is rendered as
+    // text (never markup), so entity-encoding it here would corrupt the
+    // message body with visible "&lt;b&gt;" for every recipient.
     const [text] = onSend.mock.calls[0];
-    expect(text).not.toContain('<b>');
-    expect(text).toContain('&lt;b&gt;');
+    expect(text).toBe('<b>hi</b>');
   });
 
   it('composer Shift+Enter does NOT send', () => {

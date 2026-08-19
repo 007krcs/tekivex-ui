@@ -107,9 +107,28 @@ describe('TkxAutoForm', () => {
     fireEvent.change(screen.getByLabelText(/Email/), { target: { value: 'ada@example.com' } });
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
     expect(onSubmit).toHaveBeenCalledTimes(1);
+    // v4: submitted values are the user's actual input. Entity-encoding here
+    // corrupted data on the way to the consumer's server — a user named
+    // O'Brien was submitted as "O&#39;Brien". Escaping belongs at the sink
+    // (HTML email, innerHTML) via escapeHTML, not at the form boundary; the
+    // value is rendered as inert text by React wherever it is displayed.
     const { fullName } = onSubmit.mock.calls[0][0];
-    expect(fullName).not.toContain('<script>');
-    expect(fullName).toContain('&lt;script&gt;');
+    expect(fullName).toBe('<script>alert(1)</script>');
+  });
+
+  it('sanitize={true} still strips control characters from submitted values', () => {
+    const onSubmit = vi.fn();
+    render(
+      <W>
+        <TkxAutoForm schema={SCHEMA} onSubmit={onSubmit} />
+      </W>,
+    );
+    fireEvent.change(screen.getByLabelText(/Full name/), {
+      target: { value: 'Ada\u0000Lovelace' },
+    });
+    fireEvent.change(screen.getByLabelText(/Email/), { target: { value: 'ada@example.com' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
+    expect(onSubmit.mock.calls[0][0].fullName).toBe('AdaLovelace');
   });
 
   it('does NOT sanitise when sanitize={false}', () => {
@@ -153,7 +172,10 @@ describe('TkxAutoForm', () => {
       </W>,
     );
     fireEvent.change(screen.getByLabelText(/Full name/), {
-      target: { value: '<img src=x>' },
+      // v4: markup in text no longer emits an event (React escapes it and the
+      // kernel leaves it verbatim). Control characters — a real smuggling
+      // vector — still do.
+      target: { value: 'x\u0000y' },
     });
     fireEvent.change(screen.getByLabelText(/Email/), { target: { value: 'ada@example.com' } });
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }));

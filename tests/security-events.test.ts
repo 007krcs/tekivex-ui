@@ -6,6 +6,7 @@ import {
   emitSecurityEvent,
   sanitizeUnicode,
   sanitizeString,
+  escapeHTML,
   scrubPII,
   audit,
   createRateLimiter,
@@ -73,10 +74,30 @@ describe('security event stream', () => {
     expect(seen).toEqual([]);
   });
 
-  it('sanitizeString emits a warning when it escapes HTML-sensitive chars', () => {
+  // v4: markup in text is no longer an event — React escapes text children, so
+  // "&" and "<" in a label are ordinary content, and warning on them buried the
+  // real signals in noise (every "Terms & Conditions" fired a warning).
+  it('sanitizeString does NOT emit for markup in text', () => {
+    const seen: string[] = [];
+    onSecurityEvent((e) => seen.push(e.type));
+    sanitizeString('<img src=x onerror=alert(1)>');
+    expect(seen).toEqual([]);
+  });
+
+  it('sanitizeString emits a warning when it strips control characters', () => {
     const events: any[] = [];
     onSecurityEvent((e) => events.push(e));
-    sanitizeString('<img src=x onerror=alert(1)>');
+    sanitizeString('a\u0000b');
+    const evt = events.find((e) => e.type === 'xss-sanitized');
+    expect(evt).toBeDefined();
+    expect(evt.severity).toBe('warning');
+    expect(evt.detail.stripped).toBeGreaterThanOrEqual(1);
+  });
+
+  it('escapeHTML emits a warning when it escapes for an HTML sink', () => {
+    const events: any[] = [];
+    onSecurityEvent((e) => events.push(e));
+    escapeHTML('<img src=x onerror=alert(1)>');
     const evt = events.find((e) => e.type === 'xss-sanitized');
     expect(evt).toBeDefined();
     expect(evt.severity).toBe('warning');
