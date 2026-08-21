@@ -36,17 +36,17 @@ export const TkxInput = forwardRef<HTMLInputElement, TkxInputProps>(
     const safeError = error ? sanitizeString(error) : undefined;
     const safeHint = hint ? sanitizeString(hint) : undefined;
 
-    const borderColor = hasError ? theme.danger : theme.border;
+    const borderColor = hasError ? theme.css.danger : theme.css.border;
 
     return (
       <div className={cx(tkx('flex flex-col gap-1 w-full'), className)} style={style}>
         <label
           htmlFor={id}
           className={tkx('text-sm font-medium font-sans')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {safeLabel}
-          {isRequired && <span aria-hidden="true" className={tkx('ml-1')} style={{ color: theme.danger }}>*</span>}
+          {isRequired && <span aria-hidden="true" className={tkx('ml-1')} style={{ color: theme.css.danger }}>*</span>}
         </label>
 
         <div
@@ -55,12 +55,12 @@ export const TkxInput = forwardRef<HTMLInputElement, TkxInputProps>(
             'transition-colors duration-150',
             disabled ? 'opacity-60' : '',
           )}
-          style={{ border: `1.5px solid ${borderColor}`, backgroundColor: theme.surface }}
+          style={{ border: `1.5px solid ${borderColor}`, backgroundColor: theme.css.surface }}
         >
           {leftAddon && (
             <div
               className={tkx('px-2.5 self-stretch flex items-center text-sm shrink-0')}
-              style={{ backgroundColor: theme.surfaceAlt, color: theme.textMuted, borderRight: `1px solid ${theme.border}` }}
+              style={{ backgroundColor: theme.css.surfaceAlt, color: theme.css.textMuted, borderRight: `1px solid ${theme.css.border}` }}
             >
               {leftAddon}
             </div>
@@ -76,7 +76,7 @@ export const TkxInput = forwardRef<HTMLInputElement, TkxInputProps>(
             className={cx(
               tkx('flex-1 border-none bg-transparent text-sm font-sans py-2.5 px-3 outline-none min-w-0 focus-visible:focus-ring'),
             )}
-            style={{ color: theme.text }}
+            style={{ color: theme.css.text }}
             onChange={unicodeSafe
               ? (e) => {
                   const clean = sanitizeUnicode(e.target.value);
@@ -92,7 +92,7 @@ export const TkxInput = forwardRef<HTMLInputElement, TkxInputProps>(
           {rightAddon && (
             <div
               className={tkx('px-2.5 self-stretch flex items-center text-sm shrink-0')}
-              style={{ backgroundColor: theme.surfaceAlt, color: theme.textMuted, borderLeft: `1px solid ${theme.border}` }}
+              style={{ backgroundColor: theme.css.surfaceAlt, color: theme.css.textMuted, borderLeft: `1px solid ${theme.css.border}` }}
             >
               {rightAddon}
             </div>
@@ -100,10 +100,10 @@ export const TkxInput = forwardRef<HTMLInputElement, TkxInputProps>(
         </div>
 
         {safeHint && !safeError && (
-          <span id={hintId} className={tkx('text-xs')} style={{ color: theme.textMuted }}>{safeHint}</span>
+          <span id={hintId} className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>{safeHint}</span>
         )}
         {safeError && (
-          <span id={errorId} role="alert" className={tkx('text-xs flex items-center gap-1')} style={{ color: theme.danger }}>
+          <span id={errorId} role="alert" className={tkx('text-xs flex items-center gap-1')} style={{ color: theme.css.danger }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
             </svg>

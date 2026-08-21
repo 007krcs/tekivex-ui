@@ -206,9 +206,9 @@ export const TkxCalendarLunar = forwardRef<HTMLInputElement, TkxCalendarLunarPro
     const groupStyle: CSSProperties = {
       display: 'flex',
       alignItems: 'stretch',
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 8,
-      background: theme.surface,
+      background: theme.css.surface,
       overflow: 'hidden',
     };
     const inputStyle: CSSProperties = {
@@ -217,7 +217,7 @@ export const TkxCalendarLunar = forwardRef<HTMLInputElement, TkxCalendarLunarPro
       outline: 'none',
       padding: '0 12px',
       fontSize: 14,
-      color: theme.text,
+      color: theme.css.text,
       background: 'transparent',
       minHeight: 40,
       minWidth: 0,
@@ -226,7 +226,7 @@ export const TkxCalendarLunar = forwardRef<HTMLInputElement, TkxCalendarLunarPro
     return (
       <div className={className} style={rootStyle}>
         {label && (
-          <label style={{ fontSize: 13, fontWeight: 600, color: theme.text }}>
+          <label style={{ fontSize: 13, fontWeight: 600, color: theme.css.text }}>
             {label}
           </label>
         )}
@@ -255,10 +255,10 @@ export const TkxCalendarLunar = forwardRef<HTMLInputElement, TkxCalendarLunarPro
             style={{
               width: 36,
               border: 'none',
-              borderLeft: `1px solid ${theme.border}`,
+              borderLeft: `1px solid ${theme.css.border}`,
               padding: 0,
-              background: theme.bg,
-              color: theme.text,
+              background: theme.css.bg,
+              color: theme.css.text,
               cursor: disabled ? 'not-allowed' : 'pointer',
             }}
           />
@@ -269,12 +269,12 @@ export const TkxCalendarLunar = forwardRef<HTMLInputElement, TkxCalendarLunarPro
             style={{
               padding: '6px 10px',
               borderRadius: 6,
-              background: theme.surfaceAlt,
+              background: theme.css.surfaceAlt,
               fontSize: 12,
-              color: theme.textMuted,
+              color: theme.css.textMuted,
             }}
           >
-            <strong style={{ color: theme.text }}>{calendar}:</strong> {display}
+            <strong style={{ color: theme.css.text }}>{calendar}:</strong> {display}
           </div>
         )}
       </div>

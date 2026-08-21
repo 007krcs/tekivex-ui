@@ -134,15 +134,15 @@ export function TkxAppBar({
 
   // ── Color resolution ────────────────────────────────────────────────────
 
-  const bgColor = color === 'primary' ? theme.primary : theme.surface;
-  const textColor = color === 'primary' ? theme.bg : theme.text;
+  const bgColor = color === 'primary' ? theme.css.primary : theme.css.surface;
+  const textColor = color === 'primary' ? theme.css.bg : theme.css.text;
 
   // ── Variant styles ──────────────────────────────────────────────────────
 
   const variantStyles: Record<string, CSSProperties> = {
     default: {
       backgroundColor: bgColor,
-      borderBottom: `1px solid ${theme.border}`,
+      borderBottom: `1px solid ${theme.css.border}`,
     },
     transparent: {
       backgroundColor: 'transparent',
@@ -150,7 +150,7 @@ export function TkxAppBar({
     },
     elevated: {
       backgroundColor: bgColor,
-      boxShadow: `0 2px 8px ${theme.bg}66`,
+      boxShadow: `0 2px 8px ${theme.css.bg}66`,
       borderBottom: 'none',
     },
   };
@@ -264,8 +264,8 @@ export function TkxAppBar({
             opacity: menuOpen ? 1 : 0,
             overflow: 'hidden',
             transition: slideTransition,
-            backgroundColor: theme.surface,
-            borderBottom: menuOpen ? `1px solid ${theme.border}` : 'none',
+            backgroundColor: theme.css.surface,
+            borderBottom: menuOpen ? `1px solid ${theme.css.border}` : 'none',
           }}
         >
           <div

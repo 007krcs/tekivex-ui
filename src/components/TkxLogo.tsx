@@ -158,7 +158,7 @@ export function TkxLogo({
 }: TkxLogoProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
-  const primaryColor = color ?? theme.primary;
+  const primaryColor = color ?? theme.css.primary;
   const config = SIZE_CONFIG[size];
 
   // Inject glow animation on first render
@@ -193,7 +193,7 @@ export function TkxLogo({
     fontWeight: 800,
     letterSpacing: config.letterSpacing,
     lineHeight: 1,
-    color: theme.text,
+    color: theme.css.text,
     fontFamily: 'inherit',
     margin: 0,
     padding: 0,
@@ -202,7 +202,7 @@ export function TkxLogo({
   const taglineStyle: CSSProperties = {
     fontSize: config.taglineSize,
     fontWeight: 500,
-    color: theme.textMuted,
+    color: theme.css.textMuted,
     letterSpacing: '0.04em',
     lineHeight: 1,
     margin: 0,
@@ -210,7 +210,7 @@ export function TkxLogo({
   };
 
   // Brand name: "Teki" in theme text color, "Vex" in primary color
-  const brandParts = splitBrand(text, primaryColor, theme.text);
+  const brandParts = splitBrand(text, primaryColor, theme.css.text);
 
   const ariaLabel = tagline
     ? `${text} — ${tagline}`

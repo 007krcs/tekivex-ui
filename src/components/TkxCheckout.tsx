@@ -142,10 +142,10 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
       ...style,
     };
     const cardStyle: CSSProperties = {
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 12,
       padding: 20,
-      background: theme.surface,
+      background: theme.css.surface,
     };
     const summaryStyle: CSSProperties = {
       ...cardStyle,
@@ -158,7 +158,7 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
       fontWeight: 600,
       letterSpacing: '0.05em',
       textTransform: 'uppercase',
-      color: theme.textMuted,
+      color: theme.css.textMuted,
       marginBottom: 12,
     };
 
@@ -180,7 +180,7 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
                 onChange={setAddress}
               />
               {error && (
-                <div role="alert" style={{ marginTop: 12, fontSize: 13, color: theme.danger }}>
+                <div role="alert" style={{ marginTop: 12, fontSize: 13, color: theme.css.danger }}>
                   {error}
                 </div>
               )}
@@ -192,9 +192,9 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
                     style={{
                       padding: '8px 14px',
                       borderRadius: 6,
-                      border: `1px solid ${theme.border}`,
+                      border: `1px solid ${theme.css.border}`,
                       background: 'transparent',
-                      color: theme.text,
+                      color: theme.css.text,
                       cursor: 'pointer',
                       fontSize: 13,
                       fontWeight: 600,
@@ -211,8 +211,8 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
                     padding: '8px 14px',
                     borderRadius: 6,
                     border: 'none',
-                    background: addressComplete ? theme.primary : theme.border,
-                    color: addressComplete ? theme.bg : theme.textMuted,
+                    background: addressComplete ? theme.css.primary : theme.css.border,
+                    color: addressComplete ? theme.css.bg : theme.css.textMuted,
                     cursor: addressComplete ? 'pointer' : 'not-allowed',
                     fontSize: 13,
                     fontWeight: 600,
@@ -230,8 +230,8 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
               <h2 style={{ margin: '0 0 16px', fontSize: 20, fontWeight: 700 }}>
                 Payment
               </h2>
-              <p style={{ margin: '0 0 16px', color: theme.textMuted, fontSize: 14 }}>
-                Total <strong style={{ color: theme.text, fontSize: 18 }}>{fmt(total)}</strong>
+              <p style={{ margin: '0 0 16px', color: theme.css.textMuted, fontSize: 14 }}>
+                Total <strong style={{ color: theme.css.text, fontSize: 18 }}>{fmt(total)}</strong>
               </p>
               <TkxPaymentButton
                 config={paymentConfig}
@@ -242,7 +242,7 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
                 Pay {fmt(total)}
               </TkxPaymentButton>
               {error && (
-                <div role="alert" style={{ marginTop: 12, fontSize: 13, color: theme.danger }}>
+                <div role="alert" style={{ marginTop: 12, fontSize: 13, color: theme.css.danger }}>
                   {error}
                 </div>
               )}
@@ -254,7 +254,7 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
                     padding: '6px 10px',
                     border: 'none',
                     background: 'transparent',
-                    color: theme.textMuted,
+                    color: theme.css.textMuted,
                     cursor: 'pointer',
                     fontSize: 13,
                   }}
@@ -270,7 +270,7 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
               <h2 style={{ margin: '0 0 16px', fontSize: 20, fontWeight: 700 }}>
                 Order confirmed
               </h2>
-              <p style={{ color: theme.textMuted, fontSize: 14, lineHeight: 1.6 }}>
+              <p style={{ color: theme.css.textMuted, fontSize: 14, lineHeight: 1.6 }}>
                 Thank you. A receipt has been emailed to you. Your order will
                 ship shortly.
               </p>
@@ -286,23 +286,23 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
               key={it.id}
               style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: 13 }}
             >
-              <span style={{ color: theme.text }}>
-                {it.label} <span style={{ color: theme.textMuted }}>×{it.quantity}</span>
+              <span style={{ color: theme.css.text }}>
+                {it.label} <span style={{ color: theme.css.textMuted }}>×{it.quantity}</span>
               </span>
-              <span style={{ color: theme.text, fontVariantNumeric: 'tabular-nums' }}>
+              <span style={{ color: theme.css.text, fontVariantNumeric: 'tabular-nums' }}>
                 {fmt(it.quantity * it.unitPrice)}
               </span>
             </div>
           ))}
-          <hr style={{ margin: '12px 0', border: 0, borderTop: `1px solid ${theme.border}` }} />
+          <hr style={{ margin: '12px 0', border: 0, borderTop: `1px solid ${theme.css.border}` }} />
           {taxRate > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: theme.textMuted }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: theme.css.textMuted }}>
               <span>Tax ({(taxRate * 100).toFixed(0)}%)</span>
               <span>{fmt(tax)}</span>
             </div>
           )}
           {shipping > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: theme.textMuted }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: theme.css.textMuted }}>
               <span>Shipping</span>
               <span>{fmt(shipping)}</span>
             </div>
@@ -312,7 +312,7 @@ export const TkxCheckout = forwardRef<HTMLDivElement, TkxCheckoutProps>(
             justifyContent: 'space-between',
             marginTop: 12,
             paddingTop: 12,
-            borderTop: `2px solid ${theme.text}`,
+            borderTop: `2px solid ${theme.css.text}`,
             fontSize: 16,
             fontWeight: 700,
           }}>

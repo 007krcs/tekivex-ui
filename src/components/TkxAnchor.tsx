@@ -70,9 +70,9 @@ function AnchorItem({
         className={tkx('block text-sm py-1 no-underline')}
         style={{
           paddingLeft: 12 + depth * 16,
-          color: isActive ? theme.primary : theme.textMuted,
+          color: isActive ? theme.css.primary : theme.css.textMuted,
           fontWeight: isActive ? 600 : 400,
-          borderLeft: `2px solid ${isActive ? theme.primary : 'transparent'}`,
+          borderLeft: `2px solid ${isActive ? theme.css.primary : 'transparent'}`,
           transition: reducedMotion ? 'none' : 'color 0.15s ease, border-color 0.15s ease',
         }}
       >
@@ -173,7 +173,7 @@ export function TkxAnchor({
       aria-label="Anchor navigation"
       className={tkx('font-sans')}
       style={{
-        borderLeft: `1px solid ${theme.border}`,
+        borderLeft: `1px solid ${theme.css.border}`,
         padding: '4px 0',
       }}
     >

@@ -72,7 +72,7 @@ export interface RazorpayConfig {
   notes?: Record<string, string>;
   /** Branding shown in the modal. */
   brand?: { name?: string; description?: string; image?: string };
-  /** Theme colour for the modal accents. Defaults to theme.primary. */
+  /** Theme colour for the modal accents. Defaults to theme.css.primary. */
   themeColor?: string;
 }
 
@@ -201,7 +201,7 @@ export const TkxPaymentButton = forwardRef<HTMLButtonElement, TkxPaymentButtonPr
             image: config.brand?.image,
             prefill: config.prefill,
             notes: config.notes,
-            theme: { color: config.themeColor ?? theme.primary },
+            theme: { color: config.themeColor ?? theme.css.primary },
             handler: (res: any) => {
               onSuccess({
                 provider: 'razorpay',
@@ -292,9 +292,9 @@ export const TkxPaymentButton = forwardRef<HTMLButtonElement, TkxPaymentButtonPr
     const buttonStyle: CSSProperties = {
       padding: `${padY}px ${padX}px`,
       borderRadius: 8,
-      border: variant === 'outline' ? `1.5px solid ${theme.primary}` : 'none',
-      background: variant === 'outline' ? 'transparent' : theme.primary,
-      color: variant === 'outline' ? theme.primary : theme.bg,
+      border: variant === 'outline' ? `1.5px solid ${theme.css.primary}` : 'none',
+      background: variant === 'outline' ? 'transparent' : theme.css.primary,
+      color: variant === 'outline' ? theme.css.primary : theme.css.bg,
       fontSize,
       fontWeight: 600,
       cursor: disabled ? 'not-allowed' : busy ? 'progress' : 'pointer',

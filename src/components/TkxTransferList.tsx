@@ -264,22 +264,22 @@ function ListPanel({
         style={{
           height: ITEM_H,
           boxSizing: 'border-box',
-          color: item.disabled ? theme.textMuted : theme.text,
-          backgroundColor: isChecked ? `${theme.primary}10` : 'transparent',
+          color: item.disabled ? theme.css.textMuted : theme.css.text,
+          backgroundColor: isChecked ? `${theme.css.primary}10` : 'transparent',
           transition: reducedMotion ? 'none' : 'background-color 100ms ease',
         }}
         onMouseEnter={(e) => {
           if (!item.disabled && !isChecked) {
-            (e.currentTarget as HTMLElement).style.backgroundColor = theme.surfaceAlt;
+            (e.currentTarget as HTMLElement).style.backgroundColor = theme.css.surfaceAlt;
           }
         }}
         onMouseLeave={(e) => {
           (e.currentTarget as HTMLElement).style.backgroundColor = isChecked
-            ? `${theme.primary}10`
+            ? `${theme.css.primary}10`
             : 'transparent';
         }}
       >
-        <Checkbox checked={isChecked} primaryColor={theme.primary} borderColor={theme.border} />
+        <Checkbox checked={isChecked} primaryColor={theme.css.primary} borderColor={theme.css.border} />
         <span className={tkx('truncate')}>{safeLabel}</span>
       </li>
     );
@@ -289,14 +289,14 @@ function ListPanel({
     <div
       className={tkx('flex flex-col rounded-lg overflow-hidden flex-1 min-w-0')}
       style={{
-        border: `1px solid ${theme.border}`,
-        backgroundColor: theme.surface,
+        border: `1px solid ${theme.css.border}`,
+        backgroundColor: theme.css.surface,
       }}
     >
       {/* Header */}
       <div
         className={tkx('flex items-center gap-2 px-3 py-2 border-b')}
-        style={{ borderColor: theme.border, backgroundColor: theme.surfaceAlt }}
+        style={{ borderColor: theme.css.border, backgroundColor: theme.css.surfaceAlt }}
       >
         <button
           type="button"
@@ -306,19 +306,19 @@ function ListPanel({
         >
           <Checkbox
             checked={allSelected}
-            primaryColor={theme.primary}
-            borderColor={theme.border}
+            primaryColor={theme.css.primary}
+            borderColor={theme.css.border}
           />
         </button>
         <span
           className={tkx('text-sm font-medium flex-1 truncate')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {safeTitle}
         </span>
         <span
           className={tkx('text-xs')}
-          style={{ color: theme.textMuted }}
+          style={{ color: theme.css.textMuted }}
         >
           {selected.size}/{items.length}
         </span>
@@ -328,9 +328,9 @@ function ListPanel({
       {searchable && (
         <div
           className={tkx('flex items-center gap-1.5 px-3 py-1.5 border-b')}
-          style={{ borderColor: theme.border }}
+          style={{ borderColor: theme.css.border }}
         >
-          <SearchIcon color={theme.textMuted} />
+          <SearchIcon color={theme.css.textMuted} />
           <input
             type="text"
             aria-label={`Search ${safeTitle}`}
@@ -338,7 +338,7 @@ function ListPanel({
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search..."
             className={tkx('flex-1 bg-transparent border-none outline-none text-xs')}
-            style={{ color: theme.text }}
+            style={{ color: theme.css.text }}
           />
         </div>
       )}
@@ -357,7 +357,7 @@ function ListPanel({
         {filtered.length === 0 ? (
           <li
             className={tkx('text-xs text-center py-4')}
-            style={{ color: theme.textMuted }}
+            style={{ color: theme.css.textMuted }}
             aria-disabled="true"
           >
             No items
@@ -471,8 +471,8 @@ export function TkxTransferList({
     width: 36,
     height: 36,
     borderRadius: 8,
-    border: `1px solid ${theme.border}`,
-    backgroundColor: disabled ? theme.surface : theme.surfaceAlt,
+    border: `1px solid ${theme.css.border}`,
+    backgroundColor: disabled ? theme.css.surface : theme.css.surfaceAlt,
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.5 : 1,
     transition: reducedMotion ? 'none' : 'all 100ms ease',
@@ -488,7 +488,7 @@ export function TkxTransferList({
         className ?? '',
       )}
       style={{
-        color: theme.text,
+        color: theme.css.text,
         ...style,
       }}
     >
@@ -529,17 +529,17 @@ export function TkxTransferList({
           style={transferButtonStyle(sourceSelected.size === 0)}
           onMouseEnter={(e) => {
             if (sourceSelected.size > 0) {
-              (e.currentTarget as HTMLElement).style.backgroundColor = theme.primary;
-              (e.currentTarget as HTMLElement).style.borderColor = theme.primary;
+              (e.currentTarget as HTMLElement).style.backgroundColor = theme.css.primary;
+              (e.currentTarget as HTMLElement).style.borderColor = theme.css.primary;
             }
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLElement).style.backgroundColor =
-              sourceSelected.size === 0 ? theme.surface : theme.surfaceAlt;
-            (e.currentTarget as HTMLElement).style.borderColor = theme.border;
+              sourceSelected.size === 0 ? theme.css.surface : theme.css.surfaceAlt;
+            (e.currentTarget as HTMLElement).style.borderColor = theme.css.border;
           }}
         >
-          <ArrowRightIcon color={theme.text} />
+          <ArrowRightIcon color={theme.css.text} />
         </button>
 
         <button
@@ -557,17 +557,17 @@ export function TkxTransferList({
           style={transferButtonStyle(targetSelected.size === 0)}
           onMouseEnter={(e) => {
             if (targetSelected.size > 0) {
-              (e.currentTarget as HTMLElement).style.backgroundColor = theme.primary;
-              (e.currentTarget as HTMLElement).style.borderColor = theme.primary;
+              (e.currentTarget as HTMLElement).style.backgroundColor = theme.css.primary;
+              (e.currentTarget as HTMLElement).style.borderColor = theme.css.primary;
             }
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLElement).style.backgroundColor =
-              targetSelected.size === 0 ? theme.surface : theme.surfaceAlt;
-            (e.currentTarget as HTMLElement).style.borderColor = theme.border;
+              targetSelected.size === 0 ? theme.css.surface : theme.css.surfaceAlt;
+            (e.currentTarget as HTMLElement).style.borderColor = theme.css.border;
           }}
         >
-          <ArrowLeftIcon color={theme.text} />
+          <ArrowLeftIcon color={theme.css.text} />
         </button>
       </div>
 

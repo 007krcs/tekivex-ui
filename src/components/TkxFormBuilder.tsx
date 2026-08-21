@@ -881,7 +881,7 @@ export function TkxFormBuilder({
               minHeight: 44,
               border: 'none',
               background: tab === id ? 'var(--tkx-bg, #0a0a0f)' : 'transparent',
-              color: tab === id ? 'var(--tkx-accent, #00f5d4)' : theme.textMuted,
+              color: tab === id ? 'var(--tkx-accent, #00f5d4)' : theme.css.textMuted,
               borderBottom: tab === id ? '2px solid var(--tkx-accent, #00f5d4)' : '2px solid transparent',
               cursor: 'pointer',
               fontSize: 13,
@@ -923,7 +923,7 @@ export function TkxFormBuilder({
             padding: 16,
             overflow: 'auto',
             background: 'var(--tkx-bg-subtle, #0d0d14)',
-            color: theme.primary,
+            color: theme.css.primary,
             fontSize: 12,
             fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
           }}

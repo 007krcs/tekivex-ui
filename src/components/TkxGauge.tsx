@@ -171,14 +171,14 @@ export const TkxGauge = forwardRef<HTMLDivElement, TkxGaugeProps>(
         const clippedEnd = Math.min(segEndAngle, liveAngle);
         if (clippedEnd <= segStartAngle) continue;
         // Find color for this segment: use the threshold matching segStartV
-        const segColor = colorForValue(segStartV + 0.0001, thresholds, theme.primary);
+        const segColor = colorForValue(segStartV + 0.0001, thresholds, theme.css.primary);
         segments.push({ d: arcPath(cxv, cyv, r, segStartAngle, clippedEnd), color: segColor });
       }
     } else {
-      segments.push({ d: arcPath(cxv, cyv, r, start, liveAngle), color: theme.primary });
+      segments.push({ d: arcPath(cxv, cyv, r, start, liveAngle), color: theme.css.primary });
     }
 
-    const activeColor = colorForValue(clamped, thresholds, theme.primary);
+    const activeColor = colorForValue(clamped, thresholds, theme.css.primary);
 
     // Tick marks: 11 major (every 10%), 4 minors between each pair.
     const ticks: React.ReactNode[] = [];
@@ -201,7 +201,7 @@ export const TkxGauge = forwardRef<HTMLDivElement, TkxGaugeProps>(
             y1={outer.y.toFixed(2)}
             x2={inner.x.toFixed(2)}
             y2={inner.y.toFixed(2)}
-            stroke={theme.textMuted}
+            stroke={theme.css.textMuted}
             strokeWidth={isMajor ? 1.5 : 0.75}
             strokeLinecap="round"
             data-tkx-gauge-tick={isMajor ? 'major' : 'minor'}
@@ -238,7 +238,7 @@ export const TkxGauge = forwardRef<HTMLDivElement, TkxGaugeProps>(
           <path
             d={trackD}
             fill="none"
-            stroke={theme.border}
+            stroke={theme.css.border}
             strokeWidth={thickness}
             strokeLinecap="round"
             data-tkx-gauge-track=""
@@ -280,7 +280,7 @@ export const TkxGauge = forwardRef<HTMLDivElement, TkxGaugeProps>(
         {label && (
           <span
             className={tkx('text-sm')}
-            style={{ color: theme.textMuted, marginTop: '-8px' }}
+            style={{ color: theme.css.textMuted, marginTop: '-8px' }}
             data-tkx-gauge-label=""
           >
             {label}

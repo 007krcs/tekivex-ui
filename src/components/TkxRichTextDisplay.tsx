@@ -82,7 +82,7 @@ function HeadingBlock({ block }: BlockRendererProps) {
       className={tkx('m-0')}
       style={{
         ...HEADING_SIZES[level],
-        color: theme.text,
+        color: theme.css.text,
       }}
     >
       {safeContent}
@@ -100,7 +100,7 @@ function ParagraphBlock({ block }: BlockRendererProps) {
       style={{
         fontSize: '0.938rem',
         lineHeight: 1.7,
-        color: theme.text,
+        color: theme.css.text,
         marginBottom: 12,
       }}
     >
@@ -117,15 +117,15 @@ function BlockquoteBlock({ block }: BlockRendererProps) {
     <blockquote
       className={tkx('m-0')}
       style={{
-        borderLeft: `3px solid ${theme.primary}`,
+        borderLeft: `3px solid ${theme.css.primary}`,
         paddingLeft: 16,
         paddingTop: 8,
         paddingBottom: 8,
         marginTop: 12,
         marginBottom: 12,
-        backgroundColor: `${theme.surfaceAlt}`,
+        backgroundColor: `${theme.css.surfaceAlt}`,
         borderRadius: '0 6px 6px 0',
-        color: theme.textMuted,
+        color: theme.css.textMuted,
         fontStyle: 'italic',
         fontSize: '0.938rem',
         lineHeight: 1.6,
@@ -147,8 +147,8 @@ function CodeBlock({ block }: BlockRendererProps) {
       style={{
         marginTop: 12,
         marginBottom: 12,
-        border: `1px solid ${theme.border}`,
-        backgroundColor: theme.surfaceAlt,
+        border: `1px solid ${theme.css.border}`,
+        backgroundColor: theme.css.surfaceAlt,
       }}
     >
       {/* Language label */}
@@ -156,9 +156,9 @@ function CodeBlock({ block }: BlockRendererProps) {
         <div
           className={tkx('px-3 py-1 text-[11px] font-semibold uppercase tracking-wider')}
           style={{
-            color: theme.textMuted,
-            borderBottom: `1px solid ${theme.border}`,
-            backgroundColor: theme.surface,
+            color: theme.css.textMuted,
+            borderBottom: `1px solid ${theme.css.border}`,
+            backgroundColor: theme.css.surface,
           }}
         >
           {safeLanguage}
@@ -172,7 +172,7 @@ function CodeBlock({ block }: BlockRendererProps) {
           fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
           fontSize: '0.85rem',
           lineHeight: 1.6,
-          color: theme.text,
+          color: theme.css.text,
           tabSize: 2,
         }}
       >
@@ -196,7 +196,7 @@ function ListBlock({ block }: BlockRendererProps) {
         paddingLeft: 24,
         marginTop: 8,
         marginBottom: 12,
-        color: theme.text,
+        color: theme.css.text,
         fontSize: '0.938rem',
         lineHeight: 1.7,
         listStyleType: block.ordered ? 'decimal' : 'disc',
@@ -223,7 +223,7 @@ function DividerBlock() {
       aria-hidden="true"
       style={{
         border: 'none',
-        borderTop: `1px solid ${theme.border}`,
+        borderTop: `1px solid ${theme.css.border}`,
         marginTop: 20,
         marginBottom: 20,
       }}
@@ -250,13 +250,13 @@ function ImageBlock({ block }: BlockRendererProps) {
           maxWidth: '100%',
           height: 'auto',
           display: 'block',
-          border: `1px solid ${theme.border}`,
+          border: `1px solid ${theme.css.border}`,
         }}
       />
       {block.alt && (
         <figcaption
           className={tkx('text-xs mt-2 text-center')}
-          style={{ color: theme.textMuted }}
+          style={{ color: theme.css.textMuted }}
         >
           {safeAlt}
         </figcaption>
@@ -271,10 +271,10 @@ function CalloutBlock({ block }: BlockRendererProps) {
   const safeContent = sanitizeString(block.content ?? '');
 
   const variantColorMap: Record<string, string> = {
-    info: theme.info,
-    warning: theme.warning,
-    success: theme.success,
-    danger: theme.danger,
+    info: theme.css.info,
+    warning: theme.css.warning,
+    success: theme.css.success,
+    danger: theme.css.danger,
   };
 
   const accentColor = variantColorMap[variant];
@@ -310,7 +310,7 @@ function CalloutBlock({ block }: BlockRendererProps) {
         style={{
           fontSize: '0.9rem',
           lineHeight: 1.6,
-          color: theme.text,
+          color: theme.css.text,
         }}
       >
         {safeContent}
@@ -387,7 +387,7 @@ export function TkxRichTextDisplay({
       aria-label={t.richTextContent ?? 'Rich text content'}
       className={tkx('font-sans', className ?? '')}
       style={{
-        color: theme.text,
+        color: theme.css.text,
         maxWidth: 720,
         ...style,
       }}

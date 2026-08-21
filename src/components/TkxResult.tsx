@@ -74,13 +74,13 @@ const STATUS_ICONS: Record<ResultStatus, (color: string) => ReactNode> = {
 
 function getStatusColor(status: ResultStatus, theme: ReturnType<typeof useTheme>): string {
   switch (status) {
-    case 'success': return theme.success;
+    case 'success': return theme.css.success;
     case 'error':
-    case '500': return theme.danger;
-    case 'warning': return theme.warning;
-    case 'info': return theme.info;
+    case '500': return theme.css.danger;
+    case 'warning': return theme.css.warning;
+    case 'info': return theme.css.info;
     case '404':
-    case '403': return theme.textMuted;
+    case '403': return theme.css.textMuted;
   }
 }
 
@@ -109,7 +109,7 @@ export function TkxResult({ status = 'info', title = '', subTitle, icon, extra, 
 
       <h2
         className={tkx('text-xl font-semibold m-0 mb-2')}
-        style={{ color: theme.text }}
+        style={{ color: theme.css.text }}
       >
         {safeTitle}
       </h2>
@@ -117,7 +117,7 @@ export function TkxResult({ status = 'info', title = '', subTitle, icon, extra, 
       {safeSubTitle && (
         <p
           className={tkx('text-sm m-0 mb-6 max-w-md leading-relaxed')}
-          style={{ color: theme.textMuted }}
+          style={{ color: theme.css.textMuted }}
         >
           {safeSubTitle}
         </p>

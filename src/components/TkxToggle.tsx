@@ -35,7 +35,7 @@ export const TkxToggle = forwardRef<HTMLButtonElement, TkxToggleProps>(
 
     const { tw, th, td, gap } = SIZES[size];
     const thumbOffset = checked ? tw - td - gap : gap;
-    const trackBg = checked ? theme.primary : theme.border;
+    const trackBg = checked ? theme.css.primary : theme.css.border;
 
     return (
       <div
@@ -46,7 +46,7 @@ export const TkxToggle = forwardRef<HTMLButtonElement, TkxToggleProps>(
           <label
             htmlFor={id}
             className={tkx('text-sm font-sans', disabled ? 'cursor-not-allowed' : 'cursor-pointer', 'select-none')}
-            style={{ color: theme.text }}
+            style={{ color: theme.css.text }}
           >
             {label}
           </label>
@@ -81,7 +81,7 @@ export const TkxToggle = forwardRef<HTMLButtonElement, TkxToggleProps>(
               top: '50%', left: thumbOffset,
               width: td, height: td,
               transform: 'translateY(-50%)',
-              backgroundColor: theme.surface,
+              backgroundColor: theme.css.surface,
               boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
               transition: reducedMotion ? 'none' : 'left 200ms ease',
             }}

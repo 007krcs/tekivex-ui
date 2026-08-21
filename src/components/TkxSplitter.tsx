@@ -210,13 +210,13 @@ function Gutter({
       style={{
         flex: `0 0 ${gutterSize}px`,
         alignSelf: 'stretch',
-        backgroundColor: highlight ? theme.primary : theme.border,
+        backgroundColor: highlight ? theme.css.primary : theme.css.border,
         cursor: disabled ? 'default' : horizontal ? 'col-resize' : 'row-resize',
         touchAction: 'none',
         userSelect: 'none',
         outline: 'none',
         borderRadius: 2,
-        boxShadow: focused && !disabled ? `0 0 0 2px ${theme.primary}55` : undefined,
+        boxShadow: focused && !disabled ? `0 0 0 2px ${theme.css.primary}55` : undefined,
         transition: reducedMotion ? 'none' : 'background-color 120ms ease',
       }}
     />

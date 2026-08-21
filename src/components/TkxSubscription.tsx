@@ -102,10 +102,10 @@ export const TkxPlanSelector = forwardRef<HTMLDivElement, TkxPlanSelectorProps>(
                 padding: 20,
                 borderRadius: 12,
                 border: `${plan.highlighted ? 2 : 1}px solid ${
-                  selected ? theme.primary : plan.highlighted ? theme.primary : theme.border
+                  selected ? theme.css.primary : plan.highlighted ? theme.css.primary : theme.css.border
                 }`,
-                background: theme.surface,
-                color: theme.text,
+                background: theme.css.surface,
+                color: theme.css.text,
                 textAlign: 'left',
                 cursor: plan.disabled ? 'not-allowed' : 'pointer',
                 opacity: plan.disabled ? 0.5 : 1,
@@ -121,8 +121,8 @@ export const TkxPlanSelector = forwardRef<HTMLDivElement, TkxPlanSelectorProps>(
                     position: 'absolute',
                     top: -10,
                     right: 16,
-                    background: theme.primary,
-                    color: theme.bg,
+                    background: theme.css.primary,
+                    color: theme.css.bg,
                     fontSize: 11,
                     fontWeight: 700,
                     padding: '2px 8px',
@@ -135,26 +135,26 @@ export const TkxPlanSelector = forwardRef<HTMLDivElement, TkxPlanSelectorProps>(
                   Most popular
                 </span>
               )}
-              <div style={{ fontSize: 12, fontWeight: 700, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: theme.css.textMuted, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                 {plan.name}
               </div>
               {plan.tagline && (
-                <div style={{ fontSize: 12, color: theme.textMuted, marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: theme.css.textMuted, marginTop: 2 }}>
                   {plan.tagline}
                 </div>
               )}
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginTop: 12 }}>
-                <span style={{ fontSize: 32, fontWeight: 800, color: theme.text }}>
+                <span style={{ fontSize: 32, fontWeight: 800, color: theme.css.text }}>
                   {fmt(plan.prices[cycle], plan.currency, plan.locale)}
                 </span>
-                <span style={{ fontSize: 12, color: theme.textMuted }}>
+                <span style={{ fontSize: 12, color: theme.css.textMuted }}>
                   / {cycle === 'monthly' ? 'mo' : 'yr'}
                 </span>
               </div>
               <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0 0', fontSize: 13, lineHeight: 1.7 }}>
                 {plan.features.map((f) => (
-                  <li key={f} style={{ display: 'flex', gap: 6, alignItems: 'flex-start', color: theme.text }}>
-                    <span aria-hidden="true" style={{ color: theme.success }}>✓</span>
+                  <li key={f} style={{ display: 'flex', gap: 6, alignItems: 'flex-start', color: theme.css.text }}>
+                    <span aria-hidden="true" style={{ color: theme.css.success }}>✓</span>
                     <span>{f}</span>
                   </li>
                 ))}
@@ -164,9 +164,9 @@ export const TkxPlanSelector = forwardRef<HTMLDivElement, TkxPlanSelectorProps>(
                   marginTop: 16,
                   padding: '8px 12px',
                   borderRadius: 6,
-                  background: selected ? theme.primary : 'transparent',
-                  color: selected ? theme.bg : theme.primary,
-                  border: `1px solid ${theme.primary}`,
+                  background: selected ? theme.css.primary : 'transparent',
+                  color: selected ? theme.css.bg : theme.css.primary,
+                  border: `1px solid ${theme.css.primary}`,
                   textAlign: 'center',
                   fontWeight: 600,
                   fontSize: 13,
@@ -206,9 +206,9 @@ export function TkxBillingCycleToggle({
     alignItems: 'center',
     gap: 8,
     padding: 4,
-    border: `1px solid ${theme.border}`,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: 999,
-    background: theme.surface,
+    background: theme.css.surface,
     ...style,
   };
   const segment = (active: boolean): CSSProperties => ({
@@ -216,8 +216,8 @@ export function TkxBillingCycleToggle({
     borderRadius: 999,
     fontSize: 13,
     fontWeight: 600,
-    background: active ? theme.primary : 'transparent',
-    color: active ? theme.bg : theme.text,
+    background: active ? theme.css.primary : 'transparent',
+    color: active ? theme.css.bg : theme.css.text,
     border: 'none',
     cursor: 'pointer',
     transition: 'background 0.15s, color 0.15s',
@@ -251,8 +251,8 @@ export function TkxBillingCycleToggle({
               fontSize: 10,
               padding: '2px 6px',
               borderRadius: 4,
-              background: value === 'annual' ? theme.bg : theme.success,
-              color: value === 'annual' ? theme.success : theme.bg,
+              background: value === 'annual' ? theme.css.bg : theme.css.success,
+              color: value === 'annual' ? theme.css.success : theme.css.bg,
               fontWeight: 700,
             }}
           >
@@ -302,10 +302,10 @@ export function TkxProrationPreview({
       <div
         className={className}
         style={{
-          border: `1px solid ${theme.border}`,
+          border: `1px solid ${theme.css.border}`,
           borderRadius: 12,
           padding: 20,
-          background: theme.surface,
+          background: theme.css.surface,
           ...style,
         }}
       />
@@ -319,10 +319,10 @@ export function TkxProrationPreview({
   const refund = Math.max(0, credit - charge);
 
   const wrap: CSSProperties = {
-    border: `1px solid ${theme.border}`,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: 12,
     padding: 20,
-    background: theme.surface,
+    background: theme.css.surface,
     ...style,
   };
   const row: CSSProperties = {
@@ -336,46 +336,46 @@ export function TkxProrationPreview({
 
   return (
     <div className={className} style={wrap}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: theme.css.textMuted, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>
         Plan change
       </div>
 
-      <div style={{ ...row, color: theme.textMuted }}>
-        <span>From <strong style={{ color: theme.text }}>{currentPlan.name}</strong></span>
+      <div style={{ ...row, color: theme.css.textMuted }}>
+        <span>From <strong style={{ color: theme.css.text }}>{currentPlan.name}</strong></span>
         <span>→</span>
-        <span>To <strong style={{ color: theme.primary }}>{newPlan.name}</strong></span>
+        <span>To <strong style={{ color: theme.css.primary }}>{newPlan.name}</strong></span>
       </div>
 
-      <hr style={{ border: 0, borderTop: `1px solid ${theme.border}`, margin: '8px 0' }} />
+      <hr style={{ border: 0, borderTop: `1px solid ${theme.css.border}`, margin: '8px 0' }} />
 
-      <div style={{ ...row, color: theme.textMuted }}>
+      <div style={{ ...row, color: theme.css.textMuted }}>
         <span>Days remaining in cycle</span>
         <span>{daysRemaining} / {cycleDays}</span>
       </div>
-      <div style={{ ...row, color: theme.textMuted }}>
+      <div style={{ ...row, color: theme.css.textMuted }}>
         <span>Credit from {currentPlan.name}</span>
         <span>−{f(credit)}</span>
       </div>
-      <div style={{ ...row, color: theme.textMuted }}>
+      <div style={{ ...row, color: theme.css.textMuted }}>
         <span>Charge for {newPlan.name} (prorated)</span>
         <span>{f(charge)}</span>
       </div>
 
-      <hr style={{ border: 0, borderTop: `1px solid ${theme.border}`, margin: '8px 0' }} />
+      <hr style={{ border: 0, borderTop: `1px solid ${theme.css.border}`, margin: '8px 0' }} />
 
       {dueToday > 0 ? (
         <div style={{ ...row, fontSize: 16, fontWeight: 700 }}>
-          <span style={{ color: theme.text }}>Due today</span>
-          <span style={{ color: theme.primary }}>{f(dueToday)}</span>
+          <span style={{ color: theme.css.text }}>Due today</span>
+          <span style={{ color: theme.css.primary }}>{f(dueToday)}</span>
         </div>
       ) : (
-        <div style={{ ...row, fontSize: 14, color: theme.success }}>
+        <div style={{ ...row, fontSize: 14, color: theme.css.success }}>
           <span>Credit applied at next billing</span>
           <span>{f(refund)}</span>
         </div>
       )}
 
-      <div style={{ ...row, color: theme.textMuted, fontSize: 12, marginTop: 6 }}>
+      <div style={{ ...row, color: theme.css.textMuted, fontSize: 12, marginTop: 6 }}>
         <span>Then {f(newPlan.prices[cycle])} / {cycle === 'monthly' ? 'month' : 'year'}</span>
       </div>
 

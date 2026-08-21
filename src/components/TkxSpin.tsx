@@ -171,7 +171,7 @@ export function TkxSpin({
       createElement(DefaultSpinner, {
         size: sizeConfig.dimension,
         borderWidth: sizeConfig.borderWidth,
-        color: theme.primary,
+        color: theme.css.primary,
         reducedMotion,
       }),
     safeTip &&
@@ -179,7 +179,7 @@ export function TkxSpin({
         'span',
         {
           style: {
-            color: theme.primary,
+            color: theme.css.primary,
             fontSize: sizeConfig.fontSize,
             marginTop: '4px',
           },
@@ -200,7 +200,7 @@ export function TkxSpin({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: `${theme.bg}cc`,
+          backgroundColor: `${theme.css.bg}cc`,
           zIndex: 9999,
           ...style,
         },
@@ -242,7 +242,7 @@ export function TkxSpin({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: `${theme.bg}66`,
+            backgroundColor: `${theme.css.bg}66`,
             borderRadius: '4px',
           },
         },

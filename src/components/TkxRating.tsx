@@ -161,11 +161,11 @@ export function TkxRating({
   const displayValue = hoverValue ?? activeValue;
 
   const colorMap: Record<string, string> = {
-    warning: theme.warning,
-    primary: theme.primary,
-    danger:  theme.danger,
+    warning: theme.css.warning,
+    primary: theme.css.primary,
+    danger:  theme.css.danger,
   };
-  const iconColor = colorMap[colorScheme] ?? theme.warning;
+  const iconColor = colorMap[colorScheme] ?? theme.css.warning;
   const px = SIZE_MAP[size];
   const isInteractive = !isReadOnly && !isDisabled;
 
@@ -276,7 +276,7 @@ export function TkxRating({
                 size={px}
                 filled={isFilled}
                 halfFilled={isHalf}
-                color={isFilled || isHalf ? iconColor : theme.border}
+                color={isFilled || isHalf ? iconColor : theme.css.border}
                 uid={isHalf ? uid : undefined}
               />
             </span>
@@ -287,7 +287,7 @@ export function TkxRating({
       {showValue && (
         <span
           className={tkx('text-sm tabular-nums')}
-          style={{ color: theme.textMuted }}
+          style={{ color: theme.css.textMuted }}
           aria-live="polite"
           aria-atomic="true"
         >

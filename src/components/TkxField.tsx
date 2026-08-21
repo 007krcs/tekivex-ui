@@ -116,11 +116,11 @@ export function TkxField({
       <label
         htmlFor={id}
         className={tkx('text-sm font-medium font-sans')}
-        style={{ color: theme.text }}
+        style={{ color: theme.css.text }}
       >
         {safeLabel}
         {isRequired && (
-          <span aria-hidden="true" className={tkx('ml-1')} style={{ color: theme.danger }}>
+          <span aria-hidden="true" className={tkx('ml-1')} style={{ color: theme.css.danger }}>
             *
           </span>
         )}
@@ -129,7 +129,7 @@ export function TkxField({
       {control}
 
       {safeHint && !safeError && (
-        <span id={hintId} className={tkx('text-xs')} style={{ color: theme.textMuted }}>
+        <span id={hintId} className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>
           {safeHint}
         </span>
       )}
@@ -138,7 +138,7 @@ export function TkxField({
           id={errorId}
           role="alert"
           className={tkx('text-xs flex items-center gap-1')}
-          style={{ color: theme.danger }}
+          style={{ color: theme.css.danger }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />

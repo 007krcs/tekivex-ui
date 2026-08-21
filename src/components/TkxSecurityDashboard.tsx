@@ -178,7 +178,7 @@ export function TkxSecurityDashboard({
   const { events, counts, bySeverity, clear, toJSON } = useSecurityEvents(maxEvents);
 
   const sevColor = (s: SecuritySeverity) =>
-    s === 'critical' ? theme.danger : s === 'warning' ? theme.warning : theme.textMuted;
+    s === 'critical' ? theme.css.danger : s === 'warning' ? theme.css.warning : theme.css.textMuted;
 
   const download = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -199,11 +199,11 @@ export function TkxSecurityDashboard({
   ];
 
   const cardStyle: CSSProperties = {
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
+    background: theme.css.surface,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: 12,
     padding: 16,
-    color: theme.text,
+    color: theme.css.text,
     fontFamily: 'inherit',
     ...style,
   };
@@ -217,10 +217,10 @@ export function TkxSecurityDashboard({
     >
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, gap: 12, flexWrap: 'wrap' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: theme.text }}>
+          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: theme.css.text }}>
             Security kernel — live events
           </h3>
-          <p style={{ margin: '2px 0 0', fontSize: 12, color: theme.textMuted }}>
+          <p style={{ margin: '2px 0 0', fontSize: 12, color: theme.css.textMuted }}>
             {events.length === 0
               ? 'No defensive actions yet. Events appear as the kernel blocks threats.'
               : `${events.length} event${events.length === 1 ? '' : 's'} · ${bySeverity.critical} critical · ${bySeverity.warning} warning`}
@@ -234,8 +234,8 @@ export function TkxSecurityDashboard({
               disabled={events.length === 0}
               style={{
                 padding: '6px 12px', fontSize: 12, fontWeight: 600, borderRadius: 6,
-                border: `1px solid ${theme.border}`, background: theme.surfaceAlt,
-                color: theme.text, cursor: events.length ? 'pointer' : 'not-allowed',
+                border: `1px solid ${theme.css.border}`, background: theme.css.surfaceAlt,
+                color: theme.css.text, cursor: events.length ? 'pointer' : 'not-allowed',
                 opacity: events.length ? 1 : 0.5, fontFamily: 'inherit',
               }}
             >
@@ -248,8 +248,8 @@ export function TkxSecurityDashboard({
             disabled={events.length === 0}
             style={{
               padding: '6px 12px', fontSize: 12, fontWeight: 600, borderRadius: 6,
-              border: `1px solid ${theme.border}`, background: 'transparent',
-              color: theme.textMuted, cursor: events.length ? 'pointer' : 'not-allowed',
+              border: `1px solid ${theme.css.border}`, background: 'transparent',
+              color: theme.css.textMuted, cursor: events.length ? 'pointer' : 'not-allowed',
               opacity: events.length ? 1 : 0.5, fontFamily: 'inherit',
             }}
           >
@@ -261,11 +261,11 @@ export function TkxSecurityDashboard({
       {/* Summary tiles */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 10, marginBottom: compact ? 0 : 16 }}>
         {tiles.map((t) => (
-          <div key={t.key} style={{ background: theme.surfaceAlt, border: `1px solid ${theme.border}`, borderRadius: 8, padding: '10px 12px' }}>
-            <div style={{ fontSize: 22, fontWeight: 800, color: counts[t.key] > 0 ? theme.primary : theme.textMuted, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>
+          <div key={t.key} style={{ background: theme.css.surfaceAlt, border: `1px solid ${theme.css.border}`, borderRadius: 8, padding: '10px 12px' }}>
+            <div style={{ fontSize: 22, fontWeight: 800, color: counts[t.key] > 0 ? theme.css.primary : theme.css.textMuted, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>
               {counts[t.key]}
             </div>
-            <div style={{ fontSize: 11, color: theme.textMuted, marginTop: 2 }}>{t.label}</div>
+            <div style={{ fontSize: 11, color: theme.css.textMuted, marginTop: 2 }}>{t.label}</div>
           </div>
         ))}
       </div>
@@ -277,21 +277,21 @@ export function TkxSecurityDashboard({
           aria-live="polite"
           aria-label="Security event log"
           style={{
-            maxHeight: 260, overflowY: 'auto', border: `1px solid ${theme.border}`,
-            borderRadius: 8, background: theme.bg, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 12,
+            maxHeight: 260, overflowY: 'auto', border: `1px solid ${theme.css.border}`,
+            borderRadius: 8, background: theme.css.bg, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize: 12,
           }}
         >
           {events.length === 0 ? (
-            <div style={{ padding: 16, color: theme.textMuted }}>
+            <div style={{ padding: 16, color: theme.css.textMuted }}>
               Waiting for security events…
             </div>
           ) : (
             [...events].reverse().map((e) => (
               <div
                 key={e.id}
-                style={{ display: 'flex', gap: 10, padding: '8px 12px', borderBottom: `1px solid ${theme.border}`, alignItems: 'baseline' }}
+                style={{ display: 'flex', gap: 10, padding: '8px 12px', borderBottom: `1px solid ${theme.css.border}`, alignItems: 'baseline' }}
               >
-                <span style={{ color: theme.textMuted, flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+                <span style={{ color: theme.css.textMuted, flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
                   {new Date(e.timestamp).toLocaleTimeString()}
                 </span>
                 <span
@@ -303,7 +303,7 @@ export function TkxSecurityDashboard({
                 >
                   {e.severity}
                 </span>
-                <span style={{ color: theme.text }}>{e.message}</span>
+                <span style={{ color: theme.css.text }}>{e.message}</span>
               </div>
             ))
           )}

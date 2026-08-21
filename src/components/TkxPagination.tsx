@@ -175,34 +175,34 @@ export function TkxPagination({
     if (isActive) {
       return {
         ...base,
-        backgroundColor: theme.primary,
-        color: theme.bg,
+        backgroundColor: theme.css.primary,
+        color: theme.css.bg,
         fontWeight: 600,
-        boxShadow: `0 0 0 2px ${theme.primary}44`,
+        boxShadow: `0 0 0 2px ${theme.css.primary}44`,
       };
     }
 
     if (variant === 'default') {
       return {
         ...base,
-        backgroundColor: theme.surface,
-        color: theme.text,
-        border: `1px solid ${theme.border}`,
+        backgroundColor: theme.css.surface,
+        color: theme.css.text,
+        border: `1px solid ${theme.css.border}`,
       };
     }
     if (variant === 'outline') {
       return {
         ...base,
         backgroundColor: 'transparent',
-        color: theme.text,
-        border: `1px solid ${theme.border}`,
+        color: theme.css.text,
+        border: `1px solid ${theme.css.border}`,
       };
     }
     // ghost
     return {
       ...base,
       backgroundColor: 'transparent',
-      color: theme.text,
+      color: theme.css.text,
     };
   };
 
@@ -216,7 +216,7 @@ export function TkxPagination({
     <nav aria-label={labels.pagination} className={tkx('flex flex-col gap-2')}>
       {/* Showing X-Y of Z */}
       {total > 0 && (
-        <p className={tkx('text-sm')} style={{ color: theme.textMuted, fontSize: s.fontSize }}>
+        <p className={tkx('text-sm')} style={{ color: theme.css.textMuted, fontSize: s.fontSize }}>
           {sanitizeString(labels.showing(itemStart, itemEnd, total))}
         </p>
       )}
@@ -262,7 +262,7 @@ export function TkxPagination({
                   minWidth: s.minWidth,
                   height: s.height,
                   fontSize: s.fontSize,
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   userSelect: 'none',
                 }}
               >
@@ -317,7 +317,7 @@ export function TkxPagination({
             <label
               htmlFor={selectId}
               className={tkx('text-sm')}
-              style={{ color: theme.textMuted, fontSize: s.fontSize, whiteSpace: 'nowrap' }}
+              style={{ color: theme.css.textMuted, fontSize: s.fontSize, whiteSpace: 'nowrap' }}
             >
               {t.itemsPerPage ?? 'Rows per page'}
             </label>
@@ -331,9 +331,9 @@ export function TkxPagination({
                 paddingRight: s.px,
                 fontSize: s.fontSize,
                 borderRadius: '8px',
-                border: `1px solid ${theme.border}`,
-                backgroundColor: theme.surface,
-                color: theme.text,
+                border: `1px solid ${theme.css.border}`,
+                backgroundColor: theme.css.surface,
+                color: theme.css.text,
                 cursor: 'pointer',
                 outline: 'none',
                 fontFamily: 'inherit',

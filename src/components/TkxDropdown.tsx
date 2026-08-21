@@ -328,8 +328,8 @@ function DropdownMenu({
     minWidth: Math.max(propMinWidth, position.minWidth),
     maxHeight,
     overflowY: 'auto',
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
+    background: theme.css.surface,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: 8,
     boxShadow: `0 8px 32px rgba(0,0,0,0.4)`,
     zIndex: 9999,
@@ -373,10 +373,10 @@ function DropdownMenu({
               width: '100%',
               boxSizing: 'border-box',
               padding: '6px 10px',
-              background: theme.surfaceAlt,
-              border: `1px solid ${theme.border}`,
+              background: theme.css.surfaceAlt,
+              border: `1px solid ${theme.css.border}`,
               borderRadius: 6,
-              color: theme.text,
+              color: theme.css.text,
               fontSize: 13,
               outline: 'none',
             }}
@@ -388,7 +388,7 @@ function DropdownMenu({
         <div
           style={{
             padding: '12px 16px',
-            color: theme.textMuted,
+            color: theme.css.textMuted,
             fontSize: 13,
             textAlign: 'center',
           }}
@@ -407,7 +407,7 @@ function DropdownMenu({
                 fontWeight: 600,
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
-                color: theme.textMuted,
+                color: theme.css.textMuted,
               }}
             >
               {sanitizeString(group.label)}
@@ -444,7 +444,7 @@ function DropdownMenu({
                     role="separator"
                     style={{
                       height: 1,
-                      background: theme.border,
+                      background: theme.css.border,
                       margin: '4px 0',
                     }}
                   />
@@ -512,8 +512,8 @@ function DropdownMenu({
                         top: 0,
                         left: '100%',
                         minWidth: 180,
-                        background: theme.surface,
-                        border: `1px solid ${theme.border}`,
+                        background: theme.css.surface,
+                        border: `1px solid ${theme.css.border}`,
                         borderRadius: 8,
                         boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                         zIndex: 10000,
@@ -578,15 +578,15 @@ interface DefaultItemContentProps {
   isFocused: boolean;
   multiSelect: boolean;
   query: string;
-  theme: import('../themes').ThemeTokens;
+  theme: import('../themes').ResolvedTheme;
   hasSubmenu: boolean;
 }
 
 function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, theme, hasSubmenu }: DefaultItemContentProps) {
   const bg = isFocused
     ? item.danger
-      ? `${theme.danger}20`
-      : `${theme.primary}18`
+      ? `${theme.css.danger}20`
+      : `${theme.css.primary}18`
     : 'transparent';
 
   return (
@@ -598,7 +598,7 @@ function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, t
         padding: '8px 12px',
         background: bg,
         transition: 'background 80ms',
-        color: item.danger ? theme.danger : theme.text,
+        color: item.danger ? theme.css.danger : theme.css.text,
         fontSize: 14,
         userSelect: 'none',
       }}
@@ -609,9 +609,9 @@ function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, t
           style={{
             width: 16,
             height: 16,
-            border: `2px solid ${isSelected ? theme.primary : theme.border}`,
+            border: `2px solid ${isSelected ? theme.css.primary : theme.css.border}`,
             borderRadius: 4,
-            background: isSelected ? theme.primary : 'transparent',
+            background: isSelected ? theme.css.primary : 'transparent',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -621,7 +621,7 @@ function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, t
         >
           {isSelected && (
             <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-              <path d="M1 4l3 3L9 1" stroke={theme.bg} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M1 4l3 3L9 1" stroke={theme.css.bg} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           )}
         </div>
@@ -629,7 +629,7 @@ function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, t
 
       {/* Icon */}
       {item.icon && (
-        <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0, color: item.danger ? theme.danger : theme.textMuted }}>
+        <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0, color: item.danger ? theme.css.danger : theme.css.textMuted }}>
           {item.icon}
         </span>
       )}
@@ -640,7 +640,7 @@ function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, t
           {highlightText(item.label, query)}
         </div>
         {item.description && (
-          <div style={{ fontSize: 12, color: theme.textMuted, marginTop: 1 }}>
+          <div style={{ fontSize: 12, color: theme.css.textMuted, marginTop: 1 }}>
             {highlightText(item.description, query)}
           </div>
         )}
@@ -650,8 +650,8 @@ function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, t
       {item.badge !== undefined && (
         <span
           style={{
-            background: theme.primary,
-            color: theme.bg,
+            background: theme.css.primary,
+            color: theme.css.bg,
             fontSize: 11,
             fontWeight: 700,
             borderRadius: 10,
@@ -665,7 +665,7 @@ function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, t
 
       {/* Shortcut */}
       {item.shortcut && !hasSubmenu && (
-        <span style={{ fontSize: 12, color: theme.textMuted, flexShrink: 0 }}>
+        <span style={{ fontSize: 12, color: theme.css.textMuted, flexShrink: 0 }}>
           {item.shortcut}
         </span>
       )}
@@ -673,14 +673,14 @@ function DefaultItemContent({ item, isSelected, isFocused, multiSelect, query, t
       {/* Submenu chevron */}
       {hasSubmenu && (
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}>
-          <path d="M4 2l4 4-4 4" stroke={theme.textMuted} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M4 2l4 4-4 4" stroke={theme.css.textMuted} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       )}
 
       {/* Selected indicator (single-select) */}
       {!multiSelect && isSelected && (
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
-          <path d="M2 7l4 4L12 3" stroke={theme.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M2 7l4 4L12 3" stroke={theme.css.primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       )}
     </div>

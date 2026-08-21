@@ -157,14 +157,14 @@ export function TkxImage({
         aria-label={safeAlt || 'Image failed to load'}
         className={tkx('flex flex-col items-center justify-center gap-2 w-full h-full')}
         style={{
-          backgroundColor: theme.surfaceAlt,
+          backgroundColor: theme.css.surfaceAlt,
           borderRadius,
-          color: theme.textMuted,
+          color: theme.css.textMuted,
           minHeight: '80px',
         }}
       >
-        <BrokenImagePlaceholder color={theme.textMuted} size={32} />
-        <span className={tkx('text-xs')} style={{ color: theme.textMuted }}>
+        <BrokenImagePlaceholder color={theme.css.textMuted} size={32} />
+        <span className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>
           Failed to load
         </span>
       </div>
@@ -181,7 +181,7 @@ export function TkxImage({
         height: ratio === 'auto' ? '100%' : undefined,
         minHeight: ratio === 'auto' ? '80px' : undefined,
         borderRadius,
-        backgroundColor: theme.surfaceAlt,
+        backgroundColor: theme.css.surfaceAlt,
         ...shimmerStyle,
       }}
     />
@@ -210,7 +210,7 @@ export function TkxImage({
       {inner}
       <figcaption
         className={tkx('text-sm text-center')}
-        style={{ color: theme.textMuted }}
+        style={{ color: theme.css.textMuted }}
       >
         {safeCaption}
       </figcaption>

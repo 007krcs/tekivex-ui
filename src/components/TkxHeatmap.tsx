@@ -53,7 +53,7 @@ export interface TkxHeatmapProps extends Omit<HTMLAttributes<HTMLDivElement>, 'c
   legendPosition?: 'right' | 'bottom';
   /** Format the displayed / tooltip value. Default `String(v)`. */
   formatValue?: (v: number) => string;
-  /** Fill used when an (x, y) pair has no datapoint. Default theme.surfaceAlt. */
+  /** Fill used when an (x, y) pair has no datapoint. Default theme.css.surfaceAlt. */
   emptyCellColor?: string;
   ariaLabel?: string;
   onCellClick?: (cell: TkxHeatmapCell) => void;
@@ -189,7 +189,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
     const theme = useTheme();
     const safeData = Array.isArray(data) ? data : [];
     const fmt = formatValue ?? ((v: number) => String(v));
-    const emptyFill = emptyCellColor ?? theme.surfaceAlt;
+    const emptyFill = emptyCellColor ?? theme.css.surfaceAlt;
 
     // ── Empty state ───────────────────────────────────────────────────────
     if (safeData.length === 0 && (!xLabels || xLabels.length === 0) && (!yLabels || yLabels.length === 0)) {
@@ -200,7 +200,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
           role="img"
           aria-label={label}
           className={cx(tkx('inline-flex items-center justify-center'), className)}
-          style={{ color: theme.textMuted, fontSize: 12, padding: 16, ...style }}
+          style={{ color: theme.css.textMuted, fontSize: 12, padding: 16, ...style }}
           data-tkx-heatmap-empty=""
           {...rest}
         >
@@ -344,7 +344,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
         y={gridY + row * (cellSize + gap) + cellSize / 2}
         textAnchor="end"
         dominantBaseline="central"
-        fill={theme.textMuted}
+        fill={theme.css.textMuted}
         style={{ fontSize: 11, fontFamily: 'inherit' }}
         data-tkx-heatmap-ylabel=""
       >
@@ -364,7 +364,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
             y={xLabelY}
             textAnchor="end"
             dominantBaseline="hanging"
-            fill={theme.textMuted}
+            fill={theme.css.textMuted}
             transform={`rotate(-45 ${anchorX} ${xLabelY})`}
             style={{ fontSize: 11, fontFamily: 'inherit' }}
             data-tkx-heatmap-xlabel=""
@@ -380,7 +380,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
           y={xLabelY}
           textAnchor="middle"
           dominantBaseline="hanging"
-          fill={theme.textMuted}
+          fill={theme.css.textMuted}
           style={{ fontSize: 11, fontFamily: 'inherit' }}
           data-tkx-heatmap-xlabel=""
         >
@@ -423,7 +423,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
               x={lx + LEGEND_THICK + 4}
               y={ly}
               dominantBaseline="hanging"
-              fill={theme.textMuted}
+              fill={theme.css.textMuted}
               style={{ fontSize: 10, fontFamily: 'inherit' }}
               data-tkx-heatmap-legend-max=""
             >
@@ -433,7 +433,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
               x={lx + LEGEND_THICK + 4}
               y={ly + lh}
               dominantBaseline="auto"
-              fill={theme.textMuted}
+              fill={theme.css.textMuted}
               style={{ fontSize: 10, fontFamily: 'inherit' }}
               data-tkx-heatmap-legend-min=""
             >
@@ -462,7 +462,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
               x={lx}
               y={ly + LEGEND_THICK + 11}
               textAnchor="start"
-              fill={theme.textMuted}
+              fill={theme.css.textMuted}
               style={{ fontSize: 10, fontFamily: 'inherit' }}
               data-tkx-heatmap-legend-min=""
             >
@@ -472,7 +472,7 @@ export const TkxHeatmap = forwardRef<HTMLDivElement, TkxHeatmapProps>(
               x={lx + lw}
               y={ly + LEGEND_THICK + 11}
               textAnchor="end"
-              fill={theme.textMuted}
+              fill={theme.css.textMuted}
               style={{ fontSize: 10, fontFamily: 'inherit' }}
               data-tkx-heatmap-legend-max=""
             >

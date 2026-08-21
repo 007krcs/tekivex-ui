@@ -101,7 +101,7 @@ export const TkxSparkline = forwardRef<HTMLSpanElement, TkxSparklineProps>(
     ref,
   ) => {
     const theme = useTheme();
-    const stroke = color ?? theme.primary;
+    const stroke = color ?? theme.css.primary;
 
     const isEmpty = !Array.isArray(data) || data.length === 0;
     const label =
@@ -232,7 +232,7 @@ export const TkxSparkline = forwardRef<HTMLSpanElement, TkxSparklineProps>(
         {showValue && (
           <span
             className={tkx('text-xs')}
-            style={{ color: theme.textMuted, fontVariantNumeric: 'tabular-nums' }}
+            style={{ color: theme.css.textMuted, fontVariantNumeric: 'tabular-nums' }}
             data-tkx-sparkline-value=""
           >
             {String(lastValue)}

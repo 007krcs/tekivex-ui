@@ -691,8 +691,8 @@ export const TkxQRCode = forwardRef<HTMLDivElement, TkxQRCodeProps>(function Tkx
   const reducedMotion = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const safeValue = sanitizeString(value);
-  const fg = color ?? theme.text;
-  const bg = bgColor ?? theme.surface;
+  const fg = color ?? theme.css.text;
+  const bg = bgColor ?? theme.css.surface;
   const ecLevel: ECLevel = errorLevel ?? level ?? 'M';
 
   const encoded = useMemo(() => {
@@ -764,7 +764,7 @@ export const TkxQRCode = forwardRef<HTMLDivElement, TkxQRCodeProps>(function Tkx
       style={{
         padding: bordered ? 12 : 0,
         backgroundColor: bordered ? bg : 'transparent',
-        border: bordered ? `1px solid ${theme.border}` : 'none',
+        border: bordered ? `1px solid ${theme.css.border}` : 'none',
         lineHeight: 0,
         animation: reducedMotion ? 'none' : 'tkxFadeIn 0.2s ease',
         ...style,

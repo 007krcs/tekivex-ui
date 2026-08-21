@@ -218,20 +218,20 @@ export const TkxCurrencyInput = forwardRef<HTMLInputElement, TkxCurrencyInputPro
     const groupStyle: CSSProperties = {
       display: 'flex',
       alignItems: 'stretch',
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 8,
-      background: theme.surface,
+      background: theme.css.surface,
       overflow: 'hidden',
     };
     const symbolStyle: CSSProperties = {
       display: 'inline-flex',
       alignItems: 'center',
       padding: '0 12px',
-      borderRight: `1px solid ${theme.border}`,
-      color: theme.textMuted,
+      borderRight: `1px solid ${theme.css.border}`,
+      color: theme.css.textMuted,
       fontSize: 14,
       fontVariantNumeric: 'tabular-nums',
-      background: theme.bg,
+      background: theme.css.bg,
     };
     const inputStyle: CSSProperties = {
       flex: 1,
@@ -239,7 +239,7 @@ export const TkxCurrencyInput = forwardRef<HTMLInputElement, TkxCurrencyInputPro
       outline: 'none',
       padding: '0 12px',
       fontSize: 14,
-      color: theme.text,
+      color: theme.css.text,
       background: 'transparent',
       minHeight: 40,
       minWidth: 0,
@@ -250,9 +250,9 @@ export const TkxCurrencyInput = forwardRef<HTMLInputElement, TkxCurrencyInputPro
     return (
       <div className={className} style={rootStyle}>
         {label && (
-          <label htmlFor={inputId} style={{ fontSize: 13, fontWeight: 600, color: theme.text }}>
+          <label htmlFor={inputId} style={{ fontSize: 13, fontWeight: 600, color: theme.css.text }}>
             {label}
-            {required && <span style={{ color: theme.danger, marginLeft: 4 }} aria-hidden="true">*</span>}
+            {required && <span style={{ color: theme.css.danger, marginLeft: 4 }} aria-hidden="true">*</span>}
           </label>
         )}
         <div style={groupStyle}>

@@ -152,8 +152,8 @@ export const TkxLayout = forwardRef<HTMLElement, TkxLayoutProps>(
         className={cx('tkx-layout', base, className)}
         style={{
           minHeight: '100%',
-          color: theme.text,
-          backgroundColor: theme.bg,
+          color: theme.css.text,
+          backgroundColor: theme.css.bg,
           ...direction,
           ...style,
         }}
@@ -189,8 +189,8 @@ export const TkxHeader = forwardRef<HTMLElement, TkxHeaderProps>(
         style={{
           height: h,
           minHeight: h,
-          backgroundColor: theme.surface,
-          borderBottom: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          borderBottom: `1px solid ${theme.css.border}`,
           ...fixedStyles,
           ...style,
         }}
@@ -328,8 +328,8 @@ export const TkxSider = forwardRef<HTMLElement, TkxSiderProps>(
           width: currentWidth,
           minWidth: currentWidth,
           maxWidth: currentWidth,
-          backgroundColor: theme.surface,
-          borderRight: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          borderRight: `1px solid ${theme.css.border}`,
           transition: transitionCSS,
           ...style,
         }}
@@ -345,7 +345,7 @@ export const TkxSider = forwardRef<HTMLElement, TkxSiderProps>(
         {showTrigger && (
           <div
             className={tkx('shrink-0')}
-            style={{ borderTop: `1px solid ${theme.border}` }}
+            style={{ borderTop: `1px solid ${theme.css.border}` }}
           >
             {trigger !== undefined ? (
               trigger
@@ -353,7 +353,7 @@ export const TkxSider = forwardRef<HTMLElement, TkxSiderProps>(
               <DefaultTrigger
                 collapsed={isCollapsed}
                 onClick={() => handleCollapse(!isCollapsed)}
-                color={theme.textMuted}
+                color={theme.css.textMuted}
               />
             )}
           </div>
@@ -378,7 +378,7 @@ export const TkxContent = forwardRef<HTMLDivElement, TkxContentProps>(
         ref={ref}
         className={cx('tkx-layout-content', tkx('flex-1 min-w-0 min-h-0'), className)}
         style={{
-          backgroundColor: theme.bg,
+          backgroundColor: theme.css.bg,
           padding: '24px',
           ...style,
         }}
@@ -405,9 +405,9 @@ export const TkxFooter = forwardRef<HTMLElement, TkxFooterProps>(
         ref={ref}
         className={cx('tkx-layout-footer', tkx('flex items-center px-6 py-4 shrink-0'), className)}
         style={{
-          backgroundColor: theme.surface,
-          borderTop: `1px solid ${theme.border}`,
-          color: theme.textMuted,
+          backgroundColor: theme.css.surface,
+          borderTop: `1px solid ${theme.css.border}`,
+          color: theme.css.textMuted,
           ...style,
         }}
         {...rest}

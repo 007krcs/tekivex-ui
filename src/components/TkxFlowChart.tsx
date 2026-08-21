@@ -818,7 +818,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                       borderRadius: 4,
                       border: `1px solid ${accent}`,
                       background: 'rgba(8,10,25,0.95)',
-                      color: theme.text,
+                      color: theme.css.text,
                       textAlign: 'center',
                       fontSize: 'inherit',
                       fontWeight: 'inherit',
@@ -878,7 +878,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                     cursor: 'crosshair',
                     padding: 0,
                     touchAction: 'none',
-                    color: theme.bg,
+                    color: theme.css.bg,
                     fontSize: 12,
                     fontWeight: 900,
                     fontFamily: 'inherit',
@@ -948,7 +948,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 display: 'inline-flex',
                 alignItems: 'center',
                 padding: '0 10px',
-                color: theme.textMuted,
+                color: theme.css.textMuted,
                 fontSize: 11,
                 fontFamily: 'ui-monospace, monospace',
                 fontVariantNumeric: 'tabular-nums',
@@ -1036,7 +1036,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
         {showInspector && selected && (() => {
           const node = data.nodes.find((n) => n.id === selected);
           if (!node) return null;
-          const accent = node.color ?? theme.primary;
+          const accent = node.color ?? theme.css.primary;
           const w = node.width ?? 160;
           const h = node.height ?? 60;
           const patch = (next: Partial<FlowNode>) => {
@@ -1066,7 +1066,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 zIndex: 5,
               }}
             >
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: theme.textMuted, marginBottom: 8 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: theme.css.textMuted, marginBottom: 8 }}>
                 Properties
               </div>
               <InspectorField label="Label">

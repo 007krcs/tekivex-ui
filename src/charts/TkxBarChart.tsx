@@ -59,7 +59,7 @@ export function TkxBarChart({
   const theme = useTheme();
   const colors = getDefaultColors(theme);
   const tt = tooltipStyle(theme);
-  const tickStyle = { fill: theme.textMuted, fontSize: 12 };
+  const tickStyle = { fill: theme.css.textMuted, fontSize: 12 };
   const isVertical = layout === 'vertical';
 
   return (
@@ -69,7 +69,7 @@ export function TkxBarChart({
           {showGrid && (
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke={theme.border}
+              stroke={theme.css.border}
               vertical={isVertical}
               horizontal={!isVertical}
             />
@@ -77,11 +77,11 @@ export function TkxBarChart({
           {isVertical ? (
             <>
               <YAxis dataKey={xKey} type="category" tick={tickStyle} axisLine={false} tickLine={false} tickFormatter={xTickFormatter} width={100} />
-              <XAxis type="number" tick={tickStyle} axisLine={{ stroke: theme.border }} tickLine={false} tickFormatter={yTickFormatter} />
+              <XAxis type="number" tick={tickStyle} axisLine={{ stroke: theme.css.border }} tickLine={false} tickFormatter={yTickFormatter} />
             </>
           ) : (
             <>
-              <XAxis dataKey={xKey} tick={tickStyle} axisLine={{ stroke: theme.border }} tickLine={false} tickFormatter={xTickFormatter} />
+              <XAxis dataKey={xKey} tick={tickStyle} axisLine={{ stroke: theme.css.border }} tickLine={false} tickFormatter={xTickFormatter} />
               <YAxis tick={tickStyle} axisLine={false} tickLine={false} tickFormatter={yTickFormatter} />
             </>
           )}
@@ -90,11 +90,11 @@ export function TkxBarChart({
               contentStyle={tt.contentStyle}
               labelStyle={tt.labelStyle}
               itemStyle={tt.itemStyle}
-              cursor={{ fill: `${theme.surfaceAlt}` }}
+              cursor={{ fill: `${theme.css.surfaceAlt}` }}
             />
           )}
           {showLegend && (
-            <Legend wrapperStyle={{ fontSize: 13, color: theme.textMuted, paddingTop: 8 }} />
+            <Legend wrapperStyle={{ fontSize: 13, color: theme.css.textMuted, paddingTop: 8 }} />
           )}
           {series.map((s, i) => {
             const color = s.color ?? colors[i % colors.length];

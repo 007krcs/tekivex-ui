@@ -94,15 +94,15 @@ export const TkxRadio = forwardRef<HTMLInputElement, TkxRadioProps>(
     const sz = SIZE_MAP[size];
 
     const schemeColor: Record<string, string> = {
-      primary: theme.primary,
-      success: theme.success,
-      danger: theme.danger,
+      primary: theme.css.primary,
+      success: theme.css.success,
+      danger: theme.css.danger,
     };
-    const accentColor = schemeColor[colorScheme] ?? theme.primary;
+    const accentColor = schemeColor[colorScheme] ?? theme.css.primary;
     const dotColor = getAccessibleForeground(accentColor);
 
-    const outerBorder = isChecked ? accentColor : theme.border;
-    const outerBg = theme.surface;
+    const outerBorder = isChecked ? accentColor : theme.css.border;
+    const outerBg = theme.css.surface;
 
     const dotAnimStyle: React.CSSProperties =
       !reducedMotion && isChecked
@@ -177,7 +177,7 @@ export const TkxRadio = forwardRef<HTMLInputElement, TkxRadioProps>(
           </span>
 
           {label && (
-            <span style={{ fontSize: sz.fontSize, color: theme.text, lineHeight: 1.4 }}>
+            <span style={{ fontSize: sz.fontSize, color: theme.css.text, lineHeight: 1.4 }}>
               {typeof label === 'string' ? sanitizeString(label) : label}
             </span>
           )}
@@ -186,7 +186,7 @@ export const TkxRadio = forwardRef<HTMLInputElement, TkxRadioProps>(
         {hint && (
           <span
             className={tkx('text-xs')}
-            style={{ color: theme.textMuted, marginLeft: sz.outer + 8 }}
+            style={{ color: theme.css.textMuted, marginLeft: sz.outer + 8 }}
           >
             {sanitizeString(hint)}
           </span>
@@ -253,7 +253,7 @@ export function TkxRadioGroup({
         {label && (
           <div
             className={tkx('text-sm font-medium font-sans mb-2')}
-            style={{ color: theme.text }}
+            style={{ color: theme.css.text }}
           >
             {sanitizeString(label)}
           </div>
@@ -272,7 +272,7 @@ export function TkxRadioGroup({
             id={errorId}
             role="alert"
             className={tkx('text-xs flex items-center gap-1 mt-1')}
-            style={{ color: theme.danger }}
+            style={{ color: theme.css.danger }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />

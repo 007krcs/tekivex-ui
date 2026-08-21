@@ -948,7 +948,29 @@ export function tkx(...inputs: TkxInput[]): string {
   const hash = fnv1aHash(fingerprint);
   const cls = `tkx-${hash}`;
 
-  if (baseCSS) parts.push(`.${cls}{${baseCSS}}`);
+  if (baseCSS) {
+    // `display` is emitted at ZERO specificity via :where(), while everything
+    // else keeps the normal `.cls` weight.
+    //
+    // Why: a utility class and an app's own class both score (0,1,0), so the
+    // winner is decided by stylesheet order — and tkx injects its rules at
+    // runtime, typically after the app's CSS. That silently defeated
+    // app-side responsive show/hide (e.g. `@media(min-width:768px){
+    // .burger{display:none} }` lost to a component's base `display:flex`,
+    // leaving a burger menu visible on desktop). Wrapping the declaration in
+    // :where() drops it to (0,0,0) so any app selector wins, with no
+    // !important needed. Layout the app asks for beats layout we assume.
+    const displayDecl = groups.base['display'];
+    if (displayDecl !== undefined) {
+      const rest = { ...groups.base };
+      delete rest['display'];
+      const restCSS = declarationsToCSS(rest);
+      parts.push(`:where(.${cls}){display:${displayDecl}}`);
+      if (restCSS) parts.push(`.${cls}{${restCSS}}`);
+    } else {
+      parts.push(`.${cls}{${baseCSS}}`);
+    }
+  }
 
   for (const [variant, decls] of Object.entries(groups.variants)) {
     const variantCSS = declarationsToCSS(decls);

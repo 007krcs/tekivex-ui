@@ -74,7 +74,7 @@ export function TkxPieChart({
             />
           )}
           {showLegend && (
-            <Legend wrapperStyle={{ fontSize: 13, color: theme.textMuted }} />
+            <Legend wrapperStyle={{ fontSize: 13, color: theme.css.textMuted }} />
           )}
           <Pie
             data={data}
@@ -86,7 +86,7 @@ export function TkxPieChart({
             label={showLabels ? ({ name, percent }) => `${name} (${((percent ?? 0) * 100).toFixed(0)}%)` : undefined}
             labelLine={showLabels}
             strokeWidth={2}
-            stroke={theme.bg}
+            stroke={theme.css.bg}
           >
             {data.map((entry, i) => (
               <Cell

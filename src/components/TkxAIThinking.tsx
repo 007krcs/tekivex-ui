@@ -113,7 +113,7 @@ export function TkxAIThinking({
     return () => clearInterval(id);
   }, [steps, active]);
 
-  const color = theme.primary;
+  const color = theme.css.primary;
   const fs = FONT[size];
 
   const indicator = {
@@ -135,8 +135,8 @@ export function TkxAIThinking({
         {/* Indicator */}
         <div style={{ opacity: active ? 1 : 0.35, transition: 'opacity 0.3s' }}>
           {active ? indicator : (
-            <div style={{ width: 20, height: 20, borderRadius: '50%', background: theme.success, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: theme.bg, fontSize: 11, fontWeight: 900 }}>✓</span>
+            <div style={{ width: 20, height: 20, borderRadius: '50%', background: theme.css.success, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ color: theme.css.bg, fontSize: 11, fontWeight: 900 }}>✓</span>
             </div>
           )}
         </div>
@@ -145,7 +145,7 @@ export function TkxAIThinking({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <span style={{
             fontSize: fs, fontWeight: 600,
-            color: active ? theme.text : theme.textMuted,
+            color: active ? theme.css.text : theme.css.textMuted,
             transition: 'color 0.3s',
           }}>
             {active ? (steps ? steps[stepIdx] : label) : 'Done'}

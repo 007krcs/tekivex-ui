@@ -228,7 +228,7 @@ function DefaultNodeCard({
   isActive: boolean;
   theme: ReturnType<typeof useTheme>;
 }) {
-  const accent = node.accent ?? theme.primary;
+  const accent = node.accent ?? theme.css.primary;
   const avatar = safeAvatarHref(node.avatar);
   const label = sanitizeString(node.label);
   const subLabel = node.subLabel ? sanitizeString(node.subLabel) : '';
@@ -240,8 +240,8 @@ function DefaultNodeCard({
         width: w,
         height: h,
         boxSizing: 'border-box',
-        background: theme.surface,
-        border: `1.5px solid ${isActive ? accent : theme.border}`,
+        background: theme.css.surface,
+        border: `1.5px solid ${isActive ? accent : theme.css.border}`,
         borderRadius: 12,
         padding: '10px 12px',
         display: 'flex',
@@ -249,7 +249,7 @@ function DefaultNodeCard({
         gap: 10,
         boxShadow: isActive
           ? `0 8px 24px -8px ${accent}66`
-          : `0 2px 8px -4px ${theme.border}88`,
+          : `0 2px 8px -4px ${theme.css.border}88`,
         transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
         overflow: 'hidden',
       }}
@@ -293,7 +293,7 @@ function DefaultNodeCard({
           style={{
             fontSize: 13.5,
             fontWeight: 700,
-            color: theme.text,
+            color: theme.css.text,
             lineHeight: 1.25,
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -306,7 +306,7 @@ function DefaultNodeCard({
           <div
             style={{
               fontSize: 11.5,
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               lineHeight: 1.3,
               whiteSpace: 'nowrap',
               overflow: 'hidden',
@@ -367,9 +367,9 @@ function CollapseToggle({
     width: 20,
     height: 20,
     borderRadius: '50%',
-    background: theme.surfaceAlt,
-    border: `1.5px solid ${theme.border}`,
-    color: theme.text,
+    background: theme.css.surfaceAlt,
+    border: `1.5px solid ${theme.css.border}`,
+    color: theme.css.text,
     fontSize: 12,
     fontWeight: 700,
     cursor: 'pointer',
@@ -548,8 +548,8 @@ export function TkxOrgChart({
     height,
     overflow: 'hidden',
     borderRadius: 12,
-    background: theme.bg,
-    border: `1px solid ${theme.border}`,
+    background: theme.css.bg,
+    border: `1px solid ${theme.css.border}`,
     touchAction: 'none',
     cursor: interactive ? 'grab' : 'default',
     boxSizing: 'border-box',
@@ -588,11 +588,11 @@ export function TkxOrgChart({
             zIndex: 3,
             display: 'flex',
             gap: 6,
-            background: theme.surface,
-            border: `1px solid ${theme.border}`,
+            background: theme.css.surface,
+            border: `1px solid ${theme.css.border}`,
             borderRadius: 8,
             padding: 4,
-            boxShadow: `0 4px 12px -6px ${theme.border}88`,
+            boxShadow: `0 4px 12px -6px ${theme.css.border}88`,
           }}
         >
           <ZoomBtn theme={theme} label="Zoom out" onClick={() => setZoom((z) => clampZoom(z - 0.1))}>−</ZoomBtn>
@@ -614,7 +614,7 @@ export function TkxOrgChart({
               key={e.id}
               d={e.d}
               fill="none"
-              stroke={theme.border}
+              stroke={theme.css.border}
               strokeWidth={1.5}
             />
           ))}
@@ -700,7 +700,7 @@ function ZoomBtn({
         borderRadius: 6,
         background: 'transparent',
         border: 'none',
-        color: theme.text,
+        color: theme.css.text,
         fontSize: 14,
         fontWeight: 700,
         cursor: 'pointer',
@@ -709,7 +709,7 @@ function ZoomBtn({
         alignItems: 'center',
         justifyContent: 'center',
       }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = theme.surfaceAlt; }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = theme.css.surfaceAlt; }}
       onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
     >
       {children}

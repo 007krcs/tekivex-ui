@@ -25,7 +25,7 @@ export const TkxProgress = forwardRef<HTMLDivElement, TkxProgressProps>(
   ({ value, variant = 'linear', size = 'md', label, showValue, color, className, style, ...rest }, ref) => {
     const theme = useTheme();
     const reducedMotion = useReducedMotion();
-    const fillColor = color ?? theme.primary;
+    const fillColor = color ?? theme.css.primary;
     const isIndeterminate = value === undefined;
     const clamped = value !== undefined ? Math.min(100, Math.max(0, value)) : 0;
 
@@ -56,7 +56,7 @@ export const TkxProgress = forwardRef<HTMLDivElement, TkxProgressProps>(
           style={style}
         >
           <svg width={px} height={px} viewBox={`0 0 ${px} ${px}`} aria-hidden="true">
-            <circle cx={px / 2} cy={px / 2} r={r} fill="none" stroke={theme.border} strokeWidth={strokeW} />
+            <circle cx={px / 2} cy={px / 2} r={r} fill="none" stroke={theme.css.border} strokeWidth={strokeW} />
             <circle
               cx={px / 2} cy={px / 2} r={r} fill="none"
               stroke={fillColor} strokeWidth={strokeW} strokeLinecap="round"
@@ -69,7 +69,7 @@ export const TkxProgress = forwardRef<HTMLDivElement, TkxProgressProps>(
             />
           </svg>
           {showValue && !isIndeterminate && (
-            <span className={tkx('text-xs')} style={{ color: theme.textMuted }}>{clamped}%</span>
+            <span className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>{clamped}%</span>
           )}
         </div>
       );
@@ -88,14 +88,14 @@ export const TkxProgress = forwardRef<HTMLDivElement, TkxProgressProps>(
         style={style}
       >
         {label && (
-          <div className={tkx('flex justify-between text-sm')} style={{ color: theme.text }}>
+          <div className={tkx('flex justify-between text-sm')} style={{ color: theme.css.text }}>
             <span>{label}</span>
             {showValue && !isIndeterminate && <span>{clamped}%</span>}
           </div>
         )}
         <div
           className={tkx('w-full overflow-hidden')}
-          style={{ height: h, borderRadius: h, backgroundColor: theme.border }}
+          style={{ height: h, borderRadius: h, backgroundColor: theme.css.border }}
         >
           <div
             style={{

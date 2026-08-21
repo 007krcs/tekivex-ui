@@ -48,7 +48,7 @@ function Skeleton({ theme, reducedMotion }: { theme: ReturnType<typeof useTheme>
           width: 40,
           height: 40,
           borderRadius: '50%',
-          backgroundColor: theme.surfaceAlt,
+          backgroundColor: theme.css.surfaceAlt,
           animation: reducedMotion ? 'none' : 'tkxPulse 1.5s ease infinite',
         }}
       />
@@ -58,7 +58,7 @@ function Skeleton({ theme, reducedMotion }: { theme: ReturnType<typeof useTheme>
             width: '60%',
             height: 14,
             borderRadius: 4,
-            backgroundColor: theme.surfaceAlt,
+            backgroundColor: theme.css.surfaceAlt,
             marginBottom: 8,
             animation: reducedMotion ? 'none' : 'tkxPulse 1.5s ease infinite',
           }}
@@ -68,7 +68,7 @@ function Skeleton({ theme, reducedMotion }: { theme: ReturnType<typeof useTheme>
             width: '40%',
             height: 12,
             borderRadius: 4,
-            backgroundColor: theme.surfaceAlt,
+            backgroundColor: theme.css.surfaceAlt,
             animation: reducedMotion ? 'none' : 'tkxPulse 1.5s ease infinite',
           }}
         />
@@ -107,8 +107,8 @@ export function TkxList({
       aria-busy={loading}
       className={tkx('font-sans rounded-lg overflow-hidden', className ?? '')}
       style={{
-        border: bordered ? `1px solid ${theme.border}` : 'none',
-        backgroundColor: theme.surface,
+        border: bordered ? `1px solid ${theme.css.border}` : 'none',
+        backgroundColor: theme.css.surface,
         ...style,
       }}
     >
@@ -118,9 +118,9 @@ export function TkxList({
           className={tkx('font-semibold text-sm')}
           style={{
             padding,
-            color: theme.text,
-            borderBottom: `1px solid ${theme.border}`,
-            backgroundColor: theme.surfaceAlt,
+            color: theme.css.text,
+            borderBottom: `1px solid ${theme.css.border}`,
+            backgroundColor: theme.css.surfaceAlt,
           }}
         >
           {header}
@@ -141,7 +141,7 @@ export function TkxList({
         <div
           role="status"
           className={tkx('text-center py-12 text-sm')}
-          style={{ color: theme.textMuted }}
+          style={{ color: theme.css.textMuted }}
         >
           {safeEmptyText}
         </div>
@@ -174,13 +174,13 @@ export function TkxList({
                   padding: isGrid ? padding : padding,
                   borderBottom:
                     !isGrid && idx < items.length - 1
-                      ? `1px solid ${theme.border}`
+                      ? `1px solid ${theme.css.border}`
                       : 'none',
                   ...(isGrid
                     ? {
-                        border: `1px solid ${theme.border}`,
+                        border: `1px solid ${theme.css.border}`,
                         borderRadius: 8,
-                        backgroundColor: theme.surface,
+                        backgroundColor: theme.css.surface,
                       }
                     : {}),
                   animation: reducedMotion ? 'none' : `tkxFadeIn 0.2s ease ${idx * 0.03}s both`,
@@ -197,14 +197,14 @@ export function TkxList({
                 <div className={tkx('flex-1 min-w-0')}>
                   <div
                     className={tkx('text-sm font-medium')}
-                    style={{ color: theme.text }}
+                    style={{ color: theme.css.text }}
                   >
                     {safeTitle}
                   </div>
                   {safeDesc && (
                     <div
                       className={tkx('text-xs mt-1 leading-relaxed')}
-                      style={{ color: theme.textMuted }}
+                      style={{ color: theme.css.textMuted }}
                     >
                       {safeDesc}
                     </div>
@@ -213,7 +213,7 @@ export function TkxList({
 
                 {/* Extra */}
                 {item.extra && (
-                  <div className={tkx('shrink-0 ml-auto')} style={{ color: theme.textMuted }}>
+                  <div className={tkx('shrink-0 ml-auto')} style={{ color: theme.css.textMuted }}>
                     {item.extra}
                   </div>
                 )}
@@ -236,9 +236,9 @@ export function TkxList({
           className={tkx('text-sm')}
           style={{
             padding,
-            color: theme.textMuted,
-            borderTop: `1px solid ${theme.border}`,
-            backgroundColor: theme.surfaceAlt,
+            color: theme.css.textMuted,
+            borderTop: `1px solid ${theme.css.border}`,
+            backgroundColor: theme.css.surfaceAlt,
           }}
         >
           {footer}

@@ -117,8 +117,8 @@ export function TkxSegmented({
       aria-label="Segmented control"
       className={tkx('relative inline-flex items-center rounded-lg p-1', className ?? '')}
       style={{
-        backgroundColor: theme.surfaceAlt,
-        border: `1px solid ${theme.border}`,
+        backgroundColor: theme.css.surfaceAlt,
+        border: `1px solid ${theme.css.border}`,
         width: block ? '100%' : undefined,
         ...style,
       }}
@@ -130,8 +130,8 @@ export function TkxSegmented({
         className={tkx('absolute top-1 rounded-md')}
         style={{
           ...indicatorStyle,
-          backgroundColor: theme.surface,
-          boxShadow: `0 1px 3px ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          boxShadow: `0 1px 3px ${theme.css.border}`,
           zIndex: 0,
         }}
       />
@@ -158,7 +158,7 @@ export function TkxSegmented({
               fontSize: dims.fontSize,
               padding: `0 ${dims.px}px`,
               flex: block ? 1 : undefined,
-              color: isActive ? theme.text : theme.textMuted,
+              color: isActive ? theme.css.text : theme.css.textMuted,
               backgroundColor: 'transparent',
               opacity: opt.disabled ? 0.4 : 1,
               fontWeight: isActive ? 600 : 400,

@@ -157,18 +157,18 @@ export function TkxAutoForm({
         display: 'flex',
         flexDirection: 'column',
         gap: 16,
-        color: theme.text,
+        color: theme.css.text,
         fontFamily: 'inherit',
         ...style,
       }}
     >
       {schema?.title && (
-        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: theme.text }}>
+        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: theme.css.text }}>
           {schema.title}
         </h2>
       )}
       {schema?.description && (
-        <p style={{ margin: 0, color: theme.textMuted, fontSize: 14 }}>{schema.description}</p>
+        <p style={{ margin: 0, color: theme.css.textMuted, fontSize: 14 }}>{schema.description}</p>
       )}
 
       {/* Accessible error summary */}
@@ -178,14 +178,14 @@ export function TkxAutoForm({
           role="alert"
           tabIndex={-1}
           style={{
-            border: `1px solid ${theme.danger}`,
-            background: theme.surfaceAlt,
+            border: `1px solid ${theme.css.danger}`,
+            background: theme.css.surfaceAlt,
             borderRadius: 8,
             padding: '12px 14px',
             outline: 'none',
           }}
         >
-          <strong style={{ color: theme.danger, fontSize: 14 }}>
+          <strong style={{ color: theme.css.danger, fontSize: 14 }}>
             {invalidFields.length} field{invalidFields.length === 1 ? '' : 's'} need
             {invalidFields.length === 1 ? 's' : ''} attention
           </strong>
@@ -194,7 +194,7 @@ export function TkxAutoForm({
               <li key={f.id}>
                 <a
                   href={`#tkx-af-${f.name}`}
-                  style={{ color: theme.danger }}
+                  style={{ color: theme.css.danger }}
                   onClick={(ev) => {
                     ev.preventDefault();
                     formRef.current
@@ -229,8 +229,8 @@ export function TkxAutoForm({
           minHeight: 44,
           borderRadius: 8,
           border: 'none',
-          background: theme.primary,
-          color: theme.bg,
+          background: theme.css.primary,
+          color: theme.css.bg,
           fontWeight: 700,
           fontSize: 14,
           cursor: 'pointer',
@@ -269,9 +269,9 @@ function AutoFormField({ field, value, error, onChange, onBlur }: AutoFormFieldP
     padding: '10px 12px',
     minHeight: 44,
     borderRadius: 8,
-    border: `1px solid ${error ? theme.danger : theme.border}`,
-    background: theme.surface,
-    color: theme.text,
+    border: `1px solid ${error ? theme.css.danger : theme.css.border}`,
+    background: theme.css.surface,
+    color: theme.css.text,
     fontSize: 14,
     fontFamily: 'inherit',
     boxSizing: 'border-box',
@@ -281,11 +281,11 @@ function AutoFormField({ field, value, error, onChange, onBlur }: AutoFormFieldP
     <label
       htmlFor={field.type === 'radio' ? undefined : id}
       id={field.type === 'radio' ? id : undefined}
-      style={{ display: 'block', marginBottom: 4, fontWeight: 600, color: theme.text, fontSize: 14 }}
+      style={{ display: 'block', marginBottom: 4, fontWeight: 600, color: theme.css.text, fontSize: 14 }}
     >
       {field.label}
       {field.required && (
-        <span aria-hidden="true" style={{ color: theme.danger, marginLeft: 4 }}>
+        <span aria-hidden="true" style={{ color: theme.css.danger, marginLeft: 4 }}>
           *
         </span>
       )}
@@ -341,7 +341,7 @@ function AutoFormField({ field, value, error, onChange, onBlur }: AutoFormFieldP
           {(field.options ?? []).map((o) => (
             <label
               key={o.value}
-              style={{ display: 'flex', alignItems: 'center', gap: 8, color: theme.text }}
+              style={{ display: 'flex', alignItems: 'center', gap: 8, color: theme.css.text }}
             >
               <input
                 type="radio"
@@ -359,7 +359,7 @@ function AutoFormField({ field, value, error, onChange, onBlur }: AutoFormFieldP
       break;
     case 'checkbox':
       control = (
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: theme.text }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: theme.css.text }}>
           <input
             id={id}
             type="checkbox"
@@ -398,12 +398,12 @@ function AutoFormField({ field, value, error, onChange, onBlur }: AutoFormFieldP
       {field.type !== 'checkbox' && labelEl}
       {control}
       {field.helpText && (
-        <div id={helpId} style={{ fontSize: 12, color: theme.textMuted, marginTop: 4 }}>
+        <div id={helpId} style={{ fontSize: 12, color: theme.css.textMuted, marginTop: 4 }}>
           {field.helpText}
         </div>
       )}
       {error && (
-        <div id={errId} role="alert" style={{ fontSize: 12, color: theme.danger, marginTop: 4 }}>
+        <div id={errId} role="alert" style={{ fontSize: 12, color: theme.css.danger, marginTop: 4 }}>
           {error}
         </div>
       )}

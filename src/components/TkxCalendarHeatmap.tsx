@@ -183,10 +183,10 @@ export function TkxCalendarHeatmap({
     (): string[] => {
       if (colors) return colors;
       // Default: empty → 4 shades of theme primary
-      const primary = theme.primary;
-      return [theme.surface, `${primary}33`, `${primary}66`, `${primary}AA`, primary];
+      const primary = theme.css.primary;
+      return [theme.css.surface, `${primary}33`, `${primary}66`, `${primary}AA`, primary];
     },
-    [colors, theme.primary, theme.surface],
+    [colors, theme.css.primary, theme.css.surface],
   );
 
   // ── Default tooltip formatter ────────────────────────────────────────────
@@ -241,7 +241,7 @@ export function TkxCalendarHeatmap({
   const wrapStyle: CSSProperties = {
     display: 'inline-block',
     position: 'relative',
-    color: theme.text,
+    color: theme.css.text,
     ...style,
   };
 
@@ -256,7 +256,7 @@ export function TkxCalendarHeatmap({
             gridTemplateColumns: `${showWeekdayLabels ? '24px ' : ''}repeat(${weeks.length}, ${cellSize + gap}px)`,
             marginBottom: 4,
             fontSize: 10,
-            color: theme.textMuted,
+            color: theme.css.textMuted,
             position: 'relative',
             height: 14,
           }}
@@ -296,7 +296,7 @@ export function TkxCalendarHeatmap({
               rowGap: gap,
               marginRight: 4,
               fontSize: 9,
-              color: theme.textMuted,
+              color: theme.css.textMuted,
             }}
           >
             {WEEKDAYS.map((w, i) => (
@@ -386,7 +386,7 @@ export function TkxCalendarHeatmap({
                       background: fill,
                       borderRadius: 2,
                       cursor: onCellClick ? 'pointer' : 'default',
-                      border: `1px solid ${theme.border}33`,
+                      border: `1px solid ${theme.css.border}33`,
                       outline: 'none',
                     }}
                   />
@@ -407,7 +407,7 @@ export function TkxCalendarHeatmap({
           justifyContent: 'flex-end',
           gap: 6,
           fontSize: 10,
-          color: theme.textMuted,
+          color: theme.css.textMuted,
         }}
       >
         <span>Less</span>
@@ -419,7 +419,7 @@ export function TkxCalendarHeatmap({
               height: cellSize,
               background: c,
               borderRadius: 2,
-              border: `1px solid ${theme.border}33`,
+              border: `1px solid ${theme.css.border}33`,
             }}
           />
         ))}
@@ -436,11 +436,11 @@ export function TkxCalendarHeatmap({
             top: hovered.y - 8,
             transform: 'translate(-50%, -100%)',
             padding: '4px 10px',
-            background: theme.surface,
-            border: `1px solid ${theme.border}`,
+            background: theme.css.surface,
+            border: `1px solid ${theme.css.border}`,
             borderRadius: 6,
             fontSize: 11,
-            color: theme.text,
+            color: theme.css.text,
             pointerEvents: 'none',
             whiteSpace: 'nowrap',
             zIndex: 10,

@@ -51,20 +51,20 @@ export function TkxScatterChart({
   const theme = useTheme();
   const colors = getDefaultColors(theme);
   const tt = tooltipStyle(theme);
-  const tickStyle = { fill: theme.textMuted, fontSize: 12 };
+  const tickStyle = { fill: theme.css.textMuted, fontSize: 12 };
 
   return (
     <div role="img" aria-label={ariaLabel} style={{ width: '100%', height }}>
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={margin}>
           {showGrid && (
-            <CartesianGrid strokeDasharray="3 3" stroke={theme.border} />
+            <CartesianGrid strokeDasharray="3 3" stroke={theme.css.border} />
           )}
           <XAxis
             type="number"
             dataKey="x"
             tick={tickStyle}
-            axisLine={{ stroke: theme.border }}
+            axisLine={{ stroke: theme.css.border }}
             tickLine={false}
             tickFormatter={xTickFormatter}
           />
@@ -86,7 +86,7 @@ export function TkxScatterChart({
             />
           )}
           {showLegend && (
-            <Legend wrapperStyle={{ fontSize: 13, color: theme.textMuted, paddingTop: 8 }} />
+            <Legend wrapperStyle={{ fontSize: 13, color: theme.css.textMuted, paddingTop: 8 }} />
           )}
           {series.map((s, i) => (
             <Scatter

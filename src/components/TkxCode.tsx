@@ -8,7 +8,7 @@ import {
   useState,
   type CSSProperties,
 } from 'react';
-import { useTheme, type ThemeTokens } from '../themes';
+import { useTheme, type ResolvedTheme } from '../themes';
 import { tkx, cx } from '../engine/tkx';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ export interface TkxCodeProps {
   language?: TkxCodeLanguage;
   /** Render a line-number gutter (aria-hidden). Default false. */
   showLineNumbers?: boolean;
-  /** 1-based line numbers to emphasise with a theme.primary-tinted row. */
+  /** 1-based line numbers to emphasise with a theme.css.primary-tinted row. */
   highlightLines?: number[];
   /** Show a copy-to-clipboard button. Default true. */
   copyable?: boolean;
@@ -363,20 +363,20 @@ function tokenize(code: string, lang: TkxCodeLanguage): Token[][] {
 
 // ── Token → theme colour mapping (theme tokens only, no hardcoded hex) ──────
 
-function tokenStyle(type: TokenType, theme: ThemeTokens): CSSProperties | undefined {
+function tokenStyle(type: TokenType, theme: ResolvedTheme): CSSProperties | undefined {
   switch (type) {
-    case 'keyword': return { color: theme.primary };
-    case 'string': return { color: theme.success };
-    case 'comment': return { color: theme.textMuted, fontStyle: 'italic' };
-    case 'number': return { color: theme.warning };
-    case 'boolean': return { color: theme.secondary };
-    case 'function': return { color: theme.info };
-    case 'tag': return { color: theme.danger };
-    case 'attr': return { color: theme.secondary };
-    case 'property': return { color: theme.info };
-    case 'selector': return { color: theme.danger };
-    case 'variable': return { color: theme.secondary };
-    case 'flag': return { color: theme.info };
+    case 'keyword': return { color: theme.css.primary };
+    case 'string': return { color: theme.css.success };
+    case 'comment': return { color: theme.css.textMuted, fontStyle: 'italic' };
+    case 'number': return { color: theme.css.warning };
+    case 'boolean': return { color: theme.css.secondary };
+    case 'function': return { color: theme.css.info };
+    case 'tag': return { color: theme.css.danger };
+    case 'attr': return { color: theme.css.secondary };
+    case 'property': return { color: theme.css.info };
+    case 'selector': return { color: theme.css.danger };
+    case 'variable': return { color: theme.css.secondary };
+    case 'flag': return { color: theme.css.info };
     default: return undefined;
   }
 }
@@ -452,9 +452,9 @@ export const TkxCode = forwardRef<HTMLDivElement, TkxCodeProps>(
         onClick={handleCopy}
         className={tkx('text-xs font-sans cursor-pointer rounded-md shrink-0')}
         style={{
-          color: copied ? theme.success : theme.textMuted,
-          backgroundColor: theme.surfaceAlt,
-          border: `1px solid ${theme.border}`,
+          color: copied ? theme.css.success : theme.css.textMuted,
+          backgroundColor: theme.css.surfaceAlt,
+          border: `1px solid ${theme.css.border}`,
           padding: '0.25rem 0.5rem',
           lineHeight: 1.2,
         }}
@@ -474,8 +474,8 @@ export const TkxCode = forwardRef<HTMLDivElement, TkxCodeProps>(
         ref={ref}
         className={cx(tkx('w-full rounded-lg overflow-hidden relative'), className)}
         style={{
-          backgroundColor: theme.surface,
-          border: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          border: `1px solid ${theme.css.border}`,
           ...style,
         }}
       >
@@ -484,11 +484,11 @@ export const TkxCode = forwardRef<HTMLDivElement, TkxCodeProps>(
             className={tkx('flex items-center justify-between gap-2')}
             style={{
               padding: '0.375rem 0.75rem',
-              borderBottom: `1px solid ${theme.border}`,
-              backgroundColor: theme.surfaceAlt,
+              borderBottom: `1px solid ${theme.css.border}`,
+              backgroundColor: theme.css.surfaceAlt,
             }}
           >
-            <span className={tkx('text-xs font-mono')} style={{ color: theme.textMuted }}>
+            <span className={tkx('text-xs font-mono')} style={{ color: theme.css.textMuted }}>
               {filename}
             </span>
             {copyButton}
@@ -507,7 +507,7 @@ export const TkxCode = forwardRef<HTMLDivElement, TkxCodeProps>(
             padding: '0.75rem 0',
             overflow: 'auto',
             maxHeight,
-            color: theme.text,
+            color: theme.css.text,
           }}
         >
           <code aria-label={codeLabel} style={{ display: 'block', minWidth: 'max-content' }}>
@@ -522,7 +522,7 @@ export const TkxCode = forwardRef<HTMLDivElement, TkxCodeProps>(
                   className={tkx('flex')}
                   style={{
                     padding: '0 0.75rem',
-                    borderLeft: `2px solid ${isHighlighted ? theme.primary : 'transparent'}`,
+                    borderLeft: `2px solid ${isHighlighted ? theme.css.primary : 'transparent'}`,
                     position: 'relative',
                   }}
                 >
@@ -532,7 +532,7 @@ export const TkxCode = forwardRef<HTMLDivElement, TkxCodeProps>(
                       style={{
                         position: 'absolute',
                         inset: 0,
-                        backgroundColor: theme.primary,
+                        backgroundColor: theme.css.primary,
                         opacity: 0.08,
                         pointerEvents: 'none',
                       }}
@@ -545,7 +545,7 @@ export const TkxCode = forwardRef<HTMLDivElement, TkxCodeProps>(
                       style={{
                         minWidth: gutterWidth,
                         marginRight: '1rem',
-                        color: theme.textMuted,
+                        color: theme.css.textMuted,
                       }}
                     >
                       {lineNo}

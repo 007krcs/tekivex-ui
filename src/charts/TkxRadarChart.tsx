@@ -51,13 +51,13 @@ export function TkxRadarChart({
     <div role="img" aria-label={ariaLabel} style={{ width: '100%', height }}>
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={data} outerRadius={outerRadius}>
-          <PolarGrid stroke={theme.border} />
+          <PolarGrid stroke={theme.css.border} />
           <PolarAngleAxis
             dataKey={angleKey}
-            tick={{ fill: theme.textMuted, fontSize: 12 }}
+            tick={{ fill: theme.css.textMuted, fontSize: 12 }}
           />
           <PolarRadiusAxis
-            tick={{ fill: theme.textMuted, fontSize: 10 }}
+            tick={{ fill: theme.css.textMuted, fontSize: 10 }}
             axisLine={false}
             tickLine={false}
           />
@@ -69,7 +69,7 @@ export function TkxRadarChart({
             />
           )}
           {showLegend && (
-            <Legend wrapperStyle={{ fontSize: 13, color: theme.textMuted }} />
+            <Legend wrapperStyle={{ fontSize: 13, color: theme.css.textMuted }} />
           )}
           {series.map((s, i) => {
             const color = s.color ?? colors[i % colors.length];

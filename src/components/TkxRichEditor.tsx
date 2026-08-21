@@ -482,9 +482,9 @@ export const TkxRichEditor = forwardRef<TkxRichEditorHandle, TkxRichEditorProps>
 
     // ── Styles ────────────────────────────────────────────────────────────
     const wrap: CSSProperties = {
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 12,
-      background: theme.surface,
+      background: theme.css.surface,
       ...style,
     };
     const toolbarStyle: CSSProperties = {
@@ -492,8 +492,8 @@ export const TkxRichEditor = forwardRef<TkxRichEditorHandle, TkxRichEditorProps>
       flexWrap: 'wrap',
       gap: 4,
       padding: 8,
-      borderBottom: `1px solid ${theme.border}`,
-      background: theme.surfaceAlt,
+      borderBottom: `1px solid ${theme.css.border}`,
+      background: theme.css.surfaceAlt,
       borderTopLeftRadius: 12,
       borderTopRightRadius: 12,
     };
@@ -503,7 +503,7 @@ export const TkxRichEditor = forwardRef<TkxRichEditorHandle, TkxRichEditorProps>
       minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight,
       maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight,
       overflowY: maxHeight ? 'auto' : 'visible',
-      color: theme.text,
+      color: theme.css.text,
       fontSize: 15,
       lineHeight: 1.6,
       borderBottomLeftRadius: 12,
@@ -538,9 +538,9 @@ export const TkxRichEditor = forwardRef<TkxRichEditorHandle, TkxRichEditorProps>
                 onMouseDown={(e) => e.preventDefault()} // keep editor selection
                 onClick={() => apply(def.id)}
                 style={{
-                  background: isActive ? theme.primary : 'transparent',
-                  color: isActive ? theme.bg : theme.text,
-                  border: `1px solid ${isActive ? theme.primary : 'transparent'}`,
+                  background: isActive ? theme.css.primary : 'transparent',
+                  color: isActive ? theme.css.bg : theme.css.text,
+                  border: `1px solid ${isActive ? theme.css.primary : 'transparent'}`,
                   padding: '6px 10px',
                   borderRadius: 6,
                   cursor: isDisabled ? 'not-allowed' : 'pointer',
@@ -583,7 +583,7 @@ export const TkxRichEditor = forwardRef<TkxRichEditorHandle, TkxRichEditorProps>
                 position: 'absolute',
                 top: 16,
                 left: 16,
-                color: theme.textMuted,
+                color: theme.css.textMuted,
                 pointerEvents: 'none',
                 fontSize: 15,
               }}

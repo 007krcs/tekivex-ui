@@ -241,16 +241,16 @@ export function TkxPopover({
           className ?? '',
         )}
         style={{
-          '--tkx-popover-bg': theme.surface,
+          '--tkx-popover-bg': theme.css.surface,
           top: position?.top ?? -9999,
           left: position?.left ?? -9999,
-          backgroundColor: theme.surface,
-          border: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          border: `1px solid ${theme.css.border}`,
           boxShadow: `0 8px 24px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)`,
           minWidth: 200,
           maxWidth: 420,
           padding: '12px 16px',
-          color: theme.text,
+          color: theme.css.text,
           ...animationStyle,
           ...style,
         } as CSSProperties}

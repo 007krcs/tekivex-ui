@@ -339,14 +339,14 @@ export function TkxStepper({
             icon={step.icon}
             circleSize={sizes.circle}
             fontSize={sizes.fontSize}
-            primary={theme.primary}
-            danger={theme.danger}
-            success={theme.success}
-            text={theme.text}
-            textMuted={theme.textMuted}
-            border={theme.border}
-            surface={theme.surface}
-            bg={theme.bg}
+            primary={theme.css.primary}
+            danger={theme.css.danger}
+            success={theme.css.success}
+            text={theme.css.text}
+            textMuted={theme.css.textMuted}
+            border={theme.css.border}
+            surface={theme.css.surface}
+            bg={theme.css.bg}
             variant={variant}
             reducedMotion={reducedMotion}
             clickable={clickable}
@@ -364,14 +364,14 @@ export function TkxStepper({
               style={{
                 fontSize: sizes.titleSize,
                 fontWeight: status === 'active' ? 600 : 500,
-                color: status === 'pending' ? theme.textMuted : status === 'error' ? theme.danger : theme.text,
+                color: status === 'pending' ? theme.css.textMuted : status === 'error' ? theme.css.danger : theme.css.text,
                 lineHeight: 1.3,
                 transition: reducedMotion ? 'none' : 'color 0.2s',
               }}
             >
               {sanitizeString(step.title)}
               {step.optional && (
-                <span style={{ fontSize: sizes.descSize, color: theme.textMuted, fontWeight: 400, marginLeft: 4 }}>
+                <span style={{ fontSize: sizes.descSize, color: theme.css.textMuted, fontWeight: 400, marginLeft: 4 }}>
                   (optional)
                 </span>
               )}
@@ -380,7 +380,7 @@ export function TkxStepper({
               <div
                 style={{
                   fontSize: sizes.descSize,
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   marginTop: 2,
                   lineHeight: 1.4,
                 }}
@@ -392,7 +392,7 @@ export function TkxStepper({
               <div
                 style={{
                   fontSize: sizes.descSize,
-                  color: theme.danger,
+                  color: theme.css.danger,
                   marginTop: 2,
                 }}
               >
@@ -442,8 +442,8 @@ export function TkxStepper({
                   orientation="horizontal"
                   connectorStyle={connector}
                   connectorWidth={sizes.connectorWidth}
-                  primary={theme.primary}
-                  border={theme.border}
+                  primary={theme.css.primary}
+                  border={theme.css.border}
                   reducedMotion={reducedMotion}
                 />
               )}
@@ -478,8 +478,8 @@ export function TkxStepper({
                   orientation="vertical"
                   connectorStyle={connector}
                   connectorWidth={sizes.connectorWidth}
-                  primary={theme.primary}
-                  border={theme.border}
+                  primary={theme.css.primary}
+                  border={theme.css.border}
                   reducedMotion={reducedMotion}
                 />
               )}

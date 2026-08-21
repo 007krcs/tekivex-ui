@@ -127,7 +127,7 @@ export function TkxMentions({
       {safeLabel && (
         <label
           className={tkx('block text-sm font-medium mb-1')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {safeLabel}
         </label>
@@ -153,9 +153,9 @@ export function TkxMentions({
         onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
         className={tkx('w-full rounded-lg border px-3 py-2 text-sm resize-y')}
         style={{
-          backgroundColor: theme.surface,
-          borderColor: theme.border,
-          color: theme.text,
+          backgroundColor: theme.css.surface,
+          borderColor: theme.css.border,
+          color: theme.css.text,
           minHeight: 80,
           outline: 'none',
         }}
@@ -170,14 +170,14 @@ export function TkxMentions({
           aria-label="Mention suggestions"
           className={tkx('absolute left-0 right-0 z-50 rounded-lg border overflow-auto')}
           style={{
-            backgroundColor: theme.surface,
-            borderColor: theme.border,
+            backgroundColor: theme.css.surface,
+            borderColor: theme.css.border,
             maxHeight: 200,
             top: '100%',
             marginTop: 4,
             listStyle: 'none',
             padding: 0,
-            boxShadow: `0 4px 12px ${theme.bg}80`,
+            boxShadow: `0 4px 12px ${theme.css.bg}80`,
             animation: reducedMotion ? 'none' : 'tkxFadeIn 0.15s ease',
           }}
         >
@@ -189,8 +189,8 @@ export function TkxMentions({
               aria-selected={idx === activeIdx}
               className={tkx('flex items-center gap-3 px-3 py-2 cursor-pointer text-sm')}
               style={{
-                backgroundColor: idx === activeIdx ? theme.surfaceAlt : 'transparent',
-                color: theme.text,
+                backgroundColor: idx === activeIdx ? theme.css.surfaceAlt : 'transparent',
+                color: theme.css.text,
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
@@ -210,7 +210,7 @@ export function TkxMentions({
                 />
               )}
               <span>{sanitizeString(opt.label)}</span>
-              <span style={{ color: theme.textMuted, marginLeft: 'auto' }}>
+              <span style={{ color: theme.css.textMuted, marginLeft: 'auto' }}>
                 {trigger}{sanitizeString(opt.value)}
               </span>
             </li>

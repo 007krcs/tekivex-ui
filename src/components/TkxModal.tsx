@@ -79,23 +79,23 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
         aria-labelledby={titleId}
         className={tkx('relative z-10 flex flex-col overflow-hidden', !reducedMotion && 'animate-slide-up', isFull ? '' : 'rounded-xl')}
         style={{
-          backgroundColor: theme.surface,
-          border: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          border: `1px solid ${theme.css.border}`,
           width: SIZE_W[size],
           maxWidth: '100%',
           maxHeight: isFull ? '100vh' : '90vh',
-          boxShadow: `0 20px 60px ${theme.bg}80`,
+          boxShadow: `0 20px 60px ${theme.css.bg}80`,
         }}
       >
         {/* Header */}
         <div
           className={tkx('flex items-center justify-between px-6 py-5 shrink-0')}
-          style={{ borderBottom: `1px solid ${theme.border}` }}
+          style={{ borderBottom: `1px solid ${theme.css.border}` }}
         >
           <h2
             id={titleId}
             className={tkx('m-0 text-lg font-semibold font-sans')}
-            style={{ color: theme.text }}
+            style={{ color: theme.css.text }}
           >
             {safeTitle}
           </h2>
@@ -103,7 +103,7 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
             onClick={onClose}
             aria-label={t.close}
             className={tkx('bg-transparent border-none cursor-pointer rounded p-1 flex items-center justify-center focus-visible:focus-ring')}
-            style={{ color: theme.textMuted }}
+            style={{ color: theme.css.textMuted }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -114,7 +114,7 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
         {/* Body */}
         <div
           className={tkx('flex-1 overflow-y-auto px-6 py-6 font-sans')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {children}
         </div>
@@ -123,7 +123,7 @@ export function TkxModal({ isOpen, onClose, title, size = 'md', closeOnOverlayCl
         {footer && (
           <div
             className={tkx('flex justify-end gap-2 px-6 py-4 shrink-0')}
-            style={{ borderTop: `1px solid ${theme.border}` }}
+            style={{ borderTop: `1px solid ${theme.css.border}` }}
           >
             {footer}
           </div>

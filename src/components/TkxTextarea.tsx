@@ -119,18 +119,18 @@ export const TkxTextarea = forwardRef<HTMLTextAreaElement, TkxTextareaProps>(
     const safeLabel = sanitizeString(label);
     const safeError = error ? sanitizeString(error) : undefined;
     const safeHint = hint ? sanitizeString(hint) : undefined;
-    const borderColor = hasError ? theme.danger : theme.border;
+    const borderColor = hasError ? theme.css.danger : theme.css.border;
 
     return (
       <div className={cx(tkx('flex flex-col gap-1 w-full'), className)} style={style}>
         <label
           htmlFor={id}
           className={tkx('text-sm font-medium font-sans')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {safeLabel}
           {isRequired && (
-            <span aria-hidden="true" className={tkx('ml-1')} style={{ color: theme.danger }}>
+            <span aria-hidden="true" className={tkx('ml-1')} style={{ color: theme.css.danger }}>
               *
             </span>
           )}
@@ -153,8 +153,8 @@ export const TkxTextarea = forwardRef<HTMLTextAreaElement, TkxTextareaProps>(
             disabled ? 'opacity-60' : '',
           )}
           style={{
-            color: theme.text,
-            backgroundColor: theme.surface,
+            color: theme.css.text,
+            backgroundColor: theme.css.surface,
             border: `1.5px solid ${borderColor}`,
             resize: autoResize ? 'none' : 'vertical',
             minHeight: autoResize ? undefined : `calc(${minRows} * 1.5em + 1.25rem)`,
@@ -175,7 +175,7 @@ export const TkxTextarea = forwardRef<HTMLTextAreaElement, TkxTextareaProps>(
         <div className={tkx('flex items-start justify-between gap-2')}>
           <div className={tkx('flex-1 min-w-0')}>
             {safeHint && !safeError && (
-              <span id={hintId} className={tkx('text-xs')} style={{ color: theme.textMuted }}>
+              <span id={hintId} className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>
                 {safeHint}
               </span>
             )}
@@ -184,7 +184,7 @@ export const TkxTextarea = forwardRef<HTMLTextAreaElement, TkxTextareaProps>(
                 id={errorId}
                 role="alert"
                 className={tkx('text-xs flex items-center gap-1')}
-                style={{ color: theme.danger }}
+                style={{ color: theme.css.danger }}
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
@@ -197,7 +197,7 @@ export const TkxTextarea = forwardRef<HTMLTextAreaElement, TkxTextareaProps>(
             <span
               id={countId}
               className={tkx('text-xs tabular-nums shrink-0')}
-              style={{ color: maxLength && count >= maxLength ? theme.danger : theme.textMuted }}
+              style={{ color: maxLength && count >= maxLength ? theme.css.danger : theme.css.textMuted }}
             >
               {count}
               {maxLength ? ` / ${maxLength}` : ''}

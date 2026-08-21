@@ -76,7 +76,7 @@ export const TkxHolographicPanel = forwardRef<HTMLDivElement, TkxHolographicPane
           border: `1px solid ${accent}33`,
           boxShadow: `0 0 0 1px ${accent}11, 0 12px 40px rgba(0,0,0,0.5)`,
           overflow: 'hidden',
-          color: theme.text,
+          color: theme.css.text,
           ...style,
         }}
         {...rest}
@@ -123,7 +123,7 @@ export const TkxHolographicPanel = forwardRef<HTMLDivElement, TkxHolographicPane
                     minHeight: 38,
                     border: 'none',
                     background: 'transparent',
-                    color: on ? accent : theme.textMuted,
+                    color: on ? accent : theme.css.textMuted,
                     fontWeight: 600,
                     fontSize: 12,
                     cursor: 'pointer',
@@ -258,7 +258,7 @@ export function TkxHolographicGauge({
           position: 'relative',
           textAlign: 'center',
           zIndex: 1,
-          color: theme.text,
+          color: theme.css.text,
         }}
       >
         <div
@@ -275,7 +275,7 @@ export function TkxHolographicGauge({
           {label ?? `${v.toFixed(0)}%`}
         </div>
         {caption && (
-          <div style={{ fontSize: 10, color: theme.textMuted, marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div style={{ fontSize: 10, color: theme.css.textMuted, marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             {caption}
           </div>
         )}
@@ -320,7 +320,7 @@ export function TkxHolographicProgress({
     <div className={className} style={{ ...tkxThemeVars(theme), ...style }}>
       {(label || valueLabel) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6, fontSize: 12 }}>
-          <span style={{ color: theme.textMuted, fontWeight: 600 }}>{label}</span>
+          <span style={{ color: theme.css.textMuted, fontWeight: 600 }}>{label}</span>
           <span style={{ color: accent, fontFamily: 'ui-monospace, monospace', fontVariantNumeric: 'tabular-nums' }}>
             {valueLabel ?? `${(v * 100).toFixed(0)}%`}
           </span>
@@ -469,7 +469,7 @@ export function TkxHolographicTerminal({
       <pre style={{ margin: 0, position: 'relative', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
         {visible.map((line, i) => (
           <div key={i}>
-            <span style={{ color: theme.textMuted }}>{prompt}</span>
+            <span style={{ color: theme.css.textMuted }}>{prompt}</span>
             <span style={{ color: accent }}>{line}</span>
             {i === visible.length - 1 && (
               <span

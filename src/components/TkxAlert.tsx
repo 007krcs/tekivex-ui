@@ -55,7 +55,7 @@ export function TkxAlert({ variant, title, children, dismissible, onDismiss, ico
   }, [safeTitle, variant]);
 
   const colorMap: Record<AlertVariant, string> = {
-    info: theme.info, success: theme.success, warning: theme.warning, danger: theme.danger,
+    info: theme.css.info, success: theme.css.success, warning: theme.css.warning, danger: theme.css.danger,
   };
   const accentColor = colorMap[variant];
   const role = variant === 'danger' || variant === 'warning' ? 'alert' : 'status';
@@ -64,7 +64,7 @@ export function TkxAlert({ variant, title, children, dismissible, onDismiss, ico
     <div
       role={role}
       className={tkx('flex items-start gap-3 px-4 py-3 rounded-lg border animate-fade-in font-sans', className ?? '')}
-      style={{ backgroundColor: `${accentColor}18`, borderColor: accentColor, color: theme.text, ...style }}
+      style={{ backgroundColor: `${accentColor}18`, borderColor: accentColor, color: theme.css.text, ...style }}
     >
       <span className={tkx('shrink-0 mt-[1px]')} style={{ color: accentColor }}>
         {icon ?? ICONS[variant]}
@@ -82,7 +82,7 @@ export function TkxAlert({ variant, title, children, dismissible, onDismiss, ico
           aria-label="Dismiss alert"
           onClick={onDismiss}
           className={tkx('bg-transparent border-none cursor-pointer rounded p-[2px] shrink-0 flex items-center justify-center focus-visible:focus-ring')}
-          style={{ color: theme.textMuted }}
+          style={{ color: theme.css.textMuted }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />

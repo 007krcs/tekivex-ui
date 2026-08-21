@@ -134,9 +134,9 @@ export function TkxBottomNav({
       className={tkx('fixed bottom-0 left-0 right-0 z-[1000] font-sans', className ?? '')}
       style={{
         height: NAV_HEIGHT,
-        backgroundColor: theme.surface,
-        borderTop: `1px solid ${theme.border}`,
-        boxShadow: `0 -2px 12px ${theme.bg}44`,
+        backgroundColor: theme.css.surface,
+        borderTop: `1px solid ${theme.css.border}`,
+        boxShadow: `0 -2px 12px ${theme.css.bg}44`,
         ...style,
       }}
     >
@@ -149,7 +149,7 @@ export function TkxBottomNav({
         {visibleItems.map((item) => {
           const isActive = item.id === activeId;
           const safeLabel = sanitizeString(item.label);
-          const color = isActive ? theme.primary : theme.textMuted;
+          const color = isActive ? theme.css.primary : theme.css.textMuted;
 
           return (
             <button
@@ -182,7 +182,7 @@ export function TkxBottomNav({
                     right: '25%',
                     height: 3,
                     borderRadius: '0 0 3px 3px',
-                    backgroundColor: theme.primary,
+                    backgroundColor: theme.css.primary,
                     transition: reduced ? 'none' : 'width 200ms ease',
                   }}
                 />
@@ -214,8 +214,8 @@ export function TkxBottomNav({
                       minWidth: 16,
                       height: 16,
                       padding: '0 4px',
-                      backgroundColor: theme.danger,
-                      color: theme.bg,
+                      backgroundColor: theme.css.danger,
+                      color: theme.css.bg,
                     }}
                   >
                     {item.badge > 99 ? '99+' : item.badge}

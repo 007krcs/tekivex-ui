@@ -130,17 +130,17 @@ export function TkxToolbar({
       case 'outlined':
         return {
           backgroundColor: 'transparent',
-          border: `1px solid ${theme.border}`,
+          border: `1px solid ${theme.css.border}`,
         };
       case 'filled':
         return {
-          backgroundColor: theme.surfaceAlt,
+          backgroundColor: theme.css.surfaceAlt,
           border: 'none',
         };
       default:
         return {
-          backgroundColor: theme.surface,
-          border: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          border: `1px solid ${theme.css.border}`,
         };
     }
   };
@@ -159,8 +159,8 @@ export function TkxToolbar({
       borderRadius: 6,
       border: 'none',
       cursor: item.disabled ? 'not-allowed' : 'pointer',
-      backgroundColor: isActive ? `${theme.primary}20` : 'transparent',
-      color: isActive ? theme.primary : item.disabled ? theme.textMuted : theme.text,
+      backgroundColor: isActive ? `${theme.css.primary}20` : 'transparent',
+      color: isActive ? theme.css.primary : item.disabled ? theme.css.textMuted : theme.css.text,
       opacity: item.disabled ? 0.5 : 1,
       outline: 'none',
       transition: reducedMotion ? 'none' : 'all 100ms ease',
@@ -201,7 +201,7 @@ export function TkxToolbar({
                 ...(isHorizontal
                   ? { width: 1, height: sizeConfig.separatorSize, marginLeft: 2, marginRight: 2 }
                   : { height: 1, width: sizeConfig.separatorSize, marginTop: 2, marginBottom: 2 }),
-                backgroundColor: theme.border,
+                backgroundColor: theme.css.border,
               }}
             />
           );
@@ -244,13 +244,13 @@ export function TkxToolbar({
             style={getButtonStyle(item)}
             onMouseEnter={(e) => {
               if (!item.disabled && !item.active) {
-                (e.currentTarget as HTMLElement).style.backgroundColor = theme.surfaceAlt;
+                (e.currentTarget as HTMLElement).style.backgroundColor = theme.css.surfaceAlt;
               }
             }}
             onMouseLeave={(e) => {
               if (!item.disabled) {
                 (e.currentTarget as HTMLElement).style.backgroundColor = item.active
-                  ? `${theme.primary}20`
+                  ? `${theme.css.primary}20`
                   : 'transparent';
               }
             }}

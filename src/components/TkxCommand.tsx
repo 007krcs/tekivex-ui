@@ -382,10 +382,10 @@ export function TkxCommand({
           zIndex: 1,
           width: '100%',
           maxWidth: 560,
-          backgroundColor: theme.surface,
-          border: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          border: `1px solid ${theme.css.border}`,
           borderRadius: 16,
-          boxShadow: `0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px ${theme.border}`,
+          boxShadow: `0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px ${theme.css.border}`,
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -400,7 +400,7 @@ export function TkxCommand({
             alignItems: 'center',
             gap: 10,
             padding: '14px 16px',
-            borderBottom: `1px solid ${theme.border}`,
+            borderBottom: `1px solid ${theme.css.border}`,
           }}
         >
           <svg
@@ -408,7 +408,7 @@ export function TkxCommand({
             height="18"
             viewBox="0 0 24 24"
             fill="none"
-            stroke={theme.textMuted}
+            stroke={theme.css.textMuted}
             strokeWidth={2}
             aria-hidden="true"
             style={{ flexShrink: 0 }}
@@ -435,7 +435,7 @@ export function TkxCommand({
               outline: 'none',
               fontSize: 16,
               fontFamily: 'inherit',
-              color: theme.text,
+              color: theme.css.text,
             }}
           />
           {query && (
@@ -447,7 +447,7 @@ export function TkxCommand({
                 border: 'none',
                 background: 'transparent',
                 cursor: 'pointer',
-                color: theme.textMuted,
+                color: theme.css.textMuted,
                 display: 'flex',
                 alignItems: 'center',
                 padding: 0,
@@ -471,7 +471,7 @@ export function TkxCommand({
         >
           {loading ? (
             Array.from({ length: 4 }, (_, i) => (
-              <SkeletonItem key={i} surface={theme.surface} border={theme.border} />
+              <SkeletonItem key={i} surface={theme.css.surface} border={theme.css.border} />
             ))
           ) : flatResults.length === 0 ? (
             /* Empty state */
@@ -483,7 +483,7 @@ export function TkxCommand({
                 justifyContent: 'center',
                 gap: 8,
                 padding: '32px 16px',
-                color: theme.textMuted,
+                color: theme.css.textMuted,
               }}
             >
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
@@ -508,7 +508,7 @@ export function TkxCommand({
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         letterSpacing: '0.08em',
-                        color: theme.textMuted,
+                        color: theme.css.textMuted,
                         padding: '10px 12px 4px',
                       }}
                     >
@@ -538,8 +538,8 @@ export function TkxCommand({
                           borderRadius: 8,
                           cursor: item.disabled ? 'not-allowed' : 'pointer',
                           opacity: item.disabled ? 0.45 : 1,
-                          backgroundColor: isActive ? `${theme.primary}18` : 'transparent',
-                          borderLeft: isActive ? `2px solid ${theme.primary}` : '2px solid transparent',
+                          backgroundColor: isActive ? `${theme.css.primary}18` : 'transparent',
+                          borderLeft: isActive ? `2px solid ${theme.css.primary}` : '2px solid transparent',
                           transition: 'background 80ms ease',
                           userSelect: 'none',
                         }}
@@ -554,7 +554,7 @@ export function TkxCommand({
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              color: isActive ? theme.primary : theme.textMuted,
+                              color: isActive ? theme.css.primary : theme.css.textMuted,
                             }}
                           >
                             {item.icon}
@@ -567,7 +567,7 @@ export function TkxCommand({
                             style={{
                               fontSize: '0.875rem',
                               fontWeight: 500,
-                              color: isActive ? theme.text : theme.text,
+                              color: isActive ? theme.css.text : theme.css.text,
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
@@ -576,14 +576,14 @@ export function TkxCommand({
                             <HighlightedText
                               text={item.label}
                               ranges={r.labelRanges}
-                              color={theme.primary}
+                              color={theme.css.primary}
                             />
                           </div>
                           {item.description && (
                             <div
                               style={{
                                 fontSize: '0.75rem',
-                                color: theme.textMuted,
+                                color: theme.css.textMuted,
                                 marginTop: 1,
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
@@ -602,9 +602,9 @@ export function TkxCommand({
                               flexShrink: 0,
                               fontSize: '0.6875rem',
                               fontWeight: 500,
-                              color: theme.textMuted,
-                              backgroundColor: theme.surfaceAlt,
-                              border: `1px solid ${theme.border}`,
+                              color: theme.css.textMuted,
+                              backgroundColor: theme.css.surfaceAlt,
+                              border: `1px solid ${theme.css.border}`,
                               borderRadius: 6,
                               padding: '2px 6px',
                               fontFamily: 'monospace',
@@ -632,9 +632,9 @@ export function TkxCommand({
               alignItems: 'center',
               gap: 12,
               padding: '8px 16px',
-              borderTop: `1px solid ${theme.border}`,
+              borderTop: `1px solid ${theme.css.border}`,
               fontSize: '0.6875rem',
-              color: theme.textMuted,
+              color: theme.css.textMuted,
             }}
           >
             <span>

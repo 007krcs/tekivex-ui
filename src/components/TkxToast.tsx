@@ -263,11 +263,11 @@ function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
   const labelId = useId();
 
   const variantColorMap: Record<ToastVariant, string> = {
-    default: theme.textMuted,
-    success: theme.success,
-    danger:  theme.danger,
-    warning: theme.warning,
-    info:    theme.info,
+    default: theme.css.textMuted,
+    success: theme.css.success,
+    danger:  theme.css.danger,
+    warning: theme.css.warning,
+    info:    theme.css.info,
   };
 
   const variant = toast.variant ?? 'default';
@@ -284,10 +284,10 @@ function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
       aria-labelledby={safeTitle ? labelId : undefined}
       className={tkx('flex items-start gap-3 px-4 py-3 rounded-lg shadow-lg font-sans min-w-[280px] max-w-[380px]')}
       style={{
-        backgroundColor: theme.surface,
+        backgroundColor: theme.css.surface,
         border: `1px solid ${accentColor}55`,
-        boxShadow: `0 8px 24px ${theme.bg}cc`,
-        color: theme.text,
+        boxShadow: `0 8px 24px ${theme.css.bg}cc`,
+        color: theme.css.text,
         ...slideInStyle(position, reduced),
       }}
     >
@@ -302,7 +302,7 @@ function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
           </p>
         )}
         {safeDesc && (
-          <p className={tkx('m-0 text-xs mt-[2px] leading-relaxed')} style={{ color: theme.textMuted }}>
+          <p className={tkx('m-0 text-xs mt-[2px] leading-relaxed')} style={{ color: theme.css.textMuted }}>
             {safeDesc}
           </p>
         )}
@@ -321,7 +321,7 @@ function ToastCard({ toast, position, onDismiss, reduced }: ToastCardProps) {
         aria-label={t.close}
         onClick={() => onDismiss(toast.id)}
         className={tkx('bg-transparent border-none cursor-pointer rounded p-[2px] shrink-0 flex items-center justify-center focus-visible:focus-ring')}
-        style={{ color: theme.textMuted }}
+        style={{ color: theme.css.textMuted }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />

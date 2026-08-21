@@ -81,17 +81,17 @@ function formatLogTime(ts: number): string {
 
 function getLevelColor(level: LogLevel, theme: ReturnType<typeof useTheme>): string {
   switch (level) {
-    case 'debug': return theme.textMuted;
-    case 'info':  return theme.info;
-    case 'warn':  return theme.warning;
-    case 'error': return theme.danger;
-    case 'fatal': return theme.danger;
-    default:      return theme.textMuted;
+    case 'debug': return theme.css.textMuted;
+    case 'info':  return theme.css.info;
+    case 'warn':  return theme.css.warning;
+    case 'error': return theme.css.danger;
+    case 'fatal': return theme.css.danger;
+    default:      return theme.css.textMuted;
   }
 }
 
 function getLevelBg(level: LogLevel, theme: ReturnType<typeof useTheme>): string {
-  if (level === 'fatal') return `${theme.danger}22`;
+  if (level === 'fatal') return `${theme.css.danger}22`;
   return 'transparent';
 }
 
@@ -166,7 +166,7 @@ function LogRow({
     height: ROW_HEIGHT,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    borderBottom: `1px solid ${theme.border}22`,
+    borderBottom: `1px solid ${theme.css.border}22`,
   };
 
   const handleClick = () => {
@@ -190,7 +190,7 @@ function LogRow({
     // Timestamp
     showTimestamp && createElement(
       'span',
-      { style: { color: theme.textMuted, flexShrink: 0, minWidth: 84 } },
+      { style: { color: theme.css.textMuted, flexShrink: 0, minWidth: 84 } },
       formatLogTime(entry.timestamp),
     ),
     // Level badge
@@ -211,12 +211,12 @@ function LogRow({
       'span',
       {
         style: {
-          background: theme.surfaceAlt,
-          border: `1px solid ${theme.border}`,
+          background: theme.css.surfaceAlt,
+          border: `1px solid ${theme.css.border}`,
           borderRadius: 10,
           padding: '0 5px',
           fontSize: 10,
-          color: theme.textMuted,
+          color: theme.css.textMuted,
           flexShrink: 0,
           maxWidth: 80,
           overflow: 'hidden',
@@ -228,13 +228,13 @@ function LogRow({
     // Message
     createElement(
       'span',
-      { style: { flex: 1, color: theme.text, overflow: 'hidden', textOverflow: 'ellipsis' } },
+      { style: { flex: 1, color: theme.css.text, overflow: 'hidden', textOverflow: 'ellipsis' } },
       ...highlightText(entry.message, searchQuery),
     ),
     // Expand indicator
     hasMetadata && createElement(
       'span',
-      { style: { color: theme.textMuted, fontSize: 10, flexShrink: 0 } },
+      { style: { color: theme.css.textMuted, fontSize: 10, flexShrink: 0 } },
       isExpanded ? '▲' : '▼',
     ),
   );
@@ -249,8 +249,8 @@ function MetadataPanel({ metadata, theme, style }: {
 }) {
   const panelStyle: CSSProperties = {
     ...style,
-    background: theme.surfaceAlt,
-    borderBottom: `1px solid ${theme.border}`,
+    background: theme.css.surfaceAlt,
+    borderBottom: `1px solid ${theme.css.border}`,
     padding: '6px 10px 6px 56px',
     display: 'flex',
     flexWrap: 'wrap',
@@ -269,14 +269,14 @@ function MetadataPanel({ metadata, theme, style }: {
           style: {
             fontSize: 11,
             fontFamily: 'monospace',
-            color: theme.textMuted,
-            background: theme.surface,
-            border: `1px solid ${theme.border}`,
+            color: theme.css.textMuted,
+            background: theme.css.surface,
+            border: `1px solid ${theme.css.border}`,
             borderRadius: 4,
             padding: '1px 6px',
           },
         },
-        createElement('span', { style: { color: theme.info } }, `${sanitizeString(k)}: `),
+        createElement('span', { style: { color: theme.css.info } }, `${sanitizeString(k)}: `),
         sanitizeString(String(v)),
       ),
     ),
@@ -400,8 +400,8 @@ export function TkxLiveLog({
     position: 'relative',
     overflow: 'auto',
     height: typeof height === 'number' ? `${height}px` : height,
-    background: theme.bg,
-    border: `1px solid ${theme.border}`,
+    background: theme.css.bg,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: 8,
     boxSizing: 'border-box',
   };
@@ -416,7 +416,7 @@ export function TkxLiveLog({
     return createElement(
       'div',
       { style: { ...containerStyle, display: 'flex', alignItems: 'center', justifyContent: 'center' } },
-      createElement('span', { style: { color: theme.textMuted, fontSize: 13, fontFamily: 'monospace' } }, 'No log entries.'),
+      createElement('span', { style: { color: theme.css.textMuted, fontSize: 13, fontFamily: 'monospace' } }, 'No log entries.'),
     );
   }
 

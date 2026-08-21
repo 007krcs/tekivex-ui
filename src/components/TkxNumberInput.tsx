@@ -226,7 +226,7 @@ export function TkxNumberInput({
 
   const sz = SIZE_MAP[size];
   const hasError = isInvalid || !!errorMessage;
-  const borderColor = hasError ? theme.danger : focused ? theme.primary : theme.border;
+  const borderColor = hasError ? theme.css.danger : focused ? theme.css.primary : theme.css.border;
   const describedBy = [hint && hintId, hasError && errorId].filter(Boolean).join(' ') || undefined;
 
   const safeLabel = label ? sanitizeString(label) : undefined;
@@ -292,7 +292,7 @@ export function TkxNumberInput({
         <label
           htmlFor={id}
           className={tkx('text-sm font-medium font-sans')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {safeLabel}
         </label>
@@ -302,7 +302,7 @@ export function TkxNumberInput({
         className={tkx('flex items-stretch overflow-hidden rounded-lg transition-colors duration-150')}
         style={{
           border: `1.5px solid ${borderColor}`,
-          backgroundColor: isDisabled ? theme.surfaceAlt : theme.surface,
+          backgroundColor: isDisabled ? theme.css.surfaceAlt : theme.css.surface,
           opacity: isDisabled ? 0.65 : 1,
           height: sz.height,
         }}
@@ -313,9 +313,9 @@ export function TkxNumberInput({
           isDisabled={isDisabled || isReadOnly}
           btnW={sz.btnW}
           height={sz.height}
-          primaryColor={theme.primary}
-          borderColor={theme.border}
-          textMuted={theme.textMuted}
+          primaryColor={theme.css.primary}
+          borderColor={theme.css.border}
+          textMuted={theme.css.textMuted}
           iconSz={sz.iconSz}
           onStep={step_}
           incrementLabel={incrementLabel}
@@ -330,7 +330,7 @@ export function TkxNumberInput({
                 position: 'absolute',
                 left: sz.px,
                 fontSize: sz.fontSize,
-                color: theme.textMuted,
+                color: theme.css.textMuted,
                 pointerEvents: 'none',
                 userSelect: 'none',
               }}
@@ -364,7 +364,7 @@ export function TkxNumberInput({
               textAlign: 'center',
               fontSize: sz.fontSize,
               fontFamily: 'inherit',
-              color: theme.text,
+              color: theme.css.text,
               paddingLeft: showAdornment && safePrefix ? `calc(${sz.px} + 1.2em)` : sz.px,
               paddingRight: showAdornment && safeSuffix ? `calc(${sz.px} + 1.2em)` : sz.px,
               cursor: isDisabled ? 'not-allowed' : isReadOnly ? 'default' : 'text',
@@ -381,7 +381,7 @@ export function TkxNumberInput({
                 position: 'absolute',
                 right: sz.px,
                 fontSize: sz.fontSize,
-                color: theme.textMuted,
+                color: theme.css.textMuted,
                 pointerEvents: 'none',
                 userSelect: 'none',
               }}
@@ -397,9 +397,9 @@ export function TkxNumberInput({
           isDisabled={isDisabled || isReadOnly}
           btnW={sz.btnW}
           height={sz.height}
-          primaryColor={theme.primary}
-          borderColor={theme.border}
-          textMuted={theme.textMuted}
+          primaryColor={theme.css.primary}
+          borderColor={theme.css.border}
+          textMuted={theme.css.textMuted}
           iconSz={sz.iconSz}
           onStep={step_}
           incrementLabel={incrementLabel}
@@ -408,12 +408,12 @@ export function TkxNumberInput({
       </div>
 
       {safeHint && !safeError && (
-        <span id={hintId} className={tkx('text-xs')} style={{ color: theme.textMuted }}>
+        <span id={hintId} className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>
           {safeHint}
         </span>
       )}
       {safeError && (
-        <span id={errorId} role="alert" className={tkx('text-xs flex items-center gap-1')} style={{ color: theme.danger }}>
+        <span id={errorId} role="alert" className={tkx('text-xs flex items-center gap-1')} style={{ color: theme.css.danger }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
           </svg>

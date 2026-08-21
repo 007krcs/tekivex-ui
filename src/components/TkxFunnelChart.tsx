@@ -197,7 +197,7 @@ export const TkxFunnelChart = forwardRef<HTMLDivElement, TkxFunnelChartProps>(
             y={(yTop + yBot) / 2}
             textAnchor="start"
             dominantBaseline="central"
-            fill={theme.text}
+            fill={theme.css.text}
             style={{ fontSize: 12, fontFamily: 'inherit' }}
             data-tkx-funnel-label=""
           >
@@ -218,7 +218,7 @@ export const TkxFunnelChart = forwardRef<HTMLDivElement, TkxFunnelChartProps>(
               y={yBot + gap / 2}
               textAnchor="start"
               dominantBaseline="central"
-              fill={theme.textMuted}
+              fill={theme.css.textMuted}
               style={{ fontSize: 10, fontFamily: 'inherit', fontVariantNumeric: 'tabular-nums' }}
               data-tkx-funnel-pct=""
             >
@@ -296,7 +296,7 @@ export const TkxFunnelChart = forwardRef<HTMLDivElement, TkxFunnelChartProps>(
             y={trapezoidArea + 16}
             textAnchor="middle"
             dominantBaseline="hanging"
-            fill={theme.text}
+            fill={theme.css.text}
             style={{ fontSize: 12, fontFamily: 'inherit' }}
             data-tkx-funnel-label=""
           >
@@ -316,7 +316,7 @@ export const TkxFunnelChart = forwardRef<HTMLDivElement, TkxFunnelChartProps>(
               y={trapezoidArea + 36}
               textAnchor="middle"
               dominantBaseline="hanging"
-              fill={theme.textMuted}
+              fill={theme.css.textMuted}
               style={{ fontSize: 10, fontFamily: 'inherit', fontVariantNumeric: 'tabular-nums' }}
               data-tkx-funnel-pct=""
             >

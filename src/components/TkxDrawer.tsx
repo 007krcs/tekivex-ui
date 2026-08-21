@@ -179,12 +179,12 @@ export function TkxDrawer({
         className={tkx('absolute flex flex-col font-sans')}
         style={{
           ...panelPositionStyle,
-          backgroundColor: theme.surface,
-          borderLeft: placement === 'right' ? `1px solid ${theme.border}` : undefined,
-          borderRight: placement === 'left' ? `1px solid ${theme.border}` : undefined,
-          borderTop: placement === 'bottom' ? `1px solid ${theme.border}` : undefined,
-          borderBottom: placement === 'top' ? `1px solid ${theme.border}` : undefined,
-          boxShadow: `0 20px 60px ${theme.bg}99`,
+          backgroundColor: theme.css.surface,
+          borderLeft: placement === 'right' ? `1px solid ${theme.css.border}` : undefined,
+          borderRight: placement === 'left' ? `1px solid ${theme.css.border}` : undefined,
+          borderTop: placement === 'bottom' ? `1px solid ${theme.css.border}` : undefined,
+          borderBottom: placement === 'top' ? `1px solid ${theme.css.border}` : undefined,
+          boxShadow: `0 20px 60px ${theme.css.bg}99`,
           transform: isOpen ? 'translate(0,0)' : closedTransform,
           opacity: isOpen ? 1 : 0,
           transition,
@@ -195,12 +195,12 @@ export function TkxDrawer({
         {(title !== undefined) && (
           <div
             className={tkx('flex items-center justify-between px-5 py-4 shrink-0')}
-            style={{ borderBottom: `1px solid ${theme.border}` }}
+            style={{ borderBottom: `1px solid ${theme.css.border}` }}
           >
             <h2
               id={titleId}
               className={tkx('m-0 text-base font-semibold leading-snug')}
-              style={{ color: theme.text }}
+              style={{ color: theme.css.text }}
             >
               {safeTitle}
             </h2>
@@ -208,7 +208,7 @@ export function TkxDrawer({
               onClick={onClose}
               aria-label="Close drawer"
               className={tkx('bg-transparent border-none cursor-pointer rounded p-1 flex items-center justify-center focus-visible:focus-ring')}
-              style={{ color: theme.textMuted }}
+              style={{ color: theme.css.textMuted }}
             >
               <CloseIcon />
             </button>
@@ -222,7 +222,7 @@ export function TkxDrawer({
               onClick={onClose}
               aria-label="Close drawer"
               className={tkx('bg-transparent border-none cursor-pointer rounded p-1 flex items-center justify-center focus-visible:focus-ring')}
-              style={{ color: theme.textMuted }}
+              style={{ color: theme.css.textMuted }}
             >
               <CloseIcon />
             </button>
@@ -232,7 +232,7 @@ export function TkxDrawer({
         {/* Body */}
         <div
           className={tkx('flex-1 overflow-y-auto px-5 py-4')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {children}
         </div>
@@ -241,7 +241,7 @@ export function TkxDrawer({
         {footer && (
           <div
             className={tkx('flex items-center justify-end gap-2 px-5 py-4 shrink-0')}
-            style={{ borderTop: `1px solid ${theme.border}` }}
+            style={{ borderTop: `1px solid ${theme.css.border}` }}
           >
             {footer}
           </div>

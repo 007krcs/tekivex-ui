@@ -269,15 +269,15 @@ function CheckboxIcon({ checked, indeterminate }: { checked: boolean; indetermin
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
       <rect
         x="1" y="1" width="14" height="14" rx="2"
-        fill={checked || indeterminate ? theme.primary : 'transparent'}
-        stroke={checked || indeterminate ? theme.primary : theme.border}
+        fill={checked || indeterminate ? theme.css.primary : 'transparent'}
+        stroke={checked || indeterminate ? theme.css.primary : theme.css.border}
         strokeWidth="1.5"
       />
       {indeterminate && (
-        <line x1="4" y1="8" x2="12" y2="8" stroke={theme.bg} strokeWidth="2" />
+        <line x1="4" y1="8" x2="12" y2="8" stroke={theme.css.bg} strokeWidth="2" />
       )}
       {checked && !indeterminate && (
-        <path d="M4.5 8L7 10.5L11.5 5.5" fill="none" stroke={theme.bg} strokeWidth="1.8"
+        <path d="M4.5 8L7 10.5L11.5 5.5" fill="none" stroke={theme.css.bg} strokeWidth="1.8"
           strokeLinecap="round" strokeLinejoin="round" />
       )}
     </svg>
@@ -353,7 +353,7 @@ function LoadingOverlay({ colCount }: { colCount: number }) {
         <tr key={r}>
           {Array.from({ length: colCount }, (_, c) => (
             <td key={c} className={tkx('px-3 py-2')}
-              style={{ borderBottom: `1px solid ${theme.border}` }}>
+              style={{ borderBottom: `1px solid ${theme.css.border}` }}>
               <TkxSkeleton height={16} />
             </td>
           ))}
@@ -388,12 +388,12 @@ function GridToolbar({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '8px 12px',
-        borderBottom: `1px solid ${theme.border}`,
-        backgroundColor: theme.surface,
+        borderBottom: `1px solid ${theme.css.border}`,
+        backgroundColor: theme.css.surface,
         gap: 8,
       }}
     >
-      <span style={{ fontSize: 13, color: theme.textMuted }}>
+      <span style={{ fontSize: 13, color: theme.css.textMuted }}>
         {selectedCount > 0
           ? `${selectedCount} of ${totalRows} row${totalRows !== 1 ? 's' : ''} selected`
           : `${totalRows} row${totalRows !== 1 ? 's' : ''}`}
@@ -410,9 +410,9 @@ function GridToolbar({
             fontSize: 13,
             fontWeight: 500,
             borderRadius: 6,
-            border: `1px solid ${theme.border}`,
+            border: `1px solid ${theme.css.border}`,
             backgroundColor: 'transparent',
-            color: theme.text,
+            color: theme.css.text,
             cursor: 'pointer',
           }}
         >
@@ -450,21 +450,21 @@ function PaginationBar({
   const end = Math.min(page * pageSize, totalRows);
   const btnBase: CSSProperties = {
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    width: 32, height: 32, borderRadius: 6, border: `1px solid ${theme.border}`,
-    backgroundColor: 'transparent', color: theme.text, cursor: 'pointer',
+    width: 32, height: 32, borderRadius: 6, border: `1px solid ${theme.css.border}`,
+    backgroundColor: 'transparent', color: theme.css.text, cursor: 'pointer',
     fontSize: 13, fontWeight: 500,
   };
   return (
     <div
       style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '8px 12px', borderTop: `1px solid ${theme.border}`,
-        backgroundColor: theme.surface, gap: 8, flexWrap: 'wrap',
+        padding: '8px 12px', borderTop: `1px solid ${theme.css.border}`,
+        backgroundColor: theme.css.surface, gap: 8, flexWrap: 'wrap',
       }}
       role="navigation"
       aria-label="Pagination"
     >
-      <span style={{ fontSize: 13, color: theme.textMuted }}>
+      <span style={{ fontSize: 13, color: theme.css.textMuted }}>
         {totalRows === 0 ? '0 rows' : `${start}–${end} of ${totalRows}`}
       </span>
       <div style={{ display: 'flex', gap: 4 }}>
@@ -499,9 +499,9 @@ function PaginationBar({
               aria-current={p === page ? 'page' : undefined}
               style={{
                 ...btnBase,
-                backgroundColor: p === page ? theme.primary : 'transparent',
-                color: p === page ? theme.bg : theme.text,
-                borderColor: p === page ? theme.primary : theme.border,
+                backgroundColor: p === page ? theme.css.primary : 'transparent',
+                color: p === page ? theme.css.bg : theme.css.text,
+                borderColor: p === page ? theme.css.primary : theme.css.border,
               }}
             >
               {p}
@@ -643,9 +643,9 @@ function CellEditor<T>({
     padding: '3px 6px',
     fontSize: 13,
     borderRadius: 4,
-    border: `1px solid ${error ? '#dc2626' : theme.primary}`,
-    backgroundColor: theme.bg,
-    color: theme.text,
+    border: `1px solid ${error ? '#dc2626' : theme.css.primary}`,
+    backgroundColor: theme.css.bg,
+    color: theme.css.text,
     outline: 'none',
     boxSizing: 'border-box',
   };
@@ -1335,11 +1335,11 @@ export function TkxDataGrid<T = any>({
         // Header pinned cells need a higher z-index so they stay above body
         // pinned cells when the header is also sticky.
         zIndex: isHeader ? 3 : 2,
-        backgroundColor: theme.surface,
+        backgroundColor: theme.css.surface,
         boxShadow: shadow,
       };
     },
-    [pinnedOffsets, scrolledLeft, scrolledRight, theme.surface],
+    [pinnedOffsets, scrolledLeft, scrolledRight, theme.css.surface],
   );
 
   const handleResizeStart = useCallback(
@@ -1847,7 +1847,7 @@ export function TkxDataGrid<T = any>({
     };
   };
 
-  const borderRight = bordered ? `1px solid ${theme.border}` : 'none';
+  const borderRight = bordered ? `1px solid ${theme.css.border}` : 'none';
   const safeEmpty = sanitizeString(resolvedEmpty);
   const totalCols = columns.length + (selectable ? 1 : 0);
 
@@ -1869,7 +1869,7 @@ export function TkxDataGrid<T = any>({
       onFocus={handleGridFocus}
       onKeyDown={handleGridKeyDown}
       className={tkx('font-sans rounded-lg overflow-hidden')}
-      style={{ border: `1px solid ${theme.border}`, backgroundColor: theme.bg }}
+      style={{ border: `1px solid ${theme.css.border}`, backgroundColor: theme.css.bg }}
     >
       {/* ── Toolbar ───────────────────────────────────────────────────── */}
       <GridToolbar
@@ -1914,8 +1914,8 @@ export function TkxDataGrid<T = any>({
                     top: 0,
                     left: hasPinned ? 0 : undefined,
                     zIndex: 3,
-                    backgroundColor: theme.surface,
-                    borderBottom: `2px solid ${theme.border}`,
+                    backgroundColor: theme.css.surface,
+                    borderBottom: `2px solid ${theme.css.border}`,
                     borderRight,
                     padding: `${py} ${px}`,
                     width: 40,
@@ -1957,9 +1957,9 @@ export function TkxDataGrid<T = any>({
                       position: stickyHeader || isPinned ? 'sticky' : 'static',
                       top: 0,
                       zIndex: isPinned ? (pinnedHeaderStyle.zIndex as number) : 2,
-                      backgroundColor: theme.surface,
-                      color: theme.textMuted,
-                      borderBottom: `2px solid ${theme.border}`,
+                      backgroundColor: theme.css.surface,
+                      color: theme.css.textMuted,
+                      borderBottom: `2px solid ${theme.css.border}`,
                       borderRight,
                       cursor: isSortable ? 'pointer' : 'default',
                       userSelect: 'none',
@@ -2006,8 +2006,8 @@ export function TkxDataGrid<T = any>({
                   <th
                     scope="col"
                     style={{
-                      backgroundColor: theme.surfaceAlt,
-                      borderBottom: `1px solid ${theme.border}`,
+                      backgroundColor: theme.css.surfaceAlt,
+                      borderBottom: `1px solid ${theme.css.border}`,
                       borderRight,
                       padding: `4px ${px}`,
                       width: 40,
@@ -2025,8 +2025,8 @@ export function TkxDataGrid<T = any>({
                     scope="col"
                     data-pinned={pinned?.side}
                     style={{
-                      backgroundColor: theme.surfaceAlt,
-                      borderBottom: `1px solid ${theme.border}`,
+                      backgroundColor: theme.css.surfaceAlt,
+                      borderBottom: `1px solid ${theme.css.border}`,
                       borderRight,
                       padding: `4px ${px}`,
                       ...(pinned
@@ -2052,9 +2052,9 @@ export function TkxDataGrid<T = any>({
                           padding: '3px 8px',
                           fontSize: 12,
                           borderRadius: 4,
-                          border: `1px solid ${theme.border}`,
-                          backgroundColor: theme.bg,
-                          color: theme.text,
+                          border: `1px solid ${theme.css.border}`,
+                          backgroundColor: theme.css.bg,
+                          color: theme.css.text,
                           outline: 'none',
                         }}
                       />
@@ -2075,7 +2075,7 @@ export function TkxDataGrid<T = any>({
               {(isTreeMode ? visibleTreeRows.length === 0 : pagedItems.length === 0) ? (
                 <tr>
                   <td colSpan={totalCols} className={tkx('text-center py-10')}
-                    style={{ color: theme.textMuted }}>
+                    style={{ color: theme.css.textMuted }}>
                     {safeEmpty}
                   </td>
                 </tr>
@@ -2086,8 +2086,8 @@ export function TkxDataGrid<T = any>({
                     const isSelected = selectedSet.has(id);
                     const isStriped = striped && siblingIndex % 2 === 1;
                     let rowBg = 'transparent';
-                    if (isSelected) rowBg = `${theme.primary}22`;
-                    else if (isStriped) rowBg = theme.surfaceAlt;
+                    if (isSelected) rowBg = `${theme.css.primary}22`;
+                    else if (isStriped) rowBg = theme.css.surfaceAlt;
                     return (
                       <tr
                         key={id}
@@ -2116,13 +2116,13 @@ export function TkxDataGrid<T = any>({
                             role="gridcell"
                             tabIndex={-1}
                             style={{
-                              borderBottom: `1px solid ${theme.border}`,
+                              borderBottom: `1px solid ${theme.css.border}`,
                               borderRight,
                               padding: `${py} ${px}`,
                               textAlign: 'center',
                               width: 40,
                               ...(hasPinned
-                                ? { position: 'sticky', left: 0, zIndex: 2, backgroundColor: theme.surface }
+                                ? { position: 'sticky', left: 0, zIndex: 2, backgroundColor: theme.css.surface }
                                 : {}),
                             }}
                           >
@@ -2199,9 +2199,9 @@ export function TkxDataGrid<T = any>({
                               className={tkx('text-sm')}
                               style={{
                                 ...getColStyle(col),
-                                borderBottom: `1px solid ${theme.border}`,
+                                borderBottom: `1px solid ${theme.css.border}`,
                                 borderRight,
-                                color: theme.text,
+                                color: theme.css.text,
                                 overflow: isEditing ? 'visible' : 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: isEditing ? 'normal' : 'nowrap',
@@ -2252,7 +2252,7 @@ export function TkxDataGrid<T = any>({
                                         padding: 0,
                                         border: 'none',
                                         background: 'transparent',
-                                        color: theme.text,
+                                        color: theme.css.text,
                                         cursor: 'pointer',
                                         flexShrink: 0,
                                       }}
@@ -2305,7 +2305,7 @@ export function TkxDataGrid<T = any>({
                             }
                           }}
                           style={{
-                            backgroundColor: theme.surfaceAlt,
+                            backgroundColor: theme.css.surfaceAlt,
                             cursor: 'pointer',
                             fontWeight: 600,
                           }}
@@ -2313,11 +2313,11 @@ export function TkxDataGrid<T = any>({
                           {selectable && (
                             <td
                               style={{
-                                borderBottom: `1px solid ${theme.border}`,
+                                borderBottom: `1px solid ${theme.css.border}`,
                                 borderRight,
                                 padding: `${py} ${px}`,
                                 width: 40,
-                                backgroundColor: theme.surfaceAlt,
+                                backgroundColor: theme.css.surfaceAlt,
                                 ...(hasPinned
                                   ? { position: 'sticky', left: 0, zIndex: 2 }
                                   : {}),
@@ -2343,15 +2343,15 @@ export function TkxDataGrid<T = any>({
                                 className={tkx('text-sm')}
                                 style={{
                                   ...getColStyle(col),
-                                  borderBottom: `1px solid ${theme.border}`,
+                                  borderBottom: `1px solid ${theme.css.border}`,
                                   borderRight,
-                                  color: theme.text,
+                                  color: theme.css.text,
                                   whiteSpace: 'nowrap',
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   ...pinnedCellStyle,
                                   ...(pinned
-                                    ? { backgroundColor: theme.surfaceAlt }
+                                    ? { backgroundColor: theme.css.surfaceAlt }
                                     : {}),
                                 }}
                               >
@@ -2363,7 +2363,7 @@ export function TkxDataGrid<T = any>({
                                       style={{
                                         marginLeft: 8,
                                         fontWeight: 400,
-                                        color: theme.textMuted,
+                                        color: theme.css.textMuted,
                                         fontSize: 12,
                                       }}
                                     >
@@ -2374,7 +2374,7 @@ export function TkxDataGrid<T = any>({
                                         style={{
                                           marginLeft: 12,
                                           fontWeight: 400,
-                                          color: theme.textMuted,
+                                          color: theme.css.textMuted,
                                           fontSize: 12,
                                         }}
                                         data-group-agg={col.key}
@@ -2401,8 +2401,8 @@ export function TkxDataGrid<T = any>({
                     const isSelected = selectedSet.has(id);
                     const isStriped = striped && rowIndex % 2 === 1;
                     let rowBg = 'transparent';
-                    if (isSelected) rowBg = `${theme.primary}22`;
-                    else if (isStriped) rowBg = theme.surfaceAlt;
+                    if (isSelected) rowBg = `${theme.css.primary}22`;
+                    else if (isStriped) rowBg = theme.css.surfaceAlt;
                     return (
                       <tr
                         key={id}
@@ -2426,7 +2426,7 @@ export function TkxDataGrid<T = any>({
                             role="gridcell"
                             tabIndex={-1}
                             style={{
-                              borderBottom: `1px solid ${theme.border}`,
+                              borderBottom: `1px solid ${theme.css.border}`,
                               borderRight,
                               padding: `${py} ${px}`,
                               textAlign: 'center',
@@ -2436,7 +2436,7 @@ export function TkxDataGrid<T = any>({
                                     position: 'sticky',
                                     left: 0,
                                     zIndex: 2,
-                                    backgroundColor: theme.surface,
+                                    backgroundColor: theme.css.surface,
                                   }
                                 : {}),
                             }}
@@ -2508,9 +2508,9 @@ export function TkxDataGrid<T = any>({
                               className={tkx('text-sm')}
                               style={{
                                 ...getColStyle(col),
-                                borderBottom: `1px solid ${theme.border}`,
+                                borderBottom: `1px solid ${theme.css.border}`,
                                 borderRight,
-                                color: theme.text,
+                                color: theme.css.text,
                                 overflow: isEditing ? 'visible' : 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: isEditing ? 'normal' : 'nowrap',
@@ -2553,8 +2553,8 @@ export function TkxDataGrid<T = any>({
                     const isStriped = striped && rowIndex % 2 === 1;
 
                     let rowBg = 'transparent';
-                    if (isSelected) rowBg = `${theme.primary}22`;
-                    else if (isStriped) rowBg = theme.surfaceAlt;
+                    if (isSelected) rowBg = `${theme.css.primary}22`;
+                    else if (isStriped) rowBg = theme.css.surfaceAlt;
 
                     return (
                       <tr
@@ -2575,7 +2575,7 @@ export function TkxDataGrid<T = any>({
                         }}
                         onMouseEnter={onRowClick ? e => {
                           (e.currentTarget as HTMLElement).style.backgroundColor =
-                            isSelected ? `${theme.primary}30` : theme.surfaceAlt;
+                            isSelected ? `${theme.css.primary}30` : theme.css.surfaceAlt;
                         } : undefined}
                         onMouseLeave={onRowClick ? e => {
                           (e.currentTarget as HTMLElement).style.backgroundColor = rowBg;
@@ -2587,7 +2587,7 @@ export function TkxDataGrid<T = any>({
                             role="gridcell"
                             tabIndex={-1}
                             style={{
-                              borderBottom: `1px solid ${theme.border}`,
+                              borderBottom: `1px solid ${theme.css.border}`,
                               borderRight,
                               padding: `${py} ${px}`,
                               textAlign: 'center',
@@ -2597,7 +2597,7 @@ export function TkxDataGrid<T = any>({
                                     position: 'sticky',
                                     left: 0,
                                     zIndex: 2,
-                                    backgroundColor: theme.surface,
+                                    backgroundColor: theme.css.surface,
                                   }
                                 : {}),
                             }}
@@ -2672,9 +2672,9 @@ export function TkxDataGrid<T = any>({
                               className={tkx('text-sm')}
                               style={{
                                 ...getColStyle(col),
-                                borderBottom: `1px solid ${theme.border}`,
+                                borderBottom: `1px solid ${theme.css.border}`,
                                 borderRight,
-                                color: theme.text,
+                                color: theme.css.text,
                                 overflow: isEditing ? 'visible' : 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: isEditing ? 'normal' : 'nowrap',
@@ -2735,7 +2735,7 @@ export function TkxDataGrid<T = any>({
           </div>
         )}
         {!hasMore && onLoadMore && (
-          <div style={{ padding: '16px', textAlign: 'center', fontSize: 13, color: theme.textMuted }}>
+          <div style={{ padding: '16px', textAlign: 'center', fontSize: 13, color: theme.css.textMuted }}>
             ✓ All rows loaded
           </div>
         )}

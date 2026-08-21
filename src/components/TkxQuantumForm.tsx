@@ -131,9 +131,9 @@ function ConfidenceBadge({
   // confidence is 0-1 in the existing engine
   const pct = Math.round(confidence * 100);
   const color =
-    pct >= 80 ? theme.success :
-    pct >= 60 ? theme.warning :
-    theme.danger;
+    pct >= 80 ? theme.css.success :
+    pct >= 60 ? theme.css.warning :
+    theme.css.danger;
   return (
     <span
       style={{
@@ -208,10 +208,10 @@ function FieldRenderer({
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '9px 12px',
-    border: `1.5px solid ${hasError ? theme.danger : theme.border}`,
+    border: `1.5px solid ${hasError ? theme.css.danger : theme.css.border}`,
     borderRadius: '8px',
-    backgroundColor: theme.surface,
-    color: theme.text,
+    backgroundColor: theme.css.surface,
+    color: theme.css.text,
     fontSize: '14px',
     fontFamily: 'inherit',
     outline: 'none',
@@ -239,17 +239,17 @@ function FieldRenderer({
           <QubitVisualizer
             phase={qubitPhase}
             collapsed={collapsed}
-            primaryColor={theme.primary}
-            borderColor={theme.border}
+            primaryColor={theme.css.primary}
+            borderColor={theme.css.border}
           />
         )}
         <label
           htmlFor={fieldId}
-          style={{ fontSize: '13px', fontWeight: 500, color: theme.text, cursor: 'pointer' }}
+          style={{ fontSize: '13px', fontWeight: 500, color: theme.css.text, cursor: 'pointer' }}
         >
           {safeLabel}
           {resolvedRequired && (
-            <span aria-hidden="true" style={{ color: theme.danger, marginLeft: '3px' }}>*</span>
+            <span aria-hidden="true" style={{ color: theme.css.danger, marginLeft: '3px' }}>*</span>
           )}
         </label>
         {showConfidence && <ConfidenceBadge confidence={intel.confidence} theme={theme} />}
@@ -287,7 +287,7 @@ function FieldRenderer({
           role="alert"
           style={{
             fontSize: '12px',
-            color: theme.danger,
+            color: theme.css.danger,
             display: 'flex',
             alignItems: 'center',
             gap: '4px',
@@ -432,9 +432,9 @@ export function TkxQuantumForm({
       )
     : 0;
   const confidenceColor =
-    overallConfidence >= 80 ? theme.success :
-    overallConfidence >= 60 ? theme.warning :
-    theme.danger;
+    overallConfidence >= 80 ? theme.css.success :
+    overallConfidence >= 60 ? theme.css.warning :
+    theme.css.danger;
 
   const isHorizontal = layout === 'horizontal';
 
@@ -444,8 +444,8 @@ export function TkxQuantumForm({
       noValidate
       className={tkx('w-full')}
       style={{
-        backgroundColor: theme.surface,
-        border: `1px solid ${theme.border}`,
+        backgroundColor: theme.css.surface,
+        border: `1px solid ${theme.css.border}`,
         borderRadius: '12px',
         padding: '24px',
         position: 'relative',
@@ -463,9 +463,9 @@ export function TkxQuantumForm({
           fontWeight: 700,
           padding: '3px 8px',
           borderRadius: '999px',
-          backgroundColor: `${theme.primary}20`,
-          color: theme.primary,
-          border: `1px solid ${theme.primary}44`,
+          backgroundColor: `${theme.css.primary}20`,
+          color: theme.css.primary,
+          border: `1px solid ${theme.css.primary}44`,
           letterSpacing: '0.04em',
           userSelect: 'none',
         }}
@@ -484,7 +484,7 @@ export function TkxQuantumForm({
               marginBottom: '4px',
             }}
           >
-            <span style={{ fontSize: '11px', color: theme.textMuted, fontWeight: 500 }}>
+            <span style={{ fontSize: '11px', color: theme.css.textMuted, fontWeight: 500 }}>
               Form Intelligence Confidence
             </span>
             <span style={{ fontSize: '11px', fontWeight: 700, color: confidenceColor }}>
@@ -495,7 +495,7 @@ export function TkxQuantumForm({
             style={{
               height: '4px',
               borderRadius: '4px',
-              backgroundColor: theme.border,
+              backgroundColor: theme.css.border,
               overflow: 'hidden',
             }}
           >
@@ -551,8 +551,8 @@ export function TkxQuantumForm({
           padding: '10px 20px',
           borderRadius: '8px',
           border: 'none',
-          backgroundColor: submitting ? `${theme.primary}88` : theme.primary,
-          color: theme.bg,
+          backgroundColor: submitting ? `${theme.css.primary}88` : theme.css.primary,
+          color: theme.css.bg,
           fontSize: '14px',
           fontWeight: 700,
           fontFamily: 'inherit',

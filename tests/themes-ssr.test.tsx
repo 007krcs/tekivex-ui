@@ -136,9 +136,13 @@ describe('ThemeProvider SSR / hydration safety', () => {
         <ShowBg />
       </ThemeProvider>,
     );
-    // Wrapper should NOT carry any --tkx-* inline custom properties before mount.
-    expect(html).not.toContain('--tkx-bg');
-    expect(html).not.toContain('--tkx-primary');
+    // Wrapper should NOT *define* any --tkx-* inline custom properties before
+    // mount. Note the distinction: children legitimately *reference* the
+    // variables (`var(--tkx-bg, #hex)`), which is theme-agnostic markup and
+    // identical on server and client — what must not appear is a definition
+    // (`--tkx-bg:#hex`) that would couple first paint to a resolved scheme.
+    expect(html).not.toContain('--tkx-bg:');
+    expect(html).not.toContain('--tkx-primary:');
     // The theme context still serves a value so children render — but the
     // PROVIDER wrapper itself emits no theme-coupled markup.
     expect(html).toContain('display:contents');

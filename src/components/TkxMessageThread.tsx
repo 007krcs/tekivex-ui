@@ -256,7 +256,7 @@ function AttachmentBlock({ att, theme }: { att: PeerAttachment; theme: ReturnTyp
       target="_blank"
       rel="noopener noreferrer"
       className={tkx('flex items-center gap-2 mt-2 px-2.5 py-2 rounded-md text-xs no-underline')}
-      style={{ backgroundColor: theme.surfaceAlt, color: theme.text, border: `1px solid ${theme.border}` }}
+      style={{ backgroundColor: theme.css.surfaceAlt, color: theme.css.text, border: `1px solid ${theme.css.border}` }}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -264,7 +264,7 @@ function AttachmentBlock({ att, theme }: { att: PeerAttachment; theme: ReturnTyp
       </svg>
       <div className={tkx('flex flex-col min-w-0')}>
         <span className={tkx('truncate font-medium')} style={{ maxWidth: 200 }}>{safeName}</span>
-        <span style={{ color: theme.textMuted, fontSize: 10 }}>
+        <span style={{ color: theme.css.textMuted, fontSize: 10 }}>
           {sanitizeString(att.mimeType)}{att.size != null ? ` · ${formatSize(att.size)}` : ''}
         </span>
       </div>
@@ -597,7 +597,7 @@ export function TkxMessageThread({
               <div key={row.key} className={tkx('flex items-center justify-center my-3')}>
                 <span
                   className={tkx('text-[11px] px-2.5 py-0.5 rounded-full')}
-                  style={{ color: theme.textMuted, backgroundColor: theme.surfaceAlt }}
+                  style={{ color: theme.css.textMuted, backgroundColor: theme.css.surfaceAlt }}
                 >
                   {row.label}
                 </span>
@@ -614,8 +614,8 @@ export function TkxMessageThread({
           const isEditing = editingId === msg.id;
 
           const bubbleStyle: CSSProperties = isOwn
-            ? { backgroundColor: theme.primary, color: theme.bg }
-            : { backgroundColor: theme.surface, color: theme.text, border: `1px solid ${theme.border}` };
+            ? { backgroundColor: theme.css.primary, color: theme.css.bg }
+            : { backgroundColor: theme.css.surface, color: theme.css.text, border: `1px solid ${theme.css.border}` };
 
           return (
             <div
@@ -629,13 +629,13 @@ export function TkxMessageThread({
             >
               <div className={tkx('shrink-0')} style={{ width: 32 }}>
                 {row.showHeader ? (
-                  <Avatar sender={sender} color={theme.primary} bg={theme.surfaceAlt} />
+                  <Avatar sender={sender} color={theme.css.primary} bg={theme.css.surfaceAlt} />
                 ) : null}
               </div>
               <div className={tkx('flex flex-col max-w-[75%]', isOwn ? 'items-end' : 'items-start')}>
                 {row.showHeader && (
-                  <div className={tkx('flex items-center gap-2 mb-0.5 text-xs')} style={{ color: theme.textMuted }}>
-                    <span style={{ fontWeight: 600, color: theme.text }}>{sanitizeString(sender.name)}</span>
+                  <div className={tkx('flex items-center gap-2 mb-0.5 text-xs')} style={{ color: theme.css.textMuted }}>
+                    <span style={{ fontWeight: 600, color: theme.css.text }}>{sanitizeString(sender.name)}</span>
                     {sender.role && <span>· {sanitizeString(sender.role)}</span>}
                     <span>· {formatTime(ts)}</span>
                     {msg.editedAt && !isDeleted && <span>(edited)</span>}
@@ -647,9 +647,9 @@ export function TkxMessageThread({
                   <div
                     className={tkx('mb-1 px-2 py-1 rounded text-xs')}
                     style={{
-                      backgroundColor: theme.surfaceAlt,
-                      borderLeft: `3px solid ${theme.primary}`,
-                      color: theme.textMuted,
+                      backgroundColor: theme.css.surfaceAlt,
+                      borderLeft: `3px solid ${theme.css.primary}`,
+                      color: theme.css.textMuted,
                       maxWidth: '100%',
                     }}
                   >
@@ -675,7 +675,7 @@ export function TkxMessageThread({
                         onChange={(e) => setEditDraft(e.target.value)}
                         aria-label="Edit message"
                         className={tkx('text-sm leading-relaxed bg-transparent outline-none resize-none w-full')}
-                        style={{ color: 'inherit', minHeight: 48, border: `1px solid ${theme.border}`, borderRadius: 8, padding: 4 }}
+                        style={{ color: 'inherit', minHeight: 48, border: `1px solid ${theme.css.border}`, borderRadius: 8, padding: 4 }}
                       />
                       <div className={tkx('flex gap-2 justify-end')}>
                         <button
@@ -690,7 +690,7 @@ export function TkxMessageThread({
                           type="button"
                           onClick={() => submitEdit(msg.id)}
                           className={tkx('text-xs px-2 py-1 rounded border-none cursor-pointer')}
-                          style={{ backgroundColor: theme.bg, color: theme.primary }}
+                          style={{ backgroundColor: theme.css.bg, color: theme.css.primary }}
                         >
                           Save
                         </button>
@@ -720,9 +720,9 @@ export function TkxMessageThread({
                           aria-pressed={mine}
                           className={tkx('text-xs px-1.5 py-0.5 rounded-full cursor-pointer')}
                           style={{
-                            backgroundColor: mine ? theme.primary + '33' : theme.surfaceAlt,
-                            border: `1px solid ${mine ? theme.primary : theme.border}`,
-                            color: theme.text,
+                            backgroundColor: mine ? theme.css.primary + '33' : theme.css.surfaceAlt,
+                            border: `1px solid ${mine ? theme.css.primary : theme.css.border}`,
+                            color: theme.css.text,
                           }}
                         >
                           {r.emoji} {r.by.length}
@@ -731,7 +731,7 @@ export function TkxMessageThread({
                     })}
                     {isOwn && msg.delivery && (
                       <span className={tkx('inline-flex items-center ml-1')}>
-                        <DeliveryIcon state={msg.delivery} color={theme.textMuted} danger={theme.danger} />
+                        <DeliveryIcon state={msg.delivery} color={theme.css.textMuted} danger={theme.css.danger} />
                       </span>
                     )}
                   </div>
@@ -741,7 +741,7 @@ export function TkxMessageThread({
                 {!isDeleted && !isEditing && (
                   <div
                     className={tkx('flex items-center gap-1 mt-1 text-xs')}
-                    style={{ color: theme.textMuted, opacity: 0.85 }}
+                    style={{ color: theme.css.textMuted, opacity: 0.85 }}
                   >
                     <button
                       type="button"
@@ -789,7 +789,7 @@ export function TkxMessageThread({
                         role="menu"
                         aria-label="Pick a reaction"
                         className={tkx('flex items-center gap-1 ml-1 px-1.5 py-1 rounded-full')}
-                        style={{ backgroundColor: theme.surface, border: `1px solid ${theme.border}` }}
+                        style={{ backgroundColor: theme.css.surface, border: `1px solid ${theme.css.border}` }}
                       >
                         {emojiPickerOptions.map((emoji) => (
                           <button
@@ -818,8 +818,8 @@ export function TkxMessageThread({
       className={cx(tkx('flex flex-col overflow-hidden rounded-2xl'), className)}
       style={{
         height: heightVal,
-        backgroundColor: theme.bg,
-        border: `1px solid ${theme.border}`,
+        backgroundColor: theme.css.bg,
+        border: `1px solid ${theme.css.border}`,
         ...style,
       }}
     >
@@ -855,7 +855,7 @@ export function TkxMessageThread({
               className={tkx(
                 'absolute left-1/2 -translate-x-1/2 bottom-3 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer border-none',
               )}
-              style={{ backgroundColor: theme.primary, color: theme.bg, boxShadow: '0 2px 8px rgba(0,0,0,0.25)' }}
+              style={{ backgroundColor: theme.css.primary, color: theme.css.bg, boxShadow: '0 2px 8px rgba(0,0,0,0.25)' }}
             >
               {newCount} new ↓
             </button>
@@ -885,11 +885,11 @@ export function TkxMessageThread({
           aria-live="polite"
           className={tkx('px-4 py-1 flex items-center gap-1')}
           style={{
-            color: theme.textMuted,
+            color: theme.css.textMuted,
             fontSize: 12,
             fontStyle: 'italic',
-            borderTop: `1px solid ${theme.border}`,
-            backgroundColor: theme.bg,
+            borderTop: `1px solid ${theme.css.border}`,
+            backgroundColor: theme.css.bg,
           }}
         >
           <span>{typingLabel}</span>
@@ -943,16 +943,16 @@ export function TkxMessageThread({
       {/* Composer */}
       <div
         className={tkx('flex flex-col gap-1 p-3')}
-        style={{ borderTop: `1px solid ${theme.border}`, backgroundColor: theme.surface }}
+        style={{ borderTop: `1px solid ${theme.css.border}`, backgroundColor: theme.css.surface }}
       >
         {attachWarning && (
           <div
             role="alert"
             className={tkx('text-xs px-2 py-1 rounded')}
             style={{
-              backgroundColor: theme.danger + '20',
-              color: theme.danger,
-              border: `1px solid ${theme.danger}`,
+              backgroundColor: theme.css.danger + '20',
+              color: theme.css.danger,
+              border: `1px solid ${theme.css.danger}`,
             }}
           >
             {attachWarning}
@@ -961,11 +961,11 @@ export function TkxMessageThread({
         {replyPreview && (
           <div
             className={tkx('flex items-center gap-2 px-2 py-1 rounded text-xs')}
-            style={{ backgroundColor: theme.surfaceAlt, color: theme.textMuted }}
+            style={{ backgroundColor: theme.css.surfaceAlt, color: theme.css.textMuted }}
           >
             <span className={tkx('truncate flex-1')}>
               Replying to{' '}
-              <span style={{ fontWeight: 600, color: theme.text }}>
+              <span style={{ fontWeight: 600, color: theme.css.text }}>
                 {sanitizeString(replyPreviewSender?.name ?? 'Unknown')}
               </span>
               : {sanitizeString((replyPreview.text ?? '').slice(0, 80))}
@@ -998,7 +998,7 @@ export function TkxMessageThread({
                 onClick={() => fileRef.current?.click()}
                 aria-label="Attach files"
                 className={tkx('shrink-0 w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer border-none')}
-                style={{ backgroundColor: theme.surfaceAlt, color: theme.text }}
+                style={{ backgroundColor: theme.css.surfaceAlt, color: theme.css.text }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden="true">
                   <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
@@ -1017,7 +1017,7 @@ export function TkxMessageThread({
             aria-label="Message input"
             aria-multiline="true"
             className={tkx('flex-1 resize-none text-sm leading-6 bg-transparent outline-none py-1')}
-            style={{ color: theme.text, caretColor: theme.primary, minHeight: 32, maxHeight: 24 * 6 + 16 }}
+            style={{ color: theme.css.text, caretColor: theme.css.primary, minHeight: 32, maxHeight: 24 * 6 + 16 }}
           />
           <button
             type="button"
@@ -1028,7 +1028,7 @@ export function TkxMessageThread({
               'shrink-0 w-9 h-9 rounded-xl flex items-center justify-center border-none',
               !draft.trim() ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer opacity-100',
             )}
-            style={{ backgroundColor: theme.primary, color: theme.bg }}
+            style={{ backgroundColor: theme.css.primary, color: theme.css.bg }}
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M2 14L14 8 2 2v4.5l8 1.5-8 1.5V14z" fill="currentColor" />

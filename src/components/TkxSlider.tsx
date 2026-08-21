@@ -248,10 +248,10 @@ export function TkxSlider({
   rangeValRef.current = rangeVal;
 
   const trackColor = {
-    primary: theme.primary,
-    success: theme.success,
-    danger: theme.danger,
-    warning: theme.warning,
+    primary: theme.css.primary,
+    success: theme.css.success,
+    danger: theme.css.danger,
+    warning: theme.css.warning,
   }[colorScheme];
 
   const sizes = SIZE_MAP[size];
@@ -333,18 +333,18 @@ export function TkxSlider({
             <label
               id={labelId}
               className={tkx('text-sm font-medium')}
-              style={{ color: theme.text, fontSize: sizes.fontSize }}
+              style={{ color: theme.css.text, fontSize: sizes.fontSize }}
             >
               {safeLabel}
             </label>
           )}
           {showValue && !isRange && (
-            <span className={tkx('text-sm tabular-nums')} style={{ color: theme.textMuted, fontSize: sizes.fontSize }}>
+            <span className={tkx('text-sm tabular-nums')} style={{ color: theme.css.textMuted, fontSize: sizes.fontSize }}>
               {formatVal(singleValue)}
             </span>
           )}
           {showValue && isRange && (
-            <span className={tkx('text-sm tabular-nums')} style={{ color: theme.textMuted, fontSize: sizes.fontSize }}>
+            <span className={tkx('text-sm tabular-nums')} style={{ color: theme.css.textMuted, fontSize: sizes.fontSize }}>
               {formatVal(rangeVal[0])} – {formatVal(rangeVal[1])}
             </span>
           )}
@@ -367,7 +367,7 @@ export function TkxSlider({
               ? { width: sizes.track, height: '100%' }
               : { height: sizes.track }),
             borderRadius: 9999,
-            backgroundColor: theme.border,
+            backgroundColor: theme.css.border,
             cursor: isDisabled ? 'not-allowed' : 'pointer',
             userSelect: 'none',
             touchAction: 'none',
@@ -382,7 +382,7 @@ export function TkxSlider({
                 : { top: 0, left: `${fillLeft}%`, width: `${fillRight - fillLeft}%`, height: '100%' }),
               borderRadius: 9999,
               ...(isDisabled
-                ? { backgroundColor: theme.textMuted }
+                ? { backgroundColor: theme.css.textMuted }
                 : gradient
                   ? { background: isVertical
                       ? `linear-gradient(to top, ${trackColorLight}, ${trackColor})`
@@ -401,7 +401,7 @@ export function TkxSlider({
                 ...(isVertical
                   ? { bottom: `${toPercent(t, min, max)}%`, left: '50%', transform: 'translate(-50%, 50%)', height: 3, width: sizes.track + 4 }
                   : { left: `${toPercent(t, min, max)}%`, top: '50%', transform: 'translate(-50%, -50%)', width: 3, height: sizes.track + 4 }),
-                backgroundColor: theme.surface,
+                backgroundColor: theme.css.surface,
                 borderRadius: 9999,
                 pointerEvents: 'none',
               }}
@@ -417,8 +417,8 @@ export function TkxSlider({
               step={step}
               isDisabled={isDisabled}
               trackColor={trackColor}
-              surfaceColor={theme.surface}
-              disabledColor={theme.textMuted}
+              surfaceColor={theme.css.surface}
+              disabledColor={theme.css.textMuted}
               trackHeight={sizes.track}
               thumbSize={sizes.thumb}
               ariaLabel={safeLabel ?? 'Slider'}
@@ -439,8 +439,8 @@ export function TkxSlider({
                 step={step}
                 isDisabled={isDisabled}
                 trackColor={trackColor}
-                surfaceColor={theme.surface}
-                disabledColor={theme.textMuted}
+                surfaceColor={theme.css.surface}
+                disabledColor={theme.css.textMuted}
                 trackHeight={sizes.track}
                 thumbSize={sizes.thumb}
                 ariaLabel={`${safeLabel ?? 'Range'} start`}
@@ -458,8 +458,8 @@ export function TkxSlider({
                 step={step}
                 isDisabled={isDisabled}
                 trackColor={trackColor}
-                surfaceColor={theme.surface}
-                disabledColor={theme.textMuted}
+                surfaceColor={theme.css.surface}
+                disabledColor={theme.css.textMuted}
                 trackHeight={sizes.track}
                 thumbSize={sizes.thumb}
                 ariaLabel={`${safeLabel ?? 'Range'} end`}
@@ -486,7 +486,7 @@ export function TkxSlider({
                     ? { bottom: `${toPercent(mark.value, min, max)}%`, transform: 'translateY(50%)', left: 0 }
                     : { left: `${toPercent(mark.value, min, max)}%`, transform: 'translateX(-50%)' }),
                   fontSize: '0.6875rem',
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   whiteSpace: 'nowrap',
                 }}
               >
@@ -508,7 +508,7 @@ export function TkxSlider({
                 left: `${toPercent(t, min, max)}%`,
                 transform: 'translateX(-50%)',
                 fontSize: '0.6875rem',
-                color: theme.textMuted,
+                color: theme.css.textMuted,
               }}
             >
               {formatVal(Math.round(t))}

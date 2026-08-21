@@ -311,7 +311,7 @@ export function TkxPivotTable({
                     border: `1px solid ${borderC}`,
                     padding: cellPad,
                     fontWeight: 700,
-                    color: theme.textMuted,
+                    color: theme.css.textMuted,
                     textAlign: 'left',
                   }}
                 >
@@ -374,7 +374,7 @@ export function TkxPivotTable({
                   border: `1px solid ${borderC}`,
                   padding: cellPad,
                   fontWeight: 700,
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   textAlign: 'left',
                 }}
               >
@@ -392,7 +392,7 @@ export function TkxPivotTable({
                     padding: cellPad,
                     fontSize: 11,
                     fontWeight: 600,
-                    color: theme.textMuted,
+                    color: theme.css.textMuted,
                     textAlign: 'right',
                   }}
                 >

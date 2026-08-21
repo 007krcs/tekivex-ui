@@ -509,10 +509,10 @@ export function TkxPlayground({
   const hasError = preview.error !== null || boundaryError !== null;
   const errorMsg = preview.error ?? boundaryError ?? '';
 
-  const editorBg = theme.bg;
-  const previewBg = theme.surfaceAlt;
-  const borderColor = theme.border;
-  const statusBg = theme.surface;
+  const editorBg = theme.css.bg;
+  const previewBg = theme.css.surfaceAlt;
+  const borderColor = theme.css.border;
+  const statusBg = theme.css.surface;
 
   const editorAreaStyle: React.CSSProperties = {
     width: '50%',
@@ -528,7 +528,7 @@ export function TkxPlayground({
     gap: '6px',
     padding: '6px 10px',
     borderBottom: `1px solid ${borderColor}`,
-    backgroundColor: theme.surface,
+    backgroundColor: theme.css.surface,
     flexWrap: 'wrap',
   };
 
@@ -537,7 +537,7 @@ export function TkxPlayground({
     borderRadius: '6px',
     border: `1px solid ${borderColor}`,
     backgroundColor: 'transparent',
-    color: theme.textMuted,
+    color: theme.css.textMuted,
     fontSize: '11px',
     fontWeight: 600,
     cursor: 'pointer',
@@ -567,13 +567,13 @@ export function TkxPlayground({
           justifyContent: 'space-between',
           padding: '8px 14px',
           borderBottom: `1px solid ${borderColor}`,
-          backgroundColor: theme.surface,
+          backgroundColor: theme.css.surface,
         }}
       >
-        <span style={{ fontSize: '12px', fontWeight: 700, color: theme.primary, letterSpacing: '0.05em' }}>
+        <span style={{ fontSize: '12px', fontWeight: 700, color: theme.css.primary, letterSpacing: '0.05em' }}>
           ⚛ TkxPlayground
         </span>
-        <span style={{ fontSize: '10px', color: theme.textMuted }}>Live JSX Preview</span>
+        <span style={{ fontSize: '10px', color: theme.css.textMuted }}>Live JSX Preview</span>
       </div>
 
       {/* ── Example tabs ── */}
@@ -583,7 +583,7 @@ export function TkxPlayground({
           gap: '4px',
           padding: '6px 10px',
           borderBottom: `1px solid ${borderColor}`,
-          backgroundColor: theme.surface,
+          backgroundColor: theme.css.surface,
           overflowX: 'auto',
         }}
       >
@@ -594,9 +594,9 @@ export function TkxPlayground({
             style={{
               padding: '3px 10px',
               borderRadius: '6px',
-              border: `1px solid ${i === activeExample ? theme.primary : borderColor}`,
-              backgroundColor: i === activeExample ? `${theme.primary}20` : 'transparent',
-              color: i === activeExample ? theme.primary : theme.textMuted,
+              border: `1px solid ${i === activeExample ? theme.css.primary : borderColor}`,
+              backgroundColor: i === activeExample ? `${theme.css.primary}20` : 'transparent',
+              color: i === activeExample ? theme.css.primary : theme.css.textMuted,
               fontSize: '11px',
               fontWeight: i === activeExample ? 700 : 400,
               cursor: 'pointer',
@@ -616,7 +616,7 @@ export function TkxPlayground({
         <div style={editorAreaStyle}>
           {/* Toolbar */}
           <div style={toolbarStyle}>
-            <span style={{ fontSize: '11px', color: theme.textMuted, marginRight: 'auto' }}>editor.tsx</span>
+            <span style={{ fontSize: '11px', color: theme.css.textMuted, marginRight: 'auto' }}>editor.tsx</span>
             <button onClick={handleCopy} style={iconBtnStyle} title="Copy code">
               {copied ? '✓ Copied' : '⎘ Copy'}
             </button>
@@ -647,7 +647,7 @@ export function TkxPlayground({
                 outline: 'none',
                 resize: 'none',
                 backgroundColor: editorBg,
-                color: theme.text,
+                color: theme.css.text,
                 fontSize: '12px',
                 lineHeight: `${LINE_HEIGHT}px`,
                 fontFamily: '"Fira Code", "Cascadia Code", "Consolas", "Courier New", monospace',
@@ -666,8 +666,8 @@ export function TkxPlayground({
                 bottom: '40px',
                 left: '44px',
                 zIndex: 10,
-                backgroundColor: theme.surface,
-                border: `1px solid ${theme.primary}44`,
+                backgroundColor: theme.css.surface,
+                border: `1px solid ${theme.css.primary}44`,
                 borderRadius: '8px',
                 overflow: 'hidden',
                 boxShadow: `0 4px 16px rgba(0,0,0,0.3)`,
@@ -678,7 +678,7 @@ export function TkxPlayground({
                 style={{
                   padding: '4px 10px 4px',
                   fontSize: '10px',
-                  color: theme.primary,
+                  color: theme.css.primary,
                   fontWeight: 700,
                   borderBottom: `1px solid ${borderColor}`,
                   letterSpacing: '0.05em',
@@ -698,7 +698,7 @@ export function TkxPlayground({
                     padding: '6px 10px',
                     border: 'none',
                     backgroundColor: 'transparent',
-                    color: theme.text,
+                    color: theme.css.text,
                     fontSize: '12px',
                     fontFamily: '"Fira Code", monospace',
                     cursor: 'pointer',
@@ -710,7 +710,7 @@ export function TkxPlayground({
                   <span
                     style={{
                       fontSize: '10px',
-                      color: theme.textMuted,
+                      color: theme.css.textMuted,
                       flexShrink: 0,
                     }}
                   >
@@ -734,9 +734,9 @@ export function TkxPlayground({
             style={{
               padding: '6px 10px',
               borderBottom: `1px solid ${borderColor}`,
-              backgroundColor: theme.surface,
+              backgroundColor: theme.css.surface,
               fontSize: '11px',
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               fontWeight: 600,
             }}
           >
@@ -754,7 +754,7 @@ export function TkxPlayground({
               <div
                 style={{
                   padding: '16px',
-                  color: theme.danger,
+                  color: theme.css.danger,
                   fontFamily: '"Fira Code", monospace',
                   fontSize: '12px',
                   lineHeight: 1.6,
@@ -797,7 +797,7 @@ export function TkxPlayground({
           backgroundColor: statusBg,
           borderTop: `1px solid ${borderColor}`,
           fontSize: '11px',
-          color: theme.textMuted,
+          color: theme.css.textMuted,
         }}
       >
         {/* Error / OK indicator */}
@@ -806,7 +806,7 @@ export function TkxPlayground({
             display: 'flex',
             alignItems: 'center',
             gap: '4px',
-            color: hasError ? theme.danger : theme.success,
+            color: hasError ? theme.css.danger : theme.css.success,
             fontWeight: 600,
           }}
         >
@@ -815,7 +815,7 @@ export function TkxPlayground({
               width: '6px',
               height: '6px',
               borderRadius: '50%',
-              backgroundColor: hasError ? theme.danger : theme.success,
+              backgroundColor: hasError ? theme.css.danger : theme.css.success,
               display: 'inline-block',
             }}
           />
@@ -833,7 +833,7 @@ export function TkxPlayground({
 
         {/* Quantum suggestions hint */}
         {suggestions.length > 0 && (
-          <span style={{ marginLeft: 'auto', color: theme.primary, fontWeight: 600 }}>
+          <span style={{ marginLeft: 'auto', color: theme.css.primary, fontWeight: 600 }}>
             ⚛ {suggestions.length} suggestion{suggestions.length > 1 ? 's' : ''}
           </span>
         )}

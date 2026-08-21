@@ -158,11 +158,11 @@ export function TkxEmpty({
   let imageContent: ReactNode;
   if (image === 'default') {
     imageContent = createElement(DefaultImage, {
-      color: theme.primary,
-      mutedColor: theme.textMuted,
+      color: theme.css.primary,
+      mutedColor: theme.css.textMuted,
     });
   } else if (image === 'simple') {
-    imageContent = createElement(SimpleImage, { mutedColor: theme.textMuted });
+    imageContent = createElement(SimpleImage, { mutedColor: theme.css.textMuted });
   } else {
     imageContent = image;
   }
@@ -198,7 +198,7 @@ export function TkxEmpty({
         'div',
         {
           style: {
-            color: theme.textMuted,
+            color: theme.css.textMuted,
             fontSize: '0.875rem',
             lineHeight: '1.5',
             maxWidth: '320px',

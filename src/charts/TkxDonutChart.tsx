@@ -48,13 +48,13 @@ function CenterLabel({
     <>
       {label && (
         <text x={cx} y={cy - (sublabel ? 8 : 0)} textAnchor="middle" dominantBaseline="middle"
-          fill={theme.text} fontSize={22} fontWeight={700} fontFamily="inherit">
+          fill={theme.css.text} fontSize={22} fontWeight={700} fontFamily="inherit">
           {label}
         </text>
       )}
       {sublabel && (
         <text x={cx} y={cy + (label ? 18 : 0)} textAnchor="middle" dominantBaseline="middle"
-          fill={theme.textMuted} fontSize={13} fontFamily="inherit">
+          fill={theme.css.textMuted} fontSize={13} fontFamily="inherit">
           {sublabel}
         </text>
       )}
@@ -104,7 +104,7 @@ export function TkxDonutChart({
             />
           )}
           {showLegend && (
-            <Legend wrapperStyle={{ fontSize: 13, color: theme.textMuted }} />
+            <Legend wrapperStyle={{ fontSize: 13, color: theme.css.textMuted }} />
           )}
           <Pie
             data={data}
@@ -115,7 +115,7 @@ export function TkxDonutChart({
             startAngle={startAngle}
             endAngle={startAngle - 360}
             strokeWidth={3}
-            stroke={theme.bg}
+            stroke={theme.css.bg}
             label={false}
             labelLine={false}
           >
@@ -148,12 +148,12 @@ export function TkxDonutChart({
           }}
         >
           {centerLabel && (
-            <span style={{ fontSize: 22, fontWeight: 700, color: theme.text, lineHeight: 1 }}>
+            <span style={{ fontSize: 22, fontWeight: 700, color: theme.css.text, lineHeight: 1 }}>
               {centerLabel}
             </span>
           )}
           {centerSublabel && (
-            <span style={{ fontSize: 13, color: theme.textMuted, marginTop: 4 }}>
+            <span style={{ fontSize: 13, color: theme.css.textMuted, marginTop: 4 }}>
               {centerSublabel}
             </span>
           )}

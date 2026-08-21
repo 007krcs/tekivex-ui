@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type CSSProperties } from 'react';
-import { useTheme } from '../themes';
+import { useTheme, type ResolvedTheme } from '../themes';
 import { cx, tkx } from '../engine/tkx';
 
 export interface TkxAIConfidenceBarProps {
@@ -25,12 +25,12 @@ const HEIGHT: Record<NonNullable<TkxAIConfidenceBarProps['size']>, number> = {
 
 function confidenceColor(
   value: number,
-  theme: { primary: string; success: string; warning: string; danger: string },
+  theme: ResolvedTheme,
 ): string {
-  if (value >= 80) return theme.success;  // green
-  if (value >= 55) return theme.primary;  // brand
-  if (value >= 30) return theme.warning;  // amber
-  return theme.danger;                    // red
+  if (value >= 80) return theme.css.success;  // green
+  if (value >= 55) return theme.css.primary;  // brand
+  if (value >= 30) return theme.css.warning;  // amber
+  return theme.css.danger;                    // red
 }
 
 export function TkxAIConfidenceBar({
@@ -76,7 +76,7 @@ export function TkxAIConfidenceBar({
       {(label || showLabel) && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
           {label && (
-            <span style={{ fontSize: 12, fontWeight: 600, color: theme.textMuted }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: theme.css.textMuted }}>
               {label}
             </span>
           )}
@@ -92,7 +92,7 @@ export function TkxAIConfidenceBar({
       <div style={{
         height: h,
         borderRadius: h,
-        background: `${theme.border}`,
+        background: `${theme.css.border}`,
         overflow: 'hidden',
         position: 'relative',
       }}>
@@ -120,7 +120,7 @@ export function TkxAIConfidenceBar({
       </div>
 
       {/* Confidence label */}
-      <div style={{ fontSize: 10, color: theme.textMuted, marginTop: 2, display: 'flex', gap: 4, alignItems: 'center' }}>
+      <div style={{ fontSize: 10, color: theme.css.textMuted, marginTop: 2, display: 'flex', gap: 4, alignItems: 'center' }}>
         <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
         {clamped >= 80 ? 'High confidence' : clamped >= 55 ? 'Moderate confidence' : clamped >= 30 ? 'Low confidence' : 'Very low — review manually'}
       </div>

@@ -32,11 +32,11 @@ export interface TkxSignaturePadProps {
   width?: number;
   /** Height in px. Defaults to 180. */
   height?: number;
-  /** Stroke colour. Defaults to theme.text. */
+  /** Stroke colour. Defaults to theme.css.text. */
   strokeColor?: string;
   /** Stroke width in px. Defaults to 2. */
   strokeWidth?: number;
-  /** Background fill. Defaults to theme.surface. */
+  /** Background fill. Defaults to theme.css.surface. */
   backgroundColor?: string;
   /** Called when the user lifts the pointer after drawing. */
   onChange?: (dataUrl: string) => void;
@@ -92,8 +92,8 @@ export const TkxSignaturePad = forwardRef<TkxSignaturePadHandle, TkxSignaturePad
     const dprRef = useRef<number>(1);
     const [resolvedWidth, setResolvedWidth] = useState<number>(width ?? 320);
 
-    const resolvedStroke = strokeColor ?? theme.text;
-    const resolvedBg = backgroundColor ?? theme.surface;
+    const resolvedStroke = strokeColor ?? theme.css.text;
+    const resolvedBg = backgroundColor ?? theme.css.surface;
 
     // Container resize → match canvas width unless explicitly fixed.
     useEffect(() => {
@@ -249,11 +249,11 @@ export const TkxSignaturePad = forwardRef<TkxSignaturePadHandle, TkxSignaturePad
     const labelStyle: CSSProperties = {
       fontSize: 13,
       fontWeight: 600,
-      color: theme.text,
+      color: theme.css.text,
     };
     const canvasStyle: CSSProperties = {
       borderRadius: 8,
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       background: resolvedBg,
       cursor: disabled ? 'not-allowed' : 'crosshair',
       touchAction: 'none',

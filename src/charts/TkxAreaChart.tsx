@@ -60,19 +60,19 @@ export function TkxAreaChart({
   const colors = getDefaultColors(theme);
   const tt = tooltipStyle(theme);
 
-  const tickStyle = { fill: theme.textMuted, fontSize: 12 };
+  const tickStyle = { fill: theme.css.textMuted, fontSize: 12 };
 
   return (
     <div role="img" aria-label={ariaLabel} style={{ width: '100%', height }}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={margin}>
           {showGrid && (
-            <CartesianGrid strokeDasharray="3 3" stroke={theme.border} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={theme.css.border} vertical={false} />
           )}
           <XAxis
             dataKey={xKey}
             tick={tickStyle}
-            axisLine={{ stroke: theme.border }}
+            axisLine={{ stroke: theme.css.border }}
             tickLine={false}
             tickFormatter={xTickFormatter}
           />
@@ -93,7 +93,7 @@ export function TkxAreaChart({
           )}
           {showLegend && (
             <Legend
-              wrapperStyle={{ fontSize: 13, color: theme.textMuted, paddingTop: 8 }}
+              wrapperStyle={{ fontSize: 13, color: theme.css.textMuted, paddingTop: 8 }}
             />
           )}
           {series.map((s, i) => {

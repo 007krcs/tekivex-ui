@@ -285,8 +285,8 @@ export function TkxAutocomplete({
               left: dropdownPos.left,
               width: dropdownPos.width,
               maxHeight: MAX_DROPDOWN_HEIGHT,
-              backgroundColor: theme.surface,
-              border: `1px solid ${theme.border}`,
+              backgroundColor: theme.css.surface,
+              border: `1px solid ${theme.css.border}`,
               boxShadow: `0 8px 24px rgba(0,0,0,0.15)`,
               ...animStyle,
             }}
@@ -297,9 +297,9 @@ export function TkxAutocomplete({
                 aria-selected={false}
                 aria-disabled="true"
                 className={tkx('flex items-center gap-2 px-3 py-2 text-sm')}
-                style={{ color: theme.textMuted }}
+                style={{ color: theme.css.textMuted }}
               >
-                <Spinner color={theme.primary} />
+                <Spinner color={theme.css.primary} />
                 Loading...
               </li>
             ) : filtered.length === 0 ? (
@@ -308,7 +308,7 @@ export function TkxAutocomplete({
                 aria-selected={false}
                 aria-disabled="true"
                 className={tkx('px-3 py-2 text-sm text-center')}
-                style={{ color: theme.textMuted }}
+                style={{ color: theme.css.textMuted }}
               >
                 {safeEmptyMessage}
               </li>
@@ -332,8 +332,8 @@ export function TkxAutocomplete({
                       option.disabled ? 'opacity-50 cursor-not-allowed' : '',
                     )}
                     style={{
-                      backgroundColor: isActive ? theme.surfaceAlt : 'transparent',
-                      color: option.disabled ? theme.textMuted : theme.text,
+                      backgroundColor: isActive ? theme.css.surfaceAlt : 'transparent',
+                      color: option.disabled ? theme.css.textMuted : theme.css.text,
                       transition: reducedMotion ? 'none' : 'background-color 100ms ease',
                     }}
                     onMouseEnter={() => !option.disabled && setActiveIndex(idx)}
@@ -352,7 +352,7 @@ export function TkxAutocomplete({
                       {safeDesc && (
                         <span
                           className={tkx('text-xs truncate')}
-                          style={{ color: theme.textMuted }}
+                          style={{ color: theme.css.textMuted }}
                         >
                           {safeDesc}
                         </span>
@@ -369,7 +369,7 @@ export function TkxAutocomplete({
                       >
                         <path
                           d="M3 8l3.5 3.5L13 5"
-                          stroke={theme.primary}
+                          stroke={theme.css.primary}
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -395,7 +395,7 @@ export function TkxAutocomplete({
       <label
         htmlFor={inputId}
         className={tkx('block text-sm font-medium mb-1.5')}
-        style={{ color: theme.text }}
+        style={{ color: theme.css.text }}
       >
         {safeLabel}
       </label>
@@ -404,8 +404,8 @@ export function TkxAutocomplete({
       <div
         className={tkx('relative flex items-center')}
         style={{
-          backgroundColor: theme.surface,
-          border: `1px solid ${isOpen ? theme.primary : theme.border}`,
+          backgroundColor: theme.css.surface,
+          border: `1px solid ${isOpen ? theme.css.primary : theme.css.border}`,
           borderRadius: 8,
           transition: reducedMotion ? 'none' : 'border-color 150ms ease',
         }}
@@ -430,12 +430,12 @@ export function TkxAutocomplete({
             'placeholder:opacity-50',
           )}
           style={{
-            color: theme.text,
+            color: theme.css.text,
           }}
         />
         {isLoading && (
           <span className={tkx('pr-3')}>
-            <Spinner color={theme.primary} />
+            <Spinner color={theme.css.primary} />
           </span>
         )}
       </div>

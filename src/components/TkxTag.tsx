@@ -70,19 +70,19 @@ function useTagColors(colorScheme: TagColorScheme, variant: TagVariant) {
   const theme = useTheme();
 
   const baseColor: Record<TagColorScheme, string> = {
-    default: theme.textMuted,
-    primary: theme.primary,
-    secondary: theme.secondary,
-    success: theme.success,
-    danger: theme.danger,
-    warning: theme.warning,
-    info: theme.info,
+    default: theme.css.textMuted,
+    primary: theme.css.primary,
+    secondary: theme.css.secondary,
+    success: theme.css.success,
+    danger: theme.css.danger,
+    warning: theme.css.warning,
+    info: theme.css.info,
   };
 
   const accent = baseColor[colorScheme];
 
   if (variant === 'solid') {
-    return { bg: accent, color: theme.bg, border: 'transparent' };
+    return { bg: accent, color: theme.css.bg, border: 'transparent' };
   }
   if (variant === 'subtle') {
     return { bg: `${accent}22`, color: accent, border: 'transparent' };
@@ -299,7 +299,7 @@ export function TkxTagInput({
       {label && (
         <label
           className={tkx('text-sm font-medium')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
           onClick={() => inputRef.current?.focus()}
         >
           {sanitizeString(label)}
@@ -312,8 +312,8 @@ export function TkxTagInput({
         )}
         style={{
           padding: containerPad,
-          backgroundColor: theme.surface,
-          border: `1.5px solid ${error ? theme.danger : theme.border}`,
+          backgroundColor: theme.css.surface,
+          border: `1.5px solid ${error ? theme.css.danger : theme.css.border}`,
           opacity: isDisabled ? 0.55 : 1,
           minHeight: size === 'sm' ? 36 : size === 'lg' ? 48 : 40,
         }}
@@ -341,18 +341,18 @@ export function TkxTagInput({
             placeholder={tags.length === 0 ? sanitizeString(placeholder) : ''}
             disabled={isDisabled}
             className={tkx('flex-1 bg-transparent outline-none min-w-[80px]')}
-            style={{ fontSize: inputFontSize, color: theme.text, caretColor: theme.primary }}
+            style={{ fontSize: inputFontSize, color: theme.css.text, caretColor: theme.css.primary }}
             aria-label={label ?? 'Tag input'}
           />
         )}
       </div>
       {error && (
-        <p className={tkx('text-xs')} style={{ color: theme.danger }} role="alert">
+        <p className={tkx('text-xs')} style={{ color: theme.css.danger }} role="alert">
           {error}
         </p>
       )}
       {hint && !error && (
-        <p className={tkx('text-xs')} style={{ color: theme.textMuted }}>
+        <p className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>
           {sanitizeString(hint)}
         </p>
       )}

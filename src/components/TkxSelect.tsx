@@ -66,6 +66,11 @@ const SIZE_MAP: Record<SelectSize, { py: string; px: string; fontSize: string; i
 
 function toArray(v: string | string[] | undefined): string[] {
   if (v === undefined) return [];
+  // An empty string means "nothing selected", not "a selection whose value is
+  // the empty string". Treating it as a selection made the trigger render a
+  // blank label instead of the placeholder, forcing consumers to write
+  // `value={x || undefined}` at every call site.
+  if (v === '') return [];
   return Array.isArray(v) ? v : [v];
 }
 
@@ -476,10 +481,10 @@ export function TkxSelect({
   // ── Render helpers ────────────────────────────────────────────────────────
 
   const borderColor = hasError
-    ? theme.danger
+    ? theme.css.danger
     : isOpen
-    ? theme.primary
-    : theme.border;
+    ? theme.css.primary
+    : theme.css.border;
 
   const activeOptionId =
     activeIndex >= 0 && flatEnabled[activeIndex]
@@ -517,8 +522,8 @@ export function TkxSelect({
             left: dropdownRect.left,
             width: dropdownRect.width,
             zIndex: 9999,
-            backgroundColor: theme.surface,
-            border: `1.5px solid ${theme.border}`,
+            backgroundColor: theme.css.surface,
+            border: `1.5px solid ${theme.css.border}`,
             borderRadius: 10,
             boxShadow: `0 8px 32px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.14)`,
             overflow: 'hidden',
@@ -533,7 +538,7 @@ export function TkxSelect({
             <div
               style={{
                 padding: '8px 10px',
-                borderBottom: `1px solid ${theme.border}`,
+                borderBottom: `1px solid ${theme.css.border}`,
                 flexShrink: 0,
                 display: 'flex',
                 alignItems: 'center',
@@ -545,7 +550,7 @@ export function TkxSelect({
                 height="14"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke={theme.textMuted}
+                stroke={theme.css.textMuted}
                 strokeWidth="2"
                 aria-hidden="true"
                 style={{ flexShrink: 0 }}
@@ -574,7 +579,7 @@ export function TkxSelect({
                   border: 'none',
                   outline: 'none',
                   background: 'transparent',
-                  color: theme.text,
+                  color: theme.css.text,
                   fontSize: sz.fontSize,
                   fontFamily: 'inherit',
                   width: '100%',
@@ -642,7 +647,7 @@ export function TkxSelect({
                           <span
                             style={{
                               fontSize: '12px',
-                              color: theme.textMuted,
+                              color: theme.css.textMuted,
                               marginTop: 1,
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
@@ -673,11 +678,11 @@ export function TkxSelect({
                           padding: `0 ${sz.px}`,
                           fontSize: sz.fontSize,
                           fontFamily: 'inherit',
-                          color: opt.disabled ? theme.textMuted : theme.text,
+                          color: opt.disabled ? theme.css.textMuted : theme.css.text,
                           backgroundColor: isActive
-                            ? `${theme.primary}22`
+                            ? `${theme.css.primary}22`
                             : isSelected
-                            ? `${theme.primary}12`
+                            ? `${theme.css.primary}12`
                             : 'transparent',
                           cursor: opt.disabled ? 'not-allowed' : 'pointer',
                           display: 'flex',
@@ -697,7 +702,7 @@ export function TkxSelect({
                             height="14"
                             viewBox="0 0 24 24"
                             fill="none"
-                            stroke={theme.primary}
+                            stroke={theme.css.primary}
                             strokeWidth="2.5"
                             aria-hidden="true"
                             style={{ flexShrink: 0 }}
@@ -715,7 +720,7 @@ export function TkxSelect({
                       padding: `${sz.py} ${sz.px}`,
                       fontSize: sz.fontSize,
                       fontFamily: 'inherit',
-                      color: theme.textMuted,
+                      color: theme.css.textMuted,
                       textAlign: 'center',
                       position: 'absolute',
                       top: 0,
@@ -741,13 +746,13 @@ export function TkxSelect({
                       fontWeight: 700,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
-                      color: theme.textMuted,
+                      color: theme.css.textMuted,
                       fontFamily: 'inherit',
                       position: 'sticky',
                       top: 0,
-                      backgroundColor: theme.surface,
+                      backgroundColor: theme.css.surface,
                       zIndex: 1,
-                      borderBottom: `1px solid ${theme.border}`,
+                      borderBottom: `1px solid ${theme.css.border}`,
                     }}
                   >
                     {sanitizeString(group)}
@@ -795,7 +800,7 @@ export function TkxSelect({
                         <span
                           style={{
                             fontSize: '12px',
-                            color: theme.textMuted,
+                            color: theme.css.textMuted,
                             marginTop: 1,
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
@@ -824,11 +829,11 @@ export function TkxSelect({
                         padding: `${sz.py} ${sz.px}`,
                         fontSize: sz.fontSize,
                         fontFamily: 'inherit',
-                        color: opt.disabled ? theme.textMuted : theme.text,
+                        color: opt.disabled ? theme.css.textMuted : theme.css.text,
                         backgroundColor: isActive
-                          ? `${theme.primary}22`
+                          ? `${theme.css.primary}22`
                           : isSelected
-                          ? `${theme.primary}12`
+                          ? `${theme.css.primary}12`
                           : 'transparent',
                         cursor: opt.disabled ? 'not-allowed' : 'pointer',
                         display: 'flex',
@@ -848,7 +853,7 @@ export function TkxSelect({
                           height="14"
                           viewBox="0 0 24 24"
                           fill="none"
-                          stroke={theme.primary}
+                          stroke={theme.css.primary}
                           strokeWidth="2.5"
                           aria-hidden="true"
                           style={{ flexShrink: 0 }}
@@ -868,7 +873,7 @@ export function TkxSelect({
                   padding: `${sz.py} ${sz.px}`,
                   fontSize: sz.fontSize,
                   fontFamily: 'inherit',
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   textAlign: 'center',
                 }}
               >
@@ -900,7 +905,7 @@ export function TkxSelect({
             fontSize: '14px',
             fontWeight: 500,
             fontFamily: 'inherit',
-            color: theme.text,
+            color: theme.css.text,
             userSelect: 'none',
           }}
         >
@@ -928,7 +933,7 @@ export function TkxSelect({
             : `${sz.py} ${sz.px}`,
           fontSize: sz.fontSize,
           fontFamily: 'inherit',
-          backgroundColor: theme.surface,
+          backgroundColor: theme.css.surface,
           border: `1.5px solid ${borderColor}`,
           borderRadius: 8,
           boxSizing: 'border-box',
@@ -952,10 +957,10 @@ export function TkxSelect({
                 padding: `${sz.tagPy} ${sz.tagPx}`,
                 fontSize: `calc(${sz.fontSize} - 1px)`,
                 fontFamily: 'inherit',
-                backgroundColor: `${theme.primary}22`,
-                color: theme.primary,
+                backgroundColor: `${theme.css.primary}22`,
+                color: theme.css.primary,
                 borderRadius: 6,
-                border: `1px solid ${theme.primary}44`,
+                border: `1px solid ${theme.css.primary}44`,
                 lineHeight: 1.4,
                 maxWidth: 150,
                 overflow: 'hidden',
@@ -1030,14 +1035,14 @@ export function TkxSelect({
             fontSize: sz.fontSize,
             fontFamily: 'inherit',
             backgroundColor: 'transparent',
-            color: selectedValues.length > 0 ? theme.text : theme.textMuted,
+            color: selectedValues.length > 0 ? theme.css.text : theme.css.textMuted,
             border: 'none',
             textAlign: 'left',
             cursor: 'inherit',
             outline: 'none',
           }}
         >
-          {!multiple && selectedValues.length > 0 ? (
+          {!multiple && selectedValues.length > 0 && options.some((o) => o.value === selectedValues[0]) ? (
             (() => {
               const sel = options.find((o) => o.value === selectedValues[0]);
               return (
@@ -1074,10 +1079,10 @@ export function TkxSelect({
             alignItems: 'center',
             gap: 4,
             flexShrink: 0,
-            color: theme.textMuted,
+            color: theme.css.textMuted,
           }}
         >
-          {isLoading && <Spinner size={sz.iconSize} color={theme.primary} />}
+          {isLoading && <Spinner size={sz.iconSize} color={theme.css.primary} />}
           {hasClearable && !isLoading && (
             <button
               type="button"
@@ -1137,7 +1142,7 @@ export function TkxSelect({
       {hint && !hasError && (
         <span
           id={hintId}
-          style={{ fontSize: '12px', color: theme.textMuted, fontFamily: 'inherit' }}
+          style={{ fontSize: '12px', color: theme.css.textMuted, fontFamily: 'inherit' }}
         >
           {sanitizeString(hint)}
         </span>
@@ -1148,7 +1153,7 @@ export function TkxSelect({
           role="alert"
           style={{
             fontSize: '12px',
-            color: theme.danger,
+            color: theme.css.danger,
             display: 'flex',
             alignItems: 'center',
             gap: 4,

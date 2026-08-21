@@ -498,7 +498,7 @@ export function TkxForm<T extends Record<string, unknown> = Record<string, unkno
         onSubmit={handleSubmit}
         className={cx(layoutClass, className)}
         style={{
-          color: theme.text,
+          color: theme.css.text,
           ...style,
         }}
       >
@@ -626,11 +626,11 @@ export function TkxFormField({
         'text-sm font-medium font-sans',
         isHorizontal ? 'min-w-[140px] pt-2.5' : '',
       )}
-      style={{ color: theme.text }}
+      style={{ color: theme.css.text }}
     >
       {safeLabel}
       {isRequired && (
-        <span aria-hidden="true" className={tkx('ml-1')} style={{ color: theme.danger }}>
+        <span aria-hidden="true" className={tkx('ml-1')} style={{ color: theme.css.danger }}>
           *
         </span>
       )}
@@ -641,7 +641,7 @@ export function TkxFormField({
   const messageElement = (
     <>
       {safeHelp && !safeError && (
-        <span className={tkx('text-xs mt-0.5')} style={{ color: theme.textMuted }}>
+        <span className={tkx('text-xs mt-0.5')} style={{ color: theme.css.textMuted }}>
           {safeHelp}
         </span>
       )}
@@ -650,7 +650,7 @@ export function TkxFormField({
           role="alert"
           className={tkx('text-xs flex items-center gap-1 mt-0.5')}
           style={{
-            color: theme.danger,
+            color: theme.css.danger,
             animation: 'tkxFormErrorReveal 200ms ease-out',
           }}
         >

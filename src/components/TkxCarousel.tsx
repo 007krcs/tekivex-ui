@@ -353,7 +353,7 @@ export function TkxCarousel({
           onClick={() => setPaused((p) => !p)}
           aria-label={paused ? 'Start automatic slide show' : 'Stop automatic slide show'}
           className={tkx('self-start inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium cursor-pointer border-none')}
-          style={{ backgroundColor: theme.surfaceAlt, color: theme.text }}
+          style={{ backgroundColor: theme.css.surfaceAlt, color: theme.css.text }}
         >
           {paused ? (
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
@@ -375,9 +375,9 @@ export function TkxCarousel({
             direction="prev"
             onClick={prev}
             isDisabled={!canPrev}
-            primaryColor={theme.primary}
-            surfaceColor={theme.surface}
-            textColor={theme.text}
+            primaryColor={theme.css.primary}
+            surfaceColor={theme.css.surface}
+            textColor={theme.css.text}
             position="outside"
             orientation={orientation}
           />
@@ -412,9 +412,9 @@ export function TkxCarousel({
                 direction="prev"
                 onClick={prev}
                 isDisabled={!canPrev}
-                primaryColor={theme.primary}
-                surfaceColor={theme.surface}
-                textColor={theme.text}
+                primaryColor={theme.css.primary}
+                surfaceColor={theme.css.surface}
+                textColor={theme.css.text}
                 position="inside"
                 orientation={orientation}
               />
@@ -422,9 +422,9 @@ export function TkxCarousel({
                 direction="next"
                 onClick={next}
                 isDisabled={!canNext}
-                primaryColor={theme.primary}
-                surfaceColor={theme.surface}
-                textColor={theme.text}
+                primaryColor={theme.css.primary}
+                surfaceColor={theme.css.surface}
+                textColor={theme.css.text}
                 position="inside"
                 orientation={orientation}
               />
@@ -484,13 +484,13 @@ export function TkxCarousel({
                     height: 8,
                     borderRadius: 9999,
                     border: 'none',
-                    backgroundColor: idx === currentIdx ? theme.primary : theme.textMuted,
+                    backgroundColor: idx === currentIdx ? theme.css.primary : theme.css.textMuted,
                     cursor: 'pointer',
                     padding: 0,
                     transition: 'width 250ms ease, background 250ms ease',
                     outline: 'none',
                   }}
-                  onFocus={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 3px ${theme.primary}66`; }}
+                  onFocus={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 3px ${theme.css.primary}66`; }}
                   onBlur={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
                 />
               ))}
@@ -504,9 +504,9 @@ export function TkxCarousel({
             direction="next"
             onClick={next}
             isDisabled={!canNext}
-            primaryColor={theme.primary}
-            surfaceColor={theme.surface}
-            textColor={theme.text}
+            primaryColor={theme.css.primary}
+            surfaceColor={theme.css.surface}
+            textColor={theme.css.text}
             position="outside"
             orientation={orientation}
           />
@@ -543,17 +543,17 @@ export function TkxCarousel({
                 flexShrink: 0,
                 width: 60,
                 height: 42,
-                border: `2px solid ${idx === currentIdx ? theme.primary : theme.border}`,
+                border: `2px solid ${idx === currentIdx ? theme.css.primary : theme.css.border}`,
                 borderRadius: 6,
                 overflow: 'hidden',
                 cursor: 'pointer',
                 padding: 0,
-                background: theme.surfaceAlt,
+                background: theme.css.surfaceAlt,
                 transition: 'border-color 150ms ease',
                 outline: 'none',
                 position: 'relative',
               }}
-              onFocus={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 3px ${theme.primary}55`; }}
+              onFocus={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 3px ${theme.css.primary}55`; }}
               onBlur={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}
             >
               {slide.thumbnail ? (
@@ -572,7 +572,7 @@ export function TkxCarousel({
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '0.625rem',
-                    color: theme.textMuted,
+                    color: theme.css.textMuted,
                     fontWeight: 600,
                   }}
                 >
@@ -585,7 +585,7 @@ export function TkxCarousel({
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    backgroundColor: `${theme.primary}22`,
+                    backgroundColor: `${theme.css.primary}22`,
                   }}
                 />
               )}

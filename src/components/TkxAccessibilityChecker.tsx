@@ -185,7 +185,7 @@ export function TkxAccessibilityChecker({
   const totalCount = violations.length;
   const grade =
     totalCount === 0
-      ? { color: theme.success ?? '#06d6a0', label: '✓ AAA' }
+      ? { color: theme.css.success ?? '#06d6a0', label: '✓ AAA' }
       : totalImpacts.critical || totalImpacts.serious
         ? { color: '#f72585', label: 'Issues' }
         : { color: '#ffbe0b', label: 'Warnings' };
@@ -222,8 +222,8 @@ export function TkxAccessibilityChecker({
               alignItems: 'center',
               gap: 8,
               padding: '12px 16px',
-              borderBottom: `1px solid ${theme.border}`,
-              background: theme.surfaceAlt,
+              borderBottom: `1px solid ${theme.css.border}`,
+              background: theme.css.surfaceAlt,
             }}
           >
             <span
@@ -236,7 +236,7 @@ export function TkxAccessibilityChecker({
               }}
               aria-hidden="true"
             />
-            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: theme.text, flex: 1 }}>
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: theme.css.text, flex: 1 }}>
               Accessibility — {grade.label}
             </h3>
             <button
@@ -246,7 +246,7 @@ export function TkxAccessibilityChecker({
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: theme.textMuted,
+                color: theme.css.textMuted,
                 cursor: 'pointer',
                 fontSize: 18,
                 padding: 4,
@@ -264,7 +264,7 @@ export function TkxAccessibilityChecker({
             )}
 
             {totalCount === 0 ? (
-              <div style={{ color: theme.textMuted, fontSize: 13 }}>
+              <div style={{ color: theme.css.textMuted, fontSize: 13 }}>
                 No axe-core violations on this page. ✓
               </div>
             ) : (
@@ -282,8 +282,8 @@ export function TkxAccessibilityChecker({
                       key={impact}
                       style={{
                         padding: '3px 8px',
-                        background: `${IMPACT_COLOR[impact] ?? theme.textMuted}22`,
-                        color: IMPACT_COLOR[impact] ?? theme.textMuted,
+                        background: `${IMPACT_COLOR[impact] ?? theme.css.textMuted}22`,
+                        color: IMPACT_COLOR[impact] ?? theme.css.textMuted,
                         borderRadius: 999,
                         fontSize: 10,
                         fontWeight: 700,
@@ -311,8 +311,8 @@ export function TkxAccessibilityChecker({
                       key={v.id}
                       style={{
                         padding: 10,
-                        background: theme.surfaceAlt,
-                        border: `1px solid ${theme.border}`,
+                        background: theme.css.surfaceAlt,
+                        border: `1px solid ${theme.css.border}`,
                         borderRadius: 8,
                         fontSize: 12,
                       }}
@@ -324,28 +324,28 @@ export function TkxAccessibilityChecker({
                             width: 6,
                             height: 6,
                             borderRadius: '50%',
-                            background: IMPACT_COLOR[v.impact ?? 'minor'] ?? theme.textMuted,
+                            background: IMPACT_COLOR[v.impact ?? 'minor'] ?? theme.css.textMuted,
                           }}
                         />
-                        <strong style={{ color: theme.text, flex: 1 }}>{v.help}</strong>
+                        <strong style={{ color: theme.css.text, flex: 1 }}>{v.help}</strong>
                         <span
                           style={{
                             fontSize: 10,
-                            color: theme.textMuted,
+                            color: theme.css.textMuted,
                             fontFamily: 'monospace',
                           }}
                         >
                           {v.nodes.length}×
                         </span>
                       </div>
-                      <div style={{ color: theme.textMuted, marginBottom: 6 }}>
+                      <div style={{ color: theme.css.textMuted, marginBottom: 6 }}>
                         {v.description}
                       </div>
                       <a
                         href={v.helpUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: theme.primary, fontSize: 11 }}
+                        style={{ color: theme.css.primary, fontSize: 11 }}
                       >
                         Learn more →
                       </a>
@@ -357,7 +357,7 @@ export function TkxAccessibilityChecker({
                   <div
                     style={{
                       marginTop: 10,
-                      color: theme.textMuted,
+                      color: theme.css.textMuted,
                       fontSize: 11,
                       textAlign: 'center',
                     }}
@@ -372,9 +372,9 @@ export function TkxAccessibilityChecker({
           <footer
             style={{
               padding: '8px 16px',
-              borderTop: `1px solid ${theme.border}`,
+              borderTop: `1px solid ${theme.css.border}`,
               fontSize: 10,
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               fontFamily: 'monospace',
               textAlign: 'center',
             }}
@@ -406,7 +406,7 @@ function fabStyle(
     width: 56,
     height: 56,
     borderRadius: '50%',
-    background: theme.surface,
+    background: theme.css.surface,
     border: `2px solid ${color}`,
     boxShadow: `0 0 24px ${color}55, 0 4px 12px rgba(0,0,0,0.3)`,
     color,
@@ -437,12 +437,12 @@ function panelStyle(
     zIndex: 99998,
     width: 360,
     maxWidth: 'calc(100vw - 32px)',
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
+    background: theme.css.surface,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: 12,
     boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
     overflow: 'hidden',
-    color: theme.text,
+    color: theme.css.text,
     ...corner,
   };
 }

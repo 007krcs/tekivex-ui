@@ -77,9 +77,9 @@ function formatValue(val: number | string, unit?: string): string {
 
 function getStatusColor(status: MetricItem['status'], theme: ReturnType<typeof useTheme>): string {
   switch (status) {
-    case 'warning':  return theme.warning;
-    case 'critical': return theme.danger;
-    default:         return theme.primary;
+    case 'warning':  return theme.css.warning;
+    case 'critical': return theme.css.danger;
+    default:         return theme.css.primary;
   }
 }
 
@@ -175,9 +175,9 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
 // ── TrendIcon ────────────────────────────────────────────────────────────────
 
 function TrendIcon({ trend, theme }: { trend: MetricItem['trend']; theme: ReturnType<typeof useTheme> }) {
-  if (trend === 'up')   return createElement('span', { style: { color: theme.success, fontSize: 14, fontWeight: 700 } }, '▲');
-  if (trend === 'down') return createElement('span', { style: { color: theme.danger,  fontSize: 14, fontWeight: 700 } }, '▼');
-  return createElement('span', { style: { color: theme.textMuted, fontSize: 14 } }, '→');
+  if (trend === 'up')   return createElement('span', { style: { color: theme.css.success, fontSize: 14, fontWeight: 700 } }, '▲');
+  if (trend === 'down') return createElement('span', { style: { color: theme.css.danger,  fontSize: 14, fontWeight: 700 } }, '▼');
+  return createElement('span', { style: { color: theme.css.textMuted, fontSize: 14 } }, '→');
 }
 
 // ── MetricCard ───────────────────────────────────────────────────────────────
@@ -210,8 +210,8 @@ function MetricCard({ metric, animate, onMetricClick, theme }: MetricCardProps) 
   const hasPrev = metric.previousValue !== undefined && metric.previousValue !== numericValue;
 
   const cardStyle: CSSProperties = {
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
+    background: theme.css.surface,
+    border: `1px solid ${theme.css.border}`,
     borderLeft: `4px solid ${accentColor}`,
     borderRadius: 8,
     padding: '14px 16px',
@@ -248,25 +248,25 @@ function MetricCard({ metric, animate, onMetricClick, theme }: MetricCardProps) 
     // Shimmer overlay
     shimmer && createElement('div', { style: shimmerOverlay }),
     // Label
-    createElement('div', { style: { fontSize: 12, color: theme.textMuted, marginBottom: 6, fontWeight: 500, letterSpacing: '0.03em' } }, sanitizeString(metric.label)),
+    createElement('div', { style: { fontSize: 12, color: theme.css.textMuted, marginBottom: 6, fontWeight: 500, letterSpacing: '0.03em' } }, sanitizeString(metric.label)),
     // Value row
     createElement(
       'div',
       { style: { display: 'flex', alignItems: 'flex-end', gap: 6, marginBottom: 6 } },
-      createElement('span', { style: { fontSize: 28, fontWeight: 700, color: theme.text, lineHeight: 1 } }, displayedText),
-      metric.unit && isNaN(numericValue) && createElement('span', { style: { fontSize: 14, color: theme.textMuted, marginBottom: 2 } }, sanitizeString(metric.unit)),
+      createElement('span', { style: { fontSize: 28, fontWeight: 700, color: theme.css.text, lineHeight: 1 } }, displayedText),
+      metric.unit && isNaN(numericValue) && createElement('span', { style: { fontSize: 14, color: theme.css.textMuted, marginBottom: 2 } }, sanitizeString(metric.unit)),
     ),
     // Trend row
     (metric.trend || metric.trendValue) && createElement(
       'div',
       { style: { display: 'flex', alignItems: 'center', gap: 4, marginBottom: metric.sparkline ? 8 : 0 } },
       metric.trend && createElement(TrendIcon, { trend: metric.trend, theme }),
-      metric.trendValue && createElement('span', { style: { fontSize: 12, color: theme.textMuted } }, sanitizeString(metric.trendValue)),
+      metric.trendValue && createElement('span', { style: { fontSize: 12, color: theme.css.textMuted } }, sanitizeString(metric.trendValue)),
     ),
     // Previous value
     hasPrev && createElement(
       'div',
-      { style: { fontSize: 11, color: theme.textMuted, marginTop: 2 } },
+      { style: { fontSize: 11, color: theme.css.textMuted, marginTop: 2 } },
       `was ${formatValue(metric.previousValue as number)}`,
     ),
     // Sparkline

@@ -181,9 +181,9 @@ export function TkxCascader({
             zIndex: 9999,
             top: dropdownPos.top,
             left: dropdownPos.left,
-            backgroundColor: theme.surface,
-            borderColor: theme.border,
-            boxShadow: `0 4px 16px ${theme.bg}80`,
+            backgroundColor: theme.css.surface,
+            borderColor: theme.css.border,
+            boxShadow: `0 4px 16px ${theme.css.bg}80`,
             animation: reducedMotion ? 'none' : 'tkxFadeIn 0.15s ease',
           }}
         >
@@ -197,7 +197,7 @@ export function TkxCascader({
                 listStyle: 'none',
                 minWidth: 160,
                 maxHeight: 260,
-                borderRight: colIdx < columns.length - 1 ? `1px solid ${theme.border}` : 'none',
+                borderRight: colIdx < columns.length - 1 ? `1px solid ${theme.css.border}` : 'none',
               }}
             >
               {col.map((opt, rowIdx) => {
@@ -230,8 +230,8 @@ export function TkxCascader({
                     tabIndex={opt.disabled ? -1 : 0}
                     className={tkx('flex items-center justify-between px-3 py-2 cursor-pointer text-sm')}
                     style={{
-                      backgroundColor: isSelected ? theme.surfaceAlt : 'transparent',
-                      color: opt.disabled ? theme.textMuted : theme.text,
+                      backgroundColor: isSelected ? theme.css.surfaceAlt : 'transparent',
+                      color: opt.disabled ? theme.css.textMuted : theme.css.text,
                       opacity: opt.disabled ? 0.5 : 1,
                       cursor: opt.disabled ? 'not-allowed' : 'pointer',
                     }}
@@ -263,7 +263,7 @@ export function TkxCascader({
                         viewBox="0 0 24 24"
                         fill="currentColor"
                         aria-hidden="true"
-                        style={{ color: theme.textMuted, flexShrink: 0 }}
+                        style={{ color: theme.css.textMuted, flexShrink: 0 }}
                       >
                         <path d="M10 6l6 6-6 6V6z" />
                       </svg>
@@ -283,7 +283,7 @@ export function TkxCascader({
       {safeLabel && (
         <label
           className={tkx('block text-sm font-medium mb-1')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {safeLabel}
         </label>
@@ -302,9 +302,9 @@ export function TkxCascader({
         aria-label={safeLabel ?? 'Cascader'}
         className={tkx('w-full flex items-center justify-between rounded-lg border px-3 py-2 text-sm cursor-pointer')}
         style={{
-          backgroundColor: theme.surface,
-          borderColor: open ? theme.primary : theme.border,
-          color: displayText ? theme.text : theme.textMuted,
+          backgroundColor: theme.css.surface,
+          borderColor: open ? theme.css.primary : theme.css.border,
+          color: displayText ? theme.css.text : theme.css.textMuted,
           outline: 'none',
           minHeight: 38,
           textAlign: 'left',
@@ -319,7 +319,7 @@ export function TkxCascader({
           fill="currentColor"
           aria-hidden="true"
           style={{
-            color: theme.textMuted,
+            color: theme.css.textMuted,
             transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: reducedMotion ? 'none' : 'transform 0.2s ease',
             flexShrink: 0,

@@ -252,7 +252,7 @@ export function TkxGantt({
             fontWeight: 700,
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            color: theme.textMuted,
+            color: theme.css.textMuted,
           }}
         >
           Task
@@ -316,7 +316,7 @@ export function TkxGantt({
                     width: dayWidth,
                     height: headerHeight,
                     fontSize: 10,
-                    color: isWeekend ? theme.textMuted : theme.text,
+                    color: isWeekend ? theme.css.textMuted : theme.css.text,
                     textAlign: 'center',
                     borderRight: '1px solid var(--tkx-border-soft, #1a1a25)',
                     paddingTop: 4,

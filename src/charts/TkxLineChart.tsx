@@ -69,19 +69,19 @@ export function TkxLineChart({
   const theme = useTheme();
   const colors = getDefaultColors(theme);
   const tt = tooltipStyle(theme);
-  const tickStyle = { fill: theme.textMuted, fontSize: 12 };
+  const tickStyle = { fill: theme.css.textMuted, fontSize: 12 };
 
   return (
     <div role="img" aria-label={ariaLabel} style={{ width: '100%', height }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={margin}>
           {showGrid && (
-            <CartesianGrid strokeDasharray="3 3" stroke={theme.border} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={theme.css.border} vertical={false} />
           )}
           <XAxis
             dataKey={xKey}
             tick={tickStyle}
-            axisLine={{ stroke: theme.border }}
+            axisLine={{ stroke: theme.css.border }}
             tickLine={false}
             tickFormatter={xTickFormatter}
           />
@@ -97,19 +97,19 @@ export function TkxLineChart({
               contentStyle={tt.contentStyle}
               labelStyle={tt.labelStyle}
               itemStyle={tt.itemStyle}
-              cursor={{ stroke: theme.border, strokeWidth: 1 }}
+              cursor={{ stroke: theme.css.border, strokeWidth: 1 }}
             />
           )}
           {showLegend && (
-            <Legend wrapperStyle={{ fontSize: 13, color: theme.textMuted, paddingTop: 8 }} />
+            <Legend wrapperStyle={{ fontSize: 13, color: theme.css.textMuted, paddingTop: 8 }} />
           )}
           {referenceLines.map((rl, i) => (
             <ReferenceLine
               key={i}
               y={rl.y}
               x={rl.x}
-              label={rl.label ? { value: rl.label, fill: theme.textMuted, fontSize: 11 } : undefined}
-              stroke={rl.color ?? theme.border}
+              label={rl.label ? { value: rl.label, fill: theme.css.textMuted, fontSize: 11 } : undefined}
+              stroke={rl.color ?? theme.css.border}
               strokeDasharray={rl.dashed ? '4 4' : undefined}
             />
           ))}

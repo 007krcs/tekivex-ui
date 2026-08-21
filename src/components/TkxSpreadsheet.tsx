@@ -704,7 +704,7 @@ export function TkxSpreadsheet({
               textAlign: 'center',
               lineHeight: `${headerHeight}px`,
               fontWeight: 700,
-              color: c === active.col ? 'var(--tkx-accent, #00f5d4)' : theme.textMuted,
+              color: c === active.col ? 'var(--tkx-accent, #00f5d4)' : theme.css.textMuted,
               borderRight: '1px solid var(--tkx-border-soft, #1a1a25)',
             }}
           >
@@ -729,7 +729,7 @@ export function TkxSpreadsheet({
               textAlign: 'center',
               lineHeight: `${rowHeight}px`,
               fontWeight: 700,
-              color: r === active.row ? 'var(--tkx-accent, #00f5d4)' : theme.textMuted,
+              color: r === active.row ? 'var(--tkx-accent, #00f5d4)' : theme.css.textMuted,
               background: 'var(--tkx-bg-subtle, #0d0d14)',
               borderRight: '1px solid var(--tkx-border, #2a2a3e)',
               borderBottom: '1px solid var(--tkx-border-soft, #1a1a25)',
@@ -772,7 +772,7 @@ export function TkxSpreadsheet({
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   color: typeof computed(a) === 'string' && (computed(a) as string).startsWith('#')
-                    ? theme.danger
+                    ? theme.css.danger
                     : isFormula
                       ? 'var(--tkx-accent, #00f5d4)'
                       : 'var(--tkx-fg, #e8e8f4)',

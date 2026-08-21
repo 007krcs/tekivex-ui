@@ -348,14 +348,14 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
     const labelStyle: CSSProperties = {
       fontSize: 13,
       fontWeight: 600,
-      color: theme.text,
+      color: theme.css.text,
     };
     const groupStyle: CSSProperties = {
       display: 'flex',
       alignItems: 'stretch',
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 8,
-      background: theme.surface,
+      background: theme.css.surface,
       overflow: 'visible',
       position: 'relative',
     };
@@ -366,9 +366,9 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
       padding: '0 10px',
       background: 'transparent',
       border: 'none',
-      borderRight: `1px solid ${theme.border}`,
+      borderRight: `1px solid ${theme.css.border}`,
       cursor: disabled ? 'not-allowed' : 'pointer',
-      color: theme.text,
+      color: theme.css.text,
       fontSize: 14,
       minHeight: 40,
       fontWeight: 500,
@@ -379,7 +379,7 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
       outline: 'none',
       padding: '0 12px',
       fontSize: 14,
-      color: theme.text,
+      color: theme.css.text,
       background: 'transparent',
       minHeight: 40,
       minWidth: 0,
@@ -391,8 +391,8 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
       right: 0,
       maxHeight: 280,
       overflow: 'auto',
-      background: theme.surface,
-      border: `1px solid ${theme.border}`,
+      background: theme.css.surface,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 8,
       zIndex: 1000,
       padding: 6,
@@ -401,10 +401,10 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
     const searchInputStyle: CSSProperties = {
       width: '100%',
       padding: '8px 10px',
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 6,
-      background: theme.bg,
-      color: theme.text,
+      background: theme.css.bg,
+      color: theme.css.text,
       fontSize: 13,
       marginBottom: 6,
       outline: 'none',
@@ -416,13 +416,13 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
       padding: '8px 10px',
       borderRadius: 6,
       cursor: 'pointer',
-      background: active ? theme.surfaceAlt : 'transparent',
-      color: theme.text,
+      background: active ? theme.css.surfaceAlt : 'transparent',
+      color: theme.css.text,
       fontSize: 13,
     });
     const errStyle: CSSProperties = {
       fontSize: 12,
-      color: theme.danger,
+      color: theme.css.danger,
       marginTop: 2,
     };
 
@@ -431,7 +431,7 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
         {label && (
           <label htmlFor={id || inputId} style={labelStyle}>
             {label}
-            {required && <span style={{ color: theme.danger, marginLeft: 4 }} aria-hidden="true">*</span>}
+            {required && <span style={{ color: theme.css.danger, marginLeft: 4 }} aria-hidden="true">*</span>}
           </label>
         )}
         <div style={groupStyle}>
@@ -485,7 +485,7 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
                 aria-label="Filter countries"
               />
               {filtered.length === 0 && (
-                <div style={{ padding: '12px 10px', fontSize: 13, color: theme.textMuted }}>
+                <div style={{ padding: '12px 10px', fontSize: 13, color: theme.css.textMuted }}>
                   No country matches "{search}"
                 </div>
               )}
@@ -500,7 +500,7 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
                 >
                   <span aria-hidden="true" style={{ fontSize: 16 }}>{c.flag}</span>
                   <span style={{ flex: 1 }}>{c.name}</span>
-                  <span style={{ color: theme.textMuted, fontVariantNumeric: 'tabular-nums' }}>+{c.dial}</span>
+                  <span style={{ color: theme.css.textMuted, fontVariantNumeric: 'tabular-nums' }}>+{c.dial}</span>
                 </div>
               ))}
             </div>

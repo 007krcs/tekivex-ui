@@ -27,16 +27,16 @@ export const TkxAvatar = forwardRef<HTMLDivElement, TkxAvatarProps>(
     const [imageError, setImageError] = useState(false);
     const px = SIZE_PX[size];
     const isCircle = shape === 'circle';
-    const bgColor = theme.surfaceAlt;
-    const textColor = getAccessibleForeground(bgColor, [theme.text, theme.textMuted]);
+    const bgColor = theme.css.surfaceAlt;
+    const textColor = getAccessibleForeground(bgColor, [theme.css.text, theme.css.textMuted]);
     const showImage = src && !imageError;
     const showInitials = !showImage && initials;
     const statusDotSize = Math.max(8, px * 0.22);
     const statusColors: Record<AvatarStatus, string> = {
-      online: theme.success,
-      away: theme.warning,
-      busy: theme.danger,
-      offline: theme.textMuted,
+      online: theme.css.success,
+      away: theme.css.warning,
+      busy: theme.css.danger,
+      offline: theme.css.textMuted,
     };
 
     const containerClass = tkx(
@@ -94,7 +94,7 @@ export const TkxAvatar = forwardRef<HTMLDivElement, TkxAvatarProps>(
             style={{
               width: statusDotSize, height: statusDotSize,
               backgroundColor: statusColors[status],
-              border: `2px solid ${theme.bg}`,
+              border: `2px solid ${theme.css.bg}`,
             }}
           />
         )}

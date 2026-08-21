@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useLayoutEffect, useEffect, useState, type ReactNode, createElement } from 'react';
+import { createContext, useContext, useLayoutEffect, useEffect, useMemo, useState, type ReactNode, createElement } from 'react';
 import { cssVar } from '../engine/css';
 import { meetsAA, meetsAAA } from '../engine/wcag';
 
@@ -95,7 +95,47 @@ export function createTheme(base: ThemeTokens, overrides?: Partial<ThemeTokens>)
 
 // ── Theme Context ────────────────────────────────────────────────────────────
 
-export const ThemeContext = createContext<ThemeTokens>(quantumDark);
+/**
+ * What {@link useTheme} returns.
+ *
+ * The twelve colour tokens keep their literal hex values, so existing code —
+ * colour maths, canvas `fillStyle`, anything that parses a hex string — is
+ * unaffected.
+ *
+ * `css` holds the same tokens as CSS custom-property references
+ * (`var(--tkx-surface, #12121a)`). Components paint from these so that:
+ *
+ * 1. An app's own `globals.css` can be the single source of truth — redefine
+ *    `--tkx-*` and the components follow, with the JS palette as fallback. No
+ *    more hand-maintaining a JS palette in lockstep with CSS.
+ * 2. App CSS can beat our inline styles WITHOUT `!important`. Inline styles
+ *    outrank every selector, so `:hover` / `[data-active]` rules used to lose;
+ *    custom properties resolve at use time, so redefining the variable inside
+ *    those rules now cascades into the inline `var()` reference.
+ */
+export interface ResolvedTheme extends ThemeTokens {
+  /** Same tokens as `var(--tkx-*, <hex>)` references. Paint with these. */
+  css: ThemeTokens;
+  /**
+   * The literal hex palette. Identical to reading the tokens directly; kept as
+   * an explicit, self-documenting handle for colour maths.
+   */
+  raw: ThemeTokens;
+}
+
+/**
+ * Attach the `css` (CSS-variable) and `raw` (hex) projections to a palette.
+ * The token values themselves stay hex, so this is backwards compatible.
+ */
+export function toCSSVarTheme(palette: ThemeTokens): ResolvedTheme {
+  const css = {} as Record<string, unknown>;
+  for (const [key, value] of Object.entries(palette)) {
+    css[key] = typeof value === 'string' ? `var(--tkx-${key}, ${value})` : value;
+  }
+  return { ...palette, css: css as unknown as ThemeTokens, raw: palette };
+}
+
+export const ThemeContext = createContext<ResolvedTheme>(toCSSVarTheme(quantumDark));
 
 export type ColorScheme = 'light' | 'dark' | 'auto';
 
@@ -262,9 +302,12 @@ export function ThemeProvider({
         ]),
       ) as Record<string, string>);
 
+  // Components paint from `var(--tkx-*)` rather than raw hex — see ResolvedTheme.
+  const painted = useMemo(() => toCSSVarTheme(resolved), [resolved]);
+
   return createElement(
     ThemeContext.Provider,
-    { value: resolved },
+    { value: painted },
     createElement('div', { style: { display: 'contents', ...inlineVars } }, children),
   );
 }
@@ -303,7 +346,7 @@ export function themeInitScript(opts?: {
   return `(function(){try{var k=${k};var d=${d};var s=null;try{s=window.localStorage.getItem(k);}catch(e){}var m=s;if(m!=="light"&&m!=="dark"){m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":d);}var r=document.documentElement;r.dataset.theme=m;r.setAttribute("data-tkx-scheme",m);}catch(e){}})();`;
 }
 
-export function useTheme(): ThemeTokens {
+export function useTheme(): ResolvedTheme {
   return useContext(ThemeContext);
 }
 

@@ -77,11 +77,11 @@ function relativeTime(ts: number): string {
 
 function getTypeColor(type: FeedItem['type'], theme: ReturnType<typeof useTheme>): string {
   switch (type) {
-    case 'info':    return theme.info;
-    case 'success': return theme.success;
-    case 'warning': return theme.warning;
-    case 'error':   return theme.danger;
-    default:        return theme.border;
+    case 'info':    return theme.css.info;
+    case 'success': return theme.css.success;
+    case 'warning': return theme.css.warning;
+    case 'error':   return theme.css.danger;
+    default:        return theme.css.border;
   }
 }
 
@@ -124,7 +124,7 @@ function FeedRow({ item, isNew, showTimestamps, onItemClick, renderItem, theme, 
     cursor: onItemClick ? 'pointer' : 'default',
     boxSizing: 'border-box',
     height: ITEM_HEIGHT,
-    background: theme.surface,
+    background: theme.css.surface,
     transition: 'background 0.15s',
   };
 
@@ -154,7 +154,7 @@ function FeedRow({ item, isNew, showTimestamps, onItemClick, renderItem, theme, 
           justifyContent: 'center',
           fontSize: 13,
           fontWeight: 700,
-          color: theme.bg,
+          color: theme.css.bg,
           flexShrink: 0,
           overflow: 'hidden',
         },
@@ -170,19 +170,19 @@ function FeedRow({ item, isNew, showTimestamps, onItemClick, renderItem, theme, 
       createElement(
         'div',
         { style: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 } },
-        item.author && createElement('span', { style: { fontWeight: 600, fontSize: 13, color: theme.text } }, sanitizeString(item.author)),
-        item.meta && createElement('span', { style: { fontSize: 11, color: theme.textMuted, background: theme.surfaceAlt, borderRadius: 4, padding: '1px 5px' } }, sanitizeString(item.meta)),
+        item.author && createElement('span', { style: { fontWeight: 600, fontSize: 13, color: theme.css.text } }, sanitizeString(item.author)),
+        item.meta && createElement('span', { style: { fontSize: 11, color: theme.css.textMuted, background: theme.css.surfaceAlt, borderRadius: 4, padding: '1px 5px' } }, sanitizeString(item.meta)),
       ),
       createElement(
         'div',
-        { style: { fontSize: 13, color: theme.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+        { style: { fontSize: 13, color: theme.css.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
         sanitizeString(item.content),
       ),
     ),
     // Timestamp
     showTimestamps && createElement(
       'div',
-      { style: { fontSize: 11, color: theme.textMuted, flexShrink: 0 } },
+      { style: { fontSize: 11, color: theme.css.textMuted, flexShrink: 0 } },
       relativeTime(item.timestamp),
     ),
   );
@@ -273,8 +273,8 @@ export function TkxLiveFeed({
     position: 'relative',
     overflow: 'auto',
     height: typeof height === 'number' ? `${height}px` : height,
-    background: theme.bg,
-    border: `1px solid ${theme.border}`,
+    background: theme.css.bg,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: 8,
     boxSizing: 'border-box',
   };
@@ -289,7 +289,7 @@ export function TkxLiveFeed({
     return createElement(
       'div',
       { className, style: { ...containerStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', ...style } },
-      createElement('span', { style: { color: theme.textMuted, fontSize: 14 } }, sanitizeString(emptyMessage)),
+      createElement('span', { style: { color: theme.css.textMuted, fontSize: 14 } }, sanitizeString(emptyMessage)),
     );
   }
 

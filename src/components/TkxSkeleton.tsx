@@ -73,8 +73,8 @@ export const TkxSkeleton = forwardRef<HTMLDivElement, TkxSkeletonProps>(
               width={i === lines - 1 ? '75%' : width}
               height={height}
               animation={effectiveAnimation}
-              bgColor={theme.surfaceAlt}
-              accentColor={theme.border}
+              bgColor={theme.css.surfaceAlt}
+              accentColor={theme.css.border}
             />
           ))}
         </div>
@@ -96,8 +96,8 @@ export const TkxSkeleton = forwardRef<HTMLDivElement, TkxSkeletonProps>(
           width={width}
           height={height}
           animation={effectiveAnimation}
-          bgColor={theme.surfaceAlt}
-          accentColor={theme.border}
+          bgColor={theme.css.surfaceAlt}
+          accentColor={theme.css.border}
         />
       </div>
     );

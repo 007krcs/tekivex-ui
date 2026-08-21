@@ -138,7 +138,7 @@ export const TkxSortable = forwardRef<HTMLDivElement, TkxSortableProps<any>>(
       transition: 'opacity 0.15s, transform 0.05s',
       outline:
         overId === id && draggingId !== id
-          ? `2px dashed ${theme.primary}`
+          ? `2px dashed ${theme.css.primary}`
           : 'none',
       outlineOffset: 4,
       borderRadius: 8,

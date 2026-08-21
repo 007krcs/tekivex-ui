@@ -53,10 +53,10 @@ function injectTimelineStyles() {
 function useStatusColor(status: TimelineItemStatus = 'pending') {
   const theme = useTheme();
   const map: Record<TimelineItemStatus, string> = {
-    completed: theme.success,
-    active: theme.primary,
-    pending: theme.border,
-    error: theme.danger,
+    completed: theme.css.success,
+    active: theme.css.primary,
+    pending: theme.css.border,
+    error: theme.css.danger,
   };
   return map[status];
 }
@@ -86,9 +86,9 @@ function TimelineDot({
       style={{
         width: size,
         height: size,
-        backgroundColor: status === 'pending' ? theme.surface : color,
+        backgroundColor: status === 'pending' ? theme.css.surface : color,
         border: `2px solid ${color}`,
-        color: status === 'pending' ? color : theme.bg,
+        color: status === 'pending' ? color : theme.css.bg,
       }}
       aria-hidden="true"
     >
@@ -100,7 +100,7 @@ function TimelineDot({
             width: size * 0.35,
             height: size * 0.35,
             borderRadius: '50%',
-            backgroundColor: status === 'pending' ? color : theme.bg,
+            backgroundColor: status === 'pending' ? color : theme.css.bg,
             display: 'block',
           }}
         />
@@ -174,7 +174,7 @@ function ItemContent({
       <div className={tkx('flex items-center gap-2 flex-wrap')}>
         <span
           className={tkx('text-sm font-semibold leading-snug')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {typeof item.title === 'string' ? sanitizeString(item.title) : item.title}
         </span>
@@ -182,13 +182,13 @@ function ItemContent({
           <span>{item.badge}</span>
         )}
         {safeTimestamp && (
-          <span className={tkx('text-[11px] ml-auto')} style={{ color: theme.textMuted }}>
+          <span className={tkx('text-[11px] ml-auto')} style={{ color: theme.css.textMuted }}>
             {safeTimestamp}
           </span>
         )}
       </div>
       {item.description && !compact && (
-        <div className={tkx('text-xs leading-relaxed mt-0.5')} style={{ color: theme.textMuted }}>
+        <div className={tkx('text-xs leading-relaxed mt-0.5')} style={{ color: theme.css.textMuted }}>
           {typeof item.description === 'string' ? sanitizeString(item.description) : item.description}
         </div>
       )}
@@ -225,7 +225,7 @@ export function TkxTimeline({
       <div role="list" aria-label="Timeline" className={tkx('flex items-start w-full overflow-x-auto', className ?? '')} style={style}>
         {items.map((item, idx) => {
           const status = item.status ?? 'pending';
-          const connColor = status === 'completed' ? theme.success : theme.border;
+          const connColor = status === 'completed' ? theme.css.success : theme.css.border;
           const isLast = idx === items.length - 1;
 
           return (
@@ -241,11 +241,11 @@ export function TkxTimeline({
                   )}
                 </div>
                 <div className={tkx('mt-2 px-1 text-center min-w-0 w-full')}>
-                  <div className={tkx('text-xs font-semibold truncate')} style={{ color: theme.text }}>
+                  <div className={tkx('text-xs font-semibold truncate')} style={{ color: theme.css.text }}>
                     {typeof item.title === 'string' ? sanitizeString(item.title) : item.title}
                   </div>
                   {item.timestamp && (
-                    <div className={tkx('text-[10px] mt-0.5')} style={{ color: theme.textMuted }}>
+                    <div className={tkx('text-[10px] mt-0.5')} style={{ color: theme.css.textMuted }}>
                       {sanitizeString(item.timestamp)}
                     </div>
                   )}
@@ -264,7 +264,7 @@ export function TkxTimeline({
       {items.map((item, idx) => {
         const status = item.status ?? 'pending';
         const isLast = idx === items.length - 1;
-        const connColor = status === 'completed' ? theme.success : theme.border;
+        const connColor = status === 'completed' ? theme.css.success : theme.css.border;
         const isRight = isAlternating && idx % 2 === 0;
 
         if (isAlternating) {

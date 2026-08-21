@@ -230,7 +230,7 @@ export function TkxFileUpload({
     if (!isDisabled) inputRef.current?.click();
   }, [isDisabled]);
 
-  const borderColor = isDragOver ? theme.primary : theme.border;
+  const borderColor = isDragOver ? theme.css.primary : theme.css.border;
   const safeLabel = sanitizeString(resolvedLabel);
   const safeHint = hint ? sanitizeString(hint) : '';
 
@@ -249,24 +249,24 @@ export function TkxFileUpload({
       className={tkx('flex flex-col items-center justify-center gap-3 w-full p-8 rounded-lg')}
       style={{
         border: `2px dashed ${borderColor}`,
-        backgroundColor: isDragOver ? `${theme.primary}10` : theme.surface,
+        backgroundColor: isDragOver ? `${theme.css.primary}10` : theme.css.surface,
         cursor: isDisabled ? 'not-allowed' : 'pointer',
         opacity: isDisabled ? 0.5 : 1,
         transition: reducedMotion ? 'none' : 'border-color 150ms ease, background-color 150ms ease',
         outline: 'none',
       }}
     >
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={isDragOver ? theme.primary : theme.textMuted} strokeWidth={1.5} aria-hidden="true">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={isDragOver ? theme.css.primary : theme.css.textMuted} strokeWidth={1.5} aria-hidden="true">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
         <polyline points="17 8 12 3 7 8" />
         <line x1="12" y1="3" x2="12" y2="15" />
       </svg>
       <div className={tkx('text-center')}>
-        <p className={tkx('m-0 text-sm font-medium')} style={{ color: theme.text }}>
+        <p className={tkx('m-0 text-sm font-medium')} style={{ color: theme.css.text }}>
           {isDragOver ? dropFilesText : safeLabel}
         </p>
         {safeHint && (
-          <p id={hintId} className={tkx('m-0 text-xs mt-1')} style={{ color: theme.textMuted }}>
+          <p id={hintId} className={tkx('m-0 text-xs mt-1')} style={{ color: theme.css.textMuted }}>
             {safeHint}
           </p>
         )}
@@ -282,8 +282,8 @@ export function TkxFileUpload({
       aria-describedby={hint ? hintId : undefined}
       className={tkx('flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium font-sans border-none cursor-pointer')}
       style={{
-        backgroundColor: theme.primary,
-        color: theme.bg,
+        backgroundColor: theme.css.primary,
+        color: theme.css.bg,
         opacity: isDisabled ? 0.5 : 1,
         cursor: isDisabled ? 'not-allowed' : 'pointer',
       }}
@@ -329,8 +329,8 @@ export function TkxFileUpload({
               key={entry.id}
               className={tkx('flex flex-col gap-1 rounded-md p-3')}
               style={{
-                backgroundColor: theme.surfaceAlt,
-                border: `1px solid ${entry.error ? theme.danger : theme.border}`,
+                backgroundColor: theme.css.surfaceAlt,
+                border: `1px solid ${entry.error ? theme.css.danger : theme.css.border}`,
               }}
             >
               <div className={tkx('flex items-center gap-3')}>
@@ -343,18 +343,18 @@ export function TkxFileUpload({
                   />
                 ) : (
                   <span style={{ flexShrink: 0 }}>
-                    <FileTypeIcon mimeType={entry.file.type} color={entry.error ? theme.danger : theme.textMuted} />
+                    <FileTypeIcon mimeType={entry.file.type} color={entry.error ? theme.css.danger : theme.css.textMuted} />
                   </span>
                 )}
                 <div className={tkx('flex flex-col gap-0.5 flex-1 min-w-0')}>
                   <span
                     className={tkx('text-sm font-medium truncate')}
-                    style={{ color: entry.error ? theme.danger : theme.text }}
+                    style={{ color: entry.error ? theme.css.danger : theme.css.text }}
                     title={entry.file.name}
                   >
                     {sanitizeString(entry.file.name)}
                   </span>
-                  <span className={tkx('text-xs')} style={{ color: theme.textMuted }}>
+                  <span className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>
                     {formatSize(entry.file.size)}
                     {entry.error && ` — ${entry.error}`}
                   </span>
@@ -364,7 +364,7 @@ export function TkxFileUpload({
                   aria-label={`Remove ${sanitizeString(entry.file.name)}`}
                   onClick={() => removeFile(entry.id)}
                   className={tkx('flex items-center justify-center bg-transparent border-none cursor-pointer rounded p-1')}
-                  style={{ color: theme.textMuted, flexShrink: 0 }}
+                  style={{ color: theme.css.textMuted, flexShrink: 0 }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <line x1="18" y1="6" x2="6" y2="18" />
@@ -376,14 +376,14 @@ export function TkxFileUpload({
               {!entry.error && entry.progress < 100 && (
                 <div
                   className={tkx('w-full overflow-hidden')}
-                  style={{ height: '3px', borderRadius: '3px', backgroundColor: theme.border }}
+                  style={{ height: '3px', borderRadius: '3px', backgroundColor: theme.css.border }}
                   aria-hidden="true"
                 >
                   <div
                     style={{
                       height: '100%',
                       borderRadius: '3px',
-                      backgroundColor: theme.primary,
+                      backgroundColor: theme.css.primary,
                       width: `${entry.progress}%`,
                       transition: reducedMotion ? 'none' : 'width 100ms ease',
                     }}

@@ -116,11 +116,11 @@ export const TkxButton = forwardRef<HTMLButtonElement, TkxButtonProps>(
     const isButtonDisabled = isDisabled || isLoading;
 
     const colorMap: Record<ButtonColorScheme, string> = {
-      primary: theme.primary, secondary: theme.secondary,
-      danger: theme.danger, warning: theme.warning, success: theme.success,
+      primary: theme.css.primary, secondary: theme.css.secondary,
+      danger: theme.css.danger, warning: theme.css.warning, success: theme.css.success,
     };
     const accentColor = colorMap[colorScheme];
-    const textOnAccent = getAccessibleForeground(accentColor, ['#ffffff', '#000000', theme.bg]);
+    const textOnAccent = getAccessibleForeground(accentColor, ['#ffffff', '#000000', theme.css.bg]);
 
     const safeChildren = typeof children === 'string' ? sanitizeString(children) : children;
     const safeLoadingText = loadingText ? sanitizeString(loadingText) : undefined;

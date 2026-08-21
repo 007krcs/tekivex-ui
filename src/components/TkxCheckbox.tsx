@@ -68,12 +68,12 @@ export const TkxCheckbox = forwardRef<HTMLInputElement, TkxCheckboxProps>(
     const hasError = isInvalid || !!errorMessage;
 
     const schemeColor: Record<string, string> = {
-      primary: theme.primary,
-      success: theme.success,
-      danger: theme.danger,
-      warning: theme.warning,
+      primary: theme.css.primary,
+      success: theme.css.success,
+      danger: theme.css.danger,
+      warning: theme.css.warning,
     };
-    const accentColor = schemeColor[colorScheme] ?? theme.primary;
+    const accentColor = schemeColor[colorScheme] ?? theme.css.primary;
 
     const isChecked = checked !== undefined ? checked : undefined;
 
@@ -84,8 +84,8 @@ export const TkxCheckbox = forwardRef<HTMLInputElement, TkxCheckboxProps>(
     }, [isIndeterminate, ref]);
 
     const isVisuallyChecked = isIndeterminate || (isChecked ?? false);
-    const boxBg = isVisuallyChecked ? accentColor : theme.surface;
-    const boxBorder = hasError ? theme.danger : isVisuallyChecked ? accentColor : theme.border;
+    const boxBg = isVisuallyChecked ? accentColor : theme.css.surface;
+    const boxBorder = hasError ? theme.css.danger : isVisuallyChecked ? accentColor : theme.css.border;
     const checkColor = getAccessibleForeground(accentColor);
 
     const focusRingStyle: React.CSSProperties = isFocusVisible
@@ -188,14 +188,14 @@ export const TkxCheckbox = forwardRef<HTMLInputElement, TkxCheckboxProps>(
           </span>
 
           {label && (
-            <span style={{ fontSize: sz.fontSize, color: theme.text, lineHeight: 1.4 }}>
+            <span style={{ fontSize: sz.fontSize, color: theme.css.text, lineHeight: 1.4 }}>
               {typeof label === 'string' ? sanitizeString(label) : label}
             </span>
           )}
         </label>
 
         {hint && !hasError && (
-          <span id={hintId} className={tkx('text-xs ml-7')} style={{ color: theme.textMuted, marginLeft: sz.box + 8 }}>
+          <span id={hintId} className={tkx('text-xs ml-7')} style={{ color: theme.css.textMuted, marginLeft: sz.box + 8 }}>
             {sanitizeString(hint)}
           </span>
         )}
@@ -204,7 +204,7 @@ export const TkxCheckbox = forwardRef<HTMLInputElement, TkxCheckboxProps>(
             id={errorId}
             role="alert"
             className={tkx('text-xs flex items-center gap-1')}
-            style={{ color: theme.danger, marginLeft: sz.box + 8 }}
+            style={{ color: theme.css.danger, marginLeft: sz.box + 8 }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />

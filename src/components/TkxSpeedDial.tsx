@@ -284,9 +284,9 @@ export function TkxSpeedDial({
                     )}
                     style={{
                       ...tooltipStyle,
-                      backgroundColor: theme.surfaceAlt,
-                      color: theme.text,
-                      border: `1px solid ${theme.border}`,
+                      backgroundColor: theme.css.surfaceAlt,
+                      color: theme.css.text,
+                      border: `1px solid ${theme.css.border}`,
                       boxShadow: `0 2px 8px rgba(0,0,0,0.15)`,
                     }}
                     role="tooltip"
@@ -317,18 +317,18 @@ export function TkxSpeedDial({
                     style={{
                       width: ACTION_BUTTON_SIZE,
                       height: ACTION_BUTTON_SIZE,
-                      backgroundColor: theme.surface,
-                      color: theme.text,
-                      border: `1px solid ${theme.border}`,
+                      backgroundColor: theme.css.surface,
+                      color: theme.css.text,
+                      border: `1px solid ${theme.css.border}`,
                       boxShadow: `0 4px 12px rgba(0,0,0,0.15)`,
                       transition: reducedMotion ? 'none' : 'all 150ms ease',
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = theme.surfaceAlt;
+                      (e.currentTarget as HTMLElement).style.backgroundColor = theme.css.surfaceAlt;
                       (e.currentTarget as HTMLElement).style.transform = 'scale(1.1)';
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = theme.surface;
+                      (e.currentTarget as HTMLElement).style.backgroundColor = theme.css.surface;
                       (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
                     }}
                   >
@@ -358,27 +358,27 @@ export function TkxSpeedDial({
           style={{
             width: MAIN_BUTTON_SIZE,
             height: MAIN_BUTTON_SIZE,
-            backgroundColor: theme.primary,
-            color: theme.bg,
-            boxShadow: `0 6px 20px ${theme.primary}40`,
+            backgroundColor: theme.css.primary,
+            color: theme.css.bg,
+            boxShadow: `0 6px 20px ${theme.css.primary}40`,
             transition: reducedMotion ? 'none' : 'all 200ms ease',
             position: 'relative',
             zIndex: 1,
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 28px ${theme.primary}60`;
+            (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 28px ${theme.css.primary}60`;
             if (!reducedMotion) {
               (e.currentTarget as HTMLElement).style.transform = 'scale(1.05)';
             }
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.boxShadow = `0 6px 20px ${theme.primary}40`;
+            (e.currentTarget as HTMLElement).style.boxShadow = `0 6px 20px ${theme.css.primary}40`;
             (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
           }}
         >
           {icon ?? (
             <PlusIcon
-              color={theme.bg}
+              color={theme.css.bg}
               rotated={isOpen}
               reducedMotion={reducedMotion}
             />

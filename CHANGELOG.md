@@ -5,6 +5,59 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] — 2026-08-19
+
+### Fixed — four integration defects reported by consuming apps
+
+All four reproduced against the library source first; each is covered by a
+regression test. **No breaking changes** — see the compatibility note below.
+
+**1. Components now paint from CSS custom properties.**
+Colours were written as inline styles from the JS palette, which meant an app
+had to hand-maintain its own palette in lockstep with `globals.css`, and — worse
+— inline styles outrank *every* selector, so `:hover` / `[data-active]` rules
+lost and had to be reclaimed with `!important` (one app counted ~100).
+
+`useTheme()` now returns a `css` projection whose tokens are
+`var(--tkx-<token>, <hex>)` references, and all 1,671 internal paint sites use
+it. Two consequences: your `globals.css` can be the single source of truth
+(redefine `--tkx-*` and components follow, JS palette as fallback), and app CSS
+can win *without* `!important` — redefining a custom property inside a `:hover`
+rule cascades into the inline `var()` reference, because custom properties
+resolve at use time.
+
+*Compatibility:* the twelve tokens themselves are unchanged hex strings, so
+`theme.primary` still returns `#…` and existing colour maths, canvas
+`fillStyle`, and hex parsing keep working. `theme.raw` is an explicit alias for
+the hex palette. `toCSSVarTheme()` and the `ResolvedTheme` type are exported.
+
+**2. `.tkx-*` no longer forces `display` over app CSS.**
+The generated class set `display` at normal class weight (0,1,0). An app rule
+such as `@media(min-width:768px){ .burger{display:none} }` scores the same, so
+the winner was decided by stylesheet order — and tkx injects at runtime, after
+the app's CSS. Result: a burger menu that stayed visible on desktop.
+`display` is now emitted inside `:where(.tkx-…)`, i.e. specificity (0,0,0), so
+any app selector beats it. Every other declaration keeps its previous weight.
+
+**3. `TkxSelect` treats an empty string as unset.**
+`value=""` produced a selection that matched no option, so the trigger rendered
+blank instead of the placeholder — forcing `value={x || undefined}` at each call
+site. Empty string now means "nothing selected", and any value that matches no
+option falls back to the placeholder rather than rendering empty.
+
+**4. `TkxCardHeader` can stop wrapping the title in a heading.**
+`title` accepts a `ReactNode` and always wrapped it in `<h3>`, so passing a
+heading component produced `<h*>` inside `<h3>` — invalid HTML and an SSR
+hydration failure. New `titleAs` prop (default `'h3'`) accepts any heading level
+or `'div'` / `'span'`; the prop is documented with the nesting hazard called out.
+
+### Notes
+- Two internal call sites deliberately keep the raw hex rather than the `var()`
+  reference, because they parse the colour: `TkxHeatmap`'s scale interpolation
+  and `TkxThemeStudio`'s seed palette (a theme editor must emit real hex, not a
+  self-referential variable).
+- Gate: 2,199 tests, typecheck clean, dist + SBOM rebuilt.
+
 ## [4.0.0] — 2026-07-10
 
 ### Fixed — BREAKING: `sanitizeString` no longer HTML-escapes (double-escape bug)

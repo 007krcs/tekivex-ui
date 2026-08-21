@@ -17,7 +17,7 @@ export const TkxDivider = forwardRef<HTMLHRElement, TkxDividerProps>(
     const safeLabel = label ? sanitizeString(label) : undefined;
     const isVertical = orientation === 'vertical';
     const borderProp = isVertical ? 'borderLeft' : 'borderTop';
-    const borderVal = `1px ${variant} ${theme.border}`;
+    const borderVal = `1px ${variant} ${theme.css.border}`;
 
     if (safeLabel) {
       return (
@@ -25,7 +25,7 @@ export const TkxDivider = forwardRef<HTMLHRElement, TkxDividerProps>(
           role="separator"
           aria-orientation={orientation}
           className={cx(tkx('flex items-center gap-3 text-xs'), className)}
-          style={{ color: theme.textMuted, ...style }}
+          style={{ color: theme.css.textMuted, ...style }}
           {...(rest as HTMLAttributes<HTMLDivElement>)}
         >
           <hr className={tkx('flex-1 m-0 border-none')} style={{ [borderProp]: borderVal }} />

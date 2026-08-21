@@ -546,13 +546,13 @@ export function TkxClock({
           analogStyle={analogStyle}
           showSeconds={showSeconds}
           reducedMotion={reducedMotion}
-          primary={theme.primary}
-          danger={theme.danger}
-          text={theme.text}
-          textMuted={theme.textMuted}
-          border={theme.border}
-          surface={theme.surface}
-          bg={theme.bg}
+          primary={theme.css.primary}
+          danger={theme.css.danger}
+          text={theme.css.text}
+          textMuted={theme.css.textMuted}
+          border={theme.css.border}
+          surface={theme.css.surface}
+          bg={theme.css.bg}
         />
       )}
 
@@ -564,9 +564,9 @@ export function TkxClock({
           showDate={showDate}
           label={label}
           size={sizePx}
-          primary={theme.primary}
-          text={theme.text}
-          textMuted={theme.textMuted}
+          primary={theme.css.primary}
+          text={theme.css.text}
+          textMuted={theme.css.textMuted}
           colonVisible={colonVisible}
         />
       )}
@@ -577,7 +577,7 @@ export function TkxClock({
           style={{
             marginTop: sizePx * 0.04,
             padding: `${sizePx * 0.03}px ${sizePx * 0.06}px`,
-            borderTop: `1px solid ${theme.border}`,
+            borderTop: `1px solid ${theme.css.border}`,
             textAlign: 'center',
           }}
         >
@@ -588,9 +588,9 @@ export function TkxClock({
             showDate={false}
             label={timezone2}
             size={sizePx * 0.7}
-            primary={theme.secondary}
-            text={theme.text}
-            textMuted={theme.textMuted}
+            primary={theme.css.secondary}
+            text={theme.css.text}
+            textMuted={theme.css.textMuted}
             colonVisible={colonVisible}
           />
         </div>

@@ -347,7 +347,7 @@ export const TkxTreemap = forwardRef<HTMLDivElement, TkxTreemapProps>(
               width={p.w}
               height={p.h}
               fill={fill}
-              stroke={theme.bg}
+              stroke={theme.css.bg}
               strokeWidth={1}
               data-tkx-treemap-rect=""
             >

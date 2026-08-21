@@ -317,8 +317,8 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
                     fontSize: 10,
                     fontWeight: 700,
                     borderRadius: 999,
-                    background: b.color ? `${b.color}22` : `${theme.primary}22`,
-                    color: b.color ?? theme.primary,
+                    background: b.color ? `${b.color}22` : `${theme.css.primary}22`,
+                    color: b.color ?? theme.css.primary,
                     letterSpacing: '0.05em',
                     textTransform: 'uppercase',
                   }}
@@ -328,11 +328,11 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
               ))}
             </div>
           )}
-          <div style={{ fontSize: 14, fontWeight: 600, color: theme.text, lineHeight: 1.4 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: theme.css.text, lineHeight: 1.4 }}>
             {card.title}
           </div>
           {card.description && (
-            <div style={{ fontSize: 12, color: theme.textMuted, marginTop: 6, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 12, color: theme.css.textMuted, marginTop: 6, lineHeight: 1.5 }}>
               {card.description}
             </div>
           )}
@@ -344,7 +344,7 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
                 alignItems: 'center',
                 gap: 6,
                 fontSize: 11,
-                color: theme.textMuted,
+                color: theme.css.textMuted,
               }}
             >
               {card.assignee.avatarUrl ? (
@@ -360,8 +360,8 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
                     width: 20,
                     height: 20,
                     borderRadius: '50%',
-                    background: theme.primary,
-                    color: theme.bg,
+                    background: theme.css.primary,
+                    color: theme.css.bg,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -436,9 +436,9 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
               aria-rowindex={colIndex + 1}
               aria-label={`Column: ${column.title}`}
               style={{
-                background: theme.surface,
+                background: theme.css.surface,
                 border: `1px solid ${
-                  isDropTarget ? column.color ?? theme.primary : theme.border
+                  isDropTarget ? column.color ?? theme.css.primary : theme.css.border
                 }`,
                 borderRadius: 12,
                 display: 'flex',
@@ -450,7 +450,7 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
               <header
                 style={{
                   padding: '12px 14px',
-                  borderBottom: `1px solid ${theme.border}`,
+                  borderBottom: `1px solid ${theme.css.border}`,
                   display: 'flex',
                   alignItems: 'center',
                   gap: 8,
@@ -463,7 +463,7 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
                     width: 8,
                     height: 8,
                     borderRadius: '50%',
-                    background: column.color ?? theme.primary,
+                    background: column.color ?? theme.css.primary,
                   }}
                 />
                 <h3
@@ -471,7 +471,7 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
                     margin: 0,
                     fontSize: 13,
                     fontWeight: 700,
-                    color: theme.text,
+                    color: theme.css.text,
                     letterSpacing: '0.02em',
                     flex: 1,
                   }}
@@ -481,7 +481,7 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
                 <span
                   style={{
                     fontSize: 12,
-                    color: overLimit ? theme.danger : theme.textMuted,
+                    color: overLimit ? theme.css.danger : theme.css.textMuted,
                     fontFamily: 'monospace',
                     fontWeight: 600,
                   }}
@@ -517,7 +517,7 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
 
                   return (
                     <div key={`slot-${index}`}>
-                      {isDropSlotBefore && <DropIndicator color={column.color ?? theme.primary} />}
+                      {isDropSlotBefore && <DropIndicator color={column.color ?? theme.css.primary} />}
                       <div
                         ref={(node) => {
                           if (node) cardRefs.current.set(card.id, node);
@@ -546,9 +546,9 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
                         style={{
                           padding: 12,
                           borderRadius: 8,
-                          background: theme.surfaceAlt,
+                          background: theme.css.surfaceAlt,
                           border: `1px solid ${
-                            isDragging ? column.color ?? theme.primary : theme.border
+                            isDragging ? column.color ?? theme.css.primary : theme.css.border
                           }`,
                           cursor:
                             isDragDisabled || card.isDragDisabled ? 'default' : 'grab',
@@ -573,7 +573,7 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
 
                 {/* Drop slot at end of column */}
                 {drag && drag.toColumnId === column.id && drag.toIndex >= column.cards.length && (
-                  <DropIndicator color={column.color ?? theme.primary} />
+                  <DropIndicator color={column.color ?? theme.css.primary} />
                 )}
 
                 {column.cards.length === 0 && !drag && (
@@ -581,9 +581,9 @@ export const TkxKanban = forwardRef<HTMLDivElement, TkxKanbanProps>(
                     style={{
                       padding: 24,
                       textAlign: 'center',
-                      color: theme.textMuted,
+                      color: theme.css.textMuted,
                       fontSize: 12,
-                      border: `1px dashed ${theme.border}`,
+                      border: `1px dashed ${theme.css.border}`,
                       borderRadius: 8,
                     }}
                   >

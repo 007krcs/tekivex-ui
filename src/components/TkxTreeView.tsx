@@ -474,18 +474,18 @@ export function TkxTreeView({
             )}
             style={{
               paddingLeft: depth * INDENT_PX + 8,
-              backgroundColor: isSelected ? `${theme.primary}18` : 'transparent',
+              backgroundColor: isSelected ? `${theme.css.primary}18` : 'transparent',
               transition: reducedMotion ? 'none' : 'background-color 100ms ease',
               minHeight: 32,
             }}
             onMouseEnter={(e) => {
               if (!isSelected && !node.disabled) {
-                (e.currentTarget as HTMLElement).style.backgroundColor = theme.surfaceAlt;
+                (e.currentTarget as HTMLElement).style.backgroundColor = theme.css.surfaceAlt;
               }
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.backgroundColor = isSelected
-                ? `${theme.primary}18`
+                ? `${theme.css.primary}18`
                 : 'transparent';
             }}
           >
@@ -499,7 +499,7 @@ export function TkxTreeView({
                   top: 0,
                   bottom: 0,
                   width: 1,
-                  backgroundColor: theme.border,
+                  backgroundColor: theme.css.border,
                 }}
               />
             )}
@@ -517,7 +517,7 @@ export function TkxTreeView({
               >
                 <ChevronIcon
                   expanded={isExpanded}
-                  color={theme.textMuted}
+                  color={theme.css.textMuted}
                   reducedMotion={reducedMotion}
                 />
               </span>
@@ -529,8 +529,8 @@ export function TkxTreeView({
             {showCheckboxes && (
               <TreeCheckbox
                 checked={isSelected}
-                color={theme.primary}
-                borderColor={theme.border}
+                color={theme.css.primary}
+                borderColor={theme.css.border}
               />
             )}
 
@@ -544,7 +544,7 @@ export function TkxTreeView({
             {/* Label */}
             <span
               className={tkx('text-sm truncate')}
-              style={{ color: node.disabled ? theme.textMuted : theme.text }}
+              style={{ color: node.disabled ? theme.css.textMuted : theme.css.text }}
             >
               {safeLabel}
             </span>
@@ -565,7 +565,7 @@ export function TkxTreeView({
         aria-multiselectable={multiSelect || undefined}
         className={tkx('list-none m-0 p-0 font-sans select-none', className ?? '')}
         style={{
-          color: theme.text,
+          color: theme.css.text,
           ...style,
         }}
       >
@@ -590,7 +590,7 @@ export function TkxTreeView({
         overflowY: 'auto',
         overflowAnchor: 'none',
         maxHeight: DEFAULT_VIEWPORT_PX,
-        color: theme.text,
+        color: theme.css.text,
         ...style,
       }}
     >

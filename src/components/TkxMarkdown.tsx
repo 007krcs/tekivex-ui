@@ -447,8 +447,8 @@ function renderInline(nodes: InlineNode[], ctx: RenderCtx, keyPrefix = 'i'): Rea
           <code
             key={k}
             style={{
-              background: ctx.theme.surfaceAlt,
-              border: `1px solid ${ctx.theme.border}`,
+              background: ctx.theme.css.surfaceAlt,
+              border: `1px solid ${ctx.theme.css.border}`,
               borderRadius: 4,
               padding: '0.15em 0.4em',
               fontSize: '0.9em',
@@ -472,7 +472,7 @@ function renderInline(nodes: InlineNode[], ctx: RenderCtx, keyPrefix = 'i'): Rea
             onClick={(ev) => {
               if (ctx.onLinkClick?.(href, ev) === false) ev.preventDefault();
             }}
-            style={{ color: ctx.theme.primary, textDecoration: 'underline', wordBreak: 'break-word' }}
+            style={{ color: ctx.theme.css.primary, textDecoration: 'underline', wordBreak: 'break-word' }}
           >
             {renderInline(n.children, ctx, k)}
           </a>
@@ -526,9 +526,9 @@ function CopyCodeButton({ text, theme }: { text: string; theme: ReturnType<typeo
         right: 6,
         padding: '2px 8px',
         fontSize: 11,
-        background: theme.surface,
-        color: copied ? theme.success : theme.textMuted,
-        border: `1px solid ${theme.border}`,
+        background: theme.css.surface,
+        color: copied ? theme.css.success : theme.css.textMuted,
+        border: `1px solid ${theme.css.border}`,
         borderRadius: 4,
         cursor: 'pointer',
         fontFamily: 'inherit',
@@ -564,7 +564,7 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
               marginTop: s.mt,
               marginBottom: s.mb,
               fontWeight: s.fw,
-              color: ctx.theme.text,
+              color: ctx.theme.css.text,
               scrollMarginTop: '1em',
             }}
           >
@@ -580,7 +580,7 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
             style={{
               margin: `0 0 ${ctx.compact ? '0.7em' : '1em'}`,
               lineHeight: 1.65,
-              color: ctx.theme.text,
+              color: ctx.theme.css.text,
               wordBreak: 'break-word',
             }}
           >
@@ -595,9 +595,9 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
             style={{
               margin: '0 0 1em',
               padding: '0.5em 1em',
-              borderLeft: `4px solid ${ctx.theme.primary}`,
-              background: `${ctx.theme.surfaceAlt}`,
-              color: ctx.theme.textMuted,
+              borderLeft: `4px solid ${ctx.theme.css.primary}`,
+              background: `${ctx.theme.css.surfaceAlt}`,
+              color: ctx.theme.css.textMuted,
               borderRadius: '0 6px 6px 0',
             }}
           >
@@ -613,9 +613,9 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
             style={{
               position: 'relative',
               margin: '0 0 1em',
-              border: `1px solid ${ctx.theme.border}`,
+              border: `1px solid ${ctx.theme.css.border}`,
               borderRadius: 8,
-              background: ctx.theme.surfaceAlt,
+              background: ctx.theme.css.surfaceAlt,
               overflow: 'hidden',
             }}
           >
@@ -624,8 +624,8 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
                 style={{
                   padding: '4px 10px',
                   fontSize: 11,
-                  color: ctx.theme.textMuted,
-                  borderBottom: `1px solid ${ctx.theme.border}`,
+                  color: ctx.theme.css.textMuted,
+                  borderBottom: `1px solid ${ctx.theme.css.border}`,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
                 }}
@@ -642,7 +642,7 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
                 fontSize: 13,
                 lineHeight: 1.55,
                 fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
-                color: ctx.theme.text,
+                color: ctx.theme.css.text,
                 whiteSpace: 'pre',
               }}
             >
@@ -660,7 +660,7 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
             style={{
               margin: '0 0 1em',
               paddingLeft: '1.5em',
-              color: ctx.theme.text,
+              color: ctx.theme.css.text,
               lineHeight: 1.65,
             }}
           >
@@ -689,7 +689,7 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
             key={k}
             style={{
               border: 'none',
-              borderTop: `1px solid ${ctx.theme.border}`,
+              borderTop: `1px solid ${ctx.theme.css.border}`,
               margin: '1.5em 0',
             }}
           />
@@ -702,7 +702,7 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
             style={{
               overflowX: 'auto',
               margin: '0 0 1em',
-              border: `1px solid ${ctx.theme.border}`,
+              border: `1px solid ${ctx.theme.css.border}`,
               borderRadius: 6,
               WebkitOverflowScrolling: 'touch',
             }}
@@ -712,7 +712,7 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
                 width: '100%',
                 borderCollapse: 'collapse',
                 fontSize: 14,
-                color: ctx.theme.text,
+                color: ctx.theme.css.text,
               }}
             >
               <thead>
@@ -723,8 +723,8 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
                       style={{
                         padding: '8px 12px',
                         textAlign: b.align[ci] ?? 'left',
-                        borderBottom: `2px solid ${ctx.theme.border}`,
-                        background: ctx.theme.surfaceAlt,
+                        borderBottom: `2px solid ${ctx.theme.css.border}`,
+                        background: ctx.theme.css.surfaceAlt,
                         fontWeight: 600,
                       }}
                     >
@@ -742,7 +742,7 @@ function renderBlocks(blocks: Block[], ctx: RenderCtx, keyPrefix = 'b'): ReactNo
                         style={{
                           padding: '8px 12px',
                           textAlign: b.align[ci] ?? 'left',
-                          borderBottom: `1px solid ${ctx.theme.border}`,
+                          borderBottom: `1px solid ${ctx.theme.css.border}`,
                         }}
                       >
                         {renderInline(cell, ctx, `${k}-r-${ri}-${ci}`)}
@@ -816,7 +816,7 @@ export function TkxMarkdown({
   const wrapperStyle: CSSProperties = {
     maxWidth,
     width: '100%',
-    color: theme.text,
+    color: theme.css.text,
     fontFamily: 'inherit',
     fontSize: compact ? 14 : 15,
     lineHeight: 1.65,
@@ -830,7 +830,7 @@ export function TkxMarkdown({
     if (remote.loading) {
       return (
         <div className={className} style={wrapperStyle} aria-busy="true" aria-live="polite">
-          {loadingFallback ?? <span style={{ color: theme.textMuted }}>Loading…</span>}
+          {loadingFallback ?? <span style={{ color: theme.css.textMuted }}>Loading…</span>}
         </div>
       );
     }
@@ -839,7 +839,7 @@ export function TkxMarkdown({
         <div className={className} style={wrapperStyle} role="alert">
           {errorFallback
             ? errorFallback(remote.error)
-            : <span style={{ color: theme.danger }}>{sanitizeString(remote.error)}</span>}
+            : <span style={{ color: theme.css.danger }}>{sanitizeString(remote.error)}</span>}
         </div>
       );
     }

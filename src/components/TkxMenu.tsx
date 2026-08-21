@@ -250,8 +250,8 @@ function getPanelStyle(
     zIndex: 9999,
     minWidth: 200,
     maxWidth: 320,
-    backgroundColor: theme.surface,
-    border: `1.5px solid ${theme.border}`,
+    backgroundColor: theme.css.surface,
+    border: `1.5px solid ${theme.css.border}`,
     borderRadius: 10,
     boxShadow: '0 8px 32px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.14)',
     padding: '4px 0',
@@ -268,7 +268,7 @@ function useItemStyle(
   isDanger: boolean,
   isDisabled: boolean,
 ): CSSProperties {
-  const baseColor = isDanger ? theme.danger : theme.text;
+  const baseColor = isDanger ? theme.css.danger : theme.css.text;
   return {
     display: 'flex',
     alignItems: 'center',
@@ -279,16 +279,16 @@ function useItemStyle(
     cursor: isDisabled ? 'not-allowed' : 'pointer',
     userSelect: 'none',
     color: isDisabled
-      ? theme.textMuted
+      ? theme.css.textMuted
       : isActive && isDanger
-      ? theme.danger
+      ? theme.css.danger
       : isActive
-      ? theme.text
+      ? theme.css.text
       : baseColor,
     backgroundColor: isActive
       ? isDanger
-        ? `${theme.danger}18`
-        : `${theme.primary}18`
+        ? `${theme.css.danger}18`
+        : `${theme.css.primary}18`
       : 'transparent',
     transition: 'background-color 80ms',
     opacity: isDisabled ? 0.5 : 1,
@@ -556,7 +556,7 @@ function MenuPanel({
                   style={{
                     flex: 1,
                     height: 1,
-                    backgroundColor: theme.border,
+                    backgroundColor: theme.css.border,
                     marginLeft: 14,
                   }}
                 />
@@ -566,7 +566,7 @@ function MenuPanel({
                     fontWeight: 600,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
-                    color: theme.textMuted,
+                    color: theme.css.textMuted,
                     fontFamily: 'inherit',
                     whiteSpace: 'nowrap',
                   }}
@@ -577,7 +577,7 @@ function MenuPanel({
                   style={{
                     flex: 1,
                     height: 1,
-                    backgroundColor: theme.border,
+                    backgroundColor: theme.css.border,
                     marginRight: 14,
                   }}
                 />
@@ -587,7 +587,7 @@ function MenuPanel({
                 style={{
                   flex: 1,
                   height: 1,
-                  backgroundColor: theme.border,
+                  backgroundColor: theme.css.border,
                   margin: '0 10px',
                 }}
               />
@@ -607,7 +607,7 @@ function MenuPanel({
                   fontWeight: 700,
                   letterSpacing: '0.07em',
                   textTransform: 'uppercase',
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   fontFamily: 'inherit',
                 }}
                 aria-hidden="true"
@@ -638,21 +638,21 @@ function MenuPanel({
                 >
                   <span style={{ width: 16, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
                     {isSelected ? (
-                      <RadioDot color={theme.primary} />
+                      <RadioDot color={theme.css.primary} />
                     ) : (
                       <span
                         style={{
                           width: 14,
                           height: 14,
                           borderRadius: '50%',
-                          border: `2px solid ${theme.border}`,
+                          border: `2px solid ${theme.css.border}`,
                           display: 'inline-block',
                         }}
                       />
                     )}
                   </span>
                   {opt.icon && (
-                    <span style={{ flexShrink: 0, display: 'flex', color: theme.textMuted }}>
+                    <span style={{ flexShrink: 0, display: 'flex', color: theme.css.textMuted }}>
                       {opt.icon}
                     </span>
                   )}
@@ -695,13 +695,13 @@ function MenuPanel({
           >
             <span style={{ width: 16, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
               {item.checked ? (
-                <CheckIcon color={theme.primary} />
+                <CheckIcon color={theme.css.primary} />
               ) : (
                 <span style={{ width: 14, height: 14, display: 'inline-block' }} />
               )}
             </span>
             {item.icon && (
-              <span style={{ flexShrink: 0, display: 'flex', color: theme.textMuted }}>
+              <span style={{ flexShrink: 0, display: 'flex', color: theme.css.textMuted }}>
                 {item.icon}
               </span>
             )}
@@ -757,7 +757,7 @@ function MenuPanel({
             >
               <span style={{ width: 16, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
                 {item.icon ? (
-                  <span style={{ display: 'flex', color: theme.textMuted }}>{item.icon}</span>
+                  <span style={{ display: 'flex', color: theme.css.textMuted }}>{item.icon}</span>
                 ) : (
                   <span style={{ width: 14 }} />
                 )}
@@ -772,7 +772,7 @@ function MenuPanel({
               >
                 {sanitizeString(item.label)}
               </span>
-              <ChevronRight color={theme.textMuted} />
+              <ChevronRight color={theme.css.textMuted} />
             </div>
 
             {isSubmenuOpen && submenuPos &&
@@ -823,7 +823,7 @@ function MenuPanel({
         >
           <span style={{ width: 16, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
             {actionItem.icon ? (
-              <span style={{ display: 'flex', color: isDanger ? theme.danger : theme.textMuted }}>
+              <span style={{ display: 'flex', color: isDanger ? theme.css.danger : theme.css.textMuted }}>
                 {actionItem.icon}
               </span>
             ) : (
@@ -846,7 +846,7 @@ function MenuPanel({
                 style={{
                   display: 'block',
                   fontSize: '12px',
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   marginTop: 1,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -861,7 +861,7 @@ function MenuPanel({
             <span
               style={{
                 fontSize: '12px',
-                color: theme.textMuted,
+                color: theme.css.textMuted,
                 fontFamily: 'inherit',
                 flexShrink: 0,
                 marginLeft: 16,
@@ -909,7 +909,7 @@ function useItemStyleStatic(
   isDanger: boolean,
   isDisabled: boolean,
 ): CSSProperties {
-  const baseColor = isDanger ? theme.danger : theme.text;
+  const baseColor = isDanger ? theme.css.danger : theme.css.text;
   return {
     display: 'flex',
     alignItems: 'center',
@@ -920,14 +920,14 @@ function useItemStyleStatic(
     cursor: isDisabled ? 'not-allowed' : 'pointer',
     userSelect: 'none',
     color: isDisabled
-      ? theme.textMuted
+      ? theme.css.textMuted
       : isActive && isDanger
-      ? theme.danger
+      ? theme.css.danger
       : baseColor,
     backgroundColor: isActive
       ? isDanger
-        ? `${theme.danger}18`
-        : `${theme.primary}18`
+        ? `${theme.css.danger}18`
+        : `${theme.css.primary}18`
       : 'transparent',
     transition: 'background-color 80ms',
     opacity: isDisabled ? 0.5 : 1,

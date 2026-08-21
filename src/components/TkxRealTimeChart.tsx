@@ -78,7 +78,7 @@ export function TkxRealTimeChart({
   style,
 }: TkxRealTimeChartProps) {
   const theme = useTheme();
-  const lineColor = color ?? theme.primary;
+  const lineColor = color ?? theme.css.primary;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(600);
@@ -201,8 +201,8 @@ export function TkxRealTimeChart({
   const wrapStyle: CSSProperties = {
     position: 'relative',
     width: typeof width === 'number' ? `${width}px` : width,
-    background: theme.surface,
-    border: `1px solid ${theme.border}`,
+    background: theme.css.surface,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: 8,
     overflow: 'hidden',
     boxSizing: 'border-box',
@@ -252,7 +252,7 @@ export function TkxRealTimeChart({
         {
           x: PADDING_LEFT,
           y: 18,
-          fill: theme.textMuted,
+          fill: theme.css.textMuted,
           fontSize: 12,
           fontWeight: 500,
         },
@@ -268,7 +268,7 @@ export function TkxRealTimeChart({
           y1: yPos,
           x2: PADDING_LEFT + chartW,
           y2: yPos,
-          stroke: theme.border,
+          stroke: theme.css.border,
           strokeWidth: 1,
           strokeDasharray: '4 4',
         });
@@ -281,7 +281,7 @@ export function TkxRealTimeChart({
           key: `yl-${i}`,
           x: PADDING_LEFT - 4,
           y: yl.y + PADDING_TOP + 4,
-          fill: theme.textMuted,
+          fill: theme.css.textMuted,
           fontSize: 10,
           textAnchor: 'end',
         },
@@ -291,7 +291,7 @@ export function TkxRealTimeChart({
       // Y axis unit
       unit && createElement(
         'text',
-        { x: 4, y: PADDING_TOP + 10, fill: theme.textMuted, fontSize: 9 },
+        { x: 4, y: PADDING_TOP + 10, fill: theme.css.textMuted, fontSize: 9 },
         sanitizeString(unit),
       ),
 
@@ -325,7 +325,7 @@ export function TkxRealTimeChart({
             key: `xl-${idx}`,
             x: PADDING_LEFT + toSvgX(idx),
             y: svgH - 8,
-            fill: theme.textMuted,
+            fill: theme.css.textMuted,
             fontSize: 9,
             textAnchor: 'middle',
           },
@@ -351,7 +351,7 @@ export function TkxRealTimeChart({
         cy: tooltip.y,
         r: 4,
         fill: lineColor,
-        stroke: theme.surface,
+        stroke: theme.css.surface,
         strokeWidth: 2,
       }),
 
@@ -370,12 +370,12 @@ export function TkxRealTimeChart({
             width: 90,
             height: 34,
             rx: 4,
-            fill: theme.surfaceAlt,
-            stroke: theme.border,
+            fill: theme.css.surfaceAlt,
+            stroke: theme.css.border,
             strokeWidth: 1,
           }),
-          createElement('text', { x: tx, y: ty + 11, fill: theme.text, fontSize: 12, fontWeight: 700 }, valText),
-          createElement('text', { x: tx, y: ty + 26, fill: theme.textMuted, fontSize: 10 }, tsText),
+          createElement('text', { x: tx, y: ty + 11, fill: theme.css.text, fontSize: 12, fontWeight: 700 }, valText),
+          createElement('text', { x: tx, y: ty + 26, fill: theme.css.textMuted, fontSize: 10 }, tsText),
         );
       })(),
     ),

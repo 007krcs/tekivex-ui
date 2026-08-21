@@ -184,11 +184,11 @@ export function TkxSnackbar({
   // ── Variant colors ──────────────────────────────────────────────────────
 
   const variantColorMap: Record<string, string> = {
-    default: theme.textMuted,
-    success: theme.success,
-    error: theme.danger,
-    warning: theme.warning,
-    info: theme.info,
+    default: theme.css.textMuted,
+    success: theme.css.success,
+    error: theme.css.danger,
+    warning: theme.css.warning,
+    info: theme.css.info,
   };
 
   const accentColor = variantColorMap[variant];
@@ -243,10 +243,10 @@ export function TkxSnackbar({
           'min-w-[280px] max-w-[480px]',
         )}
         style={{
-          backgroundColor: theme.surface,
+          backgroundColor: theme.css.surface,
           border: `1px solid ${accentColor}44`,
-          boxShadow: `0 8px 24px ${theme.bg}aa`,
-          color: theme.text,
+          boxShadow: `0 8px 24px ${theme.css.bg}aa`,
+          color: theme.css.text,
         }}
       >
         {/* Icon */}
@@ -279,7 +279,7 @@ export function TkxSnackbar({
               'text-sm font-semibold shrink-0',
               'focus-visible:focus-ring',
             )}
-            style={{ color: theme.primary }}
+            style={{ color: theme.css.primary }}
           >
             {sanitizeString(action.label)}
           </button>
@@ -295,7 +295,7 @@ export function TkxSnackbar({
               'shrink-0 flex items-center justify-center',
               'focus-visible:focus-ring',
             )}
-            style={{ color: theme.textMuted }}
+            style={{ color: theme.css.textMuted }}
           >
             <svg
               width="14"

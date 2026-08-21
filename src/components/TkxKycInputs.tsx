@@ -82,9 +82,9 @@ export const TkxPanInput = forwardRef<HTMLInputElement, TkxPanInputProps>(functi
   return (
     <div className={className} style={{ display: 'flex', flexDirection: 'column', gap: 6, ...style }}>
       {label && (
-        <label htmlFor={inputId} style={{ fontSize: 13, fontWeight: 600, color: theme.text }}>
+        <label htmlFor={inputId} style={{ fontSize: 13, fontWeight: 600, color: theme.css.text }}>
           {label}
-          {required && <span style={{ color: theme.danger, marginLeft: 4 }}>*</span>}
+          {required && <span style={{ color: theme.css.danger, marginLeft: 4 }}>*</span>}
         </label>
       )}
       <input
@@ -104,10 +104,10 @@ export const TkxPanInput = forwardRef<HTMLInputElement, TkxPanInputProps>(functi
           width: '100%',
           padding: '0 12px',
           minHeight: 40,
-          border: `1px solid ${current.length === 10 && !valid ? theme.danger : theme.border}`,
+          border: `1px solid ${current.length === 10 && !valid ? theme.css.danger : theme.css.border}`,
           borderRadius: 8,
-          background: theme.surface,
-          color: theme.text,
+          background: theme.css.surface,
+          color: theme.css.text,
           fontSize: 14,
           fontFamily: 'ui-monospace, monospace',
           letterSpacing: 2,
@@ -117,7 +117,7 @@ export const TkxPanInput = forwardRef<HTMLInputElement, TkxPanInputProps>(functi
         placeholder="ABCDE1234F"
       />
       {current.length === 10 && !valid && (
-        <div role="alert" style={{ fontSize: 12, color: theme.danger }}>
+        <div role="alert" style={{ fontSize: 12, color: theme.css.danger }}>
           {t.invalidFormat ?? 'Invalid PAN format.'}
         </div>
       )}
@@ -177,9 +177,9 @@ export const TkxVoterIdInput = forwardRef<HTMLInputElement, TkxVoterIdInputProps
     return (
       <div className={className} style={{ display: 'flex', flexDirection: 'column', gap: 6, ...style }}>
         {label && (
-          <label htmlFor={inputId} style={{ fontSize: 13, fontWeight: 600, color: theme.text }}>
+          <label htmlFor={inputId} style={{ fontSize: 13, fontWeight: 600, color: theme.css.text }}>
             {label}
-            {required && <span style={{ color: theme.danger, marginLeft: 4 }}>*</span>}
+            {required && <span style={{ color: theme.css.danger, marginLeft: 4 }}>*</span>}
           </label>
         )}
         <input
@@ -198,10 +198,10 @@ export const TkxVoterIdInput = forwardRef<HTMLInputElement, TkxVoterIdInputProps
             width: '100%',
             padding: '0 12px',
             minHeight: 40,
-            border: `1px solid ${current.length === 10 && !valid ? theme.danger : theme.border}`,
+            border: `1px solid ${current.length === 10 && !valid ? theme.css.danger : theme.css.border}`,
             borderRadius: 8,
-            background: theme.surface,
-            color: theme.text,
+            background: theme.css.surface,
+            color: theme.css.text,
             fontSize: 14,
             fontFamily: 'ui-monospace, monospace',
             letterSpacing: 1.5,
@@ -211,7 +211,7 @@ export const TkxVoterIdInput = forwardRef<HTMLInputElement, TkxVoterIdInputProps
           placeholder="ABC1234567"
         />
         {current.length === 10 && !valid && (
-          <div role="alert" style={{ fontSize: 12, color: theme.danger }}>
+          <div role="alert" style={{ fontSize: 12, color: theme.css.danger }}>
             {t.invalidFormat ?? 'Invalid Voter ID format.'}
           </div>
         )}
@@ -293,9 +293,9 @@ export const TkxDrivingLicenceInput = forwardRef<HTMLInputElement, TkxDrivingLic
     return (
       <div className={className} style={{ display: 'flex', flexDirection: 'column', gap: 6, ...style }}>
         {label && (
-          <label htmlFor={inputId} style={{ fontSize: 13, fontWeight: 600, color: theme.text }}>
+          <label htmlFor={inputId} style={{ fontSize: 13, fontWeight: 600, color: theme.css.text }}>
             {label}
-            {required && <span style={{ color: theme.danger, marginLeft: 4 }}>*</span>}
+            {required && <span style={{ color: theme.css.danger, marginLeft: 4 }}>*</span>}
           </label>
         )}
         <input
@@ -314,10 +314,10 @@ export const TkxDrivingLicenceInput = forwardRef<HTMLInputElement, TkxDrivingLic
             width: '100%',
             padding: '0 12px',
             minHeight: 40,
-            border: `1px solid ${normalised.length === DL_NORMALISED_LEN && !valid ? theme.danger : theme.border}`,
+            border: `1px solid ${normalised.length === DL_NORMALISED_LEN && !valid ? theme.css.danger : theme.css.border}`,
             borderRadius: 8,
-            background: theme.surface,
-            color: theme.text,
+            background: theme.css.surface,
+            color: theme.css.text,
             fontSize: 14,
             fontFamily: 'ui-monospace, monospace',
             letterSpacing: 1.2,
@@ -327,7 +327,7 @@ export const TkxDrivingLicenceInput = forwardRef<HTMLInputElement, TkxDrivingLic
           placeholder="MH-12-2010-0012345"
         />
         {normalised.length === DL_NORMALISED_LEN && !valid && (
-          <div role="alert" style={{ fontSize: 12, color: theme.danger }}>
+          <div role="alert" style={{ fontSize: 12, color: theme.css.danger }}>
             {t.invalidFormat ?? 'Invalid Driving Licence format.'}
           </div>
         )}

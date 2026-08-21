@@ -139,7 +139,11 @@ export function TkxThemeStudio({
   style,
 }: TkxThemeStudioProps) {
   const ambient = useTheme();
-  const start = initialTheme ?? ambient;
+  // Seed from the RAW hex palette, never the painted `var(--tkx-*)` view: this
+  // editor emits a ThemeTokens object that consumers persist and feed back into
+  // ThemeProvider. Emitting `var(--tkx-bg, …)` would make the variable
+  // self-referential.
+  const start = initialTheme ?? ambient.raw;
   const [tokens, setTokens] = useState<ThemeTokens>(start);
   const [format, setFormat] = useState<'json' | 'ts' | 'css'>('ts');
   const [copied, setCopied] = useState(false);

@@ -193,7 +193,7 @@ export function TkxWatermark({
 
   // Intensify opacity when DevTools open
   const baseOpacityHex = intensifyOnDevtools && devtoolsOpen ? '66' : '22';
-  const fillColor = color ?? `${theme.textMuted}${baseOpacityHex}`;
+  const fillColor = color ?? `${theme.css.textMuted}${baseOpacityHex}`;
 
   const generatePattern = useCallback(() => {
     return renderWatermarkPattern(lines, rotate, gap, fontSize, fillColor, pattern);
@@ -272,7 +272,7 @@ export function TkxWatermark({
             top: 12,
             right: 12,
             padding: '6px 12px',
-            background: theme.danger,
+            background: theme.css.danger,
             color: '#fff',
             fontSize: 12,
             fontWeight: 600,

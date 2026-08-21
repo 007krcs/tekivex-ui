@@ -176,7 +176,7 @@ export function TkxBreadcrumb({
       aria-hidden="true"
       className={tkx('flex items-center mx-1.5')}
     >
-      {separator ?? <DefaultSeparator color={theme.textMuted} />}
+      {separator ?? <DefaultSeparator color={theme.css.textMuted} />}
     </li>
   );
 
@@ -193,7 +193,7 @@ export function TkxBreadcrumb({
           <span
             aria-current="page"
             className={tkx('inline-flex items-center gap-1.5 text-sm font-medium')}
-            style={{ color: theme.text }}
+            style={{ color: theme.css.text }}
           >
             {item.icon && (
               <span aria-hidden="true" className={tkx('flex-shrink-0')}>
@@ -209,17 +209,17 @@ export function TkxBreadcrumb({
     const isLink = !!item.href;
 
     const commonStyle: CSSProperties = {
-      color: theme.textMuted,
+      color: theme.css.textMuted,
       textDecoration: 'none',
       ...transitionStyle,
     };
 
     const hoverHandlers = {
       onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-        (e.currentTarget as HTMLElement).style.color = theme.primary;
+        (e.currentTarget as HTMLElement).style.color = theme.css.primary;
       },
       onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
-        (e.currentTarget as HTMLElement).style.color = theme.textMuted;
+        (e.currentTarget as HTMLElement).style.color = theme.css.textMuted;
       },
     };
 
@@ -251,7 +251,7 @@ export function TkxBreadcrumb({
             )}
             style={{
               ...commonStyle,
-              focusRingColor: theme.primary,
+              focusRingColor: theme.css.primary,
             } as CSSProperties}
             {...hoverHandlers}
           >
@@ -301,9 +301,9 @@ export function TkxBreadcrumb({
               // Reveal the hidden middle items in place.
               setExpanded(true);
             }}
-            bgColor={theme.surfaceAlt}
-            hoverColor={theme.surface}
-            textColor={theme.textMuted}
+            bgColor={theme.css.surfaceAlt}
+            hoverColor={theme.css.surface}
+            textColor={theme.css.textMuted}
             label={t.showHiddenItems ?? 'Show hidden breadcrumb items'}
           />
         </li>,

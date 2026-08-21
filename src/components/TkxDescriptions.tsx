@@ -17,7 +17,7 @@ import { tkx, cx } from '../engine/tkx';
 // Every admin/CRUD app has a "view record" screen; this is the component that
 // stops people hand-rolling it. Two render modes:
 //   - bordered: a real <table> with <th scope="row"> label cells and <td>
-//     value cells on a theme.border grid (label cells get theme.surfaceAlt)
+//     value cells on a theme.css.border grid (label cells get theme.css.surfaceAlt)
 //   - plain (default): a semantic <dl> laid out on a CSS grid
 //
 // `span` lets an item stretch across N columns (clamped to what is left in
@@ -250,7 +250,7 @@ export const TkxDescriptions = forwardRef<HTMLDivElement, TkxDescriptionsProps>(
           className={tkx('flex items-center justify-between gap-2')}
           style={{ marginBottom: '12px' }}
         >
-          <div style={{ color: theme.text, fontWeight: 600, fontSize: '1rem' }}>
+          <div style={{ color: theme.css.text, fontWeight: 600, fontSize: '1rem' }}>
             {safe(title)}
           </div>
           {extra != null && <div>{safe(extra)}</div>}
@@ -262,20 +262,20 @@ export const TkxDescriptions = forwardRef<HTMLDivElement, TkxDescriptionsProps>(
     if (bordered) {
       const thStyle: CSSProperties = {
         padding,
-        backgroundColor: theme.surfaceAlt,
-        color: theme.textMuted,
+        backgroundColor: theme.css.surfaceAlt,
+        color: theme.css.textMuted,
         fontWeight: 500,
         fontSize: '0.875rem',
         textAlign: 'start',
-        border: `1px solid ${theme.border}`,
+        border: `1px solid ${theme.css.border}`,
         verticalAlign: 'top',
         ...labelStyle,
       };
       const tdStyle: CSSProperties = {
         padding,
-        color: theme.text,
+        color: theme.css.text,
         fontSize: '0.875rem',
-        border: `1px solid ${theme.border}`,
+        border: `1px solid ${theme.css.border}`,
         verticalAlign: 'top',
         ...contentStyle,
       };
@@ -285,7 +285,7 @@ export const TkxDescriptions = forwardRef<HTMLDivElement, TkxDescriptionsProps>(
           style={{
             width: '100%',
             borderCollapse: 'collapse',
-            border: `1px solid ${theme.border}`,
+            border: `1px solid ${theme.css.border}`,
             tableLayout: 'fixed',
           }}
         >
@@ -353,7 +353,7 @@ export const TkxDescriptions = forwardRef<HTMLDivElement, TkxDescriptionsProps>(
             >
               <dt
                 style={{
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   fontSize: '0.875rem',
                   margin: 0,
                   flexShrink: 0,
@@ -365,7 +365,7 @@ export const TkxDescriptions = forwardRef<HTMLDivElement, TkxDescriptionsProps>(
               </dt>
               <dd
                 style={{
-                  color: theme.text,
+                  color: theme.css.text,
                   fontSize: '0.875rem',
                   margin: 0,
                   minWidth: 0,

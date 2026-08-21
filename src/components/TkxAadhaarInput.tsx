@@ -165,14 +165,14 @@ export const TkxAadhaarInput = forwardRef<HTMLInputElement, TkxAadhaarInputProps
       });
     };
 
-    const labelStyle: CSSProperties = { fontSize: 13, fontWeight: 600, color: theme.text };
+    const labelStyle: CSSProperties = { fontSize: 13, fontWeight: 600, color: theme.css.text };
     const inputStyle: CSSProperties = {
       width: '100%',
       padding: '0 12px',
-      border: `1px solid ${digits.length === 12 && !valid ? theme.danger : theme.border}`,
+      border: `1px solid ${digits.length === 12 && !valid ? theme.css.danger : theme.css.border}`,
       borderRadius: 8,
-      background: theme.surface,
-      color: theme.text,
+      background: theme.css.surface,
+      color: theme.css.text,
       fontSize: 14,
       minHeight: 40,
       outline: 'none',
@@ -185,7 +185,7 @@ export const TkxAadhaarInput = forwardRef<HTMLInputElement, TkxAadhaarInputProps
         {label && (
           <label htmlFor={inputId} style={labelStyle}>
             {label}
-            {required && <span style={{ color: theme.danger, marginLeft: 4 }}>*</span>}
+            {required && <span style={{ color: theme.css.danger, marginLeft: 4 }}>*</span>}
           </label>
         )}
         <input
@@ -208,12 +208,12 @@ export const TkxAadhaarInput = forwardRef<HTMLInputElement, TkxAadhaarInputProps
           placeholder="XXXX XXXX XXXX"
         />
         {digits.length === 12 && !valid && (
-          <div id={`${inputId}-err`} role="alert" style={{ fontSize: 12, color: theme.danger }}>
+          <div id={`${inputId}-err`} role="alert" style={{ fontSize: 12, color: theme.css.danger }}>
             {t.invalidFormat ?? 'Invalid Aadhaar — checksum mismatch.'}
           </div>
         )}
         {digits.length > 0 && digits.length < 12 && (
-          <div style={{ fontSize: 12, color: theme.textMuted }}>
+          <div style={{ fontSize: 12, color: theme.css.textMuted }}>
             {12 - digits.length} digit{12 - digits.length === 1 ? '' : 's'} remaining
           </div>
         )}

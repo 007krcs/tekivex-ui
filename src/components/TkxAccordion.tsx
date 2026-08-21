@@ -371,7 +371,7 @@ export function TkxAccordion({
     switch (variant) {
       case 'bordered':
         return {
-          border: `1px solid ${theme.border}`,
+          border: `1px solid ${theme.css.border}`,
           borderRadius: '10px',
           overflow: 'hidden',
         };
@@ -391,15 +391,15 @@ export function TkxAccordion({
     switch (variant) {
       case 'default':
         return {
-          borderBottom: isLast ? 'none' : `1px solid ${theme.border}`,
+          borderBottom: isLast ? 'none' : `1px solid ${theme.css.border}`,
         };
       case 'bordered':
         return {
-          borderBottom: isLast ? 'none' : `1px solid ${theme.border}`,
+          borderBottom: isLast ? 'none' : `1px solid ${theme.css.border}`,
         };
       case 'separated':
         return {
-          border: `1px solid ${theme.border}`,
+          border: `1px solid ${theme.css.border}`,
           borderRadius: '10px',
           overflow: 'hidden',
           boxShadow: `0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)`,
@@ -415,9 +415,9 @@ export function TkxAccordion({
   // Trigger hover style
   const getTriggerHoverBg = (isOpen: boolean): string => {
     if (variant === 'ghost' || variant === 'flush') {
-      return isOpen ? `${theme.primary}10` : `${theme.surfaceAlt}80`;
+      return isOpen ? `${theme.css.primary}10` : `${theme.css.surfaceAlt}80`;
     }
-    return isOpen ? `${theme.primary}0d` : `${theme.surfaceAlt}60`;
+    return isOpen ? `${theme.css.primary}0d` : `${theme.css.surfaceAlt}60`;
   };
 
   const isSeparatedVariant = variant === 'separated';
@@ -469,7 +469,7 @@ export function TkxAccordion({
                 fontFamily: 'inherit',
                 fontSize: sz.fontSize,
                 fontWeight: 500,
-                color: item.disabled ? theme.textMuted : theme.text,
+                color: item.disabled ? theme.css.textMuted : theme.css.text,
                 opacity: item.disabled ? 0.5 : 1,
                 transition: reduced ? 'none' : 'background-color 160ms ease',
                 outline: 'none',
@@ -480,11 +480,11 @@ export function TkxAccordion({
                 }
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = isOpen ? `${theme.primary}0d` : 'transparent';
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = isOpen ? `${theme.css.primary}0d` : 'transparent';
               }}
               onFocus={(e) => {
                 if (!item.disabled) {
-                  e.currentTarget.style.outline = `2px solid ${theme.primary}`;
+                  e.currentTarget.style.outline = `2px solid ${theme.css.primary}`;
                   e.currentTarget.style.outlineOffset = '2px';
                 }
               }}
@@ -500,7 +500,7 @@ export function TkxAccordion({
                     display: 'flex',
                     alignItems: 'center',
                     flexShrink: 0,
-                    color: theme.primary,
+                    color: theme.css.primary,
                     marginTop: item.subtitle ? '1px' : undefined,
                   }}
                 >
@@ -516,7 +516,7 @@ export function TkxAccordion({
                     display: 'flex',
                     alignItems: 'center',
                     flexShrink: 0,
-                    color: isOpen ? theme.primary : theme.textMuted,
+                    color: isOpen ? theme.css.primary : theme.css.textMuted,
                     marginTop: item.subtitle ? '1px' : undefined,
                   }}
                 >
@@ -525,7 +525,7 @@ export function TkxAccordion({
                     reduced={reduced}
                     iconStyle={iconStyle}
                     size={sz.iconSize}
-                    color={isOpen ? theme.primary : theme.textMuted}
+                    color={isOpen ? theme.css.primary : theme.css.textMuted}
                   />
                 </span>
               )}
@@ -538,7 +538,7 @@ export function TkxAccordion({
                     style={{
                       display: 'block',
                       fontSize: sz.subtitleSize,
-                      color: theme.textMuted,
+                      color: theme.css.textMuted,
                       fontWeight: 400,
                       marginTop: '2px',
                       lineHeight: 1.3,
@@ -571,7 +571,7 @@ export function TkxAccordion({
                     display: 'flex',
                     alignItems: 'center',
                     flexShrink: 0,
-                    color: isOpen ? theme.primary : theme.textMuted,
+                    color: isOpen ? theme.css.primary : theme.css.textMuted,
                     marginTop: item.subtitle ? '1px' : undefined,
                   }}
                 >
@@ -580,7 +580,7 @@ export function TkxAccordion({
                     reduced={reduced}
                     iconStyle={iconStyle}
                     size={sz.iconSize}
-                    color={isOpen ? theme.primary : theme.textMuted}
+                    color={isOpen ? theme.css.primary : theme.css.textMuted}
                   />
                 </span>
               )}
@@ -599,7 +599,7 @@ export function TkxAccordion({
                   padding: sz.contentPadding,
                   fontSize: sz.fontSize,
                   lineHeight: 1.6,
-                  color: theme.textMuted,
+                  color: theme.css.textMuted,
                   fontFamily: 'inherit',
                 }}
               >

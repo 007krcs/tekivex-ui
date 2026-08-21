@@ -96,7 +96,7 @@ export function TkxStatistic({
   const safeTitle = sanitizeString(title);
   const safeTrendValue = trendValue ? sanitizeString(trendValue) : undefined;
 
-  const trendColor = trend === 'up' ? theme.success : trend === 'down' ? theme.danger : undefined;
+  const trendColor = trend === 'up' ? theme.css.success : trend === 'down' ? theme.css.danger : undefined;
 
   return createElement(
     'div',
@@ -113,7 +113,7 @@ export function TkxStatistic({
       'div',
       {
         style: {
-          color: theme.textMuted,
+          color: theme.css.textMuted,
           fontSize: '0.875rem',
           lineHeight: '1.4',
         },
@@ -122,7 +122,7 @@ export function TkxStatistic({
     ),
     // Value row
     loading
-      ? createElement(Skeleton, { w: '120px', h: '32px', alt: theme.surfaceAlt, bdr: theme.border, rm: reducedMotion })
+      ? createElement(Skeleton, { w: '120px', h: '32px', alt: theme.css.surfaceAlt, bdr: theme.css.border, rm: reducedMotion })
       : createElement(
           'div',
           {
@@ -133,7 +133,7 @@ export function TkxStatistic({
               fontSize: '1.75rem',
               fontWeight: 700,
               lineHeight: '1.2',
-              color: theme.text,
+              color: theme.css.text,
               fontVariantNumeric: 'tabular-nums',
               ...valueStyle,
             },
@@ -148,7 +148,7 @@ export function TkxStatistic({
           suffix &&
             createElement(
               'span',
-              { style: { fontSize: '0.6em', fontWeight: 400, color: theme.textMuted } },
+              { style: { fontSize: '0.6em', fontWeight: 400, color: theme.css.textMuted } },
               suffix,
             ),
         ),
@@ -224,7 +224,7 @@ export function TkxCountdown({
       'div',
       {
         style: {
-          color: theme.textMuted,
+          color: theme.css.textMuted,
           fontSize: '0.875rem',
           lineHeight: '1.4',
         },
@@ -241,7 +241,7 @@ export function TkxCountdown({
           fontSize: '1.75rem',
           fontWeight: 700,
           lineHeight: '1.2',
-          color: remaining <= 0 ? theme.danger : theme.text,
+          color: remaining <= 0 ? theme.css.danger : theme.css.text,
           fontVariantNumeric: 'tabular-nums',
         },
       },
@@ -255,7 +255,7 @@ export function TkxCountdown({
       suffix &&
         createElement(
           'span',
-          { style: { fontSize: '0.6em', fontWeight: 400, color: theme.textMuted } },
+          { style: { fontSize: '0.6em', fontWeight: 400, color: theme.css.textMuted } },
           suffix,
         ),
     ),

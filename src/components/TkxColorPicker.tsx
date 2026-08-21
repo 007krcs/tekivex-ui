@@ -552,11 +552,11 @@ export function TkxColorPicker({
     height: `${swatchSize}px`,
     padding: '4px 10px 4px 6px',
     borderRadius: '8px',
-    border: `1px solid ${theme.border}`,
-    backgroundColor: theme.surface,
+    border: `1px solid ${theme.css.border}`,
+    backgroundColor: theme.css.surface,
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.5 : 1,
-    color: theme.text,
+    color: theme.css.text,
     fontSize: '13px',
     fontFamily: 'inherit',
     transition: 'border-color 0.15s',
@@ -568,7 +568,7 @@ export function TkxColorPicker({
     height: `${swatchSize - 8}px`,
     borderRadius: '4px',
     backgroundColor: `rgba(${r},${g},${b},${alpha})`,
-    border: `1px solid ${theme.border}`,
+    border: `1px solid ${theme.css.border}`,
     flexShrink: 0,
   };
 
@@ -578,8 +578,8 @@ export function TkxColorPicker({
     left: popPos.left,
     zIndex: 9999,
     width: '260px',
-    backgroundColor: theme.surface,
-    border: `1px solid ${theme.border}`,
+    backgroundColor: theme.css.surface,
+    border: `1px solid ${theme.css.border}`,
     borderRadius: '12px',
     padding: '16px',
     boxShadow: `0 8px 32px rgba(0,0,0,0.24)`,
@@ -592,9 +592,9 @@ export function TkxColorPicker({
     width: '100%',
     padding: '6px 10px',
     borderRadius: '6px',
-    border: `1px solid ${theme.border}`,
-    backgroundColor: theme.bg,
-    color: theme.text,
+    border: `1px solid ${theme.css.border}`,
+    backgroundColor: theme.css.bg,
+    color: theme.css.text,
     fontSize: '12px',
     fontFamily: 'monospace',
     outline: 'none',
@@ -604,9 +604,9 @@ export function TkxColorPicker({
     flex: 1,
     padding: '5px 6px',
     borderRadius: '6px',
-    border: `1px solid ${theme.border}`,
-    backgroundColor: theme.bg,
-    color: theme.text,
+    border: `1px solid ${theme.css.border}`,
+    backgroundColor: theme.css.bg,
+    color: theme.css.text,
     fontSize: '11px',
     textAlign: 'center',
     fontFamily: 'monospace',
@@ -619,8 +619,8 @@ export function TkxColorPicker({
     borderRadius: '50%',
     backgroundColor: c,
     border: c.toLowerCase() === hex.toLowerCase()
-      ? `2px solid ${theme.primary}`
-      : `1px solid ${theme.border}`,
+      ? `2px solid ${theme.css.primary}`
+      : `1px solid ${theme.css.border}`,
     cursor: 'pointer',
     flexShrink: 0,
     transition: 'transform 0.1s',
@@ -629,7 +629,7 @@ export function TkxColorPicker({
   return (
     <>
       {label && (
-        <label style={{ display: 'block', fontSize: '13px', color: theme.text, marginBottom: '6px', fontWeight: 500 }}>
+        <label style={{ display: 'block', fontSize: '13px', color: theme.css.text, marginBottom: '6px', fontWeight: 500 }}>
           {label}
         </label>
       )}
@@ -644,7 +644,7 @@ export function TkxColorPicker({
         aria-expanded={isOpen}
       >
         <div style={swatchStyle} />
-        <span style={{ fontFamily: 'monospace', fontSize: '12px', color: theme.textMuted }}>
+        <span style={{ fontFamily: 'monospace', fontSize: '12px', color: theme.css.textMuted }}>
           {placeholder ?? formatColor(isValidHex(hex) ? hex : defaultValue, alpha, format)}
         </span>
       </button>
@@ -678,7 +678,7 @@ export function TkxColorPicker({
             <div style={{
               width: '28px', height: '28px', borderRadius: '6px', flexShrink: 0,
               backgroundColor: `rgba(${r},${g},${b},${alpha})`,
-              border: `1px solid ${theme.border}`,
+              border: `1px solid ${theme.css.border}`,
             }} />
             <input
               style={inputStyle}
@@ -705,7 +705,7 @@ export function TkxColorPicker({
                     onChange={(e) => handleRgbInput(ch, e.target.value)}
                     aria-label={`${ch.toUpperCase()} channel`}
                   />
-                  <span style={{ fontSize: '10px', color: theme.textMuted, textTransform: 'uppercase' }}>{ch}</span>
+                  <span style={{ fontSize: '10px', color: theme.css.textMuted, textTransform: 'uppercase' }}>{ch}</span>
                 </div>
               );
             })}
@@ -720,7 +720,7 @@ export function TkxColorPicker({
                   onChange={(e) => handleAlpha(Math.max(0, Math.min(1, parseInt(e.target.value) / 100 || 0)))}
                   aria-label="Alpha channel"
                 />
-                <span style={{ fontSize: '10px', color: theme.textMuted }}>A%</span>
+                <span style={{ fontSize: '10px', color: theme.css.textMuted }}>A%</span>
               </div>
             )}
           </div>
@@ -728,7 +728,7 @@ export function TkxColorPicker({
           {/* Presets */}
           {presets.length > 0 && (
             <div>
-              <div style={{ fontSize: '11px', color: theme.textMuted, marginBottom: '6px', fontWeight: 500 }}>
+              <div style={{ fontSize: '11px', color: theme.css.textMuted, marginBottom: '6px', fontWeight: 500 }}>
                 Presets
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>

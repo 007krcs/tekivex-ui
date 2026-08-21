@@ -94,7 +94,7 @@ export function TkxTabList({ children, className, style, ...rest }: TkxTabListPr
     <div
       role="tablist"
       className={cx(tkx('flex gap-1'), className)}
-      style={{ borderBottom: `2px solid ${theme.border}`, ...style }}
+      style={{ borderBottom: `2px solid ${theme.css.border}`, ...style }}
       {...rest}
     >
       {children}
@@ -156,9 +156,9 @@ export function TkxTab({ index, children, disabled = false, className, style }: 
         className,
       )}
       style={{
-        color: isActive ? theme.primary : theme.textMuted,
+        color: isActive ? theme.css.primary : theme.css.textMuted,
         fontWeight: isActive ? 600 : 400,
-        borderBottom: isActive ? `2px solid ${theme.primary}` : '2px solid transparent',
+        borderBottom: isActive ? `2px solid ${theme.css.primary}` : '2px solid transparent',
         marginBottom: '-2px',
         ...style,
       }}

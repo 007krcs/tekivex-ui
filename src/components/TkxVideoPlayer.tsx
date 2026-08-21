@@ -619,7 +619,7 @@ export function TkxVideoPlayer({
               width: 48,
               height: 48,
               border: '4px solid rgba(255,255,255,0.25)',
-              borderTopColor: theme.primary,
+              borderTopColor: theme.css.primary,
               borderRadius: '50%',
               animation: reducedMotion ? 'none' : 'tkxvp-spin 0.8s linear infinite',
             }}
@@ -653,7 +653,7 @@ export function TkxVideoPlayer({
               display: 'flex',
               alignItems: 'center',
               gap: 6,
-              background: theme.primary,
+              background: theme.css.primary,
               color: '#fff',
               border: 'none',
               borderRadius: 6,
@@ -726,7 +726,7 @@ export function TkxVideoPlayer({
                 position: 'absolute',
                 top: 0, left: 0, bottom: 0,
                 width: `${progressPct}%`,
-                background: theme.primary,
+                background: theme.css.primary,
                 borderRadius: 2,
                 pointerEvents: 'none',
               }}
@@ -741,7 +741,7 @@ export function TkxVideoPlayer({
                 width: 12,
                 height: 12,
                 borderRadius: '50%',
-                background: theme.primary,
+                background: theme.css.primary,
                 pointerEvents: 'none',
               }}
             />
@@ -761,7 +761,7 @@ export function TkxVideoPlayer({
                     height: 8,
                     borderRadius: '50%',
                     background: '#fff',
-                    border: `2px solid ${theme.primary}`,
+                    border: `2px solid ${theme.css.primary}`,
                     zIndex: 2,
                     cursor: 'pointer',
                     pointerEvents: 'auto',
@@ -799,12 +799,12 @@ export function TkxVideoPlayer({
           {/* Button row */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {/* Play/Pause */}
-            <CtrlBtn onClick={togglePlay} title={playing ? 'Pause' : 'Play'} primary={theme.primary}>
+            <CtrlBtn onClick={togglePlay} title={playing ? 'Pause' : 'Play'} primary={theme.css.primary}>
               <SvgIcon path={playing ? ICONS.pause : ICONS.play} size={22} />
             </CtrlBtn>
 
             {/* Skip back 10s */}
-            <CtrlBtn onClick={skipBack} title="Skip back 10 seconds" primary={theme.primary}>
+            <CtrlBtn onClick={skipBack} title="Skip back 10 seconds" primary={theme.css.primary}>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <SvgIcon path={ICONS.replay10} size={22} />
                 <span style={{ position: 'absolute', fontSize: '7px', fontWeight: 700, color: 'currentColor', marginTop: 1 }}>10</span>
@@ -812,7 +812,7 @@ export function TkxVideoPlayer({
             </CtrlBtn>
 
             {/* Skip forward 10s */}
-            <CtrlBtn onClick={skipForward} title="Skip forward 10 seconds" primary={theme.primary}>
+            <CtrlBtn onClick={skipForward} title="Skip forward 10 seconds" primary={theme.css.primary}>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <SvgIcon path={ICONS.forward10} size={22} />
                 <span style={{ position: 'absolute', fontSize: '7px', fontWeight: 700, color: 'currentColor', marginTop: 1 }}>10</span>
@@ -825,7 +825,7 @@ export function TkxVideoPlayer({
               onMouseEnter={() => setVolumeHover(true)}
               onMouseLeave={() => setVolumeHover(false)}
             >
-              <CtrlBtn onClick={toggleMute} title={muted ? 'Unmute' : 'Mute'} primary={theme.primary}>
+              <CtrlBtn onClick={toggleMute} title={muted ? 'Unmute' : 'Mute'} primary={theme.css.primary}>
                 <SvgIcon path={volumeIcon} size={20} />
               </CtrlBtn>
               <div
@@ -848,7 +848,7 @@ export function TkxVideoPlayer({
                   aria-label="Volume"
                   style={{
                     width: 64,
-                    accentColor: theme.primary,
+                    accentColor: theme.css.primary,
                     cursor: 'pointer',
                     height: 4,
                   }}
@@ -879,7 +879,7 @@ export function TkxVideoPlayer({
               <CtrlBtn
                 onClick={cycleSubtitle}
                 title="Subtitles"
-                primary={theme.primary}
+                primary={theme.css.primary}
                 active={subtitleIdx >= 0}
               >
                 <SvgIcon path={ICONS.closedCaption} size={20} />
@@ -912,7 +912,7 @@ export function TkxVideoPlayer({
                     position: 'absolute',
                     top: 0,
                     right: 0,
-                    background: theme.primary,
+                    background: theme.css.primary,
                     color: '#fff',
                     fontSize: '0.55rem',
                     fontWeight: 700,
@@ -932,7 +932,7 @@ export function TkxVideoPlayer({
                     bottom: '100%',
                     right: 0,
                     background: 'rgba(20,20,20,0.97)',
-                    border: `1px solid ${theme.border}`,
+                    border: `1px solid ${theme.css.border}`,
                     borderRadius: 6,
                     overflow: 'hidden',
                     zIndex: 100,
@@ -948,9 +948,9 @@ export function TkxVideoPlayer({
                         display: 'block',
                         width: '100%',
                         padding: '6px 14px',
-                        background: rate === playbackRate ? theme.primary + '30' : 'none',
+                        background: rate === playbackRate ? theme.css.primary + '30' : 'none',
                         border: 'none',
-                        color: rate === playbackRate ? theme.primary : '#fff',
+                        color: rate === playbackRate ? theme.css.primary : '#fff',
                         fontSize: '0.8rem',
                         cursor: 'pointer',
                         textAlign: 'left',
@@ -965,7 +965,7 @@ export function TkxVideoPlayer({
 
             {/* PiP */}
             {allowPiP && typeof document !== 'undefined' && 'pictureInPictureEnabled' in document && (
-              <CtrlBtn onClick={togglePiP} title="Picture-in-Picture" primary={theme.primary} active={isPiP}>
+              <CtrlBtn onClick={togglePiP} title="Picture-in-Picture" primary={theme.css.primary} active={isPiP}>
                 <SvgIcon path={ICONS.pip} size={20} />
               </CtrlBtn>
             )}
@@ -989,7 +989,7 @@ export function TkxVideoPlayer({
 
             {/* Fullscreen */}
             {allowFullscreen && (
-              <CtrlBtn onClick={toggleFullscreen} title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'} primary={theme.primary}>
+              <CtrlBtn onClick={toggleFullscreen} title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'} primary={theme.css.primary}>
                 <SvgIcon path={fullscreen ? ICONS.fullscreenExit : ICONS.fullscreen} size={20} />
               </CtrlBtn>
             )}

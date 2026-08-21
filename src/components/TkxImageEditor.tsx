@@ -450,21 +450,21 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
 
     // ── Styles ─────────────────────────────────────────────────────────────
     const rootStyle: CSSProperties = {
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 12,
-      background: theme.surface,
+      background: theme.css.surface,
       padding: 16,
       ...style,
     };
     const dropZoneStyle: CSSProperties = {
-      border: `2px dashed ${isDragging ? theme.primary : theme.border}`,
+      border: `2px dashed ${isDragging ? theme.css.primary : theme.css.border}`,
       borderRadius: 10,
       padding: 48,
       textAlign: 'center',
-      color: theme.textMuted,
+      color: theme.css.textMuted,
       cursor: 'pointer',
       transition: 'border-color 0.15s',
-      background: isDragging ? `${theme.primary}10` : 'transparent',
+      background: isDragging ? `${theme.css.primary}10` : 'transparent',
     };
     const toolbarStyle: CSSProperties = {
       display: 'flex',
@@ -475,10 +475,10 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
     };
     const buttonStyle: CSSProperties = {
       padding: '8px 14px',
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 6,
-      background: theme.bg,
-      color: theme.text,
+      background: theme.css.bg,
+      color: theme.css.text,
       cursor: 'pointer',
       fontSize: 13,
       fontWeight: 600,
@@ -486,9 +486,9 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
     };
     const ratioBtnStyle = (active: boolean): CSSProperties => ({
       ...buttonStyle,
-      background: active ? theme.primary : theme.bg,
-      color: active ? theme.bg : theme.text,
-      borderColor: active ? theme.primary : theme.border,
+      background: active ? theme.css.primary : theme.css.bg,
+      color: active ? theme.css.bg : theme.css.text,
+      borderColor: active ? theme.css.primary : theme.css.border,
     });
 
     const canvasWrapStyle: CSSProperties = {
@@ -545,7 +545,7 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
             <div style={{ fontSize: 14, marginBottom: 6 }}>{labels.drop}</div>
             <button
               type="button"
-              style={{ ...buttonStyle, color: theme.primary, borderColor: theme.primary }}
+              style={{ ...buttonStyle, color: theme.css.primary, borderColor: theme.css.primary }}
             >
               {labels.browse}
             </button>
@@ -579,7 +579,7 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
               {r === 'free' ? labels.free : r}
             </button>
           ))}
-          <div style={{ width: 1, height: 24, background: theme.border, margin: '0 4px' }} />
+          <div style={{ width: 1, height: 24, background: theme.css.border, margin: '0 4px' }} />
           <button
             type="button"
             onClick={() => setRotation((r) => (r - 90 + 360) % 360)}
@@ -610,7 +610,7 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
               aria-label={labels.brightness}
               style={{ width: 140 }}
             />
-            <span style={{ minWidth: 40, color: theme.textMuted, fontVariantNumeric: 'tabular-nums' }}>
+            <span style={{ minWidth: 40, color: theme.css.textMuted, fontVariantNumeric: 'tabular-nums' }}>
               {brightness}%
             </span>
           </label>
@@ -625,7 +625,7 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
               aria-label={labels.contrast}
               style={{ width: 140 }}
             />
-            <span style={{ minWidth: 40, color: theme.textMuted, fontVariantNumeric: 'tabular-nums' }}>
+            <span style={{ minWidth: 40, color: theme.css.textMuted, fontVariantNumeric: 'tabular-nums' }}>
               {contrast}%
             </span>
           </label>
@@ -643,8 +643,8 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
                 top: cropDisplay.top,
                 width: cropDisplay.width,
                 height: cropDisplay.height,
-                border: `2px solid ${theme.primary}`,
-                boxShadow: `0 0 0 9999px ${theme.bg}aa`,
+                border: `2px solid ${theme.css.primary}`,
+                boxShadow: `0 0 0 9999px ${theme.css.bg}aa`,
                 cursor: 'move',
                 touchAction: 'none',
               }}
@@ -670,8 +670,8 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
                     position: 'absolute',
                     width: 14,
                     height: 14,
-                    background: theme.primary,
-                    border: `2px solid ${theme.bg}`,
+                    background: theme.css.primary,
+                    border: `2px solid ${theme.css.bg}`,
                     borderRadius: 2,
                     cursor: `${corner}-resize`,
                     top: corner.startsWith('n') ? -7 : undefined,
@@ -698,9 +698,9 @@ export const TkxImageEditor = forwardRef<TkxImageEditorHandle, TkxImageEditorPro
             onClick={handleApply}
             style={{
               ...buttonStyle,
-              background: theme.primary,
-              color: theme.bg,
-              borderColor: theme.primary,
+              background: theme.css.primary,
+              color: theme.css.bg,
+              borderColor: theme.css.primary,
             }}
           >
             {labels.apply}

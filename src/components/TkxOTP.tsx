@@ -115,9 +115,9 @@ export function TkxOTP({
 
   // Compute success/error state colours
   const boxBorder = (idx: number): string => {
-    if (hasError) return theme.danger;
-    if (isComplete) return theme.success;
-    return theme.border;
+    if (hasError) return theme.css.danger;
+    if (isComplete) return theme.css.success;
+    return theme.css.border;
   };
 
   // Auto focus first input
@@ -257,7 +257,7 @@ export function TkxOTP({
               {separator && separatorPosition === idx && idx !== 0 && (
                 <span
                   aria-hidden="true"
-                  style={{ color: theme.textMuted, userSelect: 'none', flexShrink: 0 }}
+                  style={{ color: theme.css.textMuted, userSelect: 'none', flexShrink: 0 }}
                 >
                   {separator}
                 </span>
@@ -286,8 +286,8 @@ export function TkxOTP({
                   fontWeight: 600,
                   border: `1.5px solid ${borderCol}`,
                   borderRadius: '8px',
-                  backgroundColor: isDisabled ? theme.surfaceAlt : theme.surface,
-                  color: theme.text,
+                  backgroundColor: isDisabled ? theme.css.surfaceAlt : theme.css.surface,
+                  color: theme.css.text,
                   outline: 'none',
                   boxShadow: 'none',
                   cursor: isDisabled ? 'not-allowed' : 'text',
@@ -297,8 +297,8 @@ export function TkxOTP({
                 }}
                 onFocusCapture={(e) => {
                   if (!isDisabled) {
-                    (e.currentTarget as HTMLInputElement).style.borderColor = hasError ? theme.danger : theme.primary;
-                    (e.currentTarget as HTMLInputElement).style.boxShadow = `0 0 0 3px ${hasError ? theme.danger : theme.primary}33`;
+                    (e.currentTarget as HTMLInputElement).style.borderColor = hasError ? theme.css.danger : theme.css.primary;
+                    (e.currentTarget as HTMLInputElement).style.boxShadow = `0 0 0 3px ${hasError ? theme.css.danger : theme.css.primary}33`;
                   }
                 }}
                 onBlurCapture={(e) => {
@@ -312,12 +312,12 @@ export function TkxOTP({
       </div>
 
       {safeHint && !safeError && (
-        <span id={hintId} className={tkx('text-xs')} style={{ color: theme.textMuted }}>
+        <span id={hintId} className={tkx('text-xs')} style={{ color: theme.css.textMuted }}>
           {safeHint}
         </span>
       )}
       {safeError && (
-        <span id={errorId} role="alert" className={tkx('text-xs flex items-center gap-1')} style={{ color: theme.danger }}>
+        <span id={errorId} role="alert" className={tkx('text-xs flex items-center gap-1')} style={{ color: theme.css.danger }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
           </svg>

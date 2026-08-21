@@ -112,20 +112,20 @@ export function TkxThinkingIndicator() {
   return (
     <div
       className={tkx('flex items-center gap-1.5 px-4 py-3 rounded-2xl w-fit')}
-      style={{ backgroundColor: theme.surface, border: `1px solid ${theme.border}` }}
+      style={{ backgroundColor: theme.css.surface, border: `1px solid ${theme.css.border}` }}
       aria-label="Assistant is thinking"
     >
       <span
         className="tkx-dot1 inline-block w-2 h-2 rounded-full"
-        style={{ backgroundColor: theme.textMuted }}
+        style={{ backgroundColor: theme.css.textMuted }}
       />
       <span
         className="tkx-dot2 inline-block w-2 h-2 rounded-full"
-        style={{ backgroundColor: theme.textMuted }}
+        style={{ backgroundColor: theme.css.textMuted }}
       />
       <span
         className="tkx-dot3 inline-block w-2 h-2 rounded-full"
-        style={{ backgroundColor: theme.textMuted }}
+        style={{ backgroundColor: theme.css.textMuted }}
       />
     </div>
   );
@@ -152,7 +152,7 @@ export function TkxChatBubble({ message, showTimestamp, avatarUser, avatarAssist
       <div role="listitem" className={tkx('flex justify-center my-2')}>
         <p
           className={tkx('text-xs italic px-3 py-1 rounded-full')}
-          style={{ color: theme.textMuted, backgroundColor: theme.surfaceAlt }}
+          style={{ color: theme.css.textMuted, backgroundColor: theme.css.surfaceAlt }}
         >
           {safeContent}
         </p>
@@ -164,15 +164,15 @@ export function TkxChatBubble({ message, showTimestamp, avatarUser, avatarAssist
   const avatar = isUser ? (avatarUser ?? <DefaultUserAvatar />) : (avatarAssistant ?? <DefaultAssistantAvatar />);
 
   const bubbleStyle: React.CSSProperties = isUser
-    ? { backgroundColor: theme.primary, color: theme.bg }
+    ? { backgroundColor: theme.css.primary, color: theme.css.bg }
     : {
-        backgroundColor: theme.surface,
-        color: theme.text,
-        border: `1px solid ${error ? theme.danger : theme.border}`,
+        backgroundColor: theme.css.surface,
+        color: theme.css.text,
+        border: `1px solid ${error ? theme.css.danger : theme.css.border}`,
       };
 
   if (error) {
-    bubbleStyle.borderColor = theme.danger;
+    bubbleStyle.borderColor = theme.css.danger;
     bubbleStyle.borderWidth = '2px';
   }
 
@@ -183,7 +183,7 @@ export function TkxChatBubble({ message, showTimestamp, avatarUser, avatarAssist
     >
       <div
         className={tkx('shrink-0 w-8 h-8 rounded-full flex items-center justify-center overflow-hidden')}
-        style={{ color: isUser ? theme.primary : theme.secondary }}
+        style={{ color: isUser ? theme.css.primary : theme.css.secondary }}
       >
         {avatar}
       </div>
@@ -197,11 +197,11 @@ export function TkxChatBubble({ message, showTimestamp, avatarUser, avatarAssist
         >
           {safeContent}
           {error && (
-            <span aria-label="Error" style={{ marginLeft: 6, color: theme.danger }}>⚠</span>
+            <span aria-label="Error" style={{ marginLeft: 6, color: theme.css.danger }}>⚠</span>
           )}
         </div>
         {showTimestamp && formattedTime && (
-          <span className={tkx('text-[10px]')} style={{ color: theme.textMuted }}>
+          <span className={tkx('text-[10px]')} style={{ color: theme.css.textMuted }}>
             {formattedTime}
           </span>
         )}
@@ -283,13 +283,13 @@ export function TkxChat({
               left: 12,
               right: 12,
               borderRadius: 16,
-              backgroundColor: theme.surface,
-              border: `1px solid ${theme.border}`,
+              backgroundColor: theme.css.surface,
+              border: `1px solid ${theme.css.border}`,
               boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
             }
           : {
-              borderTop: `1px solid ${theme.border}`,
-              backgroundColor: theme.surface,
+              borderTop: `1px solid ${theme.css.border}`,
+              backgroundColor: theme.css.surface,
             }
       }
     >
@@ -306,8 +306,8 @@ export function TkxChat({
           disabled={isLoading}
           className={tkx('flex-1 resize-none text-sm leading-6 bg-transparent outline-none py-1')}
           style={{
-            color: theme.text,
-            caretColor: theme.primary,
+            color: theme.css.text,
+            caretColor: theme.css.primary,
             minHeight: 32,
             maxHeight: 120,
           }}
@@ -321,7 +321,7 @@ export function TkxChat({
             !reducedMotion && 'transition-opacity duration-150',
             !canSend ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer opacity-100',
           )}
-          style={{ backgroundColor: theme.primary, color: theme.bg }}
+          style={{ backgroundColor: theme.css.primary, color: theme.css.bg }}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M2 14L14 8 2 2v4.5l8 1.5-8 1.5V14z" fill="currentColor" />
@@ -329,7 +329,7 @@ export function TkxChat({
         </button>
       </div>
       {maxLength && (
-        <div className={tkx('text-right text-[10px]')} style={{ color: theme.textMuted }}>
+        <div className={tkx('text-right text-[10px]')} style={{ color: theme.css.textMuted }}>
           {draft.length}/{maxLength}
         </div>
       )}
@@ -341,8 +341,8 @@ export function TkxChat({
       className={tkx('flex flex-col overflow-hidden rounded-2xl')}
       style={{
         height: heightVal,
-        backgroundColor: theme.bg,
-        border: `1px solid ${theme.border}`,
+        backgroundColor: theme.css.bg,
+        border: `1px solid ${theme.css.border}`,
         position: 'relative',
       }}
     >

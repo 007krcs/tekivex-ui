@@ -446,7 +446,7 @@ function TimeColumn({ values, selected, onSelect, label, theme, format }: TimeCo
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-      <div style={{ fontSize: '11px', fontWeight: 600, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <div style={{ fontSize: '11px', fontWeight: 600, color: theme.css.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
         {label}
       </div>
       <div
@@ -456,7 +456,7 @@ function TimeColumn({ values, selected, onSelect, label, theme, format }: TimeCo
           overflowY: 'auto',
           width: '52px',
           scrollbarWidth: 'thin',
-          border: `1px solid ${theme.border}`,
+          border: `1px solid ${theme.css.border}`,
           borderRadius: '8px',
           padding: '4px',
         }}
@@ -480,8 +480,8 @@ function TimeColumn({ values, selected, onSelect, label, theme, format }: TimeCo
                 cursor: 'pointer',
                 fontSize: '13px',
                 fontWeight: isSelected ? 600 : 400,
-                backgroundColor: isSelected ? theme.primary : 'transparent',
-                color: isSelected ? theme.bg : theme.text,
+                backgroundColor: isSelected ? theme.css.primary : 'transparent',
+                color: isSelected ? theme.css.bg : theme.css.text,
                 fontFamily: 'monospace',
                 transition: 'background-color 100ms ease',
               }}
@@ -567,7 +567,7 @@ function CalendarMonth({
               textAlign: 'center',
               fontSize: '11px',
               fontWeight: 600,
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               padding: '4px 0',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
@@ -604,30 +604,30 @@ function CalendarMonth({
 
           let bg = 'transparent';
           let textColor = isCurrentMonth
-            ? isWeekend ? `${theme.text}cc` : theme.text
-            : `${theme.textMuted}60`;
+            ? isWeekend ? `${theme.css.text}cc` : theme.css.text
+            : `${theme.css.textMuted}60`;
           let borderStyle = 'none';
           let fontWeight = 400;
 
           if (isFullySelected || isHoverEndpoint) {
-            bg = theme.primary;
-            textColor = theme.bg;
+            bg = theme.css.primary;
+            textColor = theme.css.bg;
             fontWeight = 600;
           } else if (inRangeHighlight) {
-            bg = `${theme.primary}18`;
+            bg = `${theme.css.primary}18`;
           }
 
           if (isToday && !isFullySelected) {
-            borderStyle = `2px solid ${theme.primary}`;
+            borderStyle = `2px solid ${theme.css.primary}`;
             fontWeight = 600;
           }
 
           if (disabled) {
-            textColor = `${theme.textMuted}50`;
+            textColor = `${theme.css.textMuted}50`;
           }
 
           if (isFocused && !isFullySelected) {
-            borderStyle = `2px solid ${theme.secondary}`;
+            borderStyle = `2px solid ${theme.css.secondary}`;
           }
 
           const ariaLabel = cell.toLocaleDateString(locale, {
@@ -1199,7 +1199,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
-  const borderColor = isInvalid ? theme.danger : open ? theme.primary : theme.border;
+  const borderColor = isInvalid ? theme.css.danger : open ? theme.css.primary : theme.css.border;
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const minutes = Array.from({ length: 60 }, (_, i) => i);
@@ -1217,8 +1217,8 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
         top: popupPos.top,
         left: popupPos.left,
         zIndex: 9999,
-        backgroundColor: theme.surface,
-        border: `1px solid ${theme.border}`,
+        backgroundColor: theme.css.surface,
+        border: `1px solid ${theme.css.border}`,
         borderRadius: '14px',
         boxShadow: `0 8px 30px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)`,
         display: 'flex',
@@ -1241,7 +1241,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
           style={{
             width: '148px',
             flexShrink: 0,
-            borderRight: `1px solid ${theme.border}`,
+            borderRight: `1px solid ${theme.css.border}`,
             padding: '8px 6px',
             overflowY: 'auto',
             display: 'flex',
@@ -1253,7 +1253,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
             style={{
               fontSize: '11px',
               fontWeight: 600,
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               textTransform: 'uppercase',
               letterSpacing: '0.07em',
               padding: '4px 8px 8px',
@@ -1280,14 +1280,14 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                   border: 'none',
                   cursor: 'pointer',
                   fontSize: '13px',
-                  backgroundColor: isActive ? `${theme.primary}20` : 'transparent',
-                  color: isActive ? theme.primary : theme.text,
+                  backgroundColor: isActive ? `${theme.css.primary}20` : 'transparent',
+                  color: isActive ? theme.css.primary : theme.css.text,
                   fontWeight: isActive ? 600 : 400,
                   fontFamily: 'inherit',
                   transition: 'background-color 80ms ease',
                 }}
                 onMouseEnter={(e) => {
-                  if (!isActive) (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${theme.surfaceAlt}`;
+                  if (!isActive) (e.currentTarget as HTMLButtonElement).style.backgroundColor = `${theme.css.surfaceAlt}`;
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
@@ -1317,7 +1317,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
               border: 'none',
               background: 'transparent',
               cursor: 'pointer',
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               padding: '6px',
               borderRadius: '6px',
               display: 'flex',
@@ -1342,7 +1342,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                     cursor: 'pointer',
                     fontSize: '14px',
                     fontWeight: 600,
-                    color: theme.text,
+                    color: theme.css.text,
                     padding: '4px 6px',
                     borderRadius: '6px',
                     fontFamily: 'inherit',
@@ -1359,7 +1359,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                     cursor: 'pointer',
                     fontSize: '14px',
                     fontWeight: 600,
-                    color: theme.text,
+                    color: theme.css.text,
                     padding: '4px 6px',
                     borderRadius: '6px',
                     fontFamily: 'inherit',
@@ -1369,8 +1369,8 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                 </button>
                 {dualView && (
                   <>
-                    <span style={{ color: theme.textMuted, fontSize: '14px' }}>–</span>
-                    <span style={{ fontSize: '14px', fontWeight: 600, color: theme.text }}>
+                    <span style={{ color: theme.css.textMuted, fontSize: '14px' }}>–</span>
+                    <span style={{ fontSize: '14px', fontWeight: 600, color: theme.css.text }}>
                       {monthNames[month2]} {year2}
                     </span>
                   </>
@@ -1387,7 +1387,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: 600,
-                  color: theme.text,
+                  color: theme.css.text,
                   padding: '4px 6px',
                   borderRadius: '6px',
                   fontFamily: 'inherit',
@@ -1397,7 +1397,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
               </button>
             )}
             {calView === 'year' && (
-              <span style={{ fontSize: '14px', fontWeight: 600, color: theme.text }}>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: theme.css.text }}>
                 {getDecadeStart(viewYear)}–{getDecadeStart(viewYear) + 9}
               </span>
             )}
@@ -1416,7 +1416,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
               border: 'none',
               background: 'transparent',
               cursor: 'pointer',
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               padding: '6px',
               borderRadius: '6px',
               display: 'flex',
@@ -1502,12 +1502,12 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                   style={{
                     padding: '10px',
                     borderRadius: '8px',
-                    border: isTodayMonth && !isCurrentViewMonth ? `2px solid ${theme.primary}` : 'none',
+                    border: isTodayMonth && !isCurrentViewMonth ? `2px solid ${theme.css.primary}` : 'none',
                     cursor: 'pointer',
                     fontSize: '13px',
                     fontWeight: isCurrentViewMonth ? 600 : 400,
-                    backgroundColor: isCurrentViewMonth ? theme.primary : 'transparent',
-                    color: isCurrentViewMonth ? theme.bg : theme.text,
+                    backgroundColor: isCurrentViewMonth ? theme.css.primary : 'transparent',
+                    color: isCurrentViewMonth ? theme.css.bg : theme.css.text,
                     fontFamily: 'inherit',
                     transition: 'background-color 80ms ease',
                   }}
@@ -1544,12 +1544,12 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                   style={{
                     padding: '10px 6px',
                     borderRadius: '8px',
-                    border: isTodayYear && !isCurrentYear ? `2px solid ${theme.primary}` : 'none',
+                    border: isTodayYear && !isCurrentYear ? `2px solid ${theme.css.primary}` : 'none',
                     cursor: 'pointer',
                     fontSize: '13px',
                     fontWeight: isCurrentYear ? 600 : 400,
-                    backgroundColor: isCurrentYear ? theme.primary : 'transparent',
-                    color: isCurrentYear ? theme.bg : isOutsideDecade ? theme.textMuted : theme.text,
+                    backgroundColor: isCurrentYear ? theme.css.primary : 'transparent',
+                    color: isCurrentYear ? theme.css.bg : isOutsideDecade ? theme.css.textMuted : theme.css.text,
                     fontFamily: 'inherit',
                     transition: 'background-color 80ms ease',
                     opacity: isOutsideDecade ? 0.5 : 1,
@@ -1566,7 +1566,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
         {showTime && calView === 'day' && (
           <div
             style={{
-              borderTop: `1px solid ${theme.border}`,
+              borderTop: `1px solid ${theme.css.border}`,
               paddingTop: '12px',
               display: 'flex',
               alignItems: 'flex-start',
@@ -1584,7 +1584,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
               label="Hour"
               theme={theme}
             />
-            <div style={{ display: 'flex', alignItems: 'center', height: '40px', marginTop: '28px', fontSize: '16px', fontWeight: 700, color: theme.textMuted }}>
+            <div style={{ display: 'flex', alignItems: 'center', height: '40px', marginTop: '28px', fontSize: '16px', fontWeight: 700, color: theme.css.textMuted }}>
               :
             </div>
             <TimeColumn
@@ -1604,10 +1604,10 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
         {mode === 'multiple' && calView === 'day' && multiDates.length > 0 && (
           <div
             style={{
-              borderTop: `1px solid ${theme.border}`,
+              borderTop: `1px solid ${theme.css.border}`,
               paddingTop: '8px',
               fontSize: '12px',
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               textAlign: 'center',
             }}
           >
@@ -1618,7 +1618,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
         {/* Footer */}
         <div
           style={{
-            borderTop: `1px solid ${theme.border}`,
+            borderTop: `1px solid ${theme.css.border}`,
             paddingTop: '10px',
             display: 'flex',
             alignItems: 'center',
@@ -1635,7 +1635,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
               background: 'transparent',
               cursor: 'pointer',
               fontSize: '13px',
-              color: theme.primary,
+              color: theme.css.primary,
               fontWeight: 500,
               padding: '6px 10px',
               borderRadius: '6px',
@@ -1654,12 +1654,12 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                 style={{
                   padding: '6px 14px',
                   borderRadius: '7px',
-                  border: `1px solid ${theme.border}`,
+                  border: `1px solid ${theme.css.border}`,
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: 500,
                   backgroundColor: 'transparent',
-                  color: theme.text,
+                  color: theme.css.text,
                   fontFamily: 'inherit',
                 }}
               >
@@ -1675,8 +1675,8 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: 600,
-                  backgroundColor: theme.primary,
-                  color: theme.bg,
+                  backgroundColor: theme.css.primary,
+                  color: theme.css.bg,
                   fontFamily: 'inherit',
                 }}
               >
@@ -1705,7 +1705,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
       {safeLabel && (
         <label
           htmlFor={id}
-          style={{ fontSize: '13px', fontWeight: 500, color: theme.text, marginBottom: '2px' }}
+          style={{ fontSize: '13px', fontWeight: 500, color: theme.css.text, marginBottom: '2px' }}
         >
           {safeLabel}
         </label>
@@ -1719,7 +1719,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
           alignItems: 'center',
           border: `1.5px solid ${borderColor}`,
           borderRadius: '8px',
-          backgroundColor: theme.surface,
+          backgroundColor: theme.css.surface,
           overflow: 'hidden',
           transition: reduced ? 'none' : 'border-color 120ms ease',
           opacity: isDisabled ? 0.5 : 1,
@@ -1731,7 +1731,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
             display: 'flex',
             alignItems: 'center',
             paddingLeft: '10px',
-            color: theme.textMuted,
+            color: theme.css.textMuted,
             flexShrink: 0,
           }}
         >
@@ -1782,7 +1782,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
             outline: 'none',
             fontSize: '14px',
             padding: '9px 8px',
-            color: theme.text,
+            color: theme.css.text,
             cursor: mode !== 'single' ? 'pointer' : 'text',
             fontFamily: 'inherit',
             minWidth: 0,
@@ -1804,7 +1804,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
               border: 'none',
               background: 'transparent',
               cursor: 'pointer',
-              color: theme.textMuted,
+              color: theme.css.textMuted,
               flexShrink: 0,
               borderRadius: '4px',
               marginRight: '4px',
@@ -1839,7 +1839,7 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
             border: 'none',
             background: 'transparent',
             cursor: isDisabled ? 'not-allowed' : 'pointer',
-            color: theme.textMuted,
+            color: theme.css.textMuted,
             flexShrink: 0,
           }}
         >
@@ -1851,10 +1851,10 @@ export const TkxDatePicker = forwardRef<HTMLInputElement, TkxDatePickerProps>(fu
 
       {/* Hint / Error */}
       {safeHint && !isInvalid && (
-        <span style={{ fontSize: '12px', color: theme.textMuted }}>{safeHint}</span>
+        <span style={{ fontSize: '12px', color: theme.css.textMuted }}>{safeHint}</span>
       )}
       {isInvalid && safeError && (
-        <span role="alert" style={{ fontSize: '12px', color: theme.danger }}>{safeError}</span>
+        <span role="alert" style={{ fontSize: '12px', color: theme.css.danger }}>{safeError}</span>
       )}
 
       {/* Hidden input so the picker posts in plain HTML forms */}

@@ -81,7 +81,7 @@ function CopyButton({ text }: { text: string }) {
         padding: '2px 6px',
         border: 'none',
         background: 'transparent',
-        color: copied ? theme.success : theme.textMuted,
+        color: copied ? theme.css.success : theme.css.textMuted,
         cursor: 'pointer',
         fontSize: '0.8em',
         borderRadius: '4px',
@@ -97,11 +97,11 @@ function CopyButton({ text }: { text: string }) {
 function useTypeColor(type: TypographyType = 'default') {
   const theme = useTheme();
   const map: Record<TypographyType, string> = {
-    default: theme.text,
-    secondary: theme.textMuted,
-    success: theme.success,
-    warning: theme.warning,
-    danger: theme.danger,
+    default: theme.css.text,
+    secondary: theme.css.textMuted,
+    success: theme.css.success,
+    warning: theme.css.warning,
+    danger: theme.css.danger,
   };
   return map[type];
 }
@@ -183,8 +183,8 @@ export function TkxText({
         style: {
           padding: '0.15em 0.4em',
           fontSize: '0.875em',
-          backgroundColor: theme.surfaceAlt,
-          border: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surfaceAlt,
+          border: `1px solid ${theme.css.border}`,
           borderRadius: '4px',
           fontFamily: 'monospace',
         },
@@ -198,7 +198,7 @@ export function TkxText({
       'mark',
       {
         style: {
-          backgroundColor: `${theme.warning}33`,
+          backgroundColor: `${theme.css.warning}33`,
           color,
           padding: '0 2px',
           borderRadius: '2px',
@@ -236,7 +236,7 @@ export function TkxParagraph({
   style,
 }: TkxParagraphProps) {
   const theme = useTheme();
-  const color = type === 'secondary' ? theme.textMuted : theme.text;
+  const color = type === 'secondary' ? theme.css.textMuted : theme.css.text;
   const textContent = getTextContent(children);
   const safeChildren = typeof children === 'string' ? sanitizeString(children) : children;
 

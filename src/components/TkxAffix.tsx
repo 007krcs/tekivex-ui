@@ -106,7 +106,7 @@ export function TkxAffix({
         ...(offsetBottom !== undefined ? { bottom: offsetBottom } : {}),
         width: placeholderSize.width || undefined,
         transition: reducedMotion ? 'none' : 'box-shadow 0.2s ease',
-        boxShadow: `0 2px 8px ${theme.border}`,
+        boxShadow: `0 2px 8px ${theme.css.border}`,
       }
     : {};
 

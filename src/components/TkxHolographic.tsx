@@ -253,11 +253,11 @@ export const TkxHolographicSurface = forwardRef<HTMLDivElement, TkxHolographicSu
 
     const rootStyle: CSSProperties = {
       borderRadius: typeof radius === 'number' ? `${radius}px` : radius,
-      background: `linear-gradient(135deg, ${theme.surface}cc, ${theme.surfaceAlt}cc)`,
-      border: `1px solid ${theme.border}`,
+      background: `linear-gradient(135deg, ${theme.css.surface}cc, ${theme.css.surfaceAlt}cc)`,
+      border: `1px solid ${theme.css.border}`,
       backdropFilter: 'blur(12px)',
       WebkitBackdropFilter: 'blur(12px)',
-      color: theme.text,
+      color: theme.css.text,
       ...style,
     };
 
@@ -329,7 +329,7 @@ export const TkxHolographicCard = forwardRef<HTMLDivElement, TkxHolographicCardP
                     fontSize: 20,
                     fontWeight: 700,
                     letterSpacing: '-0.01em',
-                    color: theme.text,
+                    color: theme.css.text,
                   }}
                 >
                   {title}
@@ -339,7 +339,7 @@ export const TkxHolographicCard = forwardRef<HTMLDivElement, TkxHolographicCardP
             </header>
           )}
           {subtitle && (
-            <p style={{ margin: '0 0 16px', color: theme.textMuted, fontSize: 14 }}>
+            <p style={{ margin: '0 0 16px', color: theme.css.textMuted, fontSize: 14 }}>
               {subtitle}
             </p>
           )}
@@ -402,7 +402,7 @@ export const TkxHolographicAvatar = forwardRef<HTMLDivElement, TkxHolographicAva
               justifyContent: 'center',
               fontSize: size * 0.36,
               fontWeight: 700,
-              color: theme.text,
+              color: theme.css.text,
             }}
           >
             {initials ?? alt.charAt(0).toUpperCase()}
@@ -510,9 +510,9 @@ export const TkxHolographicButton = forwardRef<HTMLButtonElement, TkxHolographic
           fontSize: 15,
           fontWeight: 700,
           letterSpacing: '0.02em',
-          color: theme.text,
-          background: `linear-gradient(135deg, ${theme.surface}, ${theme.surfaceAlt})`,
-          border: `1px solid ${theme.primary}55`,
+          color: theme.css.text,
+          background: `linear-gradient(135deg, ${theme.css.surface}, ${theme.css.surfaceAlt})`,
+          border: `1px solid ${theme.css.primary}55`,
           borderRadius: 12,
           cursor: isDisabled ? 'not-allowed' : 'pointer',
           opacity: isDisabled ? 0.5 : 1,
@@ -533,8 +533,8 @@ export const TkxHolographicButton = forwardRef<HTMLButtonElement, TkxHolographic
               position: 'absolute',
               inset: -1,
               borderRadius: 12,
-              border: `1px solid ${theme.primary}88`,
-              boxShadow: `0 0 24px ${theme.primary}44`,
+              border: `1px solid ${theme.css.primary}88`,
+              boxShadow: `0 0 24px ${theme.css.primary}44`,
               pointerEvents: 'none',
               opacity: 0.6,
             }}

@@ -408,10 +408,10 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
     const inputStyle: CSSProperties = {
       width: '100%',
       padding: '8px 10px',
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 8,
-      background: theme.surface,
-      color: theme.text,
+      background: theme.css.surface,
+      color: theme.css.text,
       fontSize: 14,
       outline: 'none',
       minHeight: 40,
@@ -420,19 +420,19 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
     const selectStyle: CSSProperties = {
       ...inputStyle,
       // appearance:none normalises the OS-default caret across browsers; the
-      // chevron is drawn via a background-image SVG that respects theme.text.
+      // chevron is drawn via a background-image SVG that respects theme.css.text.
       appearance: 'none',
       WebkitAppearance: 'none',
       MozAppearance: 'none',
       paddingRight: 28,
-      backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='${encodeURIComponent(theme.textMuted)}' d='M0 0l5 6 5-6z'/></svg>")`,
+      backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='${encodeURIComponent(theme.css.textMuted)}' d='M0 0l5 6 5-6z'/></svg>")`,
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'right 10px center',
     };
     const dropdownStyle: CSSProperties = {
-      border: `1px solid ${theme.border}`,
+      border: `1px solid ${theme.css.border}`,
       borderRadius: 8,
-      background: theme.surface,
+      background: theme.css.surface,
       maxHeight: 200,
       overflow: 'auto',
       padding: 4,
@@ -442,9 +442,9 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
       borderRadius: 6,
       cursor: 'pointer',
       fontSize: 13,
-      color: theme.text,
+      color: theme.css.text,
     };
-    const labelStyle: CSSProperties = { fontSize: 12, color: theme.textMuted };
+    const labelStyle: CSSProperties = { fontSize: 12, color: theme.css.textMuted };
 
     return (
       <div className={className} style={rootStyle}>
@@ -528,7 +528,7 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
               </div>
             </div>
             {divError && (
-              <div role="alert" style={{ fontSize: 12, color: theme.danger }}>{divError}</div>
+              <div role="alert" style={{ fontSize: 12, color: theme.css.danger }}>{divError}</div>
             )}
           </>
         )}
@@ -593,11 +593,11 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
                 tabIndex={0}
                 style={{
                   ...optionStyle,
-                  background: value.postOffice === po.Name ? theme.surfaceAlt : 'transparent',
+                  background: value.postOffice === po.Name ? theme.css.surfaceAlt : 'transparent',
                 }}
               >
                 <strong>{po.Name}</strong>{' '}
-                <span style={{ color: theme.textMuted }}>
+                <span style={{ color: theme.css.textMuted }}>
                   · {po.District}, {po.State}
                 </span>
               </div>
@@ -606,7 +606,7 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
         )}
 
         {error && (
-          <div role="alert" style={{ fontSize: 12, color: theme.danger }}>
+          <div role="alert" style={{ fontSize: 12, color: theme.css.danger }}>
             {error}
           </div>
         )}

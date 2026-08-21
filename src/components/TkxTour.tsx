@@ -161,11 +161,11 @@ export function TkxTour({
           top: pos.top,
           left: pos.left,
           width: TIP_W,
-          backgroundColor: theme.surface,
-          border: `1px solid ${theme.border}`,
+          backgroundColor: theme.css.surface,
+          border: `1px solid ${theme.css.border}`,
           borderRadius: 10,
           padding: 20,
-          boxShadow: `0 8px 24px ${theme.bg}80`,
+          boxShadow: `0 8px 24px ${theme.css.bg}80`,
           animation: reducedMotion ? 'none' : 'tkxFadeIn 0.2s ease',
           fontFamily: 'inherit',
         }}
@@ -208,13 +208,13 @@ export function TkxTour({
       >
         <h3
           className={tkx('m-0 mb-2 text-base font-semibold')}
-          style={{ color: theme.text }}
+          style={{ color: theme.css.text }}
         >
           {safeTitle}
         </h3>
         <p
           className={tkx('m-0 mb-4 text-sm leading-relaxed')}
-          style={{ color: theme.textMuted }}
+          style={{ color: theme.css.textMuted }}
         >
           {safeDesc}
         </p>
@@ -229,7 +229,7 @@ export function TkxTour({
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
-                backgroundColor: i === current ? theme.primary : theme.border,
+                backgroundColor: i === current ? theme.css.primary : theme.css.border,
                 transition: reducedMotion ? 'none' : 'background-color 0.2s',
               }}
             />
@@ -243,7 +243,7 @@ export function TkxTour({
             aria-label="Skip tour"
             onClick={onClose}
             className={tkx('border-0 bg-transparent cursor-pointer text-sm px-2 py-1')}
-            style={{ color: theme.textMuted }}
+            style={{ color: theme.css.textMuted }}
           >
             Skip
           </button>
@@ -254,7 +254,7 @@ export function TkxTour({
                 aria-label="Previous step"
                 onClick={handlePrev}
                 className={tkx('rounded-md border px-3 py-1 text-sm cursor-pointer bg-transparent')}
-                style={{ borderColor: theme.border, color: theme.text }}
+                style={{ borderColor: theme.css.border, color: theme.css.text }}
               >
                 Prev
               </button>
@@ -264,7 +264,7 @@ export function TkxTour({
               aria-label={current === steps.length - 1 ? 'Finish tour' : 'Next step'}
               onClick={handleNext}
               className={tkx('rounded-md border-0 px-4 py-1 text-sm cursor-pointer font-medium')}
-              style={{ backgroundColor: theme.primary, color: '#fff' }}
+              style={{ backgroundColor: theme.css.primary, color: '#fff' }}
             >
               {current === steps.length - 1 ? 'Finish' : 'Next'}
             </button>

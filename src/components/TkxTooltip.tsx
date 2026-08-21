@@ -126,7 +126,7 @@ export function TkxTooltip({
   useEffect(() => { setMounted(true); }, []);
 
   const safeContent = typeof content === 'string' ? sanitizeString(content) : content;
-  const textColor = getAccessibleForeground(theme.surfaceAlt, [theme.text, '#ffffff', '#000000']);
+  const textColor = getAccessibleForeground(theme.css.surfaceAlt, [theme.css.text, '#ffffff', '#000000']);
 
   const setOpen = useCallback(
     (value: boolean) => {
@@ -210,10 +210,10 @@ export function TkxTooltip({
     position: 'fixed',
     top: position?.top ?? -9999,
     left: position?.left ?? -9999,
-    backgroundColor: theme.surfaceAlt,
+    backgroundColor: theme.css.surfaceAlt,
     color: textColor,
-    border: `1px solid ${theme.border}`,
-    boxShadow: `0 4px 12px ${theme.bg}40`,
+    border: `1px solid ${theme.css.border}`,
+    boxShadow: `0 4px 12px ${theme.css.bg}40`,
     maxWidth: 280,
   };
 

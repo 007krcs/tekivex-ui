@@ -50,9 +50,9 @@ function Avatar({ src, name, size = 32 }: { src?: string; name?: string; size?: 
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%', flexShrink: 0,
-      background: `${theme.primary}22`, border: `1px solid ${theme.primary}44`,
+      background: `${theme.css.primary}22`, border: `1px solid ${theme.css.primary}44`,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: size * 0.35, fontWeight: 700, color: theme.primary,
+      fontSize: size * 0.35, fontWeight: 700, color: theme.css.primary,
     }}>
       {initials}
     </div>
@@ -128,7 +128,7 @@ export function TkxAIChatBubble({
       }}>
         <div style={{
           padding: '6px 16px', borderRadius: 999, fontSize: 12,
-          background: `${theme.border}`, color: theme.textMuted,
+          background: `${theme.css.border}`, color: theme.css.textMuted,
           fontStyle: 'italic',
         }}>
           {typeof content === 'string' ? sanitizeString(content) : content}
@@ -142,14 +142,14 @@ export function TkxAIChatBubble({
     padding: '12px 16px',
     borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
     background: isUser
-      ? `linear-gradient(135deg, ${theme.primary}, ${theme.primary}cc)`
-      : `${theme.surface}`,
-    border: isUser ? 'none' : `1px solid ${theme.border}`,
-    color: isUser ? '#fff' : theme.text,
+      ? `linear-gradient(135deg, ${theme.css.primary}, ${theme.css.primary}cc)`
+      : `${theme.css.surface}`,
+    border: isUser ? 'none' : `1px solid ${theme.css.border}`,
+    color: isUser ? '#fff' : theme.css.text,
     fontSize: 14,
     lineHeight: 1.65,
     boxShadow: isUser
-      ? `0 4px 16px -4px ${theme.primary}55`
+      ? `0 4px 16px -4px ${theme.css.primary}55`
       : `0 2px 8px -2px rgba(0,0,0,0.2)`,
     position: 'relative',
     wordBreak: 'break-word',
@@ -171,8 +171,8 @@ export function TkxAIChatBubble({
         {/* Name + timestamp */}
         {(name || timestamp) && (
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', paddingInline: 4 }}>
-            {name && <span style={{ fontSize: 11, fontWeight: 700, color: theme.textMuted }}>{name}</span>}
-            {timestamp && <span style={{ fontSize: 10, color: theme.textMuted }}>{timestamp}</span>}
+            {name && <span style={{ fontSize: 11, fontWeight: 700, color: theme.css.textMuted }}>{name}</span>}
+            {timestamp && <span style={{ fontSize: 10, color: theme.css.textMuted }}>{timestamp}</span>}
           </div>
         )}
 
@@ -186,7 +186,7 @@ export function TkxAIChatBubble({
                 {streaming ? displayed : sanitizeString(content)}
               </span>
               {streaming && displayed.length < fullText.length && (
-                <span aria-hidden="true" style={{ display: 'inline-block', width: 2, height: 14, background: isUser ? '#fff' : theme.primary, marginLeft: 2, animation: 'tkx-blink 1s step-end infinite', verticalAlign: 'text-bottom' }} />
+                <span aria-hidden="true" style={{ display: 'inline-block', width: 2, height: 14, background: isUser ? '#fff' : theme.css.primary, marginLeft: 2, animation: 'tkx-blink 1s step-end infinite', verticalAlign: 'text-bottom' }} />
               )}
               {/* Debounced polite live region — announces completed words, not keystrokes. */}
               {streaming && (
@@ -219,7 +219,7 @@ export function TkxAIChatBubble({
               style={{
                 position: 'absolute', top: 8, right: 8,
                 background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: 13, color: copied ? '#10b981' : theme.textMuted,
+                fontSize: 13, color: copied ? '#10b981' : theme.css.textMuted,
                 padding: '2px 4px', borderRadius: 4,
                 transition: 'color 0.2s',
               }}
@@ -233,14 +233,14 @@ export function TkxAIChatBubble({
         {!isUser && confidence !== undefined && (
           <div style={{ paddingInline: 4, width: '100%', maxWidth: 240 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{ flex: 1, height: 3, borderRadius: 3, background: theme.border, overflow: 'hidden' }}>
+              <div style={{ flex: 1, height: 3, borderRadius: 3, background: theme.css.border, overflow: 'hidden' }}>
                 <div style={{
                   height: '100%', width: `${confidence}%`,
-                  background: confidenceColor(confidence, theme.primary),
+                  background: confidenceColor(confidence, theme.css.primary),
                   borderRadius: 3, transition: 'width 0.8s ease',
                 }} />
               </div>
-              <span style={{ fontSize: 10, color: theme.textMuted, whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: 10, color: theme.css.textMuted, whiteSpace: 'nowrap' }}>
                 {confidence}% confident
               </span>
             </div>

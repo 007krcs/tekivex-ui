@@ -205,13 +205,13 @@ export function TkxTable<T extends Record<string, unknown>>({
   // ── Styles ─────────────────────────────────────────────────────────────
   const py = compact ? '4px' : '12px';
   const px = compact ? '8px' : '16px';
-  const borderStyle = bordered ? `1px solid ${theme.border}` : 'none';
+  const borderStyle = bordered ? `1px solid ${theme.css.border}` : 'none';
   const selectedSet = useMemo(() => new Set(selectedRows ?? []), [selectedRows]);
 
   return (
     <div
       className={tkx('w-full rounded-lg', className ?? '')}
-      style={{ border: `1px solid ${theme.border}`, overflow: 'hidden', ...style }}
+      style={{ border: `1px solid ${theme.css.border}`, overflow: 'hidden', ...style }}
     >
       <div
         ref={scrollContainerRef}
@@ -229,12 +229,12 @@ export function TkxTable<T extends Record<string, unknown>>({
           // to let AT compute total size/position. Omitted when all rows are
           // in the DOM (no windowing → count is self-evident).
           aria-rowcount={isVirtual ? sorted.length : undefined}
-          style={{ borderCollapse: 'collapse', color: theme.text }}
+          style={{ borderCollapse: 'collapse', color: theme.css.text }}
         >
           {caption && (
             <caption
               className={tkx('text-sm text-left p-2')}
-              style={{ color: theme.textMuted }}
+              style={{ color: theme.css.textMuted }}
             >
               {sanitizeString(caption)}
             </caption>
@@ -244,8 +244,8 @@ export function TkxTable<T extends Record<string, unknown>>({
           <thead
             style={
               stickyHeader
-                ? { position: 'sticky', top: 0, backgroundColor: theme.surfaceAlt, zIndex: 1 }
-                : { backgroundColor: theme.surfaceAlt }
+                ? { position: 'sticky', top: 0, backgroundColor: theme.css.surfaceAlt, zIndex: 1 }
+                : { backgroundColor: theme.css.surfaceAlt }
             }
           >
             <tr>
@@ -271,8 +271,8 @@ export function TkxTable<T extends Record<string, unknown>>({
                     )}
                     style={{
                       padding: `${py} ${px}`,
-                      color: theme.textMuted,
-                      borderBottom: `2px solid ${theme.border}`,
+                      color: theme.css.textMuted,
+                      borderBottom: `2px solid ${theme.css.border}`,
                       borderRight: borderStyle,
                       width: col.width,
                     }}
@@ -312,7 +312,7 @@ export function TkxTable<T extends Record<string, unknown>>({
                 <td
                   colSpan={columns.length}
                   className={tkx('text-center')}
-                  style={{ padding: '32px 16px', color: theme.textMuted }}
+                  style={{ padding: '32px 16px', color: theme.css.textMuted }}
                 >
                   {emptyState ?? 'No data available'}
                 </td>
@@ -349,11 +349,11 @@ export function TkxTable<T extends Record<string, unknown>>({
                       className={tkx(onRowClick ? 'cursor-pointer' : '')}
                       style={{
                         backgroundColor: isSelected
-                          ? `${theme.primary}22`
+                          ? `${theme.css.primary}22`
                           : striped && rowIndex % 2 === 1
-                          ? theme.surfaceAlt
+                          ? theme.css.surfaceAlt
                           : 'transparent',
-                        borderBottom: `1px solid ${theme.border}`,
+                        borderBottom: `1px solid ${theme.css.border}`,
                         ...(isVirtual ? { height: rowHeight, boxSizing: 'border-box' as const } : {}),
                       }}
                     >
@@ -369,7 +369,7 @@ export function TkxTable<T extends Record<string, unknown>>({
                             key={String(col.key)}
                             style={{
                               padding: `${py} ${px}`,
-                              color: theme.text,
+                              color: theme.css.text,
                               borderRight: borderStyle,
                             }}
                           >
@@ -421,7 +421,7 @@ export function TkxTable<T extends Record<string, unknown>>({
               padding: '16px',
               textAlign: 'center',
               fontSize: 13,
-              color: theme.textMuted,
+              color: theme.css.textMuted,
             }}
           >
             ✓ All rows loaded
