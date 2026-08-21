@@ -13,6 +13,14 @@ interface TabsContextValue {
   isTabDisabled: (i: number) => boolean;
   /** Registers a tab's index + disabled state; returns an unregister fn. */
   registerTab: (index: number, disabled: boolean) => () => void;
+  /**
+   * Registers a tabpanel that is CURRENTLY MOUNTED; returns an unregister fn.
+   * Inactive panels unmount, so this is what tells a tab whether its
+   * `aria-controls` target actually exists in the document.
+   */
+  registerPanel: (index: number) => () => void;
+  /** True when the panel for `index` is mounted right now. */
+  hasPanel: (index: number) => boolean;
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null);
@@ -70,6 +78,31 @@ export function TkxTabs({ defaultIndex = 0, activeIndex: controlled, onChange, c
 
   const isTabDisabled = useCallback((i: number) => registry.get(i) === true, [registry]);
 
+  // Registry of MOUNTED panels. Only the active panel renders, so a tab may
+  // only advertise `aria-controls` once its panel is in the document —
+  // WAI-ARIA 1.2 requires every IDREF to resolve, and a dangling reference is
+  // silently dropped by assistive tech.
+  const [panelRegistry, setPanelRegistry] = useState<Set<number>>(() => new Set());
+
+  const registerPanel = useCallback((index: number) => {
+    setPanelRegistry(prev => {
+      if (prev.has(index)) return prev;
+      const next = new Set(prev);
+      next.add(index);
+      return next;
+    });
+    return () => {
+      setPanelRegistry(prev => {
+        if (!prev.has(index)) return prev;
+        const next = new Set(prev);
+        next.delete(index);
+        return next;
+      });
+    };
+  }, []);
+
+  const hasPanel = useCallback((i: number) => panelRegistry.has(i), [panelRegistry]);
+
   return (
     <TabsContext.Provider
       value={{
@@ -79,6 +112,8 @@ export function TkxTabs({ defaultIndex = 0, activeIndex: controlled, onChange, c
         tabCount: effectiveTabCount,
         isTabDisabled,
         registerTab,
+        registerPanel,
+        hasPanel,
       }}
     >
       <div className={className} style={style}>{children}</div>
@@ -134,7 +169,7 @@ export function TkxTab({ index, children, disabled = false, className, style }: 
       </button>
     );
   }
-  const { activeIndex, setActiveIndex, baseId, tabCount, isTabDisabled } = ctx;
+  const { activeIndex, setActiveIndex, baseId, tabCount, isTabDisabled, hasPanel } = ctx;
   const safeIndex = index ?? 0;
   const isActive = activeIndex === safeIndex;
 
@@ -143,7 +178,10 @@ export function TkxTab({ index, children, disabled = false, className, style }: 
       ref={tabRef}
       role="tab"
       id={`${baseId}-tab-${safeIndex}`}
-      aria-controls={`${baseId}-panel-${safeIndex}`}
+      // Only advertise the association while the panel is actually mounted.
+      // Inactive panels unmount, and a `aria-controls` pointing at an absent
+      // id is a WAI-ARIA 1.2 idref violation (and is ignored by AT anyway).
+      aria-controls={hasPanel(safeIndex) ? `${baseId}-panel-${safeIndex}` : undefined}
       aria-selected={isActive}
       tabIndex={isActive ? 0 : -1}
       disabled={disabled}
@@ -193,6 +231,17 @@ export function TkxTabPanel({ index, children, style, className }: TkxTabPanelPr
   // instead of throwing.
   const ctx = useContext(TabsContext);
   const safeIndex = index ?? 0;
+  const isMounted = !!ctx && ctx.activeIndex === safeIndex;
+
+  // Tell the parent whether this panel is in the document, so the matching
+  // tab knows if it may point `aria-controls` at us. Runs before any early
+  // return to keep hook order stable.
+  const registerPanel = ctx?.registerPanel;
+  useEffect(() => {
+    if (!registerPanel || !isMounted) return;
+    return registerPanel(safeIndex);
+  }, [registerPanel, isMounted, safeIndex]);
+
   if (!ctx) {
     return (
       <div role="tabpanel" className={className} style={style}>
@@ -200,8 +249,8 @@ export function TkxTabPanel({ index, children, style, className }: TkxTabPanelPr
       </div>
     );
   }
-  const { activeIndex, baseId } = ctx;
-  if (activeIndex !== safeIndex) return null;
+  const { baseId } = ctx;
+  if (!isMounted) return null;
   return (
     <div
       role="tabpanel"

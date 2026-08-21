@@ -170,3 +170,30 @@ describe('validateField', () => {
     expect(validateField(f({ pattern: '[invalid(' }), 'abc')).toBeNull();
   });
 });
+
+// ── ARIA regression: listitem must not carry a prohibited selected state ────
+describe('TkxFormBuilder — canvas rows use aria-current, not aria-selected', () => {
+  it('never puts aria-selected on a role="listitem"', () => {
+    const { container } = render(<Harness initial={{ fields: [] }} />, { wrapper: W });
+    fireEvent.click(screen.getByTestId('palette-text'));
+    fireEvent.click(screen.getByTestId('palette-email'));
+    const rows = container.querySelectorAll('[role="listitem"]');
+    expect(rows.length).toBe(2);
+    rows.forEach((r) => expect(r).not.toHaveAttribute('aria-selected'));
+  });
+
+  it('marks the row the properties panel is editing with aria-current', () => {
+    const { container } = render(<Harness initial={{ fields: [] }} />, { wrapper: W });
+    fireEvent.click(screen.getByTestId('palette-text'));
+    fireEvent.click(screen.getByTestId('palette-email'));
+    const rows = Array.from(container.querySelectorAll('[role="listitem"]'));
+
+    fireEvent.click(rows[0]);
+    expect(rows[0]).toHaveAttribute('aria-current', 'true');
+    expect(rows[1]).not.toHaveAttribute('aria-current');
+
+    fireEvent.click(rows[1]);
+    expect(rows[1]).toHaveAttribute('aria-current', 'true');
+    expect(rows[0]).not.toHaveAttribute('aria-current');
+  });
+});

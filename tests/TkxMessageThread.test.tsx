@@ -644,3 +644,33 @@ describe('TkxMessageThread / TkxPeerChat — typing indicator', () => {
     });
   });
 });
+
+// ── ARIA regression: image-attachment link must be named ────────────────────
+describe('TkxMessageThread — image attachment link accessible name', () => {
+  it('names the wrapping <a> after the attachment, not from empty content', () => {
+    const messages: PeerMessage[] = [
+      {
+        id: '1',
+        senderId: 'alice',
+        timestamp: ts(1),
+        attachments: [
+          { id: 'a1', kind: 'image', name: 'pic.png', url: 'https://x/pic.png', mimeType: 'image/png' },
+        ],
+      },
+    ];
+    const { container } = render(
+      <TkxMessageThread messages={messages} senders={senders} currentUserId="me" />,
+      { wrapper: Wrapper },
+    );
+    const links = Array.from(container.querySelectorAll('a[href]'));
+    expect(links.length).toBeGreaterThan(0);
+    links.forEach((a) => {
+      const name = a.getAttribute('aria-label') || (a.textContent ?? '').trim();
+      expect(name).toBeTruthy();
+    });
+    expect(container.querySelector('a[href="https://x/pic.png"]')).toHaveAttribute(
+      'aria-label',
+      'pic.png',
+    );
+  });
+});

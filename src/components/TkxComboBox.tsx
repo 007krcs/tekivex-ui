@@ -15,6 +15,7 @@ import {
 import { useTheme } from '../themes';
 import { sanitizeString, sanitizeUnicode } from '../engine/security';
 import { tkx, cx } from '../engine/tkx';
+import { useLocale } from '../i18n';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TkxComboBox — a multi-select combobox with token chips.
@@ -84,9 +85,11 @@ export const TkxComboBox = forwardRef<HTMLInputElement, TkxComboBoxProps>(
     ref,
   ) => {
     const theme = useTheme();
+    const t = useLocale();
     const autoId = useId();
     const id = idProp ?? autoId;
     const listboxId = `${id}-listbox`;
+    const labelId = `${id}-label`;
     const hintId = `${id}-hint`;
     const errorId = `${id}-error`;
     const hasError = isInvalid || !!error;
@@ -94,6 +97,9 @@ export const TkxComboBox = forwardRef<HTMLInputElement, TkxComboBoxProps>(
       [hint && hintId, hasError && errorId].filter(Boolean).join(' ') || undefined;
 
     const safeLabel = sanitizeString(label);
+    // Accessible name: the visible label when there is one, otherwise fall
+    // back to the (localized) placeholder so the combobox is never nameless.
+    const placeholderName = (placeholder ?? '').trim() || t.selectPlaceholder;
     const safeError = error ? sanitizeString(error) : undefined;
     const safeHint = hint ? sanitizeString(hint) : undefined;
 
@@ -289,6 +295,7 @@ export const TkxComboBox = forwardRef<HTMLInputElement, TkxComboBoxProps>(
         style={style}
       >
         <label
+          id={labelId}
           htmlFor={id}
           className={tkx('text-sm font-medium font-sans')}
           style={{ color: theme.css.text }}
@@ -325,7 +332,11 @@ export const TkxComboBox = forwardRef<HTMLInputElement, TkxComboBoxProps>(
               type="text"
               role="combobox"
               aria-expanded={isOpen}
-              aria-controls={listboxId}
+              // Only reference the popup while it exists in the DOM — a
+              // dangling aria-controls idref is itself an ARIA defect.
+              aria-controls={isOpen ? listboxId : undefined}
+              aria-labelledby={safeLabel ? labelId : undefined}
+              aria-label={safeLabel ? undefined : placeholderName}
               aria-autocomplete="list"
               aria-activedescendant={
                 isOpen && activeIndex >= 0 ? `${listboxId}-opt-${activeIndex}` : undefined
@@ -388,7 +399,7 @@ export const TkxComboBox = forwardRef<HTMLInputElement, TkxComboBoxProps>(
               id={listboxId}
               role="listbox"
               aria-multiselectable="true"
-              aria-label={safeLabel}
+              aria-label={safeLabel || placeholderName}
               className={tkx(
                 'absolute left-0 right-0 z-50 list-none m-0 mt-1 p-1 rounded-lg overflow-y-auto font-sans',
               )}

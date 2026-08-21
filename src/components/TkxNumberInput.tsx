@@ -34,6 +34,12 @@ export interface TkxNumberInputProps {
   allowMouseWheel?: boolean;
   size?: 'sm' | 'md' | 'lg';
   label?: string;
+  /**
+   * Accessible name used when no visible `label` is supplied. role="spinbutton"
+   * is not named from content, so the control would otherwise be nameless.
+   * Defaults to the visible label, else "Number".
+   */
+  ariaLabel?: string;
   hint?: string;
   isDisabled?: boolean;
   isReadOnly?: boolean;
@@ -199,6 +205,7 @@ export function TkxNumberInput({
   allowMouseWheel = false,
   size = 'md',
   label,
+  ariaLabel,
   hint,
   isDisabled = false,
   isReadOnly = false,
@@ -230,6 +237,11 @@ export function TkxNumberInput({
   const describedBy = [hint && hintId, hasError && errorId].filter(Boolean).join(' ') || undefined;
 
   const safeLabel = label ? sanitizeString(label) : undefined;
+  // The visible <label> only renders when `label` is set; without it the
+  // spinbutton has no accessible name at all, so always supply one.
+  const accessibleName = safeLabel
+    ? undefined
+    : (ariaLabel ? sanitizeString(ariaLabel) : 'Number');
   const safeHint = hint ? sanitizeString(hint) : undefined;
   const safeError = errorMessage ? sanitizeString(errorMessage) : undefined;
   const safePrefix = prefix ? sanitizeString(prefix) : undefined;
@@ -344,6 +356,7 @@ export function TkxNumberInput({
             // spinbutton makes the aria-value* range attributes valid — on the
             // implicit textbox role AT ignores them entirely.
             role="spinbutton"
+            aria-label={accessibleName}
             inputMode="decimal"
             value={focused ? rawInput : displayValue}
             readOnly={isReadOnly}

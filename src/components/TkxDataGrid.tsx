@@ -1123,6 +1123,31 @@ export function TkxDataGrid<T = any>({
     return rowItems.slice((page - 1) * pageSize, page * pageSize);
   }, [rowItems, isPaginated, page, pageSize]);
 
+  // Group key → DOM ids of that group's detail rows AS ACTUALLY RENDERED on
+  // the current page. A group header's `aria-controls` must only reference ids
+  // present in the document (WAI-ARIA 1.2 idref integrity): collapsed groups
+  // render no detail rows at all, and pagination can split a group across
+  // pages, so this is derived from `pagedItems` rather than from group.rows.
+  // The index is the position in `pagedItems`, which is exactly the `i` the
+  // render loop below uses to build each row's id — so the two can't drift.
+  const groupRowDomIds = useMemo<Map<string, string[]>>(() => {
+    const map = new Map<string, string[]>();
+    if (!validGroupBy) return map;
+    let current: string[] | null = null;
+    for (let i = 0; i < pagedItems.length; i++) {
+      const item = pagedItems[i];
+      if (item.type === 'group') {
+        current = [];
+        map.set(item.key, current);
+      } else if (current) {
+        // Detail rows before the first group header on this page belong to a
+        // group whose header is on the previous page — nothing to attach to.
+        current.push(`${gridId}-grouprow-${i}`);
+      }
+    }
+    return map;
+  }, [pagedItems, validGroupBy, gridId]);
+
   const pagedTreeRows = useMemo<TreeRowEntry[]>(() => {
     if (!isTreeMode) return [];
     if (!isPaginated) return visibleTreeRows;
@@ -2289,7 +2314,7 @@ export function TkxDataGrid<T = any>({
                   {pagedItems.map((item, i) => {
                     if (item.type === 'group') {
                       const isExpanded = expanded.has(item.key);
-                      const groupRowsId = `${gridId}-group-${item.key}`;
+                      const controlledRowIds = groupRowDomIds.get(item.key) ?? [];
                       return (
                         <tr
                           key={`group:${item.key}`}
@@ -2339,7 +2364,11 @@ export function TkxDataGrid<T = any>({
                                 tabIndex={-1}
                                 data-pinned={pinnedOffsets[col.key]?.side}
                                 aria-expanded={isFirstCol ? isExpanded : undefined}
-                                aria-controls={isFirstCol ? groupRowsId : undefined}
+                                aria-controls={
+                                  isFirstCol && controlledRowIds.length
+                                    ? controlledRowIds.join(' ')
+                                    : undefined
+                                }
                                 className={tkx('text-sm')}
                                 style={{
                                   ...getColStyle(col),
@@ -2406,6 +2435,10 @@ export function TkxDataGrid<T = any>({
                     return (
                       <tr
                         key={id}
+                        // Target of the owning group header's aria-controls.
+                        // Positional (not row-key based) so it is unique even
+                        // if the data has duplicate row keys.
+                        id={`${gridId}-grouprow-${i}`}
                         role="row"
                         aria-rowindex={rowIndex + 1}
                         aria-selected={selectable ? isSelected : undefined}

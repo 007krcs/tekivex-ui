@@ -285,7 +285,14 @@ function Canvas({
               }
             }}
             tabIndex={0}
-            aria-selected={selected}
+            // WAI-ARIA 1.2 prohibits aria-selected on role="listitem". This is
+            // not a selection widget: each row is an editable card that itself
+            // contains interactive controls (move up/down, remove), which
+            // role="option" inside a listbox would forbid. "Selecting" a row
+            // only designates which field the properties panel is editing —
+            // i.e. the current item within a container — so aria-current is the
+            // correct property, and it is allowed on listitem.
+            aria-current={selected ? 'true' : undefined}
             style={{
               padding: 12,
               borderRadius: 8,

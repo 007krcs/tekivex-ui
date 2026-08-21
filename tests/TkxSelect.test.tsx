@@ -398,12 +398,15 @@ describe('TkxSelect', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
-    it('aria-controls points at the listbox id', () => {
+    it('aria-controls points at the listbox id once the listbox exists', () => {
       render(<TkxSelect options={options} />, { wrapper: Wrapper });
       const trigger = getCombobox();
+      // Closed: the listbox is not in the DOM, so referencing it would be a
+      // dangling idref (WAI-ARIA 1.2) — the attribute must be absent.
+      expect(trigger).not.toHaveAttribute('aria-controls');
+      fireEvent.click(trigger);
       const controlsId = trigger.getAttribute('aria-controls');
       expect(controlsId).toBeTruthy();
-      fireEvent.click(trigger);
       const listbox = getListbox()!;
       expect(listbox.id).toBe(controlsId);
     });
@@ -600,6 +603,69 @@ describe('TkxSelect', () => {
       );
       fireEvent.keyDown(getCombobox(), { key: 'Backspace' });
       expect(onChange).toHaveBeenLastCalledWith(['apple']);
+    });
+  });
+
+  // -- WAI-ARIA 1.2 conformance regressions --------------------------------
+  describe('aria conformance', () => {
+    it('emits no dangling aria-controls/aria-activedescendant while closed', () => {
+      render(<TkxSelect options={options} defaultValue="apple" />, { wrapper: Wrapper });
+      const trigger = getCombobox();
+      expect(getListbox()).toBeNull();
+      expect(trigger).not.toHaveAttribute('aria-controls');
+      expect(trigger).not.toHaveAttribute('aria-activedescendant');
+    });
+
+    it('aria-controls appears and resolves to the listbox once open', () => {
+      render(<TkxSelect options={options} defaultValue="apple" />, { wrapper: Wrapper });
+      const trigger = getCombobox();
+      fireEvent.click(trigger);
+      const controls = trigger.getAttribute('aria-controls')!;
+      expect(controls).toBeTruthy();
+      expect(document.getElementById(controls)).toBe(getListbox());
+      const active = trigger.getAttribute('aria-activedescendant')!;
+      expect(active).toBeTruthy();
+      expect(document.getElementById(active)).not.toBeNull();
+    });
+
+    it('drops the references again when the listbox closes', () => {
+      render(<TkxSelect options={options} />, { wrapper: Wrapper });
+      const trigger = getCombobox();
+      fireEvent.click(trigger);
+      expect(trigger).toHaveAttribute('aria-controls');
+      fireEvent.click(trigger);
+      expect(getListbox()).toBeNull();
+      expect(trigger).not.toHaveAttribute('aria-controls');
+      expect(trigger).not.toHaveAttribute('aria-activedescendant');
+    });
+
+    it('the combobox is named by the label prop when one is given', () => {
+      render(<TkxSelect options={options} label="Favourite fruit" />, { wrapper: Wrapper });
+      expect(screen.getByRole('combobox', { name: 'Favourite fruit' })).toBeInTheDocument();
+    });
+
+    it('falls back to the placeholder for its name when there is no label', () => {
+      render(<TkxSelect options={options} placeholder="Choose fruit" />, { wrapper: Wrapper });
+      expect(screen.getByRole('combobox', { name: 'Choose fruit' })).toBeInTheDocument();
+    });
+
+    it('is still named with neither label nor placeholder, and while showing chips', () => {
+      // Multi-select renders its chips outside the button, so the trigger has
+      // no text content of its own -- it must still carry a name.
+      render(
+        <TkxSelect options={options} multiple defaultValue={['apple', 'banana']} />,
+        { wrapper: Wrapper },
+      );
+      const name = getCombobox().getAttribute('aria-label');
+      expect(name && name.trim().length).toBeTruthy();
+    });
+
+    it('an empty-string placeholder does not produce an empty name', () => {
+      render(<TkxSelect options={options} placeholder="" multiple defaultValue={['apple']} />, {
+        wrapper: Wrapper,
+      });
+      const name = getCombobox().getAttribute('aria-label');
+      expect(name && name.trim().length).toBeTruthy();
     });
   });
 });

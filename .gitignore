@@ -10,3 +10,7 @@ test-results/
 *.log
 .claude/
 sanskrit-lang/
+
+# ARIA conformance sweep reports (generated)
+aria-*.ndjson
+verify-*.ndjson

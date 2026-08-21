@@ -793,6 +793,21 @@ function MenuPanel({
 
       // action (default)
       const actionItem = item as MenuActionItem;
+
+      // A label-less action item has nothing to compute an accessible name
+      // from, and role="menuitem" is not allowed to go unnamed. Callers that
+      // hand us an entry with no label mean a divider, so render one — no
+      // invented name, and no unnamed menuitem in the tree.
+      if (!actionItem.label && !actionItem.description) {
+        return (
+          <div
+            key={actionItem.id}
+            role="separator"
+            style={{ margin: '4px 0', height: 1, backgroundColor: theme.css.border }}
+          />
+        );
+      }
+
       flatCounter++;
       const myFlatIdx = flatCounter;
       const isActive = myFlatIdx === activeIdx;

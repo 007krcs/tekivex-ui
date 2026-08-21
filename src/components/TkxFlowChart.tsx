@@ -790,6 +790,7 @@ export const TkxFlowChart = forwardRef<HTMLDivElement, TkxFlowChartProps>(
                 {editingNodeId === n.id ? (
                   <input
                     autoFocus
+                    aria-label={`Rename node ${n.label}`}
                     data-testid={`flow-node-rename-${n.id}`}
                     defaultValue={n.label}
                     onPointerDown={(e) => e.stopPropagation()}

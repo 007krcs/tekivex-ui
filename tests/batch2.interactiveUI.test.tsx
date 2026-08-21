@@ -344,3 +344,30 @@ describe('TkxForm', () => {
     fireEvent.click(screen.getByText('Save'));
   });
 });
+
+// ── ARIA regression: no unnamed menuitem in the menu tree ───────────────────
+describe('TkxMenu — no unnamed menuitem', () => {
+  it('renders a label-less entry as a separator, not a nameless menuitem', async () => {
+    render(
+      <TkxMenu
+        trigger={<button>Open</button>}
+        items={[
+          { id: '1', label: 'A' },
+          { id: 'sep' } as never,
+          { id: '2', label: 'B' },
+        ]}
+      />,
+      { wrapper: W },
+    );
+    fireEvent.click(screen.getByText('Open'));
+    await waitFor(() => expect(screen.getByText('A')).toBeInTheDocument());
+
+    const items = Array.from(document.querySelectorAll('[role="menuitem"]'));
+    expect(items).toHaveLength(2);
+    items.forEach((el) => {
+      const name = el.getAttribute('aria-label') || (el.textContent ?? '').trim();
+      expect(name).toBeTruthy();
+    });
+    expect(document.querySelectorAll('[role="separator"]').length).toBeGreaterThan(0);
+  });
+});

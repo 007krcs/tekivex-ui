@@ -30,11 +30,16 @@ export const TkxInput = forwardRef<HTMLInputElement, TkxInputProps>(
     const hintId = `${id}-hint`;
     const errorId = `${id}-error`;
     const hasError = isInvalid || !!error;
-    const describedBy = [hint && hintId, hasError && errorId].filter(Boolean).join(' ') || undefined;
-
     const safeLabel = sanitizeString(label);
     const safeError = error ? sanitizeString(error) : undefined;
     const safeHint = hint ? sanitizeString(hint) : undefined;
+
+    // Idrefs must mirror the render gates below exactly: the hint renders only
+    // without an error, and the error span renders only when there IS an error
+    // string (isInvalid alone renders none) — otherwise describedBy dangles.
+    const describedBy =
+      [safeHint && !safeError && hintId, safeError && errorId].filter(Boolean).join(' ') ||
+      undefined;
 
     const borderColor = hasError ? theme.css.danger : theme.css.border;
 

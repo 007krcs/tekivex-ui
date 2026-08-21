@@ -132,6 +132,7 @@ export function TkxAutocomplete({
   const reducedMotion = useReducedMotion();
   const inputId = useId();
   const listboxId = useId();
+  const labelId = `${inputId}-label`;
 
   const inputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -265,8 +266,19 @@ export function TkxAutocomplete({
     document.getElementById(optionId)?.scrollIntoView({ block: 'nearest' });
   }, [activeIndex, listboxId]);
 
+  // The listbox is portalled and only mounts once `dropdownPos` has been
+  // measured, so `isOpen` alone does not prove the node is in the DOM. An
+  // idref that resolves to nothing is a WAI-ARIA 1.2 conformance error and is
+  // ignored by AT, so gate both references on the popup actually rendering
+  // (same pattern as TkxCascader).
+  const listboxRendered = isOpen && dropdownPos !== null;
+
   const activeDescendant =
-    activeIndex >= 0 ? `${listboxId}-opt-${activeIndex}` : undefined;
+    listboxRendered && activeIndex >= 0 ? `${listboxId}-opt-${activeIndex}` : undefined;
+
+  // Accessible name: the visible label when there is one, otherwise the
+  // (localized) placeholder — never leave the combobox nameless.
+  const placeholderName = placeholder.trim() || t.selectPlaceholder;
 
   const animStyle: CSSProperties = reducedMotion
     ? {}
@@ -278,7 +290,7 @@ export function TkxAutocomplete({
           <ul
             id={listboxId}
             role="listbox"
-            aria-label={safeLabel}
+            aria-label={safeLabel || placeholderName}
             className={tkx('absolute z-[9200] list-none m-0 p-1 rounded-lg overflow-y-auto font-sans')}
             style={{
               top: dropdownPos.top,
@@ -393,6 +405,7 @@ export function TkxAutocomplete({
     >
       {/* Label */}
       <label
+        id={labelId}
         htmlFor={inputId}
         className={tkx('block text-sm font-medium mb-1.5')}
         style={{ color: theme.css.text }}
@@ -416,10 +429,11 @@ export function TkxAutocomplete({
           type="text"
           role="combobox"
           aria-expanded={isOpen}
-          aria-controls={listboxId}
+          aria-controls={listboxRendered ? listboxId : undefined}
           aria-activedescendant={activeDescendant}
           aria-autocomplete="list"
-          aria-label={safeLabel}
+          aria-labelledby={safeLabel ? labelId : undefined}
+          aria-label={safeLabel ? undefined : placeholderName}
           value={inputValue}
           placeholder={placeholder}
           onChange={handleInputChange}

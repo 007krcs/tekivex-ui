@@ -45,3 +45,45 @@ describe('TkxCheckbox', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Required');
   });
 });
+
+// ── ARIA regression: aria-describedby must never dangle ─────────────────────
+describe('TkxCheckbox — aria-describedby mirrors the render gates', () => {
+  const idrefs = (el: Element) =>
+    (el.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
+
+  it('omits describedby entirely when there is no hint and no error', () => {
+    render(<TkxCheckbox label="Plain" />, { wrapper: Wrapper });
+    expect(screen.getByRole('checkbox')).not.toHaveAttribute('aria-describedby');
+  });
+
+  it('does not reference an error id when isInvalid has no errorMessage', () => {
+    const { container } = render(<TkxCheckbox label="Terms" isInvalid />, { wrapper: Wrapper });
+    const input = screen.getByRole('checkbox');
+    for (const ref of idrefs(input)) {
+      expect(container.ownerDocument.getElementById(ref)).not.toBeNull();
+    }
+    expect(idrefs(input)).toHaveLength(0);
+  });
+
+  it('drops the hint idref once an error replaces the hint', () => {
+    const { container } = render(
+      <TkxCheckbox label="Terms" hint="Read them" isInvalid errorMessage="Required" />,
+      { wrapper: Wrapper },
+    );
+    const input = screen.getByRole('checkbox');
+    const refs = idrefs(input);
+    expect(refs).toHaveLength(1);
+    expect(refs[0]).toMatch(/-error$/);
+    expect(container.ownerDocument.getElementById(refs[0])).not.toBeNull();
+    expect(container.ownerDocument.querySelector('[id$="-hint"]')).toBeNull();
+  });
+
+  it('every describedby idref resolves for the hint-only case', () => {
+    const { container } = render(<TkxCheckbox label="Terms" hint="Read them" />, {
+      wrapper: Wrapper,
+    });
+    const refs = idrefs(screen.getByRole('checkbox'));
+    expect(refs).toHaveLength(1);
+    expect(container.ownerDocument.getElementById(refs[0])).not.toBeNull();
+  });
+});

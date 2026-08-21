@@ -442,7 +442,11 @@ export const TkxPhoneInput = forwardRef<HTMLInputElement, TkxPhoneInputProps>(
             onClick={() => !disabled && setPickerOpen((o) => !o)}
             aria-haspopup="listbox"
             aria-expanded={pickerOpen}
-            aria-controls={listboxId}
+            // The listbox is only in the DOM while the picker is open (and
+            // enabled). Gate the idref on the same condition — a dangling
+            // aria-controls is a WAI-ARIA 1.2 violation. Keep this predicate
+            // identical to the one guarding the listbox render below.
+            aria-controls={pickerOpen && !disabled ? listboxId : undefined}
             aria-label={`Country: ${country.name}, dial code +${country.dial}`}
             disabled={disabled}
           >

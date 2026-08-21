@@ -214,7 +214,13 @@ function AttachmentBlock({ att, theme }: { att: PeerAttachment; theme: ReturnTyp
   const safeName = sanitizeString(att.name);
   if (att.kind === 'image') {
     return (
-      <a href={att.url} target="_blank" rel="noopener noreferrer" className={tkx('block mt-2')}>
+      <a
+        href={att.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={safeName}
+        className={tkx('block mt-2')}
+      >
         <img
           src={att.url}
           alt={safeName}

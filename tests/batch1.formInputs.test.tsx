@@ -344,3 +344,24 @@ describe('TkxNumberInput', () => {
     fireEvent.blur(input);
   });
 });
+
+// ── ARIA regression: spinbutton must be named ───────────────────────────────
+describe('TkxNumberInput — accessible name', () => {
+  it('falls back to a default aria-label when no visible label is given', () => {
+    render(<TkxNumberInput defaultValue={1} />, { wrapper: W });
+    const sb = screen.getByRole('spinbutton');
+    expect(sb).toHaveAttribute('aria-label', 'Number');
+  });
+
+  it('uses the visible label rather than duplicating it as aria-label', () => {
+    render(<TkxNumberInput label="Quantity" defaultValue={1} />, { wrapper: W });
+    const sb = screen.getByRole('spinbutton');
+    expect(sb).not.toHaveAttribute('aria-label');
+    expect(screen.getByLabelText('Quantity')).toBe(sb);
+  });
+
+  it('honours an explicit ariaLabel override', () => {
+    render(<TkxNumberInput ariaLabel="Guests" defaultValue={2} />, { wrapper: W });
+    expect(screen.getByRole('spinbutton', { name: 'Guests' })).toBeInTheDocument();
+  });
+});

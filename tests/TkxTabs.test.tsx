@@ -135,3 +135,95 @@ describe('TkxTabs', () => {
     });
   });
 });
+
+// ── Regression: WAI-ARIA 1.2 idref integrity (dangling-idref) ──────────────
+// Every `role="tab"` used to hard-code aria-controls at its panel id, but
+// inactive panels do not render, so 2 of 3 references dangled on every paint.
+// A dangling IDREF is a spec violation and is silently dropped by AT.
+describe('TkxTabs — aria-controls idref integrity', () => {
+  /** Asserts every aria-controls token in the tree resolves to a real node. */
+  function expectAllIdrefsResolve() {
+    const refs = Array.from(document.querySelectorAll('[aria-controls]'));
+    for (const el of refs) {
+      for (const id of el.getAttribute('aria-controls')!.trim().split(/\s+/)) {
+        expect(document.getElementById(id), `aria-controls="${id}" does not resolve`).not.toBeNull();
+      }
+    }
+    return refs;
+  }
+
+  function tabsWithControls() {
+    return screen.getAllByRole('tab').filter(t => t.hasAttribute('aria-controls'));
+  }
+
+  // Local copy of the 4-tab keyboard fixture (the one in the suite above is
+  // scoped to that describe block).
+  function KeyboardFixture() {
+    return (
+      <TkxTabs defaultIndex={0}>
+        <TkxTabList>
+          <TkxTab index={0}>Tab 1</TkxTab>
+          <TkxTab index={1}>Tab 2</TkxTab>
+          <TkxTab index={2} disabled>Tab 3</TkxTab>
+          <TkxTab index={3}>Tab 4</TkxTab>
+        </TkxTabList>
+        <TkxTabPanels>
+          <TkxTabPanel index={0}>Panel 1 content</TkxTabPanel>
+          <TkxTabPanel index={1}>Panel 2 content</TkxTabPanel>
+          <TkxTabPanel index={2}>Panel 3 content</TkxTabPanel>
+          <TkxTabPanel index={3}>Panel 4 content</TkxTabPanel>
+        </TkxTabPanels>
+      </TkxTabs>
+    );
+  }
+
+  it('only the tab whose panel is mounted carries aria-controls, and it resolves', () => {
+    render(<TabsFixture />, { wrapper: Wrapper });
+    expectAllIdrefsResolve();
+
+    const controlling = tabsWithControls();
+    expect(controlling).toHaveLength(1);
+    expect(controlling[0]).toBe(screen.getByText('Tab 1'));
+    expect(document.getElementById(controlling[0].getAttribute('aria-controls')!)).toBe(
+      screen.getByRole('tabpanel'),
+    );
+  });
+
+  it('the idref follows the active tab on click', () => {
+    render(<TabsFixture />, { wrapper: Wrapper });
+    fireEvent.click(screen.getByText('Tab 2'));
+    expectAllIdrefsResolve();
+
+    const controlling = tabsWithControls();
+    expect(controlling).toHaveLength(1);
+    expect(controlling[0]).toBe(screen.getByText('Tab 2'));
+    expect(document.getElementById(controlling[0].getAttribute('aria-controls')!)).toBe(
+      screen.getByRole('tabpanel'),
+    );
+  });
+
+  it('the idref stays resolvable through keyboard navigation', () => {
+    render(<KeyboardFixture />, { wrapper: Wrapper });
+    fireEvent.keyDown(screen.getByText('Tab 1'), { key: 'ArrowRight' });
+    expectAllIdrefsResolve();
+    // ArrowRight from Tab 2 skips disabled Tab 3 → Tab 4
+    fireEvent.keyDown(screen.getByText('Tab 2'), { key: 'ArrowRight' });
+    expectAllIdrefsResolve();
+    const controlling = tabsWithControls();
+    expect(controlling).toHaveLength(1);
+    expect(controlling[0]).toBe(screen.getByText('Tab 4'));
+  });
+
+  it('omits aria-controls entirely when no panels are rendered', () => {
+    render(
+      <TkxTabs defaultIndex={0}>
+        <TkxTabList>
+          <TkxTab index={0}>Tab 1</TkxTab>
+          <TkxTab index={1}>Tab 2</TkxTab>
+        </TkxTabList>
+      </TkxTabs>,
+      { wrapper: Wrapper },
+    );
+    expect(tabsWithControls()).toHaveLength(0);
+  });
+});

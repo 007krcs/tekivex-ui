@@ -228,3 +228,58 @@ describe('TkxAddressInput', () => {
     await waitFor(() => expect(lookup).toHaveBeenCalledTimes(1));
   });
 });
+
+// ── ARIA regression: every text field needs a programmatic label ────────────
+describe('TkxAddressInput — accessible names', () => {
+  it('associates the PIN / City / State labels with their inputs', () => {
+    render(<TkxAddressInput value={{}} onChange={() => {}} lookup={async () => []} />, {
+      wrapper: W,
+    });
+    expect(screen.getByLabelText(/PIN code/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^City$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^State$/i)).toBeInTheDocument();
+  });
+
+  it('leaves no unnamed input in the tree', () => {
+    const { container } = render(
+      <TkxAddressInput value={{}} onChange={() => {}} lookup={async () => []} />,
+      { wrapper: W },
+    );
+    const doc = container.ownerDocument;
+    container.querySelectorAll('input, select').forEach((el) => {
+      const named =
+        el.getAttribute('aria-label') ||
+        el.getAttribute('aria-labelledby') ||
+        (el.id && doc.querySelector(`label[for="${el.id}"]`)) ||
+        el.closest('label');
+      expect(named).toBeTruthy();
+    });
+  });
+
+  it('gives the address lines a name beyond the placeholder', () => {
+    render(<TkxAddressInput value={{}} onChange={() => {}} lookup={async () => []} />, {
+      wrapper: W,
+    });
+    expect(screen.getByLabelText('Address line 1')).toBeInTheDocument();
+    expect(screen.getByLabelText('Address line 2 (optional)')).toBeInTheDocument();
+  });
+
+  it('does not reuse one id for the division select and the free-text state field', () => {
+    const { container } = render(
+      <TkxAddressInput
+        value={{}}
+        onChange={() => {}}
+        lookup={async () => []}
+        divisionsSource={{
+          countries: async () => [{ code: 'IN', name: 'India' }],
+          states: async () => [],
+          districts: async () => [],
+          subDistricts: async () => [],
+        }}
+      />,
+      { wrapper: W },
+    );
+    const ids = Array.from(container.querySelectorAll('[id]')).map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+});

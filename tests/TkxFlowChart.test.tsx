@@ -864,3 +864,26 @@ describe('TkxFlowChart accessibility', () => {
     expect(toolbar.length).toBeGreaterThan(0);
   });
 });
+
+// ── ARIA regression: the inline rename field needs an accessible name ───────
+describe('TkxFlowChart — rename input is named', () => {
+  it('gives the node rename textbox an aria-label naming the node', () => {
+    render(<Harness />);
+    fireEvent.doubleClick(screen.getByTestId('flow-node-n1'));
+    const input = screen.getByTestId('flow-node-rename-n1');
+    expect(input).toHaveAttribute('aria-label', expect.stringMatching(/rename node/i));
+  });
+
+  it('leaves no unnamed textbox in the tree while renaming', () => {
+    const { container } = render(<Harness />);
+    fireEvent.doubleClick(screen.getByTestId('flow-node-n1'));
+    container.querySelectorAll('input[type="text"], input:not([type])').forEach((el) => {
+      const named =
+        el.getAttribute('aria-label') ||
+        el.getAttribute('aria-labelledby') ||
+        el.getAttribute('placeholder') ||
+        (el.id && container.ownerDocument.querySelector(`label[for="${el.id}"]`));
+      expect(named).toBeTruthy();
+    });
+  });
+});

@@ -379,3 +379,36 @@ describe('TkxVideoPlayer', () => {
     expect(container.querySelector('video')).toBeTruthy();
   });
 });
+
+// ── ARIA regression: the meter must never emit NaN ──────────────────────────
+describe('TkxAIConfidenceBar — value guard', () => {
+  const meterOf = () => screen.getByRole('meter');
+
+  it('renders a coherent meter when no value is supplied', () => {
+    render(<TkxAIConfidenceBar />, { wrapper: W });
+    const m = meterOf();
+    expect(m).toHaveAttribute('aria-valuenow', '0');
+    expect(m).toHaveAttribute('aria-valuemin', '0');
+    expect(m).toHaveAttribute('aria-valuemax', '100');
+    expect(m.getAttribute('aria-label')).not.toMatch(/NaN/);
+  });
+
+  it('never puts NaN in aria-valuenow or aria-label for a NaN value', () => {
+    render(<TkxAIConfidenceBar value={Number.NaN} label="Extraction" />, { wrapper: W });
+    const m = meterOf();
+    expect(Number.isNaN(Number(m.getAttribute('aria-valuenow')))).toBe(false);
+    expect(m.getAttribute('aria-label')).toBe('AI confidence unknown for Extraction');
+  });
+
+  it('keeps valuemin <= valuenow <= valuemax for out-of-range input', () => {
+    render(<TkxAIConfidenceBar value={480} />, { wrapper: W });
+    expect(meterOf()).toHaveAttribute('aria-valuenow', '100');
+  });
+
+  it('still reports a real value normally', () => {
+    render(<TkxAIConfidenceBar value={75} />, { wrapper: W });
+    const m = meterOf();
+    expect(m).toHaveAttribute('aria-valuenow', '75');
+    expect(m).toHaveAttribute('aria-label', '75% AI confidence');
+  });
+});

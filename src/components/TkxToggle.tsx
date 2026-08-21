@@ -27,6 +27,7 @@ export const TkxToggle = forwardRef<HTMLButtonElement, TkxToggleProps>(
     const theme = useTheme();
     const reducedMotion = useReducedMotion();
     const id = useId();
+    const labelId = `${id}-label`;
 
     validateProps(
       { label, checked },
@@ -44,6 +45,7 @@ export const TkxToggle = forwardRef<HTMLButtonElement, TkxToggleProps>(
       >
         {!hideLabel && (
           <label
+            id={labelId}
             htmlFor={id}
             className={tkx('text-sm font-sans', disabled ? 'cursor-not-allowed' : 'cursor-pointer', 'select-none')}
             style={{ color: theme.css.text }}
@@ -56,6 +58,10 @@ export const TkxToggle = forwardRef<HTMLButtonElement, TkxToggleProps>(
           id={id}
           role="switch"
           aria-checked={checked}
+          // A <button> is not a labelable element, so the visible <label for>
+          // does not name it (same defect class as the slider thumb fixed in
+          // v3.31). Associate explicitly instead.
+          aria-labelledby={hideLabel ? undefined : labelId}
           aria-label={hideLabel ? label : undefined}
           disabled={disabled}
           onClick={() => !disabled && onChange(!checked)}

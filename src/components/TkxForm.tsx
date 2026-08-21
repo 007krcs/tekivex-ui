@@ -20,6 +20,7 @@ import {
   type ReactElement,
   type CSSProperties,
   type FormEvent,
+  useId,
 } from 'react';
 import { useTheme } from '../themes';
 import { useLocale } from '../i18n';
@@ -523,6 +524,7 @@ export function TkxFormField({
   style,
 }: TkxFormFieldProps) {
   const theme = useTheme();
+  const autoFieldId = useId();
   // Read the context directly rather than via useFormContext() so a field
   // mounted OUTSIDE a <TkxForm> (e.g. an async-rendered shell before the form
   // wrapper exists, or a smoke mount) renders an empty placeholder instead of
@@ -595,8 +597,13 @@ export function TkxFormField({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const typedChild = children as ReactElement<any>;
   const childIsValid = isValidElement(children);
+  // The visible <label> is a sibling of the control (layout puts them in
+  // separate boxes), so it can only name the control via htmlFor/id. Without
+  // this the field rendered as an unnamed textbox.
+  const fieldId = typedChild?.props?.id ?? autoFieldId;
   const childElement = childIsValid
     ? cloneElement(typedChild, {
+        id: fieldId,
         value: value ?? '',
         onChange: handleChange,
         onBlur: handleBlur,
@@ -622,6 +629,7 @@ export function TkxFormField({
   // Build the label element
   const labelElement = safeLabel ? (
     <label
+      htmlFor={fieldId}
       className={tkx(
         'text-sm font-medium font-sans',
         isHorizontal ? 'min-w-[140px] pt-2.5' : '',

@@ -16,7 +16,7 @@ describe('v3.31 LOW a11y fixes', () => {
   it('TkxCommandPalette search input has an accessible name beyond placeholder', () => {
     render(
       <TkxCommandPalette
-        commands={[{ id: 'a', label: 'Alpha', onRun: () => {} }]}
+        commands={[{ id: 'a', title: 'Alpha', onSelect: () => {} }]}
         open
         onOpenChange={() => {}}
       />,

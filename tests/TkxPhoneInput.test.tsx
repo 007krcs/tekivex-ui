@@ -61,3 +61,51 @@ describe('TkxPhoneInput', () => {
     expect(COUNTRIES.every((c) => /^\d+$/.test(c.dial))).toBe(true);
   });
 });
+
+// ── Regression: WAI-ARIA 1.2 idref integrity (dangling-idref) ──────────────
+// The country-picker button set aria-controls unconditionally, but the
+// listbox only mounts while the picker is open — so the reference dangled
+// on every closed render.
+describe('TkxPhoneInput — aria-controls idref integrity', () => {
+  function expectAllIdrefsResolve() {
+    for (const el of Array.from(document.querySelectorAll('[aria-controls]'))) {
+      for (const id of el.getAttribute('aria-controls')!.trim().split(/\s+/)) {
+        expect(document.getElementById(id), `aria-controls="${id}" does not resolve`).not.toBeNull();
+      }
+    }
+  }
+
+  const picker = () => screen.getByRole('button', { name: /Country:/i });
+
+  it('closed picker advertises no aria-controls', () => {
+    render(<TkxPhoneInput label="Mobile" />, { wrapper: Wrapper });
+    expect(picker()).not.toHaveAttribute('aria-controls');
+    expect(picker()).toHaveAttribute('aria-expanded', 'false');
+    expectAllIdrefsResolve();
+  });
+
+  it('open picker points aria-controls at the rendered listbox', () => {
+    render(<TkxPhoneInput label="Mobile" />, { wrapper: Wrapper });
+    fireEvent.click(picker());
+    const listbox = screen.getByRole('listbox');
+    expect(picker()).toHaveAttribute('aria-controls', listbox.id);
+    expect(document.getElementById(listbox.id)).toBe(listbox);
+    expectAllIdrefsResolve();
+  });
+
+  it('closing the picker withdraws the idref again', () => {
+    render(<TkxPhoneInput label="Mobile" />, { wrapper: Wrapper });
+    fireEvent.click(picker());
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    fireEvent.click(picker());
+    expect(screen.queryByRole('listbox')).toBeNull();
+    expect(picker()).not.toHaveAttribute('aria-controls');
+    expectAllIdrefsResolve();
+  });
+
+  it('a disabled picker never advertises aria-controls', () => {
+    render(<TkxPhoneInput label="Mobile" disabled />, { wrapper: Wrapper });
+    expect(picker()).not.toHaveAttribute('aria-controls');
+    expectAllIdrefsResolve();
+  });
+});

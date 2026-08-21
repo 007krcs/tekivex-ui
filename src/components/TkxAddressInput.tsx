@@ -535,7 +535,7 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
 
         <div style={rowStyle}>
           <div style={{ ...fieldStyle, flex: '0 0 140px' }}>
-            <span style={labelStyle}>PIN code</span>
+            <label style={labelStyle} htmlFor={`${fieldId}-pin`}>PIN code</label>
             <input
               ref={ref}
               id={`${fieldId}-pin`}
@@ -553,8 +553,9 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
             />
           </div>
           <div style={fieldStyle}>
-            <span style={labelStyle}>City</span>
+            <label style={labelStyle} htmlFor={`${fieldId}-city`}>City</label>
             <input
+              id={`${fieldId}-city`}
               type="text"
               autoComplete="address-level2"
               value={value.city ?? ''}
@@ -564,8 +565,9 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
             />
           </div>
           <div style={fieldStyle}>
-            <span style={labelStyle}>State</span>
+            <label style={labelStyle} htmlFor={`${fieldId}-state-name`}>State</label>
             <input
+              id={`${fieldId}-state-name`}
               type="text"
               autoComplete="address-level1"
               value={value.state ?? ''}
@@ -615,6 +617,7 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
           <>
             <input
               type="text"
+              aria-label="Address line 1"
               autoComplete="address-line1"
               placeholder="Address line 1"
               value={value.line1 ?? ''}
@@ -624,6 +627,7 @@ export const TkxAddressInput = forwardRef<HTMLInputElement, TkxAddressInputProps
             />
             <input
               type="text"
+              aria-label="Address line 2 (optional)"
               autoComplete="address-line2"
               placeholder="Address line 2 (optional)"
               value={value.line2 ?? ''}

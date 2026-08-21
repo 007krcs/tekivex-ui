@@ -1936,3 +1936,132 @@ describe('TkxDataGrid', () => {
     });
   });
 });
+
+// ── Regression: WAI-ARIA 1.2 idref integrity (dangling-idref) ──────────────
+// The group-header rowheader pointed aria-controls at `${gridId}-group-${key}`,
+// an id that was never rendered on any element — so the reference dangled
+// unconditionally. It now lists the ids of the detail rows actually present.
+describe('TkxDataGrid — group header aria-controls idref integrity', () => {
+  interface GRow { id: string; name: string; category: string; price: number; }
+  const gData: GRow[] = [
+    { id: '1', name: 'Phone', category: 'Electronics', price: 600 },
+    { id: '2', name: 'Laptop', category: 'Electronics', price: 1200 },
+    { id: '3', name: 'TV', category: 'Electronics', price: 800 },
+    { id: '4', name: 'Shirt', category: 'Clothing', price: 30 },
+    { id: '5', name: 'Pants', category: 'Clothing', price: 50 },
+  ];
+  const gCols: DataGridColumn<GRow>[] = [
+    { key: 'category', header: 'Category' },
+    { key: 'name', header: 'Name' },
+    { key: 'price', header: 'Price' },
+  ];
+
+  const groupRows = () =>
+    Array.from(document.querySelectorAll('[data-group-row]')) as HTMLElement[];
+  const detailRows = () =>
+    Array.from(
+      document.querySelectorAll('tr[data-group-key]:not([data-group-row])'),
+    ) as HTMLElement[];
+  const headerFor = (label: string) =>
+    groupRows().find(r => (r.textContent || '').includes(label))!;
+  const controlsOf = (groupRow: HTMLElement) =>
+    groupRow.querySelector('[aria-controls]')?.getAttribute('aria-controls') ?? null;
+
+  /** Every aria-controls token anywhere in the grid must resolve. */
+  function expectAllIdrefsResolve() {
+    for (const el of Array.from(document.querySelectorAll('[aria-controls]'))) {
+      for (const id of el.getAttribute('aria-controls')!.trim().split(/\s+/)) {
+        expect(document.getElementById(id), `aria-controls="${id}" does not resolve`).not.toBeNull();
+      }
+    }
+  }
+
+  it('an expanded group header controls exactly its rendered detail rows', () => {
+    render(
+      <TkxDataGrid columns={gCols} data={gData} rowKey="id" groupBy="category" />,
+      { wrapper: Wrapper },
+    );
+    expectAllIdrefsResolve();
+
+    const ids = controlsOf(headerFor('Electronics'))!.trim().split(/\s+/);
+    expect(ids).toHaveLength(3);
+    const controlled = ids.map(id => document.getElementById(id)!);
+    controlled.forEach(el => expect(el).not.toBeNull());
+    expect(controlled.map(el => el.textContent)).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('Phone'),
+        expect.stringContaining('Laptop'),
+        expect.stringContaining('TV'),
+      ]),
+    );
+    // Every controlled node is a real detail row of this grid.
+    const detail = detailRows();
+    controlled.forEach(el => expect(detail).toContain(el));
+  });
+
+  it('a collapsed group header drops aria-controls rather than dangling', () => {
+    render(
+      <TkxDataGrid columns={gCols} data={gData} rowKey="id" groupBy="category" />,
+      { wrapper: Wrapper },
+    );
+    fireEvent.click(headerFor('Electronics'));
+    expect(controlsOf(headerFor('Electronics'))).toBeNull();
+    expectAllIdrefsResolve();
+
+    // Re-expanding restores a resolvable reference.
+    fireEvent.click(headerFor('Electronics'));
+    expect(controlsOf(headerFor('Electronics'))!.trim().split(/\s+/)).toHaveLength(3);
+    expectAllIdrefsResolve();
+  });
+
+  it('groups starting collapsed carry no aria-controls', () => {
+    render(
+      <TkxDataGrid
+        columns={gCols}
+        data={gData}
+        rowKey="id"
+        groupBy="category"
+        defaultExpandedGroups="none"
+      />,
+      { wrapper: Wrapper },
+    );
+    expect(detailRows()).toHaveLength(0);
+    groupRows().forEach(r => expect(controlsOf(r)).toBeNull());
+    expectAllIdrefsResolve();
+  });
+
+  it('a group split across pages only references the rows on this page', () => {
+    // rowItems = [Electronics, r1, r2, r3, Clothing, r4, r5];
+    // pageSize 3 → page 1 renders [Electronics, r1, r2] only.
+    render(
+      <TkxDataGrid
+        columns={gCols}
+        data={gData}
+        rowKey="id"
+        groupBy="category"
+        pageSize={3}
+      />,
+      { wrapper: Wrapper },
+    );
+    const rendered = detailRows();
+    expect(rendered).toHaveLength(2);
+    const ids = controlsOf(headerFor('Electronics'))!.trim().split(/\s+/);
+    expect(ids).toHaveLength(2);
+    expect(ids.map(id => document.getElementById(id))).toEqual(rendered);
+    expectAllIdrefsResolve();
+  });
+
+  it('detail row ids are unique even when the data has duplicate row keys', () => {
+    const dupes: GRow[] = [
+      { id: 'dup', name: 'Phone', category: 'Electronics', price: 600 },
+      { id: 'dup', name: 'Laptop', category: 'Electronics', price: 1200 },
+    ];
+    render(
+      <TkxDataGrid columns={gCols} data={dupes} rowKey="id" groupBy="category" />,
+      { wrapper: Wrapper },
+    );
+    const ids = Array.from(document.querySelectorAll('tr[id]')).map(r => r.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expectAllIdrefsResolve();
+  });
+});

@@ -1,6 +1,6 @@
 {
   "name": "tekivex-ui",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Production-grade React component library — 116 components (plus 4 experimental, opt-in), WCAG 2.1 AA with WAI-ARIA APG patterns, built-in security kernel with published threat model, built-in charts, headless primitives, zero-runtime CSS engine, 44-locale i18n, Indian KYC pack, agent runtime (Anthropic/OpenAI/Gemini/Ollama/MCP/A2A), TypeScript-first.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -91,7 +91,10 @@
     "test:visual": "playwright test",
     "test:visual:landing": "playwright test -c playwright.landing.config.ts",
     "test:bundlers": "node scripts/test-bundlers.mjs",
-    "test:nextjs": "node scripts/test-nextjs-rsc.mjs"
+    "test:nextjs": "node scripts/test-nextjs-rsc.mjs",
+    "aria:sweep": "node scripts/aria.mjs sweep",
+    "aria:check": "node scripts/aria.mjs check",
+    "aria:report": "node scripts/aria-report.mjs"
   },
   "publishConfig": {
     "access": "public"
@@ -122,6 +125,7 @@
     "@typescript-eslint/parser": "^8.58.2",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.4",
+    "axe-core": "^4.13.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.1.1",
     "jsdom": "^29.0.2",

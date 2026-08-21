@@ -253,3 +253,25 @@ describe('TkxHolographicTerminal', () => {
     expect(screen.queryByText('c')).not.toBeInTheDocument();
   });
 });
+
+// ── ARIA regression: progressbar is not named from content ──────────────────
+describe('TkxHolographicProgress — accessible name', () => {
+  it('always names the progressbar, even with no label', () => {
+    render(<TkxHolographicProgress value={0.5} />);
+    const bar = screen.getByRole('progressbar');
+    expect(bar).toHaveAttribute('aria-label', 'Progress');
+    expect(bar).toHaveAttribute('aria-valuenow', '50');
+  });
+
+  it('uses a string label as the accessible name', () => {
+    render(<TkxHolographicProgress value={0.25} label="Upload" />);
+    expect(screen.getByRole('progressbar', { name: 'Upload' })).toBeInTheDocument();
+  });
+
+  it('lets ariaLabel override a non-string label node', () => {
+    render(
+      <TkxHolographicProgress value={0.9} label={<em>Sync</em>} ariaLabel="Sync progress" />,
+    );
+    expect(screen.getByRole('progressbar', { name: 'Sync progress' })).toBeInTheDocument();
+  });
+});

@@ -92,7 +92,14 @@ export const TkxCheckbox = forwardRef<HTMLInputElement, TkxCheckboxProps>(
       ? { outline: `2px solid ${accentColor}`, outlineOffset: '2px' }
       : {};
 
-    const describedBy = [hint && hintId, hasError && errorId].filter(Boolean).join(' ') || undefined;
+    // Idrefs must mirror the render gates below exactly: the hint span only
+    // renders when there is no error, and the error span only renders when an
+    // errorMessage string exists (isInvalid alone renders none) — otherwise
+    // aria-describedby dangles at a node that is never in the document.
+    const describedBy =
+      [hint && !hasError && hintId, hasError && errorMessage && errorId]
+        .filter(Boolean)
+        .join(' ') || undefined;
 
     const animStyle: React.CSSProperties =
       !reducedMotion && isVisuallyChecked

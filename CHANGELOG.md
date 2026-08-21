@@ -5,6 +5,65 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] — 2026-08-21
+
+### Added — automated WAI-ARIA 1.2 conformance gate
+
+ARIA compliance is now enforced on every test run instead of by periodic
+review. `npm run aria:check` fails the build on any violation; `npm run
+aria:sweep` + `npm run aria:report` give a triage view. Full details in
+`docs/ARIA-CONFORMANCE-SOP.md`.
+
+Every test in the suite doubles as an ARIA probe: whatever a test renders is
+validated afterwards, so the ~2,200 renders the suite already performs become
+conformance coverage, and a new component is covered the moment it gets its
+first test. A normal `vitest run` is unaffected and pays no cost.
+
+Two engines: a spec-driven validator encoded from the W3C role definitions
+(`tests/aria/aria-spec.ts`) covering roles, attribute and value grammars, idref
+integrity, required and prohibited properties, required context, `aria-hidden`
+over focusable content, accessible names and duplicate ids — plus **axe-core**
+as an independent second opinion. Layout-dependent rules (contrast, target
+size) are disabled under jsdom rather than reporting misleading passes; those
+belong to the Playwright suite.
+
+### Fixed — 212 ARIA violations found by the first sweep
+
+- **Dangling idrefs.** `aria-controls` / `aria-activedescendant` /
+  `aria-describedby` referencing popups, panels and error nodes that are not
+  rendered: `TkxSelect`, `TkxComboBox`, `TkxAutocomplete`, `TkxTabs`,
+  `TkxDataGrid`, `TkxPhoneInput`, `TkxCheckbox`, `TkxInput`. In `TkxDataGrid`
+  the referenced id never existed in any state.
+- **Unnamed widgets.** `TkxToggle`'s `role="switch"` and `TkxForm`'s fields
+  used `<label for>` against elements that are not labelable, so the label
+  named nothing — the same defect class fixed in `TkxSlider` in 4.0. Also
+  `TkxAddressInput` (spans instead of labels), `TkxNumberInput`,
+  `TkxFlowChart`, `TkxMessageThread`, `TkxHolographicProgress`, `TkxMenu`, and
+  combobox triggers across the Select family.
+- **Prohibited properties.** `aria-selected` on `role="listitem"` in
+  `TkxFormBuilder`, replaced with `aria-current` (the row designates what the
+  properties panel is editing; it is not a selection widget, and `option` would
+  forbid its interactive descendants).
+- **Invalid values.** `aria-valuenow="NaN"` on `TkxAIConfidenceBar`'s meter
+  when `value` was absent; now coerced and clamped, with an honest
+  "confidence unavailable" label.
+
+### Added — `getErrorProps()` on `useFormState`
+
+`getFieldProps()` emits `aria-describedby="<name>-error"`, which only resolves
+if the consumer renders a node with that id — a footgun that produced a real
+dangling reference. `getErrorProps(name)` returns the matching `id`, `role`,
+content and hidden state so the pair cannot drift.
+
+### Notes
+- New props: `TkxNumberInput.ariaLabel`, `TkxHolographicProgress.ariaLabel`.
+- Behaviour change: the `TkxSelect` trigger's accessible name is now its label
+  (or placeholder) rather than the selected option's text. This is the correct
+  APG combobox behaviour — the value is conveyed by the listbox's
+  `aria-selected` — but downstream tests using
+  `getByRole('combobox', { name: 'SelectedValue' })` will need updating.
+- Gate: 2,255 tests, `aria:check` green, typecheck clean, dist + SBOM rebuilt.
+
 ## [4.1.0] — 2026-08-19
 
 ### Fixed — four integration defects reported by consuming apps

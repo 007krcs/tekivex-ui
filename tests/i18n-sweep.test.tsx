@@ -43,7 +43,7 @@ describe('i18n sweep — previously-hardcoded strings now localize', () => {
   it('TkxCommandPalette dialog label uses commandPalette', () => {
     render(
       <L strings={{ commandPalette: 'Palette de commandes' }}>
-        <TkxCommandPalette open commands={[{ id: 'a', label: 'Alpha', onSelect: () => {} }]} />
+        <TkxCommandPalette open commands={[{ id: 'a', title: 'Alpha', onSelect: () => {} }]} />
       </L>,
     );
     expect(screen.getByLabelText('Palette de commandes')).toBeTruthy();

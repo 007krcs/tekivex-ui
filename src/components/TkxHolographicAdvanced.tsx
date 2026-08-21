@@ -299,6 +299,12 @@ export interface TkxHolographicProgressProps {
   accent?: string;
   /** Show animated shimmer overlay on the fill. Default true. */
   shimmer?: boolean;
+  /**
+   * Accessible name for the progressbar. Defaults to `label` when it is a
+   * plain string, else "Progress" — role="progressbar" is not named from
+   * content, so it must always carry an explicit name.
+   */
+  ariaLabel?: string;
   className?: string;
   style?: CSSProperties;
 }
@@ -310,12 +316,14 @@ export function TkxHolographicProgress({
   height = 8,
   accent = '#00f5d4',
   shimmer = true,
+  ariaLabel,
   className,
   style,
 }: TkxHolographicProgressProps) {
   useEnsureStyles();
   const theme = useTheme();
   const v = Math.max(0, Math.min(1, value));
+  const name = ariaLabel ?? (typeof label === 'string' ? label : undefined) ?? 'Progress';
   return (
     <div className={className} style={{ ...tkxThemeVars(theme), ...style }}>
       {(label || valueLabel) && (
@@ -328,6 +336,7 @@ export function TkxHolographicProgress({
       )}
       <div
         role="progressbar"
+        aria-label={name}
         aria-valuenow={Math.round(v * 100)}
         aria-valuemin={0}
         aria-valuemax={100}

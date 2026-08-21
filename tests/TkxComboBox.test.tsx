@@ -207,4 +207,40 @@ describe('TkxComboBox', () => {
     expect(screen.getByRole('alert').textContent).toContain('Pick at least one');
     expect(screen.getByRole('combobox').getAttribute('aria-invalid')).toBe('true');
   });
+
+  // -- WAI-ARIA 1.2 conformance regressions ---------------------------------
+  describe('aria conformance', () => {
+    it('emits no dangling aria-controls while the listbox is closed', () => {
+      render(<TkxComboBox label="Tags" options={FRUITS} />, { wrapper: W });
+      const input = screen.getByRole('combobox');
+      expect(screen.queryByRole('listbox')).toBeNull();
+      expect(input.hasAttribute('aria-controls')).toBe(false);
+      expect(input.hasAttribute('aria-activedescendant')).toBe(false);
+    });
+
+    it('aria-controls appears and resolves to the listbox once open', () => {
+      render(<TkxComboBox label="Tags" options={FRUITS} />, { wrapper: W });
+      const input = screen.getByRole('combobox');
+      fireEvent.focus(input);
+      const controls = input.getAttribute('aria-controls')!;
+      expect(controls).toBeTruthy();
+      expect(document.getElementById(controls)).toBe(screen.getByRole('listbox'));
+    });
+
+    it('the combobox is named by the label prop', () => {
+      render(<TkxComboBox label="Recipients" options={FRUITS} />, { wrapper: W });
+      expect(screen.getByRole('combobox', { name: 'Recipients' })).toBeTruthy();
+    });
+
+    it('falls back to the placeholder for its name when the label is blank', () => {
+      render(<TkxComboBox label="" placeholder="Add recipients" options={FRUITS} />, { wrapper: W });
+      expect(screen.getByRole('combobox', { name: 'Add recipients' })).toBeTruthy();
+    });
+
+    it('is named even with neither a label nor a placeholder', () => {
+      render(<TkxComboBox label="" options={FRUITS} />, { wrapper: W });
+      const name = screen.getByRole('combobox').getAttribute('aria-label');
+      expect(name && name.trim().length).toBeTruthy();
+    });
+  });
 });

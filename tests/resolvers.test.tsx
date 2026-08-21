@@ -96,8 +96,10 @@ describe('zodResolver', () => {
       });
       return (
         <form onSubmit={f.handleSubmit}>
-          <input data-testid="email" {...f.getFieldProps('email')} />
-          {f.errors.email && <span data-testid="err">{f.errors.email}</span>}
+          <label htmlFor="email">Email</label>
+          <input id="email" data-testid="email" {...f.getFieldProps('email')} />
+          {/* getErrorProps pairs with the aria-describedby getFieldProps emits. */}
+          <span data-testid="err" {...f.getErrorProps('email')} />
           <button type="submit">Go</button>
         </form>
       );
@@ -206,8 +208,10 @@ describe('valibotResolver', () => {
       });
       return (
         <form onSubmit={f.handleSubmit}>
-          <input data-testid="email" {...f.getFieldProps('email')} />
-          {f.errors.email && <span data-testid="err">{f.errors.email}</span>}
+          <label htmlFor="email">Email</label>
+          <input id="email" data-testid="email" {...f.getFieldProps('email')} />
+          {/* getErrorProps pairs with the aria-describedby getFieldProps emits. */}
+          <span data-testid="err" {...f.getErrorProps('email')} />
           <button type="submit">Go</button>
         </form>
       );

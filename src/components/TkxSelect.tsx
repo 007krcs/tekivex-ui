@@ -163,6 +163,7 @@ export function TkxSelect({
   const autoId = useId();
   const id = idProp ?? autoId;
   const listboxId = `${id}-listbox`;
+  const labelId = `${id}-label`;
   const hintId = `${id}-hint`;
   const errorId = `${id}-error`;
 
@@ -496,6 +497,20 @@ export function TkxSelect({
   // trigger button is downgraded to a plain button while that is the case to
   // avoid two competing combobox nodes.
   const searchOwnsCombobox = searchable && isOpen;
+
+  // The listbox lives in a portal that only mounts once we have measured a
+  // position, so `isOpen` alone is not proof the node exists. An idref must
+  // resolve to an element that is actually in the DOM (WAI-ARIA 1.2 § IDREF);
+  // a dangling one is silently dropped by AT. Same gate as TkxCascader.
+  const listboxRendered = isOpen && dropdownRect !== null;
+  const triggerOwnsListbox = listboxRendered && !searchOwnsCombobox;
+
+  // Accessible name for the combobox trigger. The visible <label> is the
+  // field name when there is one; without a label the (localized) placeholder
+  // is the only human-readable description of the control, and the trigger is
+  // otherwise nameless whenever its content is empty (multi-select renders its
+  // chips outside the button).
+  const placeholderName = resolvedPlaceholder.trim() || t.selectPlaceholder;
 
   const describedBy =
     [hint && hintId, hasError && errorId].filter(Boolean).join(' ') ||
@@ -900,6 +915,7 @@ export function TkxSelect({
     >
       {label && (
         <label
+          id={labelId}
           htmlFor={id}
           style={{
             fontSize: '14px',
@@ -1017,8 +1033,10 @@ export function TkxSelect({
           role={searchOwnsCombobox ? undefined : 'combobox'}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
-          aria-controls={searchOwnsCombobox ? undefined : listboxId}
-          aria-activedescendant={searchOwnsCombobox ? undefined : activeOptionId}
+          aria-controls={triggerOwnsListbox ? listboxId : undefined}
+          aria-activedescendant={triggerOwnsListbox ? activeOptionId : undefined}
+          aria-labelledby={label ? labelId : undefined}
+          aria-label={label ? undefined : placeholderName}
           aria-invalid={hasError || undefined}
           aria-describedby={describedBy}
           aria-multiselectable={searchOwnsCombobox ? undefined : multiple}

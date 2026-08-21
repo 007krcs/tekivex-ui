@@ -62,6 +62,17 @@ export interface UseFormStateReturn<T extends Record<string, FormFieldValue>> {
     'aria-invalid': boolean | undefined;
     'aria-describedby': string | undefined;
   };
+  /**
+   * Props for the node that renders a field's error message. Pairs with the
+   * `aria-describedby` that `getFieldProps` emits, so the idref always
+   * resolves. See the implementation for usage.
+   */
+  getErrorProps: (name: keyof T) => {
+    id: string;
+    role: 'alert';
+    children: string | undefined;
+    hidden: true | undefined;
+  };
 }
 
 /**
@@ -229,6 +240,28 @@ export function useFormState<T extends Record<string, FormFieldValue>>({
 
   const isValid = Object.keys(errors).length === 0 && !rootError;
 
+  /**
+   * Props for the element that displays a field's error message.
+   *
+   * `getFieldProps()` sets `aria-describedby="<name>-error"` whenever a field
+   * has an error, which is only valid if an element carrying that id is
+   * actually rendered — otherwise the reference dangles and assistive tech
+   * silently ignores it. Spread this onto your error node so the two always
+   * agree:
+   *
+   *   <input {...getFieldProps('email')} />
+   *   <span {...getErrorProps('email')} />
+   */
+  const getErrorProps = useCallback(
+    (name: keyof T) => ({
+      id: `${String(name)}-error`,
+      role: 'alert' as const,
+      children: errors[name] as string | undefined,
+      hidden: (errors[name] ? undefined : true) as true | undefined,
+    }),
+    [errors],
+  );
+
   const getFieldProps = useCallback(
     (name: keyof T) => ({
       value: values[name],
@@ -257,5 +290,6 @@ export function useFormState<T extends Record<string, FormFieldValue>>({
     validate,
     reset,
     getFieldProps,
+    getErrorProps,
   };
 }

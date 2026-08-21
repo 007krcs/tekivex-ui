@@ -482,6 +482,10 @@ export function TkxCommandPalette({
                         id={i === activeIdx ? activeId : undefined}
                         role="option"
                         aria-selected={active}
+                        // role="option" takes its name from its contents, so a
+                        // command with a blank title would reach assistive tech
+                        // as an unnamed entry. Fall back to the command id.
+                        aria-label={item.cmd.title?.trim() ? undefined : item.cmd.id}
                         data-testid={`cmdk-item-${item.cmd.id}`}
                         data-idx={i}
                         onMouseMove={() => setActiveIdx(i)}

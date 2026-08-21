@@ -5,8 +5,8 @@ import { useTheme, type ResolvedTheme } from '../themes';
 import { cx, tkx } from '../engine/tkx';
 
 export interface TkxAIConfidenceBarProps {
-  /** 0–100 confidence value */
-  value: number;
+  /** 0–100 confidence value. Missing / non-finite values render as unknown. */
+  value?: number;
   /** Optional label for the metric being shown */
   label?: string;
   /** Show numeric percentage text */
@@ -44,7 +44,13 @@ export function TkxAIConfidenceBar({
 }: TkxAIConfidenceBarProps) {
   const theme = useTheme();
   const fillRef = useRef<HTMLDivElement>(null);
-  const clamped = Math.max(0, Math.min(100, value));
+  // `value` arrives from callers/APIs that may hand us undefined, null, NaN or
+  // a numeric string. Math.min/max propagate NaN, which would land verbatim in
+  // aria-valuenow (invalid — it must be a number) and in the aria-label.
+  // Normalise first so valuemin <= valuenow <= valuemax always holds.
+  const numeric = typeof value === 'number' ? value : Number(value);
+  const clamped = Number.isFinite(numeric) ? Math.max(0, Math.min(100, numeric)) : 0;
+  const hasValue = Number.isFinite(numeric);
   const color = confidenceColor(clamped, theme);
   const h = HEIGHT[size];
 
@@ -59,9 +65,9 @@ export function TkxAIConfidenceBar({
     return () => cancelAnimationFrame(raf);
   }, [clamped, animate]);
 
-  const label_ = typeof clamped === 'number'
+  const label_ = hasValue
     ? `${clamped.toFixed(0)}% AI confidence${label ? ` for ${label}` : ''}`
-    : label;
+    : `AI confidence unknown${label ? ` for ${label}` : ''}`;
 
   return (
     <div
@@ -82,7 +88,7 @@ export function TkxAIConfidenceBar({
           )}
           {showLabel && (
             <span style={{ fontSize: 12, fontWeight: 700, color, marginLeft: 'auto' }}>
-              {clamped.toFixed(0)}%
+              {hasValue ? `${clamped.toFixed(0)}%` : '—'}
             </span>
           )}
         </div>
@@ -122,7 +128,9 @@ export function TkxAIConfidenceBar({
       {/* Confidence label */}
       <div style={{ fontSize: 10, color: theme.css.textMuted, marginTop: 2, display: 'flex', gap: 4, alignItems: 'center' }}>
         <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
-        {clamped >= 80 ? 'High confidence' : clamped >= 55 ? 'Moderate confidence' : clamped >= 30 ? 'Low confidence' : 'Very low — review manually'}
+        {!hasValue
+          ? 'Confidence unavailable'
+          : clamped >= 80 ? 'High confidence' : clamped >= 55 ? 'Moderate confidence' : clamped >= 30 ? 'Low confidence' : 'Very low — review manually'}
       </div>
 
       <style>{`

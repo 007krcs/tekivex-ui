@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: ['./tests/setup.ts'],
+    setupFiles: ['./tests/setup.ts', './tests/aria/sweep-setup.ts'],
     // Heavy components (DataGrid, Spreadsheet, CalendarHeatmap) legitimately
     // take >5s to render in jsdom under load; the default 5s timeout flaked
     // them. Give each worker fork extra heap so the broad render-smoke suite
