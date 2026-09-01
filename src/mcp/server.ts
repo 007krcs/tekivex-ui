@@ -10,7 +10,7 @@
  * validators the library's own CI uses. Nothing here invents an answer.
  */
 import { createInterface } from 'node:readline';
-import { Guard, ToolError, configFromEnv, type ServerConfig } from './enterprise.js';
+import { Guard, ToolError, configFromEnv, type ServerConfig } from './enterprise';
 import {
   listComponents,
   getComponentApi,
@@ -18,7 +18,7 @@ import {
   verifySecurity,
   scaffoldForm,
   type AriaCheck,
-} from './tools.js';
+} from './tools';
 
 const PROTOCOL_VERSION = '2024-11-05';
 const SERVER_INFO = { name: 'tekivex-ui', version: '0.1.0' };
@@ -40,12 +40,13 @@ export const TOOLS: ToolDefinition[] = [
   {
     name: 'ui_list_components',
     description:
-      'List the components tekivex-ui actually ships, with their descriptions and whether each is safe to render as a React Server Component. Use this before assuming a component exists.',
+      'Compact catalog: name, category, one-line summary and RSC status for each component tekivex-ui ships. Deliberately omits props to keep context small — call ui_get_component_api for the full API of a chosen component.',
     inputSchema: {
       type: 'object',
       properties: {
         filter: { type: 'string', description: 'Case-insensitive substring of name or description.' },
         rscOnly: { type: 'boolean', description: 'Only components renderable without "use client".' },
+        category: { type: 'string', description: 'input | data | chart | overlay | layout | display | ai | commerce | other' },
       },
     },
   },
@@ -205,7 +206,7 @@ export class TekivexMcpServer {
   private dispatch(name: string, args: Record<string, unknown>): unknown {
     switch (name) {
       case 'ui_list_components':
-        return listComponents(args as { filter?: string; rscOnly?: boolean });
+        return listComponents(args as { filter?: string; rscOnly?: boolean; category?: string });
       case 'ui_get_component_api':
         return getComponentApi(args as unknown as { name: string });
       case 'ui_audit_accessibility':

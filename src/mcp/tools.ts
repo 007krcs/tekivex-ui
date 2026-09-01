@@ -8,7 +8,7 @@
  * cannot tell the difference.
  */
 import catalog from './catalog.json' with { type: 'json' };
-import { ToolError } from './enterprise.js';
+import { ToolError } from './enterprise';
 
 interface PropEntry {
   name: string;
@@ -36,10 +36,46 @@ const TYPES = catalog.types as Record<string, TypeEntry>;
 
 // ── ui_list_components ───────────────────────────────────────────────────────
 
-export function listComponents(args: { filter?: string; rscOnly?: boolean }) {
+/**
+ * Bucket a component by name so a listing can be scanned without reading every
+ * description. Derived, not hand-maintained, so it cannot drift.
+ */
+function categoryOf(name: string): string {
+  const n = name.replace(/^Tkx/, '');
+  const table: Array<[RegExp, string]> = [
+    [/^(Input|Textarea|Select|Checkbox|Radio|Toggle|Slider|NumberInput|Currency|Phone|OTP|DatePicker|ComboBox|Autocomplete|Form|Field|AutoForm|Mentions|Rating|ColorPicker|FileUpload|SignaturePad|Aadhaar|Pan|Kyc|Address)/, 'input'],
+    [/^(Table|DataGrid|DataExplorer|Spreadsheet|PivotTable|List|TransferList|Tree|OrgChart|Timeline|Descriptions|Statistic|Calendar|Kanban|Gantt)/, 'data'],
+    [/^(Chart|Sparkline|Gauge|Heatmap|Treemap|Funnel|RealTime)/, 'chart'],
+    [/^(Modal|Drawer|Popover|Tooltip|Toast|Snackbar|Alert|Dialog|CommandPalette|Menu|Dropdown|SpeedDial|Tour)/, 'overlay'],
+    [/^(Card|Layout|Grid|Stack|Divider|Splitter|Accordion|Tabs|AppBar|BottomNav|Toolbar|Breadcrumb|Pagination|Stepper|Anchor|Affix)/, 'layout'],
+    [/^(Badge|Tag|Avatar|Icon|Typography|Skeleton|Spin|Progress|Empty|Result|Image|QRCode|Watermark|Logo|Code|Markdown|RichText)/, 'display'],
+    [/^(Agent|AI|Chat|MessageThread|Live|Reasoning|ToolCall)/, 'ai'],
+    [/^(Checkout|Payment|Subscription)/, 'commerce'],
+  ];
+  for (const [re, cat] of table) if (re.test(n)) return cat;
+  return 'other';
+}
+
+/** First sentence only — a listing is for scanning, not for reading. */
+function summarise(description: string | undefined): string | undefined {
+  if (!description) return undefined;
+  const first = description.split(/(?<=\.)\s/)[0].trim();
+  return first.length > 100 ? first.slice(0, 97) + '…' : first;
+}
+
+/**
+ * Deliberately compact: name, category, one-line summary, RSC status.
+ *
+ * Full prop tables and type definitions live ONLY in ui_get_component_api. A
+ * catalog listing that inlined every prop would burn a large share of the
+ * model's context before it had chosen a component, which is the opposite of
+ * useful.
+ */
+export function listComponents(args: { filter?: string; rscOnly?: boolean; category?: string }) {
   const needle = args.filter?.toLowerCase();
   const matches = COMPONENTS.filter((c) => {
     if (args.rscOnly && !c.rscSafe) return false;
+    if (args.category && categoryOf(c.name) !== args.category) return false;
     if (!needle) return true;
     return (
       c.name.toLowerCase().includes(needle) ||
@@ -51,10 +87,11 @@ export function listComponents(args: { filter?: string; rscOnly?: boolean }) {
     count: matches.length,
     components: matches.map((c) => ({
       name: c.name,
-      description: c.description,
+      category: categoryOf(c.name),
+      summary: summarise(c.description),
       rscSafe: c.rscSafe,
-      importPath: c.importPath,
     })),
+    next: 'Call ui_get_component_api(name) for props, types and RSC directive guidance.',
   };
 }
 
@@ -120,8 +157,17 @@ export function getComponentApi(args: { name: string }) {
     name: component.name,
     description: component.description,
     importPath: component.importPath,
+    // ── RSC metadata ────────────────────────────────────────────────────────
+    // Both directions are stated explicitly rather than leaving the caller to
+    // negate one: an agent scaffolding a Next.js or Remix file needs an
+    // unambiguous answer to "must I prepend 'use client'?".
     rscSafe: component.rscSafe,
-    clientDirectiveRequired: !component.rscSafe,
+    isClientComponent: !component.rscSafe,
+    requiresUseClientDirective: !component.rscSafe,
+    directiveToPrepend: component.rscSafe ? null : "'use client';",
+    rscNote: component.rscSafe
+      ? 'Renders on the server. Ships no JavaScript. Do NOT add "use client".'
+      : 'Reads React context or uses state/handlers. The file that imports it must start with \'use client\';',
     propsType: component.propsType,
     props,
     relatedTypes: relatedTypes(props),

@@ -17,12 +17,12 @@ import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO = resolve(HERE, '../../..');
+const REPO = resolve(HERE, '..');
 const COMPONENT_DIR = join(REPO, 'src/components');
 
 const outFlagIndex = process.argv.indexOf('--out');
 const OUT =
-  outFlagIndex !== -1 ? process.argv[outFlagIndex + 1] : join(HERE, '../src/catalog.json');
+  outFlagIndex !== -1 ? process.argv[outFlagIndex + 1] : join(REPO, 'src/mcp/catalog.json');
 
 /** Files that export components. */
 const files = readdirSync(COMPONENT_DIR)

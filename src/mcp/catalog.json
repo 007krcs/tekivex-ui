@@ -1,6 +1,6 @@
 {
   "generatedFrom": "src/components/*.tsx via the TypeScript compiler API",
-  "libraryVersion": "4.3.0",
+  "libraryVersion": "4.5.0",
   "componentCount": 161,
   "components": [
     {

@@ -36,6 +36,7 @@ const ENTRIES = [
   'agent',
   'experimental',
   'a11y-aria',
+  'mcp',
 ];
 
 const start = Date.now();

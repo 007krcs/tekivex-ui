@@ -1,6 +1,6 @@
 {
   "name": "tekivex-ui",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "description": "Production-grade React component library — 116 components (plus 4 experimental, opt-in), WCAG 2.1 AA with WAI-ARIA APG patterns, built-in security kernel with published threat model, built-in charts, headless primitives, zero-runtime CSS engine, 44-locale i18n, Indian KYC pack, agent runtime (Anthropic/OpenAI/Gemini/Ollama/MCP/A2A), TypeScript-first.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -8,55 +8,115 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./styles": "./dist/tekivex-ui.css",
     "./themes": {
-      "import": "./dist/themes.js",
-      "require": "./dist/themes.cjs",
-      "types": "./dist/themes.d.ts"
+      "import": {
+        "types": "./dist/themes.d.ts",
+        "default": "./dist/themes.js"
+      },
+      "require": {
+        "types": "./dist/themes.d.cts",
+        "default": "./dist/themes.cjs"
+      }
     },
     "./charts": {
-      "import": "./dist/charts.js",
-      "require": "./dist/charts.cjs",
-      "types": "./dist/charts.d.ts"
+      "import": {
+        "types": "./dist/charts.d.ts",
+        "default": "./dist/charts.js"
+      },
+      "require": {
+        "types": "./dist/charts.d.cts",
+        "default": "./dist/charts.cjs"
+      }
     },
     "./headless": {
-      "import": "./dist/headless.js",
-      "require": "./dist/headless.cjs",
-      "types": "./dist/headless.d.ts"
+      "import": {
+        "types": "./dist/headless.d.ts",
+        "default": "./dist/headless.js"
+      },
+      "require": {
+        "types": "./dist/headless.d.cts",
+        "default": "./dist/headless.cjs"
+      }
     },
     "./i18n": {
-      "import": "./dist/i18n.js",
-      "require": "./dist/i18n.cjs",
-      "types": "./dist/i18n.d.ts"
+      "import": {
+        "types": "./dist/i18n.d.ts",
+        "default": "./dist/i18n.js"
+      },
+      "require": {
+        "types": "./dist/i18n.d.cts",
+        "default": "./dist/i18n.cjs"
+      }
     },
     "./quantum": {
-      "import": "./dist/quantum.js",
-      "require": "./dist/quantum.cjs",
-      "types": "./dist/quantum.d.ts"
+      "import": {
+        "types": "./dist/quantum.d.ts",
+        "default": "./dist/quantum.js"
+      },
+      "require": {
+        "types": "./dist/quantum.d.cts",
+        "default": "./dist/quantum.cjs"
+      }
     },
     "./realtime": {
-      "import": "./dist/realtime.js",
-      "require": "./dist/realtime.cjs",
-      "types": "./dist/realtime.d.ts"
+      "import": {
+        "types": "./dist/realtime.d.ts",
+        "default": "./dist/realtime.js"
+      },
+      "require": {
+        "types": "./dist/realtime.d.cts",
+        "default": "./dist/realtime.cjs"
+      }
     },
     "./agent": {
-      "import": "./dist/agent.js",
-      "require": "./dist/agent.cjs",
-      "types": "./dist/agent.d.ts"
+      "import": {
+        "types": "./dist/agent.d.ts",
+        "default": "./dist/agent.js"
+      },
+      "require": {
+        "types": "./dist/agent.d.cts",
+        "default": "./dist/agent.cjs"
+      }
     },
     "./experimental": {
-      "import": "./dist/experimental.js",
-      "require": "./dist/experimental.cjs",
-      "types": "./dist/experimental.d.ts"
+      "import": {
+        "types": "./dist/experimental.d.ts",
+        "default": "./dist/experimental.js"
+      },
+      "require": {
+        "types": "./dist/experimental.d.cts",
+        "default": "./dist/experimental.cjs"
+      }
     },
     "./a11y-aria": {
-      "types": "./dist/a11y-aria.d.ts",
-      "import": "./dist/a11y-aria.js",
-      "require": "./dist/a11y-aria.cjs"
+      "import": {
+        "types": "./dist/a11y-aria.d.ts",
+        "default": "./dist/a11y-aria.js"
+      },
+      "require": {
+        "types": "./dist/a11y-aria.d.cts",
+        "default": "./dist/a11y-aria.cjs"
+      }
+    },
+    "./mcp": {
+      "import": {
+        "types": "./dist/mcp.d.ts",
+        "default": "./dist/mcp.js"
+      },
+      "require": {
+        "types": "./dist/mcp.d.cts",
+        "default": "./dist/mcp.cjs"
+      }
     }
   },
   "sideEffects": [
@@ -66,10 +126,11 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "bin"
   ],
   "scripts": {
-    "build": "node scripts/build-all-entries.mjs && tsc --emitDeclarationOnly && node scripts/emit-dts-shims.mjs",
+    "build": "node scripts/build-all-entries.mjs && tsc --emitDeclarationOnly && node scripts/fix-dts-specifiers.mjs && node scripts/emit-dts-shims.mjs",
     "dev": "vite",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -85,7 +146,7 @@
     "build:demo": "node scripts/build-unified-site.mjs",
     "build:demo:standalone": "vite build --config ./demo/vite.config.ts",
     "build:unified": "node scripts/build-unified-site.mjs",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run mcp:catalog && npm run build && npm run check:exports && npm run check:types",
     "pack:check": "npm pack --dry-run",
     "metrics:collect": "node scripts/collect-metrics.mjs",
     "figma:build": "node packages/figma-kit/scripts/export-tokens.mjs && node packages/figma-kit/scripts/build-variant-catalog.mjs",
@@ -100,7 +161,11 @@
     "aria:sweep": "node scripts/aria.mjs sweep",
     "aria:check": "node scripts/aria.mjs check",
     "aria:report": "node scripts/aria-report.mjs",
-    "typecheck:tests": "tsc --noEmit -p tsconfig.tests.json"
+    "typecheck:tests": "tsc --noEmit -p tsconfig.tests.json",
+    "mcp:catalog": "node scripts/generate-mcp-catalog.mjs",
+    "check:exports": "publint",
+    "check:types": "attw --pack . --profile node16 --exclude-entrypoints styles",
+    "check:pack": "npm run check:exports && npm run check:types"
   },
   "publishConfig": {
     "access": "public"
@@ -121,6 +186,7 @@
     }
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@playwright/test": "^1.59.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
@@ -138,6 +204,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "jsdom": "^29.0.2",
     "prettier": "^3.8.3",
+    "publint": "^0.3.24",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "recharts": "^3.8.1",
@@ -190,12 +257,15 @@
   "homepage": "https://ui.tekivex.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/007krcs/tekivex-ui.git"
+    "url": "git+https://github.com/007krcs/tekivex-ui.git"
   },
   "bugs": {
     "url": "https://github.com/007krcs/tekivex-ui/issues"
   },
   "engines": {
     "node": ">=20.0.0 <23.0.0"
+  },
+  "bin": {
+    "tekivex-mcp": "./bin/tekivex-mcp.mjs"
   }
 }

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { TekivexMcpServer, TOOLS } from '../packages/tekivex-mcp/src/server';
-import { configFromEnv, Guard, ToolError } from '../packages/tekivex-mcp/src/enterprise';
+import { TekivexMcpServer, TOOLS } from '../src/mcp/server';
+import { configFromEnv, Guard, ToolError } from '../src/mcp/enterprise';
 import { validateAria } from '../src/a11y/aria/validate';
-import catalog from '../packages/tekivex-mcp/src/catalog.json';
+import catalog from '../src/mcp/catalog.json';
 
 /** The suite runs in jsdom, so a DOM is already available. */
 function validate(html: string) {
@@ -86,13 +86,33 @@ describe('ui_get_component_api — ground truth, not guesses', () => {
     expect(fields).not.toContain('label');
   });
 
-  it('reports RSC safety accurately', async () => {
+  it('states RSC status unambiguously in both directions', async () => {
+    // An agent scaffolding a Next.js/Remix file must be told outright whether
+    // to prepend the directive — not left to negate a single flag.
     const badge = await call(server(), 'ui_get_component_api', { name: 'TkxBadge' });
     expect(badge.data.rscSafe).toBe(true);
-    expect(badge.data.clientDirectiveRequired).toBe(false);
+    expect(badge.data.isClientComponent).toBe(false);
+    expect(badge.data.requiresUseClientDirective).toBe(false);
+    expect(badge.data.directiveToPrepend).toBeNull();
+    expect(badge.data.rscNote).toMatch(/Do NOT add/);
 
     const select = await call(server(), 'ui_get_component_api', { name: 'TkxSelect' });
     expect(select.data.rscSafe).toBe(false);
+    expect(select.data.isClientComponent).toBe(true);
+    expect(select.data.requiresUseClientDirective).toBe(true);
+    expect(select.data.directiveToPrepend).toBe("'use client';");
+  });
+
+  it('the RSC flag matches the source of truth for every component', async () => {
+    // Guards against a stale catalog claiming server-safety a component lost.
+    const { data } = await call(server(), 'ui_list_components', { rscOnly: true });
+    expect(data.components.map((c: { name: string }) => c.name).sort()).toEqual([
+      'TkxBadge',
+      'TkxDivider',
+      'TkxEmpty',
+      'TkxIcon',
+      'TkxSparkline',
+    ]);
   });
 
   it('suggests alternatives for an unknown component instead of inventing one', async () => {
@@ -265,5 +285,44 @@ describe('enterprise controls', () => {
     expect(log[0]).toMatchObject({ tool: 'ui_list_components', principal: 'team-a', outcome: 'ok' });
     expect(log[1].outcome).toBe('denied');
     expect(Date.parse(log[0].at)).not.toBeNaN();
+  });
+});
+
+describe('context budgeting', () => {
+  it('ui_list_components stays compact — no prop tables in a catalog listing', async () => {
+    const { data } = await call(server(), 'ui_list_components', {});
+    // Only scanning fields; props/types are never inlined. `summary` is absent
+    // when a component carries no JSDoc, so check the key set is a subset.
+    const allowed = new Set(['name', 'category', 'summary', 'rscSafe']);
+    for (const entry of data.components) {
+      for (const key of Object.keys(entry)) expect(allowed).toContain(key);
+      expect(entry).not.toHaveProperty('props');
+      expect(entry).not.toHaveProperty('relatedTypes');
+    }
+  });
+
+  it('a full listing costs far less than the per-component detail it replaces', async () => {
+    const list = await call(server(), 'ui_list_components', {});
+    const one = await call(server(), 'ui_get_component_api', { name: 'TkxSelect' });
+    const listBytes = JSON.stringify(list.data).length;
+    const detailBytes = JSON.stringify(one.data).length;
+    // The whole catalog must not cost more than ~40 detail lookups; without
+    // trimming, inlining props for 161 components would dwarf that.
+    expect(listBytes).toBeLessThan(detailBytes * 40);
+    // And each summary is a single sentence, not a paragraph.
+    for (const c of list.data.components) {
+      if (c.summary) expect(c.summary.length).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it('categories let a model narrow before fetching detail', async () => {
+    const { data } = await call(server(), 'ui_list_components', { category: 'chart' });
+    expect(data.count).toBeGreaterThan(0);
+    expect(data.components.every((c: { category: string }) => c.category === 'chart')).toBe(true);
+  });
+
+  it('points the caller at the detail tool', async () => {
+    const { data } = await call(server(), 'ui_list_components', {});
+    expect(data.next).toMatch(/ui_get_component_api/);
   });
 });

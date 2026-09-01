@@ -5,7 +5,7 @@
  * Claude Desktop / IDE config:
  *   {
  *     "mcpServers": {
- *       "tekivex-ui": { "command": "npx", "args": ["-y", "tekivex-mcp"] }
+ *       "tekivex-ui": { "command": "npx", "args": ["-y", "--package=tekivex-ui", "tekivex-mcp"] }
  *     }
  *   }
  *
@@ -13,8 +13,8 @@
  * default. Set TEKIVEX_MCP_TOKENS ("team-a:secret,team-b:secret") when exposing
  * this over anything else.
  */
-import { TekivexMcpServer } from '../dist/server.js';
-import { createAriaValidator, defaultDomFactory } from '../dist/ariaValidator.js';
+import { TekivexMcpServer, createAriaValidator, defaultDomFactory } from '../dist/mcp.js';
+
 
 const domFactory = await defaultDomFactory();
 const validate = domFactory

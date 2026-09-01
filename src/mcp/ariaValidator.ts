@@ -7,8 +7,8 @@
  * than a false "conformant" when it is not. Reporting a pass we cannot prove
  * would be worse than reporting nothing.
  */
-import { validateAria } from 'tekivex-ui/a11y-aria';
-import type { AriaCheck } from './tools.js';
+import { validateAria } from '../a11y/aria/validate';
+import type { AriaCheck } from './tools';
 
 export interface DomFactory {
   (html: string): { body: ParentNode } | null;

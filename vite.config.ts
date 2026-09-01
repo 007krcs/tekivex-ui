@@ -40,6 +40,7 @@ const entries: Record<string, string> = {
   agent: 'src/agent/index.ts',
   experimental: 'src/experimental/index.ts',
   'a11y-aria': 'src/a11y/aria/index.ts',
+  mcp: 'src/mcp/index.ts',
 };
 
 const entry = process.env.ENTRY ?? 'index';
@@ -105,6 +106,10 @@ export default defineConfig({
         'react-dom',
         'react/jsx-runtime',
         'recharts',
+        // Node builtins used by the MCP server entry.
+        'node:readline',
+        'node:fs',
+        'jsdom',
       ],
       output: {
         globals: {

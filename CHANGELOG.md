@@ -5,6 +5,71 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.0] — 2026-09-01
+
+### Changed — the MCP server is now part of `tekivex-ui`, not a separate package
+
+`tekivex-mcp@0.1.0` was never published; it is now a subpath of the main
+package (`tekivex-ui/mcp`) with a `tekivex-mcp` bin. One package, one version —
+the tools answer from this library's own source, so versioning them apart would
+have let the catalog drift from the components it describes.
+
+Configure Claude Desktop, Claude Code or Cursor with:
+
+```json
+{ "mcpServers": { "tekivex-ui": {
+  "command": "npx", "args": ["-y", "--package=tekivex-ui", "tekivex-mcp"] } } }
+```
+
+`--package` is required because the bin lives inside `tekivex-ui`. Full setup,
+including the authenticated variant, is in `docs/MCP-SERVER.md`.
+
+### Fixed — TypeScript packaging was broken far more deeply than 4.4.0 fixed
+
+4.4.0 added `.js` specifiers to the ten subpath shims and claimed that repaired
+NodeNext resolution. Running `attw --profile node16` for the first time showed
+that was only the top layer: **350 further internal resolution errors** across
+226 distinct specifiers, because every declaration under `dist/src/` is emitted
+with extensionless relative paths (tsconfig uses `moduleResolution: "bundler"`).
+Consumers on Node16/NodeNext still resolved our types to empty modules.
+
+- New `scripts/fix-dts-specifiers.mjs` post-processes emitted declarations,
+  rewriting `./x` to `./x.js` and `./dir` to `./dir/index.js`, and stripping the
+  CSS import tsc copies into the root declaration. 547 specifiers rewritten.
+- `publint` found nine more real errors: `types` was **last** in every export
+  condition, so TypeScript could resolve the `.js` implementation instead of the
+  declaration. Conditions are order-sensitive; `types` is now first everywhere.
+- Each entry now ships a `.d.cts` twin and the exports map splits `import` and
+  `require`, each with its own `types`. Without this, `require()` consumers got
+  declarations that "masquerade as ESM" (11 `FalseESM` findings).
+
+Result: `attw --profile node16` is clean for every typed entrypoint, and
+`publint` reports "All good!". `./styles` is excluded from the type gate because
+it is a CSS side-effect import with no types by design; `node10` resolution is
+also out of scope, since it predates `exports` subpaths entirely.
+
+### Added — packaging gates so this cannot regress
+
+```bash
+npm run check:exports   # publint
+npm run check:types     # attw --profile node16
+```
+
+Both run in `prepublishOnly`, alongside catalog regeneration. The class of bug
+that shipped silently in every release up to 4.4.0 now fails the publish.
+
+### Added — MCP context budgeting and explicit RSC metadata
+
+- `ui_list_components` returns only name, category, one-sentence summary and RSC
+  status, with a new `category` filter (`input`, `data`, `chart`, `overlay`,
+  `layout`, `display`, `ai`, `commerce`, `other`). Prop tables and type
+  definitions stay exclusively in `ui_get_component_api`, so listing the catalog
+  costs a fraction of the context inlining props would.
+- `ui_get_component_api` now states server-component status in both directions —
+  `rscSafe`, `isClientComponent`, `requiresUseClientDirective`,
+  `directiveToPrepend` and a plain-language `rscNote` — so an agent scaffolding
+  a Next.js or Remix file never has to infer whether to prepend `'use client'`.
+
 ## [4.4.0] — 2026-09-01
 
 ### Added — `tekivex-mcp`, a Model Context Protocol server
