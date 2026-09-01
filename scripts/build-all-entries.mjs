@@ -35,6 +35,7 @@ const ENTRIES = [
   'realtime',
   'agent',
   'experimental',
+  'a11y-aria',
 ];
 
 const start = Date.now();

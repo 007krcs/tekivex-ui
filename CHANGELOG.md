@@ -5,6 +5,60 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0] — 2026-09-01
+
+### Added — `tekivex-mcp`, a Model Context Protocol server
+
+A new package that gives an AI assistant **ground truth** about this library
+rather than letting it guess. Five tools, each answering from something that
+actually exists in the repository:
+
+| Tool | Source of truth |
+|---|---|
+| `ui_list_components` | Catalog extracted from source |
+| `ui_get_component_api` | TypeScript compiler API — exact props, types, required flags, and the item shapes those props reference |
+| `ui_audit_accessibility` | The same WAI-ARIA 1.2 validator that gates this build |
+| `ui_verify_security` | The sinks named in `docs/SECURITY-THREAT-MODEL.md` |
+| `ui_scaffold_form` | Catalog — refuses unsupported field types instead of inventing a component |
+
+The motivation is concrete: this repository has itself shipped fixtures using
+`label` where the prop was `title`, and `key` where it was `id`. The components
+rendered nothing and the tests passed for the wrong reason. Hand-written docs
+drift; a catalog extracted by the compiler cannot. Every response carries the
+library version so a caller can detect a stale catalog.
+
+Tools fail loudly rather than inventing — an unknown component returns
+`not_found` *with ranked suggestions*, and an unsupported field type lists what
+is supported.
+
+**Enterprise controls**: optional bearer tokens (`TEKIVEX_MCP_TOKENS`, compared
+in constant time), per-principal rate limiting, an input size cap, and an audit
+log recording principal, tool and outcome for every call. Authentication is off
+by default because over stdio the transport is the trust boundary; it must be
+enabled for any other transport. No runtime dependencies — the JSON-RPC subset
+an MCP tool server needs is small, and adding a dependency tree to a package
+whose selling point is a small supply chain would be self-defeating.
+
+38 tests cover the protocol handshake, every tool, the failure modes, and each
+enterprise control.
+
+### Added — `tekivex-ui/a11y-aria` subpath export
+
+The WAI-ARIA 1.2 validator that gates this build is now a public export, so
+consumers can run the same conformance checks against their own rendered output
+in their test suite or CI. It moved from `tests/aria/` into `src/a11y/aria/`;
+the internal gate is unchanged.
+
+### Fixed — type declarations were unusable under Node16/NodeNext resolution
+
+Every subpath `.d.ts` shim re-exported without a file extension
+(`export * from './src/headless/index'`). Node16 and NodeNext resolution require
+the `.js` extension, so consumers on those settings resolved **every** subpath's
+types to an empty module and any named type import failed. All nine shims now
+carry the extension, which Bundler resolution ignores. This affected
+`tekivex-ui/headless`, `/charts`, `/i18n`, `/themes`, `/agent`, `/quantum`,
+`/realtime` and `/experimental` — not just the new entry.
+
 ## [4.3.0] — 2026-08-21
 
 ### Fixed — the RSC documentation was advertising something that did not exist

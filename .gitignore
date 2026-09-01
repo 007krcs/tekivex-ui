@@ -14,3 +14,7 @@ sanskrit-lang/
 # ARIA conformance sweep reports (generated)
 aria-*.ndjson
 verify-*.ndjson
+
+# tekivex-mcp build output (generated from src via tsc)
+packages/tekivex-mcp/dist/
+packages/tekivex-mcp/node_modules/

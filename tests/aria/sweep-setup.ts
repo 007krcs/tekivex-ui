@@ -22,7 +22,7 @@
  */
 import { afterEach } from 'vitest';
 import { appendFileSync } from 'node:fs';
-import { validateAria, formatViolations } from './validate';
+import { validateAria, formatViolations } from '../../src/a11y/aria/validate';
 
 const REPORTING = process.env.TKX_ARIA_SWEEP === '1';
 const STRICT = process.env.TKX_ARIA_STRICT === '1';

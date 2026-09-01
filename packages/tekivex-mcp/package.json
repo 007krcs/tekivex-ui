@@ -1,0 +1,41 @@
+{
+  "name": "tekivex-mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for tekivex-ui. Gives an AI assistant ground truth about the component API, plus the library's own accessibility and security validators, so generated code matches what actually ships.",
+  "type": "module",
+  "bin": {
+    "tekivex-mcp": "./bin/tekivex-mcp.mjs"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "tekivex-ui",
+    "accessibility",
+    "wai-aria",
+    "security",
+    "claude"
+  ],
+  "scripts": {
+    "catalog": "node scripts/generate-catalog.mjs",
+    "build": "tsc -p tsconfig.json && node scripts/copy-catalog.mjs",
+    "prepublishOnly": "npm run catalog && npm run build"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "jsdom": ">=22",
+    "tekivex-ui": ">=4.3.0"
+  },
+  "peerDependenciesMeta": {
+    "jsdom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "tekivex-ui": "file:../.."
+  }
+}

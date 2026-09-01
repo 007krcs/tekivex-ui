@@ -39,6 +39,7 @@ const entries: Record<string, string> = {
   realtime: 'src/realtime/index.ts',
   agent: 'src/agent/index.ts',
   experimental: 'src/experimental/index.ts',
+  'a11y-aria': 'src/a11y/aria/index.ts',
 };
 
 const entry = process.env.ENTRY ?? 'index';
