@@ -3,7 +3,7 @@ import { render, fireEvent, within } from '@testing-library/react';
 import { TkxTable, type ColumnDef } from '../src/components/TkxTable';
 import { ThemeProvider } from '../src/themes';
 
-interface Row { id: number; name: string; age: number; role: string }
+type Row = { id: number; name: string; age: number; role: string };
 
 const cols: ColumnDef<Row>[] = [
   { key: 'name', header: 'Name', sortable: true },

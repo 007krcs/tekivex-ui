@@ -17,7 +17,7 @@ describe('TkxMenu', () => {
     render(
       <TkxMenu
         trigger={<button>Open</button>}
-        items={[{ key: '1', label: 'Item 1' }]}
+        items={[{ id: '1', label: 'Item 1' }]}
       />,
       { wrapper: W },
     );
@@ -28,7 +28,7 @@ describe('TkxMenu', () => {
     render(
       <TkxMenu
         trigger={<button>Open</button>}
-        items={[{ key: '1', label: 'Item A' }, { key: '2', label: 'Item B' }]}
+        items={[{ id: '1', label: 'Item A' }, { id: '2', label: 'Item B' }]}
       />,
       { wrapper: W },
     );
@@ -40,7 +40,7 @@ describe('TkxMenu', () => {
     render(
       <TkxMenu
         trigger={<button>Open</button>}
-        items={[{ key: '1', label: 'A' }]}
+        items={[{ id: '1', label: 'A' }]}
         isDisabled
       />,
       { wrapper: W },
@@ -56,7 +56,7 @@ describe('TkxMenu', () => {
     render(
       <TkxMenu
         trigger={<button>Open</button>}
-        items={[{ key: '1', label: 'X' }]}
+        items={[{ id: '1', label: 'X' }]}
         onOpen={onOpen}
         onClose={onClose}
       />,
@@ -71,7 +71,7 @@ describe('TkxMenu', () => {
     render(
       <TkxMenu
         trigger={<button>Open</button>}
-        items={[{ key: '1', label: 'Pick me', onClick }]}
+        items={[{ id: '1', label: 'Pick me', onClick }]}
       />,
       { wrapper: W },
     );
@@ -85,7 +85,7 @@ describe('TkxMenu', () => {
     render(
       <TkxMenu
         trigger={<button>Open</button>}
-        items={[{ key: '1', label: 'Disabled', isDisabled: true }]}
+        items={[{ id: '1', label: 'Disabled', disabled: true }]}
       />,
       { wrapper: W },
     );
@@ -98,9 +98,9 @@ describe('TkxMenu', () => {
       <TkxMenu
         trigger={<button>Open</button>}
         items={[
-          { key: '1', label: 'A' },
-          { key: 'sep', isDivider: true },
-          { key: '2', label: 'B' },
+          { id: '1', label: 'A' },
+          { id: 'sep', type: 'separator' as const },
+          { id: '2', label: 'B' },
         ]}
       />,
       { wrapper: W },
@@ -113,7 +113,7 @@ describe('TkxMenu', () => {
     const { container } = render(
       <TkxMenu
         trigger={<button>Open</button>}
-        items={[{ key: '1', label: 'A' }]}
+        items={[{ id: '1', label: 'A' }]}
         placement="bottom-end"
       />,
       { wrapper: W },

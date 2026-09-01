@@ -1,7 +1,5 @@
-'use client';
-
 import { forwardRef, type HTMLAttributes } from 'react';
-import { useTheme } from '../themes';
+import { cssTokens } from '../themes/cssTokens';
 import { sanitizeString } from '../engine/security';
 import { tkx, cx } from '../engine/tkx';
 
@@ -13,11 +11,10 @@ export interface TkxDividerProps extends HTMLAttributes<HTMLElement> {
 
 export const TkxDivider = forwardRef<HTMLHRElement, TkxDividerProps>(
   ({ orientation = 'horizontal', label, variant = 'solid', className, style, ...rest }, ref) => {
-    const theme = useTheme();
     const safeLabel = label ? sanitizeString(label) : undefined;
     const isVertical = orientation === 'vertical';
     const borderProp = isVertical ? 'borderLeft' : 'borderTop';
-    const borderVal = `1px ${variant} ${theme.css.border}`;
+    const borderVal = `1px ${variant} ${cssTokens.border}`;
 
     if (safeLabel) {
       return (
@@ -25,7 +22,7 @@ export const TkxDivider = forwardRef<HTMLHRElement, TkxDividerProps>(
           role="separator"
           aria-orientation={orientation}
           className={cx(tkx('flex items-center gap-3 text-xs'), className)}
-          style={{ color: theme.css.textMuted, ...style }}
+          style={{ color: cssTokens.textMuted, ...style }}
           {...(rest as HTMLAttributes<HTMLDivElement>)}
         >
           <hr className={tkx('flex-1 m-0 border-none')} style={{ [borderProp]: borderVal }} />

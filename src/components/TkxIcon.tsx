@@ -1,7 +1,5 @@
-'use client';
-
 import { forwardRef, type ReactNode, type SVGAttributes } from 'react';
-import { useTheme } from '../themes';
+import { cssTokens } from '../themes/cssTokens';
 import { tkx, cx } from '../engine/tkx';
 
 // ── Icon Name Type ─────────────────────────────────────────────────────────────
@@ -599,9 +597,8 @@ export const TkxIcon = forwardRef<SVGSVGElement, TkxIconProps>(
       ...rest
     },
     ref,
-  ) => {
-    const theme = useTheme();
-    const resolvedColor = resolveColor(color, theme as unknown as Record<string, string>);
+  ) => {
+    const resolvedColor = resolveColor(color, cssTokens as unknown as Record<string, string>);
 
     const descriptors = name ? ICONS[name] : null;
 

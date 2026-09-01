@@ -1,35 +1,56 @@
 ---
 title: React Server Components
-description: 13 components in tekivex-ui render in Next.js App Router, Remix, and any RSC-capable framework — no "use client" required.
+description: Five tekivex-ui components render as Server Components with zero client JavaScript. Everything else is a Client Component — this page says exactly which, and why.
 ---
 
-13 components in `tekivex-ui` are RSC-compatible: they use no hooks, no
-browser APIs, and no event handlers, so they render on the server in
-Next.js App Router (or any other RSC framework) without `"use client"`.
+import { Aside } from '@astrojs/starlight/components';
 
-## The 13 server-safe components
+Five components in `tekivex-ui` are RSC-safe: they call no hook, use no browser
+API, and attach no event handler, so they render on the server in Next.js App
+Router (or any RSC framework) without `"use client"` and ship **no JavaScript**
+to the browser.
+
+<Aside type="caution" title="Corrected in 4.3.0">
+This page previously listed 13 components as RSC-compatible. That was wrong —
+every one of them shipped a `'use client'` directive and rendered as a Client
+Component, so the promise on this page did not hold. The list below is now
+verified by `tests/rsc-safety.test.ts`, which fails the build if a component
+named here calls a hook or carries the directive, and equally if any other
+component silently drops it.
+</Aside>
+
+## The five server-safe components
 
 | Component | Notes |
 |---|---|
 | `TkxBadge` | Status pill |
-| `TkxAvatar` | User avatar with initials fallback |
-| `TkxDivider` | Horizontal/vertical separator |
-| `TkxTypography` | Headings, paragraphs, captions |
-| `TkxSkeleton` | Loading shimmer placeholder |
-| `TkxSpin` | Spinner / loader |
+| `TkxDivider` | Horizontal / vertical separator |
 | `TkxEmpty` | Empty-state placeholder |
-| `TkxStatistic` | Animated numeric KPI |
-| `TkxTag` | Inline tag with optional close button |
-| `TkxCard` | Card container + Header/Body/Footer |
-| `TkxAlert` | Status alert (info/success/warning/danger) |
-| `TkxProgress` | Linear / circular progress |
-| `TkxTimeline` | Vertical timeline of events |
+| `TkxIcon` | Icon set |
+| `TkxSparkline` | Inline trend chart (pure SVG) |
+
+## Why the rest are Client Components
+
+Every other component calls `useTheme()`, which reads React context, or else
+uses state, refs, or event handlers. Context is not available in Server
+Components, so those have to stay client-side.
+
+The five above escape it because of the CSS-variable change in 4.1.0:
+components paint with `var(--tkx-token, fallback)` rather than a resolved hex
+value, and `ThemeProvider` defines those variables on the DOM. A purely
+presentational component can therefore emit the variable reference directly —
+through the React-free `cssTokens` module — and let CSS resolve it. Theming,
+including live theme switching, keeps working with no JavaScript at all,
+because the resolution happens in CSS rather than in JS.
+
+That is also the recipe for widening this list: remove a component's
+dependency on context, rather than just removing its directive.
 
 ## Usage in Next.js App Router
 
 ```tsx
 // app/dashboard/page.tsx — Server Component
-import { TkxCard, TkxCardBody, TkxStatistic } from 'tekivex-ui';
+import { TkxBadge, TkxDivider, TkxSparkline } from 'tekivex-ui';
 
 export default async function Dashboard() {
   const data = await fetch('https://api.example.com/metrics', {
@@ -37,35 +58,37 @@ export default async function Dashboard() {
   }).then(r => r.json());
 
   return (
-    <TkxCard>
-      <TkxCardBody>
-        <TkxStatistic title="Active users" value={data.active} />
-      </TkxCardBody>
-    </TkxCard>
+    <section>
+      <TkxBadge variant="success">{data.status}</TkxBadge>
+      <TkxDivider />
+      <TkxSparkline data={data.trend} />
+    </section>
   );
 }
 ```
 
-No `"use client"`. The HTML ships fully rendered on first byte.
+No `"use client"`, and no JavaScript shipped for those three. The HTML arrives
+fully rendered on first byte.
 
 ## When you need a client component
 
 Anything interactive — buttons with `onClick`, forms with `onChange`, modals,
-the image editor, the captcha — must be in a client boundary. The convention
-is to keep your `'use client'` boundaries small and leaf-level:
+the image editor, the captcha — must sit in a client boundary, as must any
+component that reads the theme through context (which today is everything not
+in the table above). The convention is to keep your `'use client'` boundaries
+small and leaf-level:
 
 ```tsx
 // app/page.tsx — Server
-import { TkxCard, TkxCardBody } from 'tekivex-ui';
+import { TkxBadge } from 'tekivex-ui';
 import { LoginForm } from './login-form';
 
 export default function Page() {
   return (
-    <TkxCard>
-      <TkxCardBody>
-        <LoginForm />
-      </TkxCardBody>
-    </TkxCard>
+    <section>
+      <TkxBadge variant="info">Beta</TkxBadge>
+      <LoginForm />
+    </section>
   );
 }
 
@@ -75,5 +98,5 @@ import { TkxInput, TkxButton } from 'tekivex-ui';
 // …
 ```
 
-The Server Component still ships the Card structure on first byte; only the
-form hydrates.
+The Server Component still ships the surrounding structure on first byte; only
+the form hydrates.

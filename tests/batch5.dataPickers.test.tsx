@@ -43,9 +43,15 @@ describe('TkxCascader', () => {
     expect(container.firstChild).toBeTruthy();
   });
 
-  it('multiple mode', () => {
-    const { container } = render(<TkxCascader options={CASCADE_OPTS} multiple />, { wrapper: W });
-    expect(container.firstChild).toBeTruthy();
+  // TkxCascader is single-select by design (value is one root→leaf path);
+  // there is no `multiple` prop. Assert the real drill-down commit instead.
+  it('commits the full path via onChange when a leaf is chosen', () => {
+    const onChange = vi.fn();
+    render(<TkxCascader options={CASCADE_OPTS} onChange={onChange} placeholder="Pick" />, { wrapper: W });
+    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.click(screen.getByText('A'));
+    fireEvent.click(screen.getByText('A1'));
+    expect(onChange).toHaveBeenCalledWith(['a', 'a1'], expect.anything());
   });
 });
 

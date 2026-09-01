@@ -81,16 +81,18 @@ describe('plurals — pluralize', () => {
 
 describe('plurals — fallback when Intl.PluralRules is unavailable', () => {
   it('returns "one" for 1 and "other" for !1 when Intl.PluralRules is missing', () => {
-    const original = (globalThis as { Intl: typeof Intl }).Intl.PluralRules;
-    // @ts-expect-error — intentional deletion to exercise fallback path.
-    delete (globalThis as { Intl: typeof Intl }).Intl.PluralRules;
+    // `Intl.PluralRules` is declared readonly on the ambient Intl namespace, so
+    // view it through a mutable-optional shape to remove and restore it.
+    const intl = globalThis.Intl as { PluralRules?: typeof Intl.PluralRules };
+    const original = intl.PluralRules;
+    delete intl.PluralRules;
     _clearPluralCache();
     try {
       expect(getPluralCategory('ru-RU', 1)).toBe('one');
       expect(getPluralCategory('ru-RU', 5)).toBe('other');
       expect(getPluralCategory('en-US', 0)).toBe('other');
     } finally {
-      (globalThis as { Intl: typeof Intl }).Intl.PluralRules = original;
+      intl.PluralRules = original;
       _clearPluralCache();
     }
   });

@@ -124,7 +124,7 @@ describe('Agent', () => {
     const agent = new Agent({
       provider,
       model: 'test',
-      middleware: [{ name: 'spy', onEvent: (e) => seen.push(e) }],
+      middleware: [{ name: 'spy', onEvent: (e) => { seen.push(e); } }],
     });
     for await (const _ of agent.run({ message: 'go' })) {
       /* drain */

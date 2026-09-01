@@ -54,11 +54,13 @@ Two limits worth knowing:
   authored roles.** A native `<option>` or `<tr>` gets its semantics from HTML,
   so demanding author-supplied `aria-selected` on it would be wrong. (An early
   version of the validator did exactly that and produced 182 false positives.)
-- **Test files are not typechecked.** `tsconfig.json` covers `src` + `index.ts`
-  only, so a fixture can pass props that do not exist — that is how two
-  CommandPalette fixtures came to use `label` instead of `title`, rendering
-  unnamed options. The sweep catches the *symptom*; widening typecheck to
-  `tests/` would catch the *cause*, and is worth doing.
+- **Test fixtures need their own typecheck.** `tsconfig.json` covers `src` +
+  `index.ts` only — what ships — so for a long time a fixture could pass props
+  that do not exist and nothing complained. That is how two CommandPalette
+  fixtures came to use `label` instead of `title`, rendering unnamed options,
+  and how TkxMenu fixtures passed `key` instead of `id`. The sweep catches the
+  *symptom*; `npm run typecheck:tests` (`tsconfig.tests.json`) catches the
+  *cause*. Run both.
 
 ## Defect classes this has caught
 
@@ -87,3 +89,27 @@ add a blanket ignore.
 The one legitimate exemption in the tree is `tests/aria/axe-smoke.test.tsx`,
 which renders invalid markup on purpose to prove the detector works, and is
 skipped in strict mode for that reason.
+
+## The full pre-release check
+
+```bash
+npm test                  # 2,255 unit tests
+npm run typecheck         # src + index.ts (what ships)
+npm run typecheck:tests   # test fixtures — catches wrong-prop fixtures
+npm run aria:check        # WAI-ARIA 1.2 conformance, fails on any violation
+npm run build             # dist + d.ts shims
+```
+
+## Consumer-visible ARIA changes
+
+Fixing conformance can change an element's accessible name, which changes how
+`getByRole(role, { name })` resolves in a consumer's own tests. Changes so far:
+
+| Version | Component | Change |
+|---|---|---|
+| 4.2.0 | `TkxSelect` | The trigger's accessible name is now its `label` (or placeholder), not the selected option's text. This is the APG combobox behaviour — the value is conveyed by the listbox's `aria-selected` — but `getByRole('combobox', { name: 'SelectedValue' })` must become the label text. |
+| 4.2.0 | `TkxToggle` | `role="switch"` is now named via `aria-labelledby` pointing at the visible label. Previously the `<label for>` targeted a `<button>`, which is not a labelable element, so the switch had **no** name at all — queries by name start working rather than break. |
+| 4.2.0 | `TkxForm` fields | Same fix: the field label now actually names its control. |
+
+When a fix like this lands, record it here and in the CHANGELOG — a silently
+changed accessible name is an API change for anyone testing by role and name.

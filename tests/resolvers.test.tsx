@@ -97,7 +97,12 @@ describe('zodResolver', () => {
       return (
         <form onSubmit={f.handleSubmit}>
           <label htmlFor="email">Email</label>
-          <input id="email" data-testid="email" {...f.getFieldProps('email')} />
+          {/* getFieldProps().value is FormFieldValue (may be boolean/null for
+              other field kinds), so narrow it for a text <input>. */}
+          {(() => {
+            const { value, ...field } = f.getFieldProps('email');
+            return <input id="email" data-testid="email" value={String(value ?? '')} {...field} />;
+          })()}
           {/* getErrorProps pairs with the aria-describedby getFieldProps emits. */}
           <span data-testid="err" {...f.getErrorProps('email')} />
           <button type="submit">Go</button>
@@ -209,7 +214,12 @@ describe('valibotResolver', () => {
       return (
         <form onSubmit={f.handleSubmit}>
           <label htmlFor="email">Email</label>
-          <input id="email" data-testid="email" {...f.getFieldProps('email')} />
+          {/* getFieldProps().value is FormFieldValue (may be boolean/null for
+              other field kinds), so narrow it for a text <input>. */}
+          {(() => {
+            const { value, ...field } = f.getFieldProps('email');
+            return <input id="email" data-testid="email" value={String(value ?? '')} {...field} />;
+          })()}
           {/* getErrorProps pairs with the aria-describedby getFieldProps emits. */}
           <span data-testid="err" {...f.getErrorProps('email')} />
           <button type="submit">Go</button>

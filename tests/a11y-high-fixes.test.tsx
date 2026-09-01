@@ -13,9 +13,11 @@ function W({ children }: { children: React.ReactNode }) {
 describe('v3.29 HIGH a11y fixes', () => {
   // ── Dropdown: non-interactive trigger becomes keyboard-operable ─────────────
   describe('TkxDropdown menu-button keyboard support', () => {
+    // DropdownItem is keyed by `key` and has no per-item onClick — selection
+    // is reported through the component-level onSelect prop.
     const items = [
-      { id: 'a', label: 'Alpha', onClick: () => {} },
-      { id: 'b', label: 'Beta', onClick: () => {} },
+      { key: 'a', label: 'Alpha' },
+      { key: 'b', label: 'Beta' },
     ];
 
     it('promotes a NON-interactive trigger to a focusable button and opens on Enter', () => {

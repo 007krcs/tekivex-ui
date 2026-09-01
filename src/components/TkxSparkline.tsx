@@ -1,7 +1,5 @@
-'use client';
-
 import { forwardRef, type HTMLAttributes } from 'react';
-import { useTheme } from '../themes';
+import { cssTokens } from '../themes/cssTokens';
 import { cx, tkx } from '../engine/tkx';
 
 export type SparklineVariant = 'line' | 'area' | 'bar';
@@ -100,8 +98,7 @@ export const TkxSparkline = forwardRef<HTMLSpanElement, TkxSparklineProps>(
     },
     ref,
   ) => {
-    const theme = useTheme();
-    const stroke = color ?? theme.css.primary;
+    const stroke = color ?? cssTokens.primary;
 
     const isEmpty = !Array.isArray(data) || data.length === 0;
     const label =
@@ -232,7 +229,7 @@ export const TkxSparkline = forwardRef<HTMLSpanElement, TkxSparklineProps>(
         {showValue && (
           <span
             className={tkx('text-xs')}
-            style={{ color: theme.css.textMuted, fontVariantNumeric: 'tabular-nums' }}
+            style={{ color: cssTokens.textMuted, fontVariantNumeric: 'tabular-nums' }}
             data-tkx-sparkline-value=""
           >
             {String(lastValue)}

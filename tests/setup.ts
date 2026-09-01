@@ -59,7 +59,7 @@ Object.defineProperty(window, 'matchMedia', {
 const _origGetContext = HTMLCanvasElement.prototype.getContext as
   | ((id: string, opts?: any) => any)
   | undefined;
-HTMLCanvasElement.prototype.getContext = function (id: string, opts?: any) {
+HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, id: string, opts?: any) {
   try {
     const real = _origGetContext?.call(this, id as any, opts);
     if (real) return real;

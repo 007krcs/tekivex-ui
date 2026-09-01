@@ -45,7 +45,7 @@ describe('TkxDatePicker', () => {
 
   it('multi mode renders without crashing', () => {
     const { container } = render(
-      <TkxDatePicker mode="multi" multiValue={[]} onMultiChange={() => {}} />,
+      <TkxDatePicker mode="multiple" multiValue={[]} onMultiChange={() => {}} />,
       { wrapper: W },
     );
     expect(container.firstChild).toBeTruthy();

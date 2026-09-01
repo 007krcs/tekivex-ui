@@ -1,0 +1,39 @@
+{
+  // Typecheck the TEST suite.
+  //
+  // The main tsconfig deliberately scopes compilation to `src` + `index.ts`
+  // because that is what ships. The consequence was that test fixtures were
+  // never typechecked at all, so a test could pass props that do not exist and
+  // nobody noticed — two TkxCommandPalette fixtures passed `label` where the
+  // real field is `title`, which rendered unnamed options and only surfaced via
+  // the ARIA sweep.
+  //
+  // This config exists purely to catch that class of bug. It emits nothing.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // Tests run under Node 18+ / modern jsdom, so ES2022 runtime built-ins
+    // (Array.prototype.at, etc.) are genuinely available to them. `src` keeps
+    // its ES2020 lib floor via tsconfig.json, which still gates what ships.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vitest/globals", "node"]
+  },
+  "include": ["src", "index.ts", "tests", "scripts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "demo",
+    // Playwright specs run under @playwright/test with its own globals.
+    "tests/visual",
+    // Separate workspace package with its own toolchain and peer deps.
+    "packages",
+    // These import packages/tekivex-3d, which needs the `three` peer dep that
+    // the root install deliberately omits. Vitest excludes them for the same
+    // reason (see vitest.config.ts); run them from packages/tekivex-3d.
+    "tests/TkxAvatar3D.test.tsx",
+    "tests/TkxOrbitPath.test.tsx",
+    "tests/TkxPlanet.test.tsx",
+    "tests/TkxPortal3D.test.tsx",
+    "tests/TkxStarfield.test.tsx"
+  ]
+}

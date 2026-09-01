@@ -275,7 +275,7 @@ describe('TkxCaptcha', () => {
 const BNAV_ITEMS = [
   { id: 'home', label: 'Home', icon: <span>🏠</span> },
   { id: 'search', label: 'Search', icon: <span>🔍</span> },
-  { id: 'profile', label: 'Me', icon: <span>👤</span>, badge: '3' },
+  { id: 'profile', label: 'Me', icon: <span>👤</span>, badge: 3 },
   { id: 'settings', label: 'Settings', icon: <span>⚙</span> },
 ];
 
@@ -403,10 +403,9 @@ describe('TkxPopover', () => {
   });
 
   it('renders all placement variants when open', () => {
-    for (const p of [
-      'top', 'bottom', 'left', 'right',
-      'top-start', 'top-end', 'bottom-start', 'bottom-end',
-    ] as const) {
+    // PopoverPlacement is the four cardinal sides only — there are no
+    // -start/-end variants (those belong to MenuPlacement).
+    for (const p of ['top', 'bottom', 'left', 'right'] as const) {
       const { container } = render(
         <TkxPopover
           trigger={<button>T</button>}

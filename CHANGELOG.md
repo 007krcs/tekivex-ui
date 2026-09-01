@@ -5,6 +5,42 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0] — 2026-08-21
+
+### Fixed — the RSC documentation was advertising something that did not exist
+
+`docs/rsc.mdx` claimed *"13 components in tekivex-ui render in Next.js App
+Router … no `use client` required"* and named 16 of them. Every one of those
+files shipped a `'use client'` directive, so all 16 were Client Components and
+the promise did not hold. A consumer following that page would have shipped
+JavaScript for components documented as zero-bundle.
+
+### Added — five genuinely server-renderable components
+
+`TkxBadge`, `TkxDivider`, `TkxEmpty`, `TkxIcon` and `TkxSparkline` now render
+as React Server Components with **no JavaScript shipped**.
+
+The blocker was never the directive — it was `useTheme()`, which reads React
+context and is unavailable in Server Components. The CSS-variable work in 4.1.0
+removed the need for it: components paint `var(--tkx-token, fallback)` and
+`ThemeProvider` defines those variables on the DOM, so a purely presentational
+component can emit the reference directly and let CSS resolve it. New
+`src/themes/cssTokens.ts` provides those references with no React import at
+all. Theming — including live theme switching — is unaffected, because
+resolution happens in CSS rather than JS.
+
+Verified by `tests/rsc-safety.test.ts`, which fails the build if a component
+documented as RSC-safe calls a hook or carries the directive, if any other
+component silently drops its directive, if `cssTokens` ever imports something
+React-touching, or if its fallbacks drift from `quantumDark`.
+
+### Fixed — further stale claims on the docs home page
+
+"13 components are RSC-compatible" → 5. The `1,798 tests` figure → 2,273. Two
+more unqualified "WCAG 2.1 AAA" headings replaced with the accurate "WCAG 2.1
+AA with an automated WAI-ARIA 1.2 conformance gate" (the AAA claim was retired
+in 4.2.0 but these two survived the earlier sweep).
+
 ## [4.2.0] — 2026-08-21
 
 ### Added — automated WAI-ARIA 1.2 conformance gate

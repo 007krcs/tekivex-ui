@@ -86,13 +86,19 @@ interface RHFBaseProps<TValue> {
 // ── The set of bindings the factory returns ────────────────────────────────
 
 export interface RHFBindings {
-  TkxRHFInput: ComponentType<RHFBaseProps<string> & Omit<TkxInputProps, 'value' | 'onChange' | 'onBlur' | 'error' | 'name'>>;
-  TkxRHFSelect: ComponentType<RHFBaseProps<string | string[]> & Omit<TkxSelectProps, 'value' | 'onChange' | 'errorMessage'>>;
-  TkxRHFCheckbox: ComponentType<RHFBaseProps<boolean> & Omit<TkxCheckboxProps, 'checked' | 'onChange' | 'errorMessage' | 'name'>>;
-  TkxRHFToggle: ComponentType<RHFBaseProps<boolean> & Omit<TkxToggleProps, 'checked' | 'onChange'>>;
-  TkxRHFRadio: ComponentType<RHFBaseProps<string> & Omit<TkxRadioProps, 'checked' | 'onChange' | 'name'>>;
-  TkxRHFNumberInput: ComponentType<RHFBaseProps<number | null> & Omit<TkxNumberInputProps, 'value' | 'onChange' | 'errorMessage'>>;
-  TkxRHFDatePicker: ComponentType<RHFBaseProps<Date | null> & Omit<TkxDatePickerProps, 'value' | 'onChange'>>;
+  // `defaultValue` is omitted from every wrapped component's props: it is owned
+  // by RHFBaseProps (the RHF field default, e.g. a boolean for a checkbox).
+  // Components whose props extend InputHTMLAttributes also inherit the DOM
+  // `defaultValue?: string | number | readonly string[]`, and intersecting the
+  // two produced an uninhabitable type — `defaultValue={true}` on
+  // TkxRHFCheckbox was rejected as `(true & readonly string[])`.
+  TkxRHFInput: ComponentType<RHFBaseProps<string> & Omit<TkxInputProps, 'value' | 'onChange' | 'onBlur' | 'error' | 'name' | 'defaultValue'>>;
+  TkxRHFSelect: ComponentType<RHFBaseProps<string | string[]> & Omit<TkxSelectProps, 'value' | 'onChange' | 'errorMessage' | 'defaultValue'>>;
+  TkxRHFCheckbox: ComponentType<RHFBaseProps<boolean> & Omit<TkxCheckboxProps, 'checked' | 'onChange' | 'errorMessage' | 'name' | 'defaultValue'>>;
+  TkxRHFToggle: ComponentType<RHFBaseProps<boolean> & Omit<TkxToggleProps, 'checked' | 'onChange' | 'defaultValue'>>;
+  TkxRHFRadio: ComponentType<RHFBaseProps<string> & Omit<TkxRadioProps, 'checked' | 'onChange' | 'name' | 'defaultValue'>>;
+  TkxRHFNumberInput: ComponentType<RHFBaseProps<number | null> & Omit<TkxNumberInputProps, 'value' | 'onChange' | 'errorMessage' | 'defaultValue'>>;
+  TkxRHFDatePicker: ComponentType<RHFBaseProps<Date | null> & Omit<TkxDatePickerProps, 'value' | 'onChange' | 'defaultValue'>>;
 }
 
 export interface CreateRHFBindingsConfig {

@@ -1,7 +1,5 @@
-'use client';
-
 import { type ReactNode, type CSSProperties, createElement } from 'react';
-import { useTheme } from '../themes';
+import { cssTokens } from '../themes/cssTokens';
 import { sanitizeString } from '../engine/security';
 
 // ── Interface ───────────────────────────────────────────────────────────────
@@ -150,7 +148,6 @@ export function TkxEmpty({
   children,
   style,
 }: TkxEmptyProps) {
-  const theme = useTheme();
 
   const safeDescription =
     typeof description === 'string' ? sanitizeString(description) : description;
@@ -158,11 +155,11 @@ export function TkxEmpty({
   let imageContent: ReactNode;
   if (image === 'default') {
     imageContent = createElement(DefaultImage, {
-      color: theme.css.primary,
-      mutedColor: theme.css.textMuted,
+      color: cssTokens.primary,
+      mutedColor: cssTokens.textMuted,
     });
   } else if (image === 'simple') {
-    imageContent = createElement(SimpleImage, { mutedColor: theme.css.textMuted });
+    imageContent = createElement(SimpleImage, { mutedColor: cssTokens.textMuted });
   } else {
     imageContent = image;
   }
@@ -198,7 +195,7 @@ export function TkxEmpty({
         'div',
         {
           style: {
-            color: theme.css.textMuted,
+            color: cssTokens.textMuted,
             fontSize: '0.875rem',
             lineHeight: '1.5',
             maxWidth: '320px',

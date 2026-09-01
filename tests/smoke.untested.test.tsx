@@ -26,12 +26,12 @@ import { TkxAIThinking } from '../src/components/TkxAIThinking';
 
 describe('TkxAIConfidenceBar', () => {
   it('renders with a confidence value', () => {
-    const { container } = render(<TkxAIConfidenceBar confidence={75} />, { wrapper: W });
+    const { container } = render(<TkxAIConfidenceBar value={75} />, { wrapper: W });
     expect(container.firstChild).toBeTruthy();
   });
   it('respects min/max edge cases', () => {
-    render(<TkxAIConfidenceBar confidence={0} />, { wrapper: W });
-    render(<TkxAIConfidenceBar confidence={100} />, { wrapper: W });
+    render(<TkxAIConfidenceBar value={0} />, { wrapper: W });
+    render(<TkxAIConfidenceBar value={100} />, { wrapper: W });
   });
 });
 
@@ -134,8 +134,8 @@ describe('TkxBottomNav', () => {
   it('renders nav items', () => {
     render(
       <TkxBottomNav
-        items={[{ key: 'home', label: 'Home', icon: '🏠' }]}
-        active="home"
+        items={[{ id: 'home', label: 'Home', icon: '🏠' }]}
+        activeId="home"
         onChange={() => {}}
       />,
       { wrapper: W },
@@ -277,7 +277,7 @@ describe('TkxCommand', () => {
 describe('TkxSpeedDial', () => {
   it('renders without crashing', () => {
     const { container } = render(
-      <TkxSpeedDial actions={[{ key: 'a', icon: '+', label: 'Add' }]} onAction={() => {}} />,
+      <TkxSpeedDial actions={[{ id: 'a', icon: '+', label: 'Add' }]} />,
       { wrapper: W },
     );
     expect(container.firstChild).toBeTruthy();
@@ -359,7 +359,7 @@ describe('TkxTour', () => {
   it('renders tour steps when isOpen', () => {
     const { container } = render(
       <TkxTour
-        steps={[{ target: '#root', title: 'Step 1', content: 'Hi' }]}
+        steps={[{ target: '#root', title: 'Step 1', description: 'Hi' }]}
         isOpen={false}
         onClose={() => {}}
       />,

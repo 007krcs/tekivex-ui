@@ -78,7 +78,7 @@ describe('TkxTag', () => {
   });
 
   it('renders all color schemes', () => {
-    for (const cs of ['primary', 'success', 'danger', 'warning', 'neutral'] as const) {
+    for (const cs of ['default', 'primary', 'secondary', 'success', 'danger', 'warning', 'info'] as const) {
       const { container } = render(<TkxTag colorScheme={cs}>cs</TkxTag>, { wrapper: W });
       expect(container.firstChild).toBeTruthy();
     }

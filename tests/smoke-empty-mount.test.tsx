@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, cleanup } from '@testing-library/react';
-import { createElement, type ComponentType } from 'react';
+import { type ComponentType } from 'react';
 import { ThemeProvider, quantumDark } from '../src/themes';
 import {
   TkxDataGrid, TkxTable, TkxSelect, TkxMenu, TkxAccordion, TkxBreadcrumb,
@@ -21,29 +21,33 @@ import {
 // single ≤24-mount file so one jsdom worker doesn't exhaust its heap.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const COMPONENTS: Array<[string, ComponentType<Record<string, unknown>>]> = [
-  ['TkxDataGrid', TkxDataGrid as ComponentType<Record<string, unknown>>],
-  ['TkxTable', TkxTable as ComponentType<Record<string, unknown>>],
-  ['TkxSelect', TkxSelect as ComponentType<Record<string, unknown>>],
-  ['TkxMenu', TkxMenu as ComponentType<Record<string, unknown>>],
-  ['TkxAccordion', TkxAccordion as ComponentType<Record<string, unknown>>],
-  ['TkxBreadcrumb', TkxBreadcrumb as ComponentType<Record<string, unknown>>],
-  ['TkxStepper', TkxStepper as ComponentType<Record<string, unknown>>],
-  ['TkxTreeView', TkxTreeView as ComponentType<Record<string, unknown>>],
-  ['TkxToolbar', TkxToolbar as ComponentType<Record<string, unknown>>],
-  ['TkxTransferList', TkxTransferList as ComponentType<Record<string, unknown>>],
-  ['TkxSegmented', TkxSegmented as ComponentType<Record<string, unknown>>],
-  ['TkxList', TkxList as ComponentType<Record<string, unknown>>],
-  ['TkxOrgChart', TkxOrgChart as ComponentType<Record<string, unknown>>],
-  ['TkxPivotTable', TkxPivotTable as ComponentType<Record<string, unknown>>],
-  ['TkxSpreadsheet', TkxSpreadsheet as ComponentType<Record<string, unknown>>],
-  ['TkxFormBuilder', TkxFormBuilder as ComponentType<Record<string, unknown>>],
-  ['TkxAutoForm', TkxAutoForm as ComponentType<Record<string, unknown>>],
-  ['TkxGantt', TkxGantt as ComponentType<Record<string, unknown>>],
-  ['TkxMindMap', TkxMindMap as ComponentType<Record<string, unknown>>],
-  ['TkxResult', TkxResult as ComponentType<Record<string, unknown>>],
-  ['TkxChat', TkxChat as ComponentType<Record<string, unknown>>],
-  ['TkxCommandPalette', TkxCommandPalette as ComponentType<Record<string, unknown>>],
+// Deliberately loose element type: the point of this sweep is to mount each
+// component with NO props at all, i.e. omitting props the component declares as
+// required. A heterogeneous list of differently-typed components can only be
+// held as `ComponentType<any>`.
+const COMPONENTS: Array<[string, ComponentType<any>]> = [
+  ['TkxDataGrid', TkxDataGrid],
+  ['TkxTable', TkxTable],
+  ['TkxSelect', TkxSelect],
+  ['TkxMenu', TkxMenu],
+  ['TkxAccordion', TkxAccordion],
+  ['TkxBreadcrumb', TkxBreadcrumb],
+  ['TkxStepper', TkxStepper],
+  ['TkxTreeView', TkxTreeView],
+  ['TkxToolbar', TkxToolbar],
+  ['TkxTransferList', TkxTransferList],
+  ['TkxSegmented', TkxSegmented],
+  ['TkxList', TkxList],
+  ['TkxOrgChart', TkxOrgChart],
+  ['TkxPivotTable', TkxPivotTable],
+  ['TkxSpreadsheet', TkxSpreadsheet],
+  ['TkxFormBuilder', TkxFormBuilder],
+  ['TkxAutoForm', TkxAutoForm],
+  ['TkxGantt', TkxGantt],
+  ['TkxMindMap', TkxMindMap],
+  ['TkxResult', TkxResult],
+  ['TkxChat', TkxChat],
+  ['TkxCommandPalette', TkxCommandPalette],
 ];
 
 afterEach(() => cleanup());
@@ -53,11 +57,9 @@ describe('empty-mount guard — data components render empty state, never crash'
     it(`${name} survives a no-prop mount`, () => {
       expect(() => {
         const { unmount } = render(
-          createElement(
-            ThemeProvider,
-            { theme: quantumDark } as Record<string, unknown>,
-            createElement(Comp, {}),
-          ),
+          <ThemeProvider theme={quantumDark}>
+            <Comp />
+          </ThemeProvider>,
         );
         unmount();
       }).not.toThrow();

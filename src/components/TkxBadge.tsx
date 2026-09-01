@@ -1,7 +1,5 @@
-'use client';
-
 import { forwardRef, type HTMLAttributes } from 'react';
-import { useTheme } from '../themes';
+import { cssTokens } from '../themes/cssTokens';
 import { getAccessibleForeground } from '../engine/wcag';
 import { sanitizeString } from '../engine/security';
 import { tkx, cx } from '../engine/tkx';
@@ -27,14 +25,13 @@ const DOT_SIZE: Record<BadgeSize, string> = { sm: 'size-[6px]', md: 'size-2', lg
 
 export const TkxBadge = forwardRef<HTMLSpanElement, TkxBadgeProps>(
   ({ variant = 'default', size = 'md', dot = false, pulse = false, outlined = false, children, className, style, ...rest }, ref) => {
-    const theme = useTheme();
 
     const colorMap: Record<BadgeVariant, string> = {
-      default: theme.css.border, primary: theme.css.primary, secondary: theme.css.secondary,
-      danger: theme.css.danger, warning: theme.css.warning, success: theme.css.success, info: theme.css.info,
+      default: cssTokens.border, primary: cssTokens.primary, secondary: cssTokens.secondary,
+      danger: cssTokens.danger, warning: cssTokens.warning, success: cssTokens.success, info: cssTokens.info,
     };
     const bgColor = colorMap[variant] || '#666666';
-    const textColor = getAccessibleForeground(bgColor, ['#ffffff', '#000000', theme.css.bg || '#000000']);
+    const textColor = getAccessibleForeground(bgColor, ['#ffffff', '#000000', cssTokens.bg || '#000000']);
 
     const safeChildren = typeof children === 'string' ? sanitizeString(children) : children;
 

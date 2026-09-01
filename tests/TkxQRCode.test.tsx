@@ -174,7 +174,7 @@ describe('TkxQRCode component', () => {
 
   it('forwards a ref to the root element', () => {
     let node: HTMLDivElement | null = null;
-    render(<TkxQRCode value="ref" ref={(n) => (node = n)} />, { wrapper: Wrapper });
+    render(<TkxQRCode value="ref" ref={(n) => { node = n; }} />, { wrapper: Wrapper });
     expect(node).toBeInstanceOf(HTMLDivElement);
   });
 

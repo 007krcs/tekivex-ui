@@ -1,9 +1,9 @@
 ---
 title: TekiVex UI — Accessible React Component Library
-description: 116 components, self-tested against WCAG 2.1 AAA (third-party audit on roadmap), built-in security kernel, 1,798 tests, RSC-ready. npm install tekivex-ui.
+description: 116 components, WCAG 2.1 AA with an automated WAI-ARIA conformance gate, built-in security kernel, 2,273 tests. npm install tekivex-ui.
 template: splash
 hero:
-  tagline: 116 components. WCAG 2.1 AAA target (third-party audit on roadmap, not completed). Zero-trust security primitives. 1,798 tests. MIT licensed.
+  tagline: 116 components. WCAG 2.1 AA with an automated WAI-ARIA 1.2 conformance gate. Zero-trust security primitives. 2,273 tests. MIT licensed.
   actions:
     - text: Get started
       link: /getting-started/
@@ -24,11 +24,11 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
     DatePicker, RichText, Carousel) to AI-native (ConfidenceBar, ChatBubble)
     to fintech (Subscription, PaymentButton, CurrencyInput).
   </Card>
-  <Card title="WCAG 2.1 AAA target" icon="approve-check-circle">
-    Self-tested against AAA criteria via an internal `meetsAAA()` helper —
-    7:1 contrast ratios, 44×44 touch targets, full keyboard nav, screen-reader
-    landmarks, prefers-reduced-motion respected. Third-party audit is on the
-    roadmap, not completed.
+  <Card title="WCAG 2.1 AA, gated in CI" icon="approve-check-circle">
+    Every render in the test suite is validated against WAI-ARIA 1.2 and
+    axe-core, and the build fails on any violation. Contrast, 44×44 touch
+    targets, keyboard nav and reduced-motion are self-tested against AAA
+    criteria. AAA overall remains an aspiration; no third-party audit yet.
   </Card>
   <Card title="Zero-trust security" icon="seti:lock">
     SecurityCore kernel sanitises every URL, scrubs PII, defeats Unicode
@@ -36,7 +36,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
   </Card>
   <Card title="Works with everything" icon="seti:config">
     Vite, Webpack 5, Next.js (App + Pages), Remix, Parcel, Rollup, Astro.
-    13 components are RSC-compatible out of the box.
+    5 components render as Server Components with zero client JavaScript.
   </Card>
   <Card title="1034 passing tests" icon="approve-check-circle">
     82 test files. Coverage: 64.84% lines / 51.10% functions / 56.77% branches.
