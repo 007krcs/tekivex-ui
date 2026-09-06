@@ -1,3 +1,4 @@
+import { withBase } from '../base';
 /**
  * HeroPro — professional B2B hero (text-first, no 3D, light theme).
  *
@@ -118,7 +119,7 @@ export function HeroPro() {
             }}
           >
             <a
-              href="/security/"
+              href={withBase('/security/')}
               className="hero-pro-cta-primary"
               style={{
                 display: 'inline-flex',
@@ -137,7 +138,7 @@ export function HeroPro() {
               View threat model
             </a>
             <a
-              href="/getting-started/"
+              href={withBase('/getting-started/')}
               className="hero-pro-cta-secondary"
               style={{
                 display: 'inline-flex',

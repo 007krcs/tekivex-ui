@@ -19,6 +19,7 @@
 
 import { useState } from 'react';
 import { RequestAccessDialog, type RequestTarget } from '../RequestAccessDialog';
+import { withBase } from '../base';
 
 // Slugs that have a real /components/<slug>/ page on the Astro docs site.
 // Generated from `ls docs-site/src/content/docs/components/*.mdx` as of
@@ -343,11 +344,11 @@ export function AllComponents() {
           Click any component below to request access — we publish the latest
           source to npm on demand and email setup instructions back. Browse the
           full live catalog at{' '}
-          <a href="/playground/" style={{ color: '#0f766e', fontWeight: 600 }}>
+          <a href={withBase('/playground/')} style={{ color: '#0f766e', fontWeight: 600 }}>
             /playground/
           </a>{' '}
           or storybook-style controls at{' '}
-          <a href="/book/" style={{ color: '#0f766e', fontWeight: 600 }}>
+          <a href={withBase('/book/')} style={{ color: '#0f766e', fontWeight: 600 }}>
             /book/
           </a>
           .
@@ -462,7 +463,7 @@ export function AllComponents() {
                     {DOCUMENTED_SLUGS.has(c.slug) ? (
                       // Real docs page exists — link to it directly. No JS, no modal.
                       <a
-                        href={`/components/${c.slug}/`}
+                        href={withBase(`/components/${c.slug}/`)}
                         style={chipStyle}
                         onMouseEnter={handleEnter}
                         onMouseLeave={handleLeave}
@@ -508,7 +509,7 @@ export function AllComponents() {
         }}
       >
         <a
-          href="/playground/"
+          href={withBase('/playground/')}
           style={{
             padding: '12px 24px',
             background: '#0d9488',
@@ -525,7 +526,7 @@ export function AllComponents() {
           🎮 Open the playground →
         </a>
         <a
-          href="/book/"
+          href={withBase('/book/')}
           style={{
             padding: '12px 24px',
             background: '#ffffff',

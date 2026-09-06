@@ -21,17 +21,18 @@ import { useState } from 'react';
 import { TkxScene, TkxPanorama360, TkxHotspot, TkxParticleField, TkxXRSession } from 'tekivex-3d';
 import { TkxHolographicBadge } from 'tekivex-ui';
 import { useImmersive } from '../immersive-context';
+import { withBase } from '../base';
 
 const SKY_360 =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Equirectangular_projection_SW.jpg/2560px-Equirectangular_projection_SW.jpg';
 
 const HOTSPOTS: { id: string; label: string; pos: [number, number, number]; color: string; href: string }[] = [
   { id: 'components', label: '🧩 102 components', pos: [-22, 6, -12], color: '#00f5d4', href: '#components' },
-  { id: 'playground', label: '🎮 Playground',     pos: [-12, -3, -22], color: '#3a86ff', href: '/playground/' },
+  { id: 'playground', label: '🎮 Playground',     pos: [-12, -3, -22], color: '#3a86ff', href: withBase('/playground/') },
   { id: 'pdf',        label: '📄 PDF · no Puppeteer', pos: [12, 4, -22], color: '#ff006e', href: '#packages' },
   { id: 'security',   label: '🛡️ Security kernel', pos: [22, -2, -10], color: '#ffbe0b', href: '#features' },
   { id: 'roadmap',    label: '🗺️ Roadmap',         pos: [12, 6, 18], color: '#06d6a0', href: '#roadmap' },
-  { id: 'book',       label: '📖 Catalog',         pos: [-14, -2, 18], color: '#7b2ff7', href: '/book/' },
+  { id: 'book',       label: '📖 Catalog',         pos: [-14, -2, 18], color: '#7b2ff7', href: withBase('/book/') },
 ];
 
 export function Hero() {

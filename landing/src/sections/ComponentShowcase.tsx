@@ -48,6 +48,7 @@ import {
   TkxBreadcrumb,
 } from 'tekivex-ui';
 import { useState } from 'react';
+import { withBase } from '../base';
 
 // ── Light-mode palette (AAA-verified) ───────────────────────────────────────
 const BG          = '#ffffff';
@@ -117,7 +118,7 @@ function ShowcaseCard({ name, slug, description, children }: ShowcaseCardProps) 
 
       <div style={{ display: 'flex', gap: 12, fontSize: 12.5, fontWeight: 600 }}>
         <a
-          href={`/components/${slug}/`}
+          href={withBase(`/components/${slug}/`)}
           style={{ color: ACCENT_TEXT, textDecoration: 'none' }}
           onMouseEnter={(e) => (e.currentTarget.style.color = ACCENT_TEXT_HOVER)}
           onMouseLeave={(e) => (e.currentTarget.style.color = ACCENT_TEXT)}
@@ -125,7 +126,7 @@ function ShowcaseCard({ name, slug, description, children }: ShowcaseCardProps) 
           View docs →
         </a>
         <a
-          href={`/playground/#/components/${slug}`}
+          href={withBase(`/playground/#/components/${slug}`)}
           style={{ color: ACCENT_TEXT, textDecoration: 'none' }}
           onMouseEnter={(e) => (e.currentTarget.style.color = ACCENT_TEXT_HOVER)}
           onMouseLeave={(e) => (e.currentTarget.style.color = ACCENT_TEXT)}
@@ -387,8 +388,8 @@ export function ComponentShowcase() {
           </ShowcaseCard>
           <ShowcaseCard name="TkxBreadcrumb" slug="breadcrumb" description="Hierarchical nav with separators and current-page marker.">
             <TkxBreadcrumb items={[
-              { label: 'Home', href: '/' },
-              { label: 'Components', href: '/components/' },
+              { label: 'Home', href: withBase('/') },
+              { label: 'Components', href: withBase('/components/') },
               { label: 'Breadcrumb' },
             ]} />
           </ShowcaseCard>
@@ -420,7 +421,7 @@ export function ComponentShowcase() {
             description="Address, KYC, DataGrid, Chat, Charts, 3D — see them all in the interactive playground."
           >
             <a
-              href="/playground/"
+              href={withBase('/playground/')}
               style={{
                 padding: '10px 18px',
                 background: TEXT,
@@ -441,7 +442,7 @@ export function ComponentShowcase() {
 
         <div style={{ textAlign: 'center', marginTop: 56 }}>
           <a
-            href="/playground/"
+            href={withBase('/playground/')}
             style={{
               display: 'inline-flex',
               alignItems: 'center',

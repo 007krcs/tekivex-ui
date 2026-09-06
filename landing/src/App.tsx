@@ -20,6 +20,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BASE, withBase } from './base';
 import { lazy, Suspense, useEffect } from 'react';
 import { Footer } from './sections/Footer';
 import { Nav } from './sections/Nav';
@@ -64,7 +65,7 @@ function RouteFallback() {
 
 export function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={BASE}>
       <ScrollToTop />
       <div className="tk-aurora" aria-hidden="true" />
       <SacredGeometry />
@@ -131,8 +132,8 @@ function NotFound() {
         Page not found
       </h1>
       <p style={{ color: '#b8b8d4' }}>
-        That URL doesn't exist on the site. Try the <a href="/" style={{ color: '#00f5d4' }}>home page</a>{' '}
-        or the <a href="/docs" style={{ color: '#00f5d4' }}>docs index</a>.
+        That URL doesn't exist on the site. Try the <a href={withBase('/')} style={{ color: '#00f5d4' }}>home page</a>{' '}
+        or the <a href={withBase('/docs')} style={{ color: '#00f5d4' }}>docs index</a>.
       </p>
     </div>
   );

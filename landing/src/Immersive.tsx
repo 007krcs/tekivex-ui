@@ -18,6 +18,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import { TkxScene, TkxPanorama360, TkxHotspot, TkxXRSession } from 'tekivex-3d';
+import { withBase } from './base';
 
 // Equirectangular cosmic / aurora-style sky
 const SKY_360 =
@@ -43,7 +44,7 @@ const HOTSPOTS: {
           Every Tkx* component grouped into 16 families — primitives, forms, KYC, layout,
           display, overlays, data, real-time, AI, charts, media, fintech, utility, holographic,
           and 3D.{' '}
-          <a href="/playground/" style={linkStyle}>Browse them all →</a>
+          <a href={withBase('/playground/')} style={linkStyle}>Browse them all →</a>
         </p>
       ),
     },
@@ -59,7 +60,7 @@ const HOTSPOTS: {
         <p>
           Click any component to open it in the sandbox at <code>/playground/</code>. Tweak
           props, see the source, copy the code.{' '}
-          <a href="/playground/" style={linkStyle}>Open playground →</a>
+          <a href={withBase('/playground/')} style={linkStyle}>Open playground →</a>
         </p>
       ),
     },
@@ -74,7 +75,7 @@ const HOTSPOTS: {
       body: (
         <p>
           Storybook-style controls + a11y panel + viewport toggles. No Storybook dependency.{' '}
-          <a href="/book/" style={linkStyle}>Open catalog →</a>
+          <a href={withBase('/book/')} style={linkStyle}>Open catalog →</a>
         </p>
       ),
     },

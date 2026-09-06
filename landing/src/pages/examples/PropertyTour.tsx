@@ -16,6 +16,7 @@ import { TkxScene, TkxPanorama360, TkxHotspot, TkxParticleField } from 'tekivex-
 import { ExampleShell } from './ExampleShell';
 import { OpenSourceFooter } from './OpenSourceFooter';
 import { usePageMeta } from '../../use-page-meta';
+import { withBase } from '../../base';
 
 interface RoomPalette {
   ceiling: string;
@@ -438,8 +439,8 @@ export function PropertyTour() {
           <pre>{`import { TkxScene, TkxPanorama360, TkxHotspot } from 'tekivex-3d';
 
 const ROOMS = [
-  { id: 'living',  src: '/living.jpg',  hotspots: [{ to: 'kitchen', pos: [-22, 2, -10], color: '#06b6d4', label: '🍳 Kitchen' }] },
-  { id: 'kitchen', src: '/kitchen.jpg', hotspots: [{ to: 'living',  pos: [0, 2, -22], color: '#4f46e5', label: '↩ Living room' }] },
+  { id: 'living',  src: withBase('/living.jpg'),  hotspots: [{ to: 'kitchen', pos: [-22, 2, -10], color: '#06b6d4', label: '🍳 Kitchen' }] },
+  { id: 'kitchen', src: withBase('/kitchen.jpg'), hotspots: [{ to: 'living',  pos: [0, 2, -22], color: '#4f46e5', label: '↩ Living room' }] },
 ];
 
 function Tour() {

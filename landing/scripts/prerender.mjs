@@ -18,6 +18,8 @@ const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
 const DIST = join(ROOT, 'dist');
 const ORIGIN = 'https://www.tekivex.com/ui';
+// Path prefix the bundle is built for (VITE_BASE=/ui/ in the unified build).
+const BASE = (process.env.VITE_BASE || '/').replace(/\/$/, '');
 
 if (!existsSync(join(DIST, 'index.html'))) {
   console.error('✗ dist/index.html missing — run `vite build` first');
@@ -267,10 +269,10 @@ function makeHtml(route) {
   // professional document rather than a placeholder.
   const ssr = `
       <main style="max-width:760px;margin:0 auto;padding:64px 24px;color:#1a1a2a;font:16px/1.65 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
-        <nav aria-label="Breadcrumb" style="font-size:13px;color:#6b6b8a;margin-bottom:24px"><a href="/" style="color:#3a86ff;text-decoration:none">Home</a></nav>
+        <nav aria-label="Breadcrumb" style="font-size:13px;color:#6b6b8a;margin-bottom:24px"><a href="${BASE}/" style="color:#3a86ff;text-decoration:none">Home</a></nav>
         <h1 style="font-size:2.4rem;font-weight:800;letter-spacing:-0.025em;color:#0a0a1a;margin:0 0 12px;line-height:1.15">${escapeHtml(route.h1)}</h1>
         <p style="color:#3a3a52;font-size:18px;line-height:1.6;margin:0 0 32px">${escapeHtml(route.body)}</p>
-        <p style="color:#6b6b8a;font-size:13px;border-top:1px solid #e6e6ee;padding-top:20px">TekiVex UI · open-source React component library · MIT licensed · <a href="/about" style="color:#3a86ff;text-decoration:none">About</a> · <a href="/docs" style="color:#3a86ff;text-decoration:none">Docs</a> · <a href="/blog" style="color:#3a86ff;text-decoration:none">Blog</a></p>
+        <p style="color:#6b6b8a;font-size:13px;border-top:1px solid #e6e6ee;padding-top:20px">TekiVex UI · open-source React component library · MIT licensed · <a href="${BASE}/about" style="color:#3a86ff;text-decoration:none">About</a> · <a href="${BASE}/docs" style="color:#3a86ff;text-decoration:none">Docs</a> · <a href="${BASE}/blog" style="color:#3a86ff;text-decoration:none">Blog</a></p>
       </main>`;
   html = html.replace('<div id="root"></div>', `<div id="root">${ssr}</div>`);
 

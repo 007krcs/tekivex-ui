@@ -1,3 +1,4 @@
+import { withBase } from '../../../base';
 export function AvatarDoc() {
   return (
     <>
@@ -19,7 +20,7 @@ export function AvatarDoc() {
 
       <h3>Photo</h3>
       <pre><code>{`<TkxAvatar
-  src="/photos/aria.jpg"
+  src={withBase('/photos/aria.jpg')}
   alt="Aria Solis"
   size="lg"
   status="online"

@@ -9,6 +9,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { JsonLd, faqSchema } from '../JsonLd';
+import { withBase } from '../base';
 
 const FAQS: { question: string; answer: string }[] = [
   {
@@ -146,7 +147,7 @@ export function BrandFaq() {
         <p style={{ margin: '16px 0 0' }}>
           Looking for the docs? Browse the <Link to="/docs">component documentation</Link>,
           read the <Link to="/blog">engineering blog</Link>, or jump into the{' '}
-          <a href="/playground/">interactive playground</a>. Want to learn about the
+          <a href={withBase('/playground/')}>interactive playground</a>. Want to learn about the
           project? See the <Link to="/about">About page</Link> or the{' '}
           <Link to="/contact">Contact page</Link>.
         </p>

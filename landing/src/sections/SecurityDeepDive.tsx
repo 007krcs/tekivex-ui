@@ -1,3 +1,4 @@
+import { withBase } from '../base';
 /**
  * SecurityDeepDive — three SecurityCore primitives shown with real API usage.
  *
@@ -492,7 +493,7 @@ export function SecurityDeepDive() {
 
       <div style={{ textAlign: 'center' }}>
         <a
-          href="/security/"
+          href={withBase('/security/')}
           style={{
             display: 'inline-flex',
             alignItems: 'center',

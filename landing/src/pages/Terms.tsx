@@ -1,5 +1,6 @@
 import { PageShell } from './PageShell';
 import { usePageMeta } from '../use-page-meta';
+import { withBase } from '../base';
 
 export const meta = {
   title: 'Terms of Service — TekiVex UI',
@@ -120,7 +121,7 @@ export function Terms() {
 
       <h2>9. Privacy</h2>
       <p>
-        How information is handled is described in our <a href="/privacy">Privacy Policy</a>.
+        How information is handled is described in our <a href={withBase('/privacy')}>Privacy Policy</a>.
       </p>
 
       <h2>10. Governing law</h2>

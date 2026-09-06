@@ -3,6 +3,7 @@ import { PageShell } from '../PageShell';
 import { findDoc } from './docs-registry';
 import { usePageMeta } from '../../use-page-meta';
 import { JsonLd, techArticleSchema } from '../../JsonLd';
+import { withBase } from '../../base';
 
 // Slugs that have a real Astro /components/<slug>/ page in docs-site.
 // Source of truth: `ls docs-site/src/content/docs/components/*.mdx`.
@@ -70,11 +71,11 @@ export function DocsPage() {
             }}
           >
             <strong style={{ color: '#1f2937' }}>Also at:</strong>
-            <a href={`/components/${doc.slug}/`} style={{ color: 'var(--tk-prose-link)', textDecoration: 'none', fontWeight: 600 }}>
+            <a href={withBase(`/components/${doc.slug}/`)} style={{ color: 'var(--tk-prose-link)', textDecoration: 'none', fontWeight: 600 }}>
               /components/{doc.slug}/ →
             </a>
             <span style={{ color: '#475569' }}>(full Props + live demos)</span>
-            <a href={`/playground/#/components/${doc.slug}`} style={{ color: 'var(--tk-prose-link)', textDecoration: 'none', fontWeight: 600 }}>
+            <a href={withBase(`/playground/#/components/${doc.slug}`)} style={{ color: 'var(--tk-prose-link)', textDecoration: 'none', fontWeight: 600 }}>
               /playground →
             </a>
             <span style={{ color: '#475569' }}>(interactive sandbox)</span>
