@@ -68,7 +68,7 @@
   "bugs": {
     "url": "https://github.com/007krcs/tekivex-ui/issues"
   },
-  "homepage": "https://ui.tekivex.com/",
+  "homepage": "https://www.tekivex.com/ui/",
   "engines": {
     "node": ">=18.0.0"
   }

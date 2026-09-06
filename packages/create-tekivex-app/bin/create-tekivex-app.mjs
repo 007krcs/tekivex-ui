@@ -155,8 +155,8 @@ Next steps:
   ${C.cyan}cd ${appName}${C.reset}
   ${C.cyan}npm run dev${C.reset}
 
-Docs:       ${C.dim}https://ui.tekivex.com${C.reset}
-Security:   ${C.dim}https://ui.tekivex.com/#/security${C.reset}
+Docs:       ${C.dim}https://www.tekivex.com/ui${C.reset}
+Security:   ${C.dim}https://www.tekivex.com/ui/#/security${C.reset}
 Report bug: ${C.dim}https://github.com/007krcs/tekivex-ui/issues${C.reset}
 `);
 }

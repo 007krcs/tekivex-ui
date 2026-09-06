@@ -24,7 +24,7 @@ export function DocsPage() {
   );
   if (!doc) return <Navigate to="/docs" replace />;
   const Body = doc.render;
-  const url = `https://ui.tekivex.com/docs/${doc.slug}`;
+  const url = `https://www.tekivex.com/ui/docs/${doc.slug}`;
   return (
     <>
       <JsonLd

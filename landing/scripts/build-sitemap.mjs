@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
-const BASE = 'https://ui.tekivex.com';
+const BASE = 'https://www.tekivex.com/ui';
 const TODAY = new Date().toISOString().slice(0, 10);
 const NOW_RFC = new Date().toUTCString();
 
@@ -130,7 +130,7 @@ const rss =
 const humans = [
   '/* TEAM */',
   '  Project: TekiVex UI',
-  '  Site:    https://ui.tekivex.com',
+  '  Site:    https://www.tekivex.com/ui',
   '  Source:  https://github.com/007krcs/tekivex-ui',
   '',
   '/* SITE */',

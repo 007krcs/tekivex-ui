@@ -205,11 +205,11 @@ ${propsTable}
 
 ## Source
 
-The implementation lives at [\`${sourcePath}\`](https://ui.tekivex.com).
+The implementation lives at [\`${sourcePath}\`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/${kebab(componentName)}).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/${kebab(componentName)}).
 `;
 }
 

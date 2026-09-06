@@ -1,11 +1,11 @@
 // One-shot cleanup: replace every github.com/007krcs/* and github.com/sponsors/007krcs
-// reference across the codebase with ui.tekivex.com. Keep only the public
+// reference across the codebase with www.tekivex.com/ui. Keep only the public
 // issue-report repo URL (https://github.com/007krcs/tekivex-ui).
 import fs from 'node:fs';
 import path from 'node:path';
 
 const ALLOWED = 'https://github.com/007krcs/tekivex-ui';
-const SITE = 'https://ui.tekivex.com';
+const SITE = 'https://www.tekivex.com/ui';
 
 function walk(dir, exts) {
   const out = [];

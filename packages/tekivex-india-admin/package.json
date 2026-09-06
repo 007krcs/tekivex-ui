@@ -58,7 +58,7 @@
   "bugs": {
     "url": "https://github.com/007krcs/tekivex-ui/issues"
   },
-  "homepage": "https://ui.tekivex.com/blueprints/india-address-form/",
+  "homepage": "https://www.tekivex.com/ui/blueprints/india-address-form/",
   "publishConfig": {
     "access": "public",
     "provenance": true

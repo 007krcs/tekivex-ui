@@ -52,7 +52,7 @@ landing page when we go to HN.
 | Land 1 design-partner logo + quote | 007krcs | `landing/src/sections/DesignPartners.tsx` has 1 real entry; logo SVG at `landing/public/partners/`; `.eml` proof at `docs/design-partners/` |
 | Lift `TkxDataGrid` coverage from 30 → 50+ tests | maintainer | Add column-resize, virtual-scroll, infinite-scroll, keyboard-nav-across-pages tests |
 | Refresh `docs/a11y-screen-reader-matrix.md` | maintainer | Re-run the 470-cell matrix against current HEAD; pass rate ≥ 90% |
-| Public SBOM at https://ui.tekivex.com/security/sbom.json | done | ✓ ships in build (deploy gated by `verify:security-artifacts`) |
+| Public SBOM at https://www.tekivex.com/ui/security/sbom.json | done | ✓ ships in build (deploy gated by `verify:security-artifacts`) |
 | Public security.txt at /.well-known/ | done | ✓ ships in build |
 | Real `novaai0401@gmail.com` inbox monitored | 007krcs | Gmail filter set, response cadence < 24h |
 
@@ -61,7 +61,7 @@ landing page when we go to HN.
 | Item | Owner |
 |---|---|
 | socket.dev badge on README + CI integration | maintainer |
-| Public per-commit axe-core results at `ui.tekivex.com/security/a11y/` | maintainer |
+| Public per-commit axe-core results at `www.tekivex.com/ui/security/a11y/` | maintainer |
 | Storybook proper (in addition to existing `tkx-book`) | maintainer |
 
 ---
@@ -203,7 +203,7 @@ opportunistically.
 - Server Components (RSC) verified for the components that don't need
   hydration (publish a marked list in the docs)
 - Tree-shake `i18n` to per-locale chunks by default (lazy-load other locales)
-- Bundle visualizer at `ui.tekivex.com/bundle-explorer/` (interactive)
+- Bundle visualizer at `www.tekivex.com/ui/bundle-explorer/` (interactive)
 
 ---
 
@@ -227,11 +227,11 @@ quoted "production" tag for the next 18 months.
 
 | Item | Definition of done |
 |---|---|
-| Third-party WCAG 2.1 AAA VPAT published | PDF at `ui.tekivex.com/security/vpat-2.5.pdf`, linked from README + landing |
+| Third-party WCAG 2.1 AAA VPAT published | PDF at `www.tekivex.com/ui/security/vpat-2.5.pdf`, linked from README + landing |
 | 90/90/85 test coverage achieved | CI ratchet enforces |
 | 70+ locales | Match Ant Design's coverage |
 | 5 published case studies | Real partners, real production deployments, named decision-makers |
-| Storybook + tkx-book parity | Storybook proper at `ui.tekivex.com/storybook/`, tkx-book stays as the lighter alternative |
+| Storybook + tkx-book parity | Storybook proper at `www.tekivex.com/ui/storybook/`, tkx-book stays as the lighter alternative |
 | Companion package roadmap committed | `tekivex-3d` v1.0, `tekivex-pdf` v1.0, `tekivex-india` v1.0 — each with their own ROADMAP |
 
 ### v4.0 migration tooling

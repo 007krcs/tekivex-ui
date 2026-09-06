@@ -22,7 +22,7 @@ I maintain TekiVex UI — an MIT-licensed open-source React component library wi
 
 **Project:** WCAG 2.1 Level AAA audit of TekiVex UI v3.17.0
 **Repo:** https://github.com/007krcs/tekivex-ui (MIT, public, ~$0 revenue today)
-**Demo:** https://ui.tekivex.com (live playground for all components)
+**Demo:** https://www.tekivex.com/ui (live playground for all components)
 
 **The phased scope I'm proposing — would this fit a $5–10k v1?**
 
@@ -39,7 +39,7 @@ I maintain TekiVex UI — an MIT-licensed open-source React component library wi
 
 **What we'd offer in return:**
 - Permission to use your firm name + logo on our landing page from SOW-signing forward
-- Public case study at https://ui.tekivex.com/case-studies/webaim-audit when the report lands
+- Public case study at https://www.tekivex.com/ui/case-studies/webaim-audit when the report lands
 - Promotion in our launch blog post + Show HN
 
 **Existing artifacts we'd share at kickoff:**

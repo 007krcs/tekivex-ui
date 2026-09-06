@@ -8,11 +8,19 @@
 
 import { useEffect } from 'react';
 
-const SITE_ORIGIN = 'https://ui.tekivex.com';
+// This site's permanent public home is https://www.tekivex.com/ui (the
+// www.tekivex.com/ui subdomain is retired). Canonicals always point there,
+// whatever Vite base the bundle happened to be built with.
+const SITE_ORIGIN = 'https://www.tekivex.com';
+const CANONICAL_BASE = '/ui';
+// Vite build base: '/' when built standalone, '/ui/' when vendored under
+// www.tekivex.com. Stripped from the pathname so the route is base-agnostic.
+const BUILD_BASE_RAW: string = import.meta.env.BASE_URL || '/';
+const BUILD_BASE = BUILD_BASE_RAW.endsWith('/') ? BUILD_BASE_RAW.slice(0, -1) : BUILD_BASE_RAW;
 // Default social-share card. Every route falls back to this unless it passes
 // its own opts.image, so a shared link ALWAYS renders a preview image on
 // WhatsApp / Slack / iMessage / Twitter / LinkedIn / Facebook.
-const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`;
+const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}${CANONICAL_BASE}/og-image.png`;
 
 export function usePageMeta(title: string, description?: string, opts?: { keywords?: string; image?: string }) {
   useEffect(() => {
@@ -34,7 +42,9 @@ export function usePageMeta(title: string, description?: string, opts?: { keywor
     // Canonical URL — always set to the current path on the public origin.
     // This kills "duplicate content" penalties when Google sees the page via
     // utm-tagged or trailing-slash variants.
-    const canonicalHref = `${SITE_ORIGIN}${window.location.pathname}`;
+    const pathname = window.location.pathname;
+    const route = BUILD_BASE && pathname.startsWith(BUILD_BASE) ? (pathname.slice(BUILD_BASE.length) || '/') : pathname;
+    const canonicalHref = `${SITE_ORIGIN}${CANONICAL_BASE}${route}`;
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     let prevCanonical: string | null = null;
     if (!canonical) {

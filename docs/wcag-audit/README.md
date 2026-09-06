@@ -78,12 +78,12 @@ template paragraph.
 
 **Repo:** https://github.com/007krcs/tekivex-ui (MIT-licensed, public)
 
-**Live demo site:** https://ui.tekivex.com (116 production components,
+**Live demo site:** https://www.tekivex.com/ui (116 production components,
 interactive playground for each)
 
 **Surface to audit (in-scope):**
 - 116 production React components in the `tekivex-ui` npm package
-- All component variants documented at https://ui.tekivex.com/docs
+- All component variants documented at https://www.tekivex.com/ui/docs
 - Theming system (light + dark themes, contrast ratios)
 - Keyboard-navigation patterns across the 7 most complex components
   (TkxDataGrid, TkxSelect, TkxDatePicker, TkxModal, TkxMenu, TkxCommand,
@@ -129,7 +129,7 @@ interactive playground for each)
 - Screen-reader test transcripts on request
 
 **Public-relations question:** Can we use your firm's name + logo on
-https://ui.tekivex.com once the SOW is signed (before the audit completes)?
+https://www.tekivex.com/ui once the SOW is signed (before the audit completes)?
 Specifically: "Audit underway with [Firm Name] — report expected [Q3 2026]."
 This is critical for our launch credibility timeline.
 
@@ -152,7 +152,7 @@ firm-marketing pages.
 > Deque audit + VPAT before announcing the AAA claim publicly.
 >
 > Quick context: the library is open-source, the demo site is live at
-> ui.tekivex.com, and we already run axe-core in CI on every PR (passes clean).
+> www.tekivex.com/ui, and we already run axe-core in CI on every PR (passes clean).
 > We're not starting from a hostile baseline — we're looking for the third-party
 > rigor we can't self-attest to.
 >
@@ -242,7 +242,7 @@ When the quote arrives, expect these levers:
    the target.
 6. **On report receipt**: triage findings into a public GitHub project board,
    commit to a remediation timeline for critical + major, ship the VPAT at
-   `https://ui.tekivex.com/security/vpat-2.5.pdf` next to the SBOM.
+   `https://www.tekivex.com/ui/security/vpat-2.5.pdf` next to the SBOM.
 7. **Public announcement**: blog post + Show HN once the report lands +
    findings are resolved.
 

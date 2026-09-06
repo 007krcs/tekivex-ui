@@ -7,7 +7,7 @@ Show HN: TekiVex UI – React component library with 360°/AR/VR documentation
 
 **Submitted URL**:
 ```
-https://ui.tekivex.com/
+https://www.tekivex.com/ui/
 ```
 
 **Best time to submit**: 9 PM IST (= 7:30 AM Pacific, 10:30 AM Eastern). Hacker News traffic peaks around US morning. Avoid Saturdays.
@@ -79,7 +79,7 @@ MIT licensed. Built solo over 12 months. Ask me anything.
 
 ## Pre-submission checklist
 
-- [ ] Verify https://ui.tekivex.com/ loads from a non-corporate network
+- [ ] Verify https://www.tekivex.com/ui/ loads from a non-corporate network
 - [ ] Click 🌐 Enter 360° mode and confirm at least 3 hotspots open panels
 - [ ] Verify https://www.npmjs.com/package/tekivex-ui shows v3.2.0 (after Kanban release)
 - [ ] Have your "first comment" pre-written in a tab so you can paste within 60 seconds of submission

@@ -18,11 +18,11 @@ Hi,
 
 I maintain TekiVex UI — an MIT-licensed React component library with 116 production components, a published security threat model, and a self-attested WCAG 2.1 AAA target. We're approaching a public launch and we want a third-party Deque audit + VPAT before announcing the AAA claim publicly.
 
-Quick context: the library is open-source, the demo site is live at https://ui.tekivex.com, and we already run axe-core in CI on every PR (passes clean). We're not starting from a hostile baseline — we want the third-party rigor we can't self-attest to.
+Quick context: the library is open-source, the demo site is live at https://www.tekivex.com/ui, and we already run axe-core in CI on every PR (passes clean). We're not starting from a hostile baseline — we want the third-party rigor we can't self-attest to.
 
 **Scope:**
 - 116 production React components in the `tekivex-ui` npm package
-- Live demo: https://ui.tekivex.com (interactive playground for each component)
+- Live demo: https://www.tekivex.com/ui (interactive playground for each component)
 - Theming system (light + dark themes, contrast ratios)
 - Keyboard-navigation patterns across the 7 most complex components (TkxDataGrid, TkxSelect, TkxDatePicker, TkxModal, TkxMenu, TkxCommand, TkxFlowChart)
 

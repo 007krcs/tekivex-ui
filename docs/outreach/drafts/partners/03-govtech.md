@@ -14,8 +14,8 @@ I'm [YOUR NAME], maintainer of TekiVex UI. We're a React component library desig
 
 - **WCAG 2.1 AAA target** with third-party audit-firm engagement open (Deque, TPGi, WebAIM). Once the SOW signs we'll be one of the very few component libraries with a defensible AAA story.
 - **Section 508 VPAT** — included as a Phase 1 deliverable on the audit. EU EAA (European Accessibility Act, in force since June 2025) covered by the same VPAT.
-- **Published threat model** at https://ui.tekivex.com/docs/security-threat-model — 15 STRIDE-mapped threats, CWE references, per-component coverage matrix. No other mainstream React UI library publishes one.
-- **CycloneDX SBOM** at https://ui.tekivex.com/security/sbom.json — clean SBOM, zero runtime dependencies in core, ready for the FedRAMP / StateRAMP supply-chain attestations.
+- **Published threat model** at https://www.tekivex.com/ui/docs/security-threat-model — 15 STRIDE-mapped threats, CWE references, per-component coverage matrix. No other mainstream React UI library publishes one.
+- **CycloneDX SBOM** at https://www.tekivex.com/ui/security/sbom.json — clean SBOM, zero runtime dependencies in core, ready for the FedRAMP / StateRAMP supply-chain attestations.
 - **Trusted Types + CSP builder + magic-byte MIME verification + tamper-evident SHA-256 audit trail** — primitives that make agency-side security review faster.
 - **MIT licensed**, 116 production components, 1,798 unit tests, 44-locale i18n with RTL.
 
@@ -33,8 +33,8 @@ Best,
 [YOUR NAME]
 Maintainer, TekiVex UI
 
-Threat model: https://ui.tekivex.com/docs/security-threat-model
-SBOM:         https://ui.tekivex.com/security/sbom.json
+Threat model: https://www.tekivex.com/ui/docs/security-threat-model
+SBOM:         https://www.tekivex.com/ui/security/sbom.json
 GitHub:       https://github.com/007krcs/tekivex-ui
 Reply to:     novaai0401@gmail.com
 

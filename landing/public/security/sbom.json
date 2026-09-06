@@ -101,7 +101,7 @@
           "comment": "as detected from PackageJson property \"repository.url\""
         },
         {
-          "url": "https://ui.tekivex.com/",
+          "url": "https://www.tekivex.com/ui/",
           "type": "website",
           "comment": "as detected from PackageJson property \"homepage\""
         },

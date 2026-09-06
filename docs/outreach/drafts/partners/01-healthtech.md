@@ -14,7 +14,7 @@ I'm [YOUR NAME], maintainer of TekiVex UI — a React component library that shi
 
 I'm onboarding our first 5 design partners before public launch. I noticed [COMPANY] ships [SPECIFIC PRODUCT — e.g. "an EHR for outpatient cardiology," "a HIPAA-compliant patient portal," "a clinical-trial enrollment platform"], and I think we'd be a useful fit because:
 
-- Your HIPAA audit team will care about the threat model — most React UI libraries don't publish one, and security review of an off-the-shelf component kit usually costs 2-4 weeks of engineering time. Ours is documented at https://ui.tekivex.com/docs/security-threat-model with 15 STRIDE-mapped threats and CWE references.
+- Your HIPAA audit team will care about the threat model — most React UI libraries don't publish one, and security review of an off-the-shelf component kit usually costs 2-4 weeks of engineering time. Ours is documented at https://www.tekivex.com/ui/docs/security-threat-model with 15 STRIDE-mapped threats and CWE references.
 - We ship magic-byte MIME verification on file uploads (real signature bytes, not just the Content-Type header) — directly relevant for clinical-document upload flows.
 - A tamper-evident SHA-256 hash-chained audit trail is built into the library — useful for the audit-log requirements in 21 CFR Part 11 and similar.
 - Zero runtime dependencies in the core means no transitive-deps surprises when your SBOM gets reviewed.
@@ -25,7 +25,7 @@ I'm onboarding our first 5 design partners before public launch. I noticed [COMP
 - Pre-publication review of any case study mentioning [COMPANY] — your team has veto power on copy
 
 **What we ask in return:**
-- One company logo on https://ui.tekivex.com
+- One company logo on https://www.tekivex.com/ui
 - One 2-3 sentence quote from a named decision-maker (VP Eng / CTO / Head of Engineering)
 - Permission to mention [COMPANY] in our launch blog post and one Show HN
 
@@ -37,8 +37,8 @@ Best,
 [YOUR NAME]
 Maintainer, TekiVex UI
 
-Threat model: https://ui.tekivex.com/docs/security-threat-model
-SBOM:         https://ui.tekivex.com/security/sbom.json
+Threat model: https://www.tekivex.com/ui/docs/security-threat-model
+SBOM:         https://www.tekivex.com/ui/security/sbom.json
 GitHub:       https://github.com/007krcs/tekivex-ui
 Reply to:     novaai0401@gmail.com
 

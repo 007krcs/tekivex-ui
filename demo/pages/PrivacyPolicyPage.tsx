@@ -39,7 +39,7 @@ export function PrivacyPolicyPage({ theme }: Props) {
           <strong>Effective date:</strong> April 20, 2026
         </p>
         <p style={{ ...prose, marginTop: '12px', padding: '16px', background: `${theme.surface}`, borderRadius: '8px', border: `1px solid ${theme.border}` }}>
-          TekiVex UI ("we", "our", or "us") operates the website <strong>tekivex.com</strong> and its subdomains, including <strong>ui.tekivex.com</strong>. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our websites. Please read this policy carefully. If you disagree with its terms, please discontinue use of our sites.
+          TekiVex UI ("we", "our", or "us") operates the website <strong>tekivex.com</strong> and its subdomains, including <strong>www.tekivex.com/ui</strong>. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our websites. Please read this policy carefully. If you disagree with its terms, please discontinue use of our sites.
         </p>
       </header>
 
@@ -208,9 +208,9 @@ export function PrivacyPolicyPage({ theme }: Props) {
         </p>
         <div style={{ padding: '20px', background: theme.surface, borderRadius: '8px', border: `1px solid ${theme.border}` }}>
           <p style={{ ...prose, marginBottom: '6px' }}><strong>TekiVex UI</strong></p>
-          <p style={{ ...prose, marginBottom: '6px' }}>GitHub: <a href="https://ui.tekivex.com" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>github.com/007krcs/tekivex-ui</a></p>
+          <p style={{ ...prose, marginBottom: '6px' }}>GitHub: <a href="https://www.tekivex.com/ui" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>github.com/007krcs/tekivex-ui</a></p>
           <p style={{ ...prose, marginBottom: '6px' }}>npm: <a href="https://www.npmjs.com/package/tekivex-ui" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>npmjs.com/package/tekivex-ui</a></p>
-          <p style={{ ...prose, marginBottom: 0 }}>Website: <a href="https://ui.tekivex.com" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>ui.tekivex.com</a></p>
+          <p style={{ ...prose, marginBottom: 0 }}>Website: <a href="https://www.tekivex.com/ui" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>www.tekivex.com/ui</a></p>
         </div>
       </Section>
 

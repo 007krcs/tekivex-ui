@@ -23,7 +23,7 @@ Add tekivex-ui — production-ready React UI library
 - 1034 passing tests
 - MIT licensed
 
-Live demo with WebXR: https://ui.tekivex.com/
+Live demo with WebXR: https://www.tekivex.com/ui/
 npm: https://www.npmjs.com/package/tekivex-ui
 ```
 
@@ -56,13 +56,13 @@ Markdown to add to the README:
 ### awesome-accessibility
 
 ```markdown
-- [tekivex-ui](https://ui.tekivex.com/) - React UI library targeting WCAG 2.1 AAA across all 99 components. 7:1 contrast, 44×44 touch targets, full keyboard navigation, screen-reader matrix tested.
+- [tekivex-ui](https://www.tekivex.com/ui/) - React UI library targeting WCAG 2.1 AAA across all 99 components. 7:1 contrast, 44×44 touch targets, full keyboard navigation, screen-reader matrix tested.
 ```
 
 ### awesome-design-systems
 
 ```markdown
-- [TekiVex UI](https://ui.tekivex.com/) - Open-source design system in React. AAA accessibility, security kernel, PDF + 3D + 360° components, MIT.
+- [TekiVex UI](https://www.tekivex.com/ui/) - Open-source design system in React. AAA accessibility, security kernel, PDF + 3D + 360° components, MIT.
 ```
 
 ### awesome-webxr

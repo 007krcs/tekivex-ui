@@ -43,7 +43,7 @@ export function App() {
         </TkxCard>
 
         <footer style={{ textAlign: 'center', padding: 24, opacity: 0.5, fontSize: 13 }}>
-          Built with <a href="https://ui.tekivex.com">tekivex-ui</a> · <a href="https://ui.tekivex.com/#/security">SecurityCore</a>
+          Built with <a href="https://www.tekivex.com/ui">tekivex-ui</a> · <a href="https://www.tekivex.com/ui/#/security">SecurityCore</a>
         </footer>
       </div>
     </div>

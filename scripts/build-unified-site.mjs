@@ -13,7 +13,7 @@
 //   docs-site/dist/playground/      ← demo/ SPA (interactive sandbox)
 //   docs-site/dist/book/            ← packages/tkx-book/ (component catalog)
 //
-// One domain (ui.tekivex.com), three intents:
+// One domain (www.tekivex.com/ui), three intents:
 //
 //   /                 — read documentation
 //   /playground/      — click around components live
@@ -50,6 +50,9 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
+// Path prefix when the site is vendored under www.tekivex.com (e.g. '/ui');
+// empty for a standalone root deploy. Threaded into every sub-build's base.
+const SITE_BASE = process.env.SITE_BASE || '';
 
 function run(cmd, cwd, env = {}) {
   console.log(`\n▶ ${cmd}\n  cwd=${cwd}`);
@@ -162,7 +165,7 @@ try {
   // /examples/index.html, /about/index.html, /blog/<slug>/index.html etc.
   // never get generated and Render returns "Not Found" for any non-root
   // path that React Router needs to handle.
-  run('npm run build', resolve(ROOT, 'landing'));
+  run('npm run build', resolve(ROOT, 'landing'), { VITE_BASE: SITE_BASE + '/' });
   const landingDist = resolve(ROOT, 'landing/dist');
   if (existsSync(landingDist)) {
     if (existsSync(DIST)) rmSync(DIST, { recursive: true, force: true });
@@ -191,7 +194,7 @@ if (!astroSucceeded) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TekiVex UI — v3.5 · 13 packages on npm · React in 360°</title>
   <meta name="description" content="Production-ready React component library — 99 components, WCAG 2.1 AAA, built-in security kernel, 1034 passing tests, Puppeteer-free PDF rendering.">
-  <link rel="canonical" href="https://ui.tekivex.com/">
+  <link rel="canonical" href="https://www.tekivex.com/ui/">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -353,7 +356,7 @@ if (!astroSucceeded) {
 // was fixed in commit 7827e4e (May 2026). With both gone, the docs
 // build now reliably produces 125+ pages locally. Adding the step
 // back in here so the recipes/blueprints/components docs that have
-// been shipped since v3.18 finally reach ui.tekivex.com.
+// been shipped since v3.18 finally reach www.tekivex.com/ui.
 //
 // If this step starts failing again, the safe fall-back is to comment
 // out just the run() and the overlay call below — the landing pages
@@ -426,7 +429,7 @@ console.log(`  Astro overlay step: ${astroOverlaySucceeded ? 'OK' : 'SKIPPED'}`)
 // ── Astro post-overlay assertion ────────────────────────────────────────────
 // History: an earlier version of this script allowed the deploy to ship
 // landing-only if Astro failed silently, calling it "non-fatal." Result: for
-// ~9 weeks ui.tekivex.com served zero Astro pages — every /security/,
+// ~9 weeks www.tekivex.com/ui served zero Astro pages — every /security/,
 // /getting-started/, /components/<slug>/, /recipes/<slug>/, /blueprints/<slug>/
 // returned 404 and nobody noticed because the homepage and /playground/ both
 // worked. The user reported it 2026-06-07 with screenshots.
@@ -490,11 +493,11 @@ console.log('\n═════════════════════�
 console.log('Step 3/4 — build demo/ SPA → /playground/');
 console.log('══════════════════════════════════════════════════════');
 run(
-  'npx vite build --config ./demo/vite.config.ts --base=/playground/',
+  'npx vite build --config ./demo/vite.config.ts --base=' + SITE_BASE + '/playground/',
   ROOT,
 );
 copyTree(resolve(ROOT, 'demo/dist'), resolve(DIST, 'playground'));
-verifyBase(resolve(DIST, 'playground/index.html'), '/playground/');
+verifyBase(resolve(DIST, 'playground/index.html'), SITE_BASE + '/playground/');
 
 // ── 4. Build tkx-book with /book/ base, copy into dist/book/
 //    Same pattern: --base on CLI, not via env var.
@@ -502,9 +505,9 @@ console.log('\n═════════════════════�
 console.log('Step 4/4 — build packages/tkx-book/ → /book/');
 console.log('══════════════════════════════════════════════════════');
 run('npm install --no-audit --no-fund', resolve(ROOT, 'packages/tkx-book'));
-run('npx vite build --base=/book/', resolve(ROOT, 'packages/tkx-book'));
+run('npx vite build --base=' + SITE_BASE + '/book/', resolve(ROOT, 'packages/tkx-book'));
 copyTree(resolve(ROOT, 'packages/tkx-book/dist'), resolve(DIST, 'book'));
-verifyBase(resolve(DIST, 'book/index.html'), '/book/');
+verifyBase(resolve(DIST, 'book/index.html'), SITE_BASE + '/book/');
 
 // ── 5. Security artifacts (security.txt + SBOM) — copy unconditionally.
 //    When the landing build succeeds, Vite already copies landing/public/*

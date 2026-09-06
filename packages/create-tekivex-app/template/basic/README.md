@@ -17,6 +17,6 @@ npm run preview
 
 ## Learn more
 
-- [tekivex-ui docs](https://ui.tekivex.com)
-- [SecurityCore playground](https://ui.tekivex.com/#/security)
-- [Component catalogue](https://ui.tekivex.com/#/components/button)
+- [tekivex-ui docs](https://www.tekivex.com/ui)
+- [SecurityCore playground](https://www.tekivex.com/ui/#/security)
+- [Component catalogue](https://www.tekivex.com/ui/#/components/button)

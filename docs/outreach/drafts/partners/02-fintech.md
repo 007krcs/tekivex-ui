@@ -21,7 +21,7 @@ I'm building TekiVex UI — a React component library that's trying to be the bo
 - **Magic-byte MIME verification** on file uploads — verifies actual signature bytes, defends against polyglot files and Content-Type spoofing.
 - **Tamper-evident SHA-256 hash-chained audit trail** — every component render is loggable, the chain is verifiable, useful for SOC 2 audit evidence.
 - **Trusted Types policy installer** — one call locks down DOM XSS sinks at the browser level.
-- **Zero runtime dependencies in core** — clean SBOM at https://ui.tekivex.com/security/sbom.json. No transitive-deps surprises during vendor review.
+- **Zero runtime dependencies in core** — clean SBOM at https://www.tekivex.com/ui/security/sbom.json. No transitive-deps surprises during vendor review.
 - **MIT licensed**, 116 production components, 1,798 unit tests, WCAG 2.1 AAA target (third-party audit-firm engagement open).
 
 **The design-partner ask:**
@@ -36,8 +36,8 @@ Best,
 [YOUR NAME]
 Maintainer, TekiVex UI
 
-Threat model: https://ui.tekivex.com/docs/security-threat-model
-SBOM:         https://ui.tekivex.com/security/sbom.json
+Threat model: https://www.tekivex.com/ui/docs/security-threat-model
+SBOM:         https://www.tekivex.com/ui/security/sbom.json
 GitHub:       https://github.com/007krcs/tekivex-ui
 Reply to:     novaai0401@gmail.com
 

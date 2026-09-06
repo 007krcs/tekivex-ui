@@ -14,7 +14,7 @@ export function BlogPost() {
   );
   if (!post) return <Navigate to="/blog" replace />;
   const Body = post.render;
-  const url = `https://ui.tekivex.com/blog/${post.slug}`;
+  const url = `https://www.tekivex.com/ui/blog/${post.slug}`;
   return (
     <>
       <JsonLd

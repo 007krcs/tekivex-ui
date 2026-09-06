@@ -112,7 +112,7 @@ SaaS companies. Goal: 200 + 1 enterprise = $4500 MRR.
 
 ## What to do FIRST (don't ship yet)
 
-1. **Add a "/pro/" placeholder page to ui.tekivex.com** that says "coming
+1. **Add a "/pro/" placeholder page to www.tekivex.com/ui** that says "coming
    soon — sign up for early access" with an email form. Measure interest.
 2. **Run a Twitter / LinkedIn poll**: "Would you pay $19/month for premium
    PDF templates and 3D asset packs on top of TekiVex UI?" Publish results

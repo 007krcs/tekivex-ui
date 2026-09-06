@@ -17,7 +17,7 @@ WCAG 2.1 AAA target (third-party audit on roadmap, not yet completed) · WAI-ARI
 [![Tests](https://img.shields.io/badge/Tests-1798%20passing-00c853.svg)](#testing)
 [![SecurityCore](https://img.shields.io/badge/SecurityCore-v3.0-f72585.svg)](./docs/SECURITY-THREAT-MODEL.md)
 [![Socket.dev](https://socket.dev/api/badge/npm/package/tekivex-ui)](https://socket.dev/npm/package/tekivex-ui)
-[![SBOM](https://img.shields.io/badge/SBOM-CycloneDX%201.5-7c5cff.svg)](https://ui.tekivex.com/security/sbom.json)
+[![SBOM](https://img.shields.io/badge/SBOM-CycloneDX%201.5-7c5cff.svg)](https://www.tekivex.com/ui/security/sbom.json)
 
 <br/>
 
@@ -25,7 +25,7 @@ WCAG 2.1 AAA target (third-party audit on roadmap, not yet completed) · WAI-ARI
 npm install tekivex-ui
 ```
 
-[📖 Docs](https://ui.tekivex.com) · [🚀 Demo](https://ui.tekivex.com) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/007krcs/tekivex-ui/issues) · [⭐ Star](https://github.com/007krcs/tekivex-ui/stargazers)
+[📖 Docs](https://www.tekivex.com/ui) · [🚀 Demo](https://www.tekivex.com/ui) · [📦 npm](https://www.npmjs.com/package/tekivex-ui) · [🐛 Report Issue](https://github.com/007krcs/tekivex-ui/issues) · [⭐ Star](https://github.com/007krcs/tekivex-ui/stargazers)
 
 </div>
 
@@ -36,7 +36,7 @@ npm install tekivex-ui
 `tekivex-ui` is the main library, but the ecosystem ships 14 npm
 packages total. **You typically need 1–3 of them, not 14.** Map below
 groups by *the question that makes you install each one*. Full
-reference: [ui.tekivex.com/ecosystem](https://ui.tekivex.com/ecosystem/).
+reference: [www.tekivex.com/ui/ecosystem](https://www.tekivex.com/ui/ecosystem/).
 
 | If you're building… | `npm install` |
 |---|---|
@@ -68,7 +68,7 @@ current install matrix.
 
 TekiVex UI is **pre-1.0** and currently maintained by a single developer
 ([007krcs](https://github.com/007krcs)) on `novaai0401@gmail.com`. We
-ship a public [CycloneDX SBOM](https://ui.tekivex.com/security/sbom.json),
+ship a public [CycloneDX SBOM](https://www.tekivex.com/ui/security/sbom.json),
 a [security threat model](./docs/SECURITY-THREAT-MODEL.md) (15 STRIDE
 threats with CWE refs), and 1,798 tests at the published version — but
 none of that substitutes for the human-scale risk of any pre-1.0,
@@ -84,7 +84,7 @@ if it matters to your supply-chain policy.
 
 - **Pin your version** (`"tekivex-ui": "3.18.0"`, not `"^3.18.0"`) until v4.0
 - **Read [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** before integrating — covers known Next.js / RSC / SSR / hydration issues
-- **Audit the SBOM** at [`ui.tekivex.com/security/sbom.json`](https://ui.tekivex.com/security/sbom.json) — verifies zero runtime deps
+- **Audit the SBOM** at [`www.tekivex.com/ui/security/sbom.json`](https://www.tekivex.com/ui/security/sbom.json) — verifies zero runtime deps
 - **Verify the package** with `npm view tekivex-ui` before installing if you're concerned about typosquats (the legitimate name is exactly `tekivex-ui`)
 - **Check Socket.dev** [![Socket.dev](https://socket.dev/api/badge/npm/package/tekivex-ui)](https://socket.dev/npm/package/tekivex-ui) for supply-chain risk score
 - **For regulated-industry teams**: we're open to design-partner collaborations with regulated-industry teams — see [`docs/design-partners/README.md`](./docs/design-partners/README.md) for the playbook. No reserved slots, no formal program in place yet; reach out if it fits your situation.
@@ -570,7 +570,7 @@ const aaa   = meetsAAA('#00f5d4', '#0a0a1a');       // → true  (≥ 7:1)
 
 We ship **WCAG 2.1 AA with WAI-ARIA APG patterns throughout**, and work toward AAA as a tracked aspiration. **A third-party audit is on the roadmap and has not been completed** — treat this section as our internal compliance target, not a certification.
 
-In July 2026 we ran an adversarially-verified internal audit of every interactive component against its APG pattern. It confirmed **35 violations** (4 high, 26 medium, 5 low) — published in full in [`docs/A11Y-AUDIT.md`](docs/A11Y-AUDIT.md) — and **all 35 were fixed across v3.29.0–v3.32.0** with regression tests (suite: 2,058 → 2,168 tests). Highlights: focus traps + focus restore in every dialog surface, full keyboard models for DataGrid (roving tabindex, virtualization-aware navigation) and DatePicker (roving calendar grid), real ARIA sliders in ColorPicker, correct menu semantics in Dropdown, and `inert` off-screen carousel slides. Details on the [Accessibility docs page](https://ui.tekivex.com/docs/accessibility/).
+In July 2026 we ran an adversarially-verified internal audit of every interactive component against its APG pattern. It confirmed **35 violations** (4 high, 26 medium, 5 low) — published in full in [`docs/A11Y-AUDIT.md`](docs/A11Y-AUDIT.md) — and **all 35 were fixed across v3.29.0–v3.32.0** with regression tests (suite: 2,058 → 2,168 tests). Highlights: focus traps + focus restore in every dialog surface, full keyboard models for DataGrid (roving tabindex, virtualization-aware navigation) and DatePicker (roving calendar grid), real ARIA sliders in ColorPicker, correct menu semantics in Dropdown, and `inert` off-screen carousel slides. Details on the [Accessibility docs page](https://www.tekivex.com/ui/docs/accessibility/).
 
 - ✅ Contrast ratio ≥ **7:1** for all text (AAA, not just AA's 4.5:1) — verified via internal `meetsAAA()` helper
 - ✅ Full **keyboard navigation** — Tab, Enter, Space, Arrow keys, Escape (APG-audited)
@@ -637,7 +637,7 @@ Seven full-page templates included in the demo:
 ## Development
 
 ```bash
-git clone https://ui.tekivex.com
+git clone https://www.tekivex.com/ui
 cd tekivex-ui
 npm install
 
@@ -730,13 +730,13 @@ When reporting, please include:
 
 Contributions are welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before submitting a PR.
 
-**Maintainers:** [007krcs](https://ui.tekivex.com) · [seemaalmas](https://ui.tekivex.com) · [novaai0401-ui](https://ui.tekivex.com)
+**Maintainers:** [007krcs](https://www.tekivex.com/ui) · [seemaalmas](https://www.tekivex.com/ui) · [novaai0401-ui](https://www.tekivex.com/ui)
 
 ---
 
 ## License
 
-[MIT](./LICENSE) © 2026 [007krcs](https://ui.tekivex.com)
+[MIT](./LICENSE) © 2026 [007krcs](https://www.tekivex.com/ui)
 
 ---
 
@@ -744,6 +744,6 @@ Contributions are welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) befo
 
 Made with ⚡ by the TekiVex team
 
-**[npm](https://www.npmjs.com/package/tekivex-ui) · [GitHub](https://ui.tekivex.com) · [Docs](https://ui.tekivex.com)**
+**[npm](https://www.npmjs.com/package/tekivex-ui) · [GitHub](https://www.tekivex.com/ui) · [Docs](https://www.tekivex.com/ui)**
 
 </div>

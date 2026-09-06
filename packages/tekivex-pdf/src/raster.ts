@@ -51,7 +51,7 @@ async function loadSharp(): Promise<any> {
   } catch {
     throw new Error(
       "tekivex-pdf/raster requires the 'sharp' package. Install it with " +
-        "`npm install sharp`. See https://ui.tekivex.com/pdf/render-to-png/.",
+        "`npm install sharp`. See https://www.tekivex.com/ui/pdf/render-to-png/.",
     );
   }
 }

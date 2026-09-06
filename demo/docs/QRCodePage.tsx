@@ -15,7 +15,7 @@ const QRCODE_PROPS = [
 ];
 
 export function QRCodePage({ theme }: { theme: ThemeTokens }) {
-  const [customValue, setCustomValue] = useState('https://ui.tekivex.com');
+  const [customValue, setCustomValue] = useState('https://www.tekivex.com/ui');
   const [errorLevel, setErrorLevel] = useState<'L' | 'M' | 'Q' | 'H'>('M');
 
   const divider = { height: '1px', backgroundColor: theme.border, margin: '48px 0', border: 'none' };
@@ -28,17 +28,17 @@ export function QRCodePage({ theme }: { theme: ThemeTokens }) {
         title="Basic QR Code"
         description="Renders a deterministic QR-style code from any string. Perfect for URLs, Wi-Fi credentials, vCards, or deep links."
         theme={theme}
-        code={`<TkxQRCode value="https://ui.tekivex.com" />`}
+        code={`<TkxQRCode value="https://www.tekivex.com/ui" />`}
       >
         <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap', alignItems: 'flex-start' }}>
-          <TkxQRCode value="https://ui.tekivex.com" />
+          <TkxQRCode value="https://www.tekivex.com/ui" />
           <div>
             <p style={{ margin: '0 0 8px', fontSize: 14, color: theme.text, fontWeight: 600 }}>tekivex-ui on npm</p>
             <TkxQRCode value="https://npmjs.com/package/tekivex-ui" size={100} />
           </div>
           <div>
             <p style={{ margin: '0 0 8px', fontSize: 14, color: theme.text, fontWeight: 600 }}>GitHub Repo</p>
-            <TkxQRCode value="https://ui.tekivex.com" size={100} />
+            <TkxQRCode value="https://www.tekivex.com/ui" size={100} />
           </div>
         </div>
       </DemoSection>
@@ -50,7 +50,7 @@ export function QRCodePage({ theme }: { theme: ThemeTokens }) {
         title="Live Playground"
         description="Type any text, URL, or data — the QR code updates in real time."
         theme={theme}
-        code={`const [value, setValue] = useState('https://ui.tekivex.com');
+        code={`const [value, setValue] = useState('https://www.tekivex.com/ui');
 
 <TkxInput
   value={value}
@@ -82,7 +82,7 @@ export function QRCodePage({ theme }: { theme: ThemeTokens }) {
             </div>
           </div>
           <TkxQRCode
-            value={customValue || 'https://ui.tekivex.com'}
+            value={customValue || 'https://www.tekivex.com/ui'}
             size={160}
             errorLevel={errorLevel}
           />
@@ -96,16 +96,16 @@ export function QRCodePage({ theme }: { theme: ThemeTokens }) {
         title="Custom Colors & Sizes"
         description="Match your brand palette. Any foreground and background colors work — ensure sufficient contrast for scanability."
         theme={theme}
-        code={`<TkxQRCode value="https://ui.tekivex.com" color="#0ea5e9" bgColor="#f0f9ff" size={120} />
-<TkxQRCode value="https://ui.tekivex.com" color="#10b981" bgColor="#f0fdf4" size={120} />
-<TkxQRCode value="https://ui.tekivex.com" color="#8b5cf6" bgColor="#faf5ff" size={120} />
-<TkxQRCode value="https://ui.tekivex.com" color="#f59e0b" bgColor="#fffbeb" size={120} />`}
+        code={`<TkxQRCode value="https://www.tekivex.com/ui" color="#0ea5e9" bgColor="#f0f9ff" size={120} />
+<TkxQRCode value="https://www.tekivex.com/ui" color="#10b981" bgColor="#f0fdf4" size={120} />
+<TkxQRCode value="https://www.tekivex.com/ui" color="#8b5cf6" bgColor="#faf5ff" size={120} />
+<TkxQRCode value="https://www.tekivex.com/ui" color="#f59e0b" bgColor="#fffbeb" size={120} />`}
       >
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-          <TkxQRCode value="https://ui.tekivex.com" color="#0ea5e9" bgColor="#f0f9ff" size={120} />
-          <TkxQRCode value="https://ui.tekivex.com" color="#10b981" bgColor="#f0fdf4" size={120} />
-          <TkxQRCode value="https://ui.tekivex.com" color="#8b5cf6" bgColor="#faf5ff" size={120} />
-          <TkxQRCode value="https://ui.tekivex.com" color="#f59e0b" bgColor="#fffbeb" size={120} />
+          <TkxQRCode value="https://www.tekivex.com/ui" color="#0ea5e9" bgColor="#f0f9ff" size={120} />
+          <TkxQRCode value="https://www.tekivex.com/ui" color="#10b981" bgColor="#f0fdf4" size={120} />
+          <TkxQRCode value="https://www.tekivex.com/ui" color="#8b5cf6" bgColor="#faf5ff" size={120} />
+          <TkxQRCode value="https://www.tekivex.com/ui" color="#f59e0b" bgColor="#fffbeb" size={120} />
         </div>
       </DemoSection>
 

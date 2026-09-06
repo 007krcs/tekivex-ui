@@ -1,0 +1,39 @@
+# Publishes the unified TekiVex UI site (landing + /playground + /book + Astro
+# docs) to the `build` branch so the tekivex marketing site can vendor it into
+# dist/ui/ and serve it at https://www.tekivex.com/ui — one domain, no subdomain.
+name: Publish static build
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm install --no-audit --no-fund
+      - name: Build unified site with base /ui
+        env:
+          SITE_BASE: /ui
+        run: node scripts/build-unified-site.mjs
+      - name: Publish docs-site/dist to the build branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: build
+          publish_dir: docs-site/dist
+          force_orphan: true
+          commit_message: 'build: ${{ github.sha }}'

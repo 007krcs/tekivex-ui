@@ -21,8 +21,8 @@ Pro-tier customers: see SLA terms in your contract.
 
 The same channels are advertised machine-readably per [RFC 9116](https://www.rfc-editor.org/rfc/rfc9116):
 
-- **security.txt:** <https://ui.tekivex.com/.well-known/security.txt>
-- **CycloneDX SBOM (1.5):** <https://ui.tekivex.com/security/sbom.json>
+- **security.txt:** <https://www.tekivex.com/ui/.well-known/security.txt>
+- **CycloneDX SBOM (1.5):** <https://www.tekivex.com/ui/security/sbom.json>
 
 Regenerate the SBOM locally with `npm run sbom:generate`.
 

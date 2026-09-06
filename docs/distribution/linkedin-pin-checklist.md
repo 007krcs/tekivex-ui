@@ -17,7 +17,7 @@ A few details I couldn't fit in the post:
 🛠 The Aadhaar Verhoeff checksum is in 13 lines of pure TypeScript.
 🛠 The PDF rendering uses @react-pdf/renderer under the hood — same
    React tree as your browser components.
-🛠 The 360° mode at ui.tekivex.com is built entirely with the
+🛠 The 360° mode at www.tekivex.com/ui is built entirely with the
    library's own components — TkxScene + TkxPanorama360 + TkxHotspot
    + TkxXRSession. The docs site is a WebXR experience.
 
@@ -89,7 +89,7 @@ comment on their recent post first to warm the introduction.
 
 ## Pre-post checklist (run THIS first)
 
-- [ ] ui.tekivex.com loads from a personal device
+- [ ] www.tekivex.com/ui loads from a personal device
 - [ ] 🌐 Enter 360° mode button works
 - [ ] At least 3 hotspots open panels
 - [ ] tekivex-ui@3.2.0 visible on https://www.npmjs.com/package/tekivex-ui

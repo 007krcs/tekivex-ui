@@ -5,7 +5,7 @@ takes 5 min or less.
 
 ## A. Confirm the live site shows what we shipped
 
-Open https://ui.tekivex.com/ from a **non-corporate device** (phone hotspot
+Open https://www.tekivex.com/ui/ from a **non-corporate device** (phone hotspot
 works if your ISP also blocks).
 
 Hard-refresh (Ctrl+Shift+R or Cmd+Shift+R). You should see:
@@ -65,7 +65,7 @@ Visit each at `https://www.npmjs.com/package/<name>`. For each, the right
 sidebar should show:
 
 - [ ] **Repository**: `github.com/007krcs/tekivex-ui`
-- [ ] **Homepage**: `ui.tekivex.com`
+- [ ] **Homepage**: `www.tekivex.com/ui`
 - [ ] **Bug reports**: `github.com/007krcs/tekivex-ui/issues`
 
 NOT `github.com/007krcs/tekivex-ui` anywhere. If you see the source repo
@@ -85,12 +85,12 @@ personal browser, paste:
 | Fortinet | https://www.fortiguard.com/webfilter | Information Technology |
 | Cloudflare Radar | https://radar.cloudflare.com/domains/feedback | Information Technology |
 
-Domain to submit: `ui.tekivex.com`
+Domain to submit: `www.tekivex.com/ui`
 
 Description (paste in any "additional info" field):
 
 ```
-ui.tekivex.com is the official documentation site for tekivex-ui, an
+www.tekivex.com/ui is the official documentation site for tekivex-ui, an
 open-source MIT-licensed React component library on npm. The site is hosted
 on Render with Let's Encrypt SSL. No user-generated content, no auth flows,
 no downloads beyond standard JS/CSS bundle assets. Currently uncategorized
@@ -110,7 +110,7 @@ screenshotted earlier).
 Fields to fill:
 
 ```
-URL:           https://ui.tekivex.com/
+URL:           https://www.tekivex.com/ui/
 Justification: Documentation site for tekivex-ui, an open-source React
                UI library used by our development team. MIT-licensed,
                hosted on Render with Let's Encrypt cert. No

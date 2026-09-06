@@ -577,7 +577,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       ]} />
 
       <Callout type="info" theme={theme}>
-        TekiVex UI exports an <code>llms.txt</code> file at <a href="https://ui.tekivex.com/llms.txt" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>ui.tekivex.com/llms.txt</a> that documents the RSC status of every component for use with AI coding assistants like GitHub Copilot, Cursor, and Claude.
+        TekiVex UI exports an <code>llms.txt</code> file at <a href="https://www.tekivex.com/ui/llms.txt" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary }}>www.tekivex.com/ui/llms.txt</a> that documents the RSC status of every component for use with AI coding assistants like GitHub Copilot, Cursor, and Claude.
       </Callout>
     </>
   );
@@ -980,7 +980,7 @@ export function BlogPage({ theme }: Props) {
         </p>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <a
-            href="https://ui.tekivex.com"
+            href="https://www.tekivex.com/ui"
             target="_blank"
             rel="noopener noreferrer"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: theme.primary, color: '#0a0a0f', border: 'none', borderRadius: '8px', padding: '11px 22px', fontWeight: 700, fontSize: '14px', textDecoration: 'none', cursor: 'pointer' }}

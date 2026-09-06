@@ -55,8 +55,8 @@ const CLAIMS: VerifiableClaim[] = [
     claim: 'Zero runtime dependencies in core',
     explain:
       'We publish a CycloneDX SBOM with every release. Open it and confirm the dependency list for tekivex-ui core is empty.',
-    how: 'curl https://ui.tekivex.com/security/sbom.json | jq ".dependencies"',
-    href: 'https://ui.tekivex.com/security/sbom.json',
+    how: 'curl https://www.tekivex.com/ui/security/sbom.json | jq ".dependencies"',
+    href: 'https://www.tekivex.com/ui/security/sbom.json',
     cta: 'Open the SBOM',
   },
   {

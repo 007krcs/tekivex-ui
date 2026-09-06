@@ -1,6 +1,6 @@
 # create-tekivex-app
 
-Scaffold a secure React + Vite app with [tekivex-ui](https://ui.tekivex.com) pre-wired.
+Scaffold a secure React + Vite app with [tekivex-ui](https://www.tekivex.com/ui) pre-wired.
 
 ```bash
 npx create-tekivex-app my-app

@@ -4,7 +4,7 @@ import { usePageMeta } from '../use-page-meta';
 export const meta = {
   title: 'Privacy Policy — TekiVex UI',
   description:
-    'How TekiVex UI collects, uses, and protects information about visitors to ui.tekivex.com and users of the open-source library.',
+    'How TekiVex UI collects, uses, and protects information about visitors to www.tekivex.com/ui and users of the open-source library.',
 };
 
 export function Privacy() {
@@ -13,20 +13,20 @@ export function Privacy() {
     <PageShell
       title="Privacy Policy"
       eyebrow="Legal"
-      subtitle="How TekiVex UI handles information about visitors to ui.tekivex.com and developers using the open-source packages."
+      subtitle="How TekiVex UI handles information about visitors to www.tekivex.com/ui and developers using the open-source packages."
       breadcrumbs={[{ label: 'Privacy' }]}
       updated="2026-05-02"
     >
       <p>
         TekiVex UI is an open-source React component library distributed under the MIT license.
-        This page explains what information ui.tekivex.com (the documentation site) and the
+        This page explains what information www.tekivex.com/ui (the documentation site) and the
         published npm packages collect, why, and how it is handled. Plain language, no dark
         patterns.
       </p>
 
       <h2>What the documentation site collects</h2>
       <p>
-        The site at <code>ui.tekivex.com</code> is a static React application served from a CDN. We
+        The site at <code>www.tekivex.com/ui</code> is a static React application served from a CDN. We
         intentionally avoid first-party tracking. The site itself does not set marketing cookies,
         does not fingerprint visitors, and does not run analytics scripts that build identity
         profiles.

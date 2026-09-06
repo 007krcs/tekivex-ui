@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
 const DIST = join(ROOT, 'dist');
-const ORIGIN = 'https://ui.tekivex.com';
+const ORIGIN = 'https://www.tekivex.com/ui';
 
 if (!existsSync(join(DIST, 'index.html'))) {
   console.error('✗ dist/index.html missing — run `vite build` first');
@@ -93,19 +93,19 @@ const routes = [
     path: '/privacy',
     title: 'Privacy Policy — TekiVex UI',
     description:
-      'How TekiVex UI collects, uses, and protects information about visitors to ui.tekivex.com and users of the open-source library.',
+      'How TekiVex UI collects, uses, and protects information about visitors to www.tekivex.com/ui and users of the open-source library.',
     h1: 'Privacy Policy',
     body:
-      'TekiVex UI is an open-source React component library distributed under the MIT license. This page explains what information ui.tekivex.com (the documentation site) and the published npm packages collect, why, and how it is handled.',
+      'TekiVex UI is an open-source React component library distributed under the MIT license. This page explains what information www.tekivex.com/ui (the documentation site) and the published npm packages collect, why, and how it is handled.',
   },
   {
     path: '/terms',
     title: 'Terms of Service — TekiVex UI',
     description:
-      'The terms that govern use of the ui.tekivex.com documentation site and the TekiVex UI open-source packages.',
+      'The terms that govern use of the www.tekivex.com/ui documentation site and the TekiVex UI open-source packages.',
     h1: 'Terms of Service',
     body:
-      'TekiVex UI is an open-source React component library distributed under the MIT license, and ui.tekivex.com is the documentation site for that project. These terms cover both — the rules of the road for using the site and the packages.',
+      'TekiVex UI is an open-source React component library distributed under the MIT license, and www.tekivex.com/ui is the documentation site for that project. These terms cover both — the rules of the road for using the site and the packages.',
   },
   {
     path: '/blog',

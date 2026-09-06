@@ -22,7 +22,7 @@ The repo's [`render.yaml`](../render.yaml) blueprint defines two services:
 
 | Service | Subdomain | Builds from |
 |---|---|---|
-| `tekivex-ui` | `ui.tekivex.com` | `docs-site/` (this folder) |
+| `tekivex-ui` | `www.tekivex.com/ui` | `docs-site/` (this folder) |
 | `tekivex-ui-playground` | `playground.tekivex.com` | `demo/` (legacy SPA) |
 
 After pushing this folder to master, sync the blueprint in Render's
@@ -64,7 +64,7 @@ sidebar picks them up automatically as they land in
 
 ## Why this exists
 
-The old SPA lived at `https://ui.tekivex.com/#/components/button` —
+The old SPA lived at `https://www.tekivex.com/ui/#/components/button` —
 fragments don't get indexed by Google. Astro Starlight gives us:
 
 - Real `<title>` and `<h1>` on first byte

@@ -2,5 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /assets/
 
-Sitemap: https://ui.tekivex.com/sitemap.xml
+Sitemap: https://www.tekivex.com/ui/sitemap.xml
 

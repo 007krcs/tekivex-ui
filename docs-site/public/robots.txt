@@ -1,4 +1,4 @@
-# robots.txt for ui.tekivex.com
+# robots.txt for www.tekivex.com/ui
 #
 # Policy: this is open-source developer documentation. We WANT to be
 # indexed and cited by every search engine and every AI answer engine.
@@ -102,5 +102,5 @@ User-agent: *
 Allow: /
 
 # Sitemaps + AI index manifest
-Sitemap: https://ui.tekivex.com/sitemap-index.xml
-Sitemap: https://ui.tekivex.com/sitemap.xml
+Sitemap: https://www.tekivex.com/ui/sitemap-index.xml
+Sitemap: https://www.tekivex.com/ui/sitemap.xml

@@ -20,7 +20,17 @@
 // field is absent.
 import Default from '@astrojs/starlight/components/Head.astro';
 
-const SITE = 'https://ui.tekivex.com';
+// Permanent public home of the docs (the old ui subdomain is retired).
+// Every absolute URL — canonical, OG, breadcrumbs, JSON-LD — is built from this.
+const SITE = 'https://www.tekivex.com/ui';
+// Astro build base: '/' when built standalone, '/ui' when vendored under
+// www.tekivex.com. Stripped from the pathname so page paths are base-agnostic
+// (otherwise breadcrumbs would gain a spurious 'Ui' crumb and URLs a doubled /ui).
+const BUILD_BASE_RAW = import.meta.env.BASE_URL || '/';
+const BUILD_BASE = BUILD_BASE_RAW.endsWith('/') ? BUILD_BASE_RAW.slice(0, -1) : BUILD_BASE_RAW;
+const pagePath = BUILD_BASE && Astro.url.pathname.startsWith(BUILD_BASE)
+  ? (Astro.url.pathname.slice(BUILD_BASE.length) || '/')
+  : Astro.url.pathname;
 const OG_IMAGE = `${SITE}/og-image.png`;
 
 // Starlight route data for the current page.
@@ -51,11 +61,11 @@ const rawDescription: string =
 const pageDescription = clampDescription(rawDescription);
 
 // Absolute canonical URL for this page (strip any query/hash, ensure trailing slash semantics Astro uses).
-const canonicalURL = new URL(Astro.url.pathname, SITE).href;
+const canonicalURL = SITE + pagePath;
 
 // ── BreadcrumbList JSON-LD from the path segments ───────────────────────────
 // /recipes/india-address-form/ -> Home > Recipes > India address form
-const segments = Astro.url.pathname.split('/').filter(Boolean);
+const segments = pagePath.split('/').filter(Boolean);
 const crumbItems = [
   { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
   ...segments.map((seg, i) => {

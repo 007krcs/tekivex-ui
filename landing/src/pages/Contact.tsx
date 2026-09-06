@@ -21,7 +21,7 @@ export function Contact() {
     e.preventDefault();
     openMail({
       subject: `[TekiVex UI · ${topic}] from ${name || 'Anonymous'}`,
-      body: `From: ${name} <${email}>\nTopic: ${topic}\n\n${message}\n\n---\nSent from ui.tekivex.com/contact`,
+      body: `From: ${name} <${email}>\nTopic: ${topic}\n\n${message}\n\n---\nSent from www.tekivex.com/ui/contact`,
     });
     setSent(true);
   }

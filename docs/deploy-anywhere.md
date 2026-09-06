@@ -46,7 +46,7 @@ Why it wins:
 
 - Corporate proxies almost always allow Cloudflare (the world's largest CDN)
 - 100% free tier covers up to 500 builds/month and unlimited bandwidth
-- Custom domain (`ui.tekivex.com`) free, with automatic SSL
+- Custom domain (`www.tekivex.com/ui`) free, with automatic SSL
 - Pages stay live forever even if you stop deploying
 - Anycast network — sub-50ms latency from most major cities
 - Built-in DDoS protection
@@ -98,9 +98,9 @@ If that succeeds, you're good. (We've already wired up Astro Starlight + the red
 5. Hit Deploy. First build takes ~3 minutes.
 6. Cloudflare gives you `<random>.pages.dev` — visit it to confirm the site works.
 
-### Step 3 — Point `ui.tekivex.com` at it
+### Step 3 — Point `www.tekivex.com/ui` at it
 
-1. In Cloudflare Pages → your project → **Custom domains** → Add `ui.tekivex.com`
+1. In Cloudflare Pages → your project → **Custom domains** → Add `www.tekivex.com/ui`
 2. Cloudflare gives you a CNAME target (e.g. `tekivex-ui.pages.dev`)
 3. Add that CNAME at your DNS provider:
    - **Type:** CNAME
@@ -119,7 +119,7 @@ Test from:
 - A friend's network in a different country ✅
 - Your work laptop on Citi network — usually works because `*.pages.dev` is whitelisted; if not, email Citi IT for a category review
 
-Check `whatsmydns.net/ui.tekivex.com` to confirm DNS has propagated globally.
+Check `whatsmydns.net/www.tekivex.com/ui` to confirm DNS has propagated globally.
 
 ## Domain renewal — set this up once, never worry again
 

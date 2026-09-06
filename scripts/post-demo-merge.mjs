@@ -8,7 +8,7 @@
 // which we cannot change without dashboard access. So we hook into Vite.
 //
 // Layout produced inside demo/dist (Render's publish path):
-//   demo/dist/                ← React landing (the new ui.tekivex.com /)
+//   demo/dist/                ← React landing (the new www.tekivex.com/ui /)
 //   demo/dist/playground/     ← The demo SPA (the same files Vite just built,
 //                               but moved into a subfolder)
 //   demo/dist/book/           ← packages/tkx-book/ component catalog

@@ -20,7 +20,7 @@ Last updated: 2026-05-28 (v3.17.x).
 | `Updating a style property during rerender (background)` | Internal animation conflict, pre-v3.18 | Upgrade to v3.18+ |
 | `Module not found: 'three'` | Optional peer not installed | `npm install three` only if you use `tekivex-3d` or `TkxHolographic*` |
 | Stale chunks in Next.js dev | `.next/` cache + service worker | Clear `.next/`, unregister service workers in DevTools → Application |
-| About to hand-roll a div for a banner / form / placeholder | Discoverability gap — the library probably already covers it | Skim [`/quick-reference/`](https://ui.tekivex.com/quick-reference/) first |
+| About to hand-roll a div for a banner / form / placeholder | Discoverability gap — the library probably already covers it | Skim [`/quick-reference/`](https://www.tekivex.com/ui/quick-reference/) first |
 
 ---
 
@@ -263,7 +263,7 @@ a success banner" doesn't map to "look under A for Alert."
 
 ### Fix
 
-Skim **[`/quick-reference/`](https://ui.tekivex.com/quick-reference/)**
+Skim **[`/quick-reference/`](https://www.tekivex.com/ui/quick-reference/)**
 before hand-rolling. It's a 60-second use-case index — "you want to show
 a success/error banner → TkxAlert" — grouped by what you're trying to
 build, not by component name. Most consumers find 3-5 components they
@@ -363,7 +363,7 @@ npm view tekivex-ui
 npm pack tekivex-ui --dry-run
 
 # Verify the SBOM (lists peer deps + zero runtime deps)
-curl https://ui.tekivex.com/security/sbom.json | jq '.metadata.component, .components'
+curl https://www.tekivex.com/ui/security/sbom.json | jq '.metadata.component, .components'
 
 # Verify the threat model (15 STRIDE-mapped threats, public)
 open https://github.com/007krcs/tekivex-ui/blob/main/docs/SECURITY-THREAT-MODEL.md

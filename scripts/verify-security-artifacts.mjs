@@ -10,7 +10,7 @@
  * leaves the building. Also runnable standalone via `npm run verify:security-artifacts`.
  *
  * Each check is the answer to a specific question a procurement auditor will
- * ask: "if I curl https://ui.tekivex.com/.well-known/security.txt, do I get
+ * ask: "if I curl https://www.tekivex.com/ui/.well-known/security.txt, do I get
  * the file? If I curl /security/sbom.json, is it valid JSON?"
  */
 
@@ -38,7 +38,7 @@ const securityTxt = resolve(DIST, '.well-known/security.txt');
 if (!existsSync(securityTxt)) {
   log('✗', 'MISSING: /.well-known/security.txt');
   log(' ', `  expected at ${securityTxt}`);
-  log(' ', '  consumers visiting ui.tekivex.com/.well-known/security.txt get 404');
+  log(' ', '  consumers visiting www.tekivex.com/ui/.well-known/security.txt get 404');
   failed++;
 } else {
   const txt = readFileSync(securityTxt, 'utf8');
@@ -84,7 +84,7 @@ const sbomJson = resolve(DIST, 'security/sbom.json');
 if (!existsSync(sbomJson)) {
   log('✗', 'MISSING: /security/sbom.json');
   log(' ', `  expected at ${sbomJson}`);
-  log(' ', '  SECURITY.md links to ui.tekivex.com/security/sbom.json — would 404');
+  log(' ', '  SECURITY.md links to www.tekivex.com/ui/security/sbom.json — would 404');
   failed++;
 } else {
   try {

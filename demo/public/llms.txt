@@ -814,8 +814,8 @@ npx @tekivex/figma-kit build
 
 ## Links
 
-- Docs:      https://ui.tekivex.com
-- Ecosystem: https://ui.tekivex.com/#/ecosystem
+- Docs:      https://www.tekivex.com/ui
+- Ecosystem: https://www.tekivex.com/ui/#/ecosystem
 - npm:       https://npmjs.com/package/tekivex-ui
 - GitHub:    https://github.com/007krcs/tekivex-ui
 - Issues:    https://github.com/007krcs/tekivex-ui/issues

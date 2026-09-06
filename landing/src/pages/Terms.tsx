@@ -4,7 +4,7 @@ import { usePageMeta } from '../use-page-meta';
 export const meta = {
   title: 'Terms of Service — TekiVex UI',
   description:
-    'The terms that govern use of the ui.tekivex.com documentation site and the TekiVex UI open-source packages.',
+    'The terms that govern use of the www.tekivex.com/ui documentation site and the TekiVex UI open-source packages.',
 };
 
 export function Terms() {
@@ -19,7 +19,7 @@ export function Terms() {
     >
       <p>
         TekiVex UI is an open-source React component library distributed under the MIT license,
-        and ui.tekivex.com is the documentation site for that project. These terms cover both.
+        and www.tekivex.com/ui is the documentation site for that project. These terms cover both.
         By using the site or the packages you agree to the terms below; if you don't agree,
         please don't use them.
       </p>
@@ -87,7 +87,7 @@ export function Terms() {
 
       <h2>5. Advertising</h2>
       <p>
-        ui.tekivex.com may display advertising provided by Google AdSense. Ads are clearly
+        www.tekivex.com/ui may display advertising provided by Google AdSense. Ads are clearly
         labeled and rendered inside isolated iframes. We don't dictate which ads appear; that
         is determined by Google's auction. If a specific ad violates Google's policies you can
         report it directly via the small "i" icon on the ad itself.

@@ -1,6 +1,6 @@
 # tekivex-security-core
 
-> **The security kernel extracted from [tekivex-ui](https://ui.tekivex.com).** Framework-agnostic. Zero runtime dependencies. Pure TypeScript.
+> **The security kernel extracted from [tekivex-ui](https://www.tekivex.com/ui).** Framework-agnostic. Zero runtime dependencies. Pure TypeScript.
 
 [![npm](https://img.shields.io/npm/v/tekivex-security-core.svg)](https://npmjs.com/package/tekivex-security-core)
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)

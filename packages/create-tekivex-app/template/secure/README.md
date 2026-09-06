@@ -24,5 +24,5 @@ npm run dev
 - [ ] Move CSP from meta tag to HTTP header on your server/CDN
 - [ ] Use a server-generated `nonce` with `buildTkxCSP({ nonce })` for strict CSP
 - [ ] Add `Strict-Transport-Security` header
-- [ ] Review [tekivex-ui threat model](https://ui.tekivex.com/#/security)
+- [ ] Review [tekivex-ui threat model](https://www.tekivex.com/ui/#/security)
 - [ ] Run `npx tekivex audit` before every release

@@ -6,10 +6,10 @@ You're already on Render. This is the one document you need.
 
 - Your existing Render service is named **`tekivex-ui`**
 - It builds `demo/` (the legacy hash-routed React SPA)
-- It serves at **`ui.tekivex.com`** (custom domain attached in the Render dashboard)
+- It serves at **`www.tekivex.com/ui`** (custom domain attached in the Render dashboard)
 - It auto-deploys on every git push to master
 
-That's working — Render itself isn't the problem. **The problem is what it builds.** A hash-routed SPA is invisible to Google because every page looks like the same URL (`ui.tekivex.com/`) — the `#/components/button` part is a fragment, not a separate document.
+That's working — Render itself isn't the problem. **The problem is what it builds.** A hash-routed SPA is invisible to Google because every page looks like the same URL (`www.tekivex.com/ui/`) — the `#/components/button` part is a fragment, not a separate document.
 
 We've already shipped the fix in the repo: `docs-site/` is an Astro Starlight build that produces real flat URLs (`/components/button/`, `/components/modal/`, etc.) Google can index.
 
@@ -19,7 +19,7 @@ This playbook flips the existing Render service to build `docs-site/` instead, w
 
 | Site | Subdomain | Deploys from | Indexed by Google? |
 |---|---|---|---|
-| **Canonical docs** | `ui.tekivex.com` | `docs-site/` (Astro Starlight) | ✅ yes — flat URLs |
+| **Canonical docs** | `www.tekivex.com/ui` | `docs-site/` (Astro Starlight) | ✅ yes — flat URLs |
 | **Interactive playground** | `playground.tekivex.com` | `demo/` (hash-routed SPA) | ❌ no, but doesn't need to be |
 
 Both auto-deploy on every push. No DNS surprises, no broken bookmarks (the legacy demo stays live for existing users).
@@ -36,7 +36,7 @@ I've already updated `render.yaml` in this commit. Once you `git push`, Render r
 2. Click into your existing `tekivex-ui` service
 3. **Settings → Build & Deploy** — you should see a "Sync Blueprint" / "Re-read render.yaml" option. Click it. (Render usually auto-detects YAML changes within ~1 minute of a push, but the manual sync is faster.)
 4. Two changes happen:
-   - The existing `tekivex-ui` service will rebuild from `docs-site/` next deploy. Custom domain `ui.tekivex.com` stays attached.
+   - The existing `tekivex-ui` service will rebuild from `docs-site/` next deploy. Custom domain `www.tekivex.com/ui` stays attached.
    - A new service `tekivex-ui-playground` gets created. It builds `demo/` and is initially served only at its `<random>.onrender.com` URL.
 
 ### 3. Add `playground.tekivex.com` as a custom domain
@@ -59,13 +59,13 @@ Only needed if you want the legacy demo to keep getting traffic.
 
 After the next push, check:
 
-- `https://ui.tekivex.com/` → Astro Starlight homepage with hero
-- `https://ui.tekivex.com/components/button/` → real flat URL, full HTML
-- `https://ui.tekivex.com/sitemap-index.xml` → XML sitemap with one entry per page
+- `https://www.tekivex.com/ui/` → Astro Starlight homepage with hero
+- `https://www.tekivex.com/ui/components/button/` → real flat URL, full HTML
+- `https://www.tekivex.com/ui/sitemap-index.xml` → XML sitemap with one entry per page
 - `https://playground.tekivex.com/` → legacy demo loads
 - `https://playground.tekivex.com/#/components/button` → legacy demo with hash routing works
 
-If `ui.tekivex.com/components/button/` returns a 404, check the build logs for the new docs-site service.
+If `www.tekivex.com/ui/components/button/` returns a 404, check the build logs for the new docs-site service.
 
 ### 5. Submit the new sitemap to Google
 
@@ -73,8 +73,8 @@ This is the step that actually triggers indexing.
 
 1. Go to [search.google.com/search-console](https://search.google.com/search-console)
 2. If you haven't already: Add property → **Domain** → enter `tekivex.com` → verify via DNS TXT record
-3. **Sitemaps** (left nav) → enter `https://ui.tekivex.com/sitemap-index.xml` → Submit
-4. **URL Inspection** → enter `https://ui.tekivex.com/` → Request Indexing
+3. **Sitemaps** (left nav) → enter `https://www.tekivex.com/ui/sitemap-index.xml` → Submit
+4. **URL Inspection** → enter `https://www.tekivex.com/ui/` → Request Indexing
 
 Google starts crawling within hours; first indexed pages typically appear in 2–14 days.
 
@@ -90,7 +90,7 @@ Where Cloudflare has a slight edge:
 
 But for a docs site getting pre-launch traffic, Render is operationally simpler and you're already on it. **Stay on Render.** Move only if you hit a specific limitation.
 
-If `ui.tekivex.com` ends up blocked at Citi specifically:
+If `www.tekivex.com/ui` ends up blocked at Citi specifically:
 
 - Email Citi IT with subject "URL category review request" — they typically recategorise within 1–2 business days
 - Or, as a backup, you can also deploy `docs-site/` to Cloudflare Pages in parallel (the configs are already in the repo: `docs-site/wrangler.toml`). Run both, point one DNS record at one and another at the other for redundancy.
@@ -118,7 +118,7 @@ The same `docs-site/` builds and runs on:
 - **Vercel** — `docs-site/vercel.json` already in the repo
 - **GitHub Pages** — `.github/workflows/deploy-pages.yml` already in the repo
 
-Pick any of them, connect to the same GitHub repo, change the DNS CNAME for `ui.tekivex.com` — site is back live in 10 minutes.
+Pick any of them, connect to the same GitHub repo, change the DNS CNAME for `www.tekivex.com/ui` — site is back live in 10 minutes.
 
 This is the architectural insurance that makes the deploy "permanent" — there's no single host you depend on for survival.
 

@@ -59,7 +59,7 @@ export default function Doc() {
 
 ## Links & images
 
-Visit the [docs](https://ui.tekivex.com/) or the autolink <https://ui.tekivex.com>.
+Visit the [docs](https://www.tekivex.com/ui/) or the autolink <https://www.tekivex.com/ui>.
 
 ![Placeholder](https://via.placeholder.com/600x120/00f5d4/0a0a0f?text=TkxMarkdown)
 `;
@@ -121,7 +121,7 @@ export function MarkdownPage({ theme }: { theme: ThemeTokens }) {
 
 - Lists
 - [x] Tasks
-- [Links](https://ui.tekivex.com/)
+- [Links](https://www.tekivex.com/ui/)
 
 \\\`\\\`\\\`ts
 const x = 1;

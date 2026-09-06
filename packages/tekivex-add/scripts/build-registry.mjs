@@ -54,7 +54,7 @@ async function main() {
 
   const registry = {
     schemaVersion: 1,
-    repo: 'https://ui.tekivex.com',
+    repo: 'https://www.tekivex.com/ui',
     components,
   };
 

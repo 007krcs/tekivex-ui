@@ -4,7 +4,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Astro + Starlight config for ui.tekivex.com
+// Astro + Starlight config for www.tekivex.com/ui
 //
 // Key wins over the old hash-routed SPA:
 //   1. Real flat URLs (/getting-started, /components/button, …) — Google can
@@ -17,7 +17,8 @@ import sitemap from '@astrojs/sitemap';
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default defineConfig({
-  site: 'https://ui.tekivex.com',
+  site: 'https://www.tekivex.com',
+  base: process.env.SITE_BASE || '/',
   integrations: [
     starlight({
       title: 'TekiVex UI',
@@ -29,7 +30,7 @@ export default defineConfig({
         replacesTitle: false,
       },
       social: [
-        { icon: 'github', label: 'GitHub', href: 'https://ui.tekivex.com' },
+        { icon: 'github', label: 'GitHub', href: 'https://www.tekivex.com/ui' },
         { icon: 'npm', label: 'npm', href: 'https://www.npmjs.com/package/tekivex-ui' },
       ],
       head: [
@@ -70,13 +71,13 @@ export default defineConfig({
             '@graph': [
               {
                 '@type': 'SoftwareApplication',
-                '@id': 'https://ui.tekivex.com/#software',
+                '@id': 'https://www.tekivex.com/ui/#software',
                 name: 'TekiVex UI',
                 applicationCategory: 'DeveloperApplication',
                 operatingSystem: 'Web',
                 description:
                   'Production-grade React component library — 116 components, WCAG 2.1 AAA, built-in security kernel with published threat model, headless primitives, zero-runtime CSS engine, 44-locale i18n.',
-                url: 'https://ui.tekivex.com/',
+                url: 'https://www.tekivex.com/ui/',
                 softwareVersion: '3.20.1',
                 license: 'https://opensource.org/licenses/MIT',
                 codeRepository: 'https://github.com/007krcs/tekivex-ui',
@@ -85,15 +86,15 @@ export default defineConfig({
                 programmingLanguage: ['TypeScript', 'JavaScript'],
                 operatingSystem: 'Web',
                 offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-                author: { '@id': 'https://ui.tekivex.com/#org' },
-                publisher: { '@id': 'https://ui.tekivex.com/#org' },
+                author: { '@id': 'https://www.tekivex.com/ui/#org' },
+                publisher: { '@id': 'https://www.tekivex.com/ui/#org' },
               },
               {
                 '@type': 'Organization',
-                '@id': 'https://ui.tekivex.com/#org',
+                '@id': 'https://www.tekivex.com/ui/#org',
                 name: 'TekiVex UI',
-                url: 'https://ui.tekivex.com/',
-                logo: 'https://ui.tekivex.com/og-image.png',
+                url: 'https://www.tekivex.com/ui/',
+                logo: 'https://www.tekivex.com/ui/og-image.png',
                 sameAs: [
                   'https://www.npmjs.com/package/tekivex-ui',
                   'https://github.com/007krcs/tekivex-ui',
@@ -101,19 +102,19 @@ export default defineConfig({
               },
               {
                 '@type': 'WebSite',
-                '@id': 'https://ui.tekivex.com/#website',
+                '@id': 'https://www.tekivex.com/ui/#website',
                 name: 'TekiVex UI',
-                url: 'https://ui.tekivex.com/',
+                url: 'https://www.tekivex.com/ui/',
                 description:
                   'Documentation for TekiVex UI — accessible, secure React component library.',
-                publisher: { '@id': 'https://ui.tekivex.com/#org' },
+                publisher: { '@id': 'https://www.tekivex.com/ui/#org' },
                 inLanguage: 'en',
                 potentialAction: {
                   '@type': 'SearchAction',
                   target: {
                     '@type': 'EntryPoint',
                     urlTemplate:
-                      'https://ui.tekivex.com/?q={search_term_string}',
+                      'https://www.tekivex.com/ui/?q={search_term_string}',
                   },
                   'query-input': 'required name=search_term_string',
                 },

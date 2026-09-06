@@ -141,9 +141,9 @@ export function LicensePage({ theme }: Props) {
       {/* Attribution */}
       <div style={{ marginTop: 32, padding: bp.isMobile ? 20 : 28, borderRadius: 12, border: `1px solid ${theme.border}`, background: theme.surface, textAlign: 'center' }}>
         <p style={{ fontSize: 14, color: theme.textMuted, lineHeight: 1.7, margin: 0 }}>
-          MIT © 2026 <a href="https://ui.tekivex.com" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary, textDecoration: 'none', fontWeight: 600 }}>007krcs</a>
+          MIT © 2026 <a href="https://www.tekivex.com/ui" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary, textDecoration: 'none', fontWeight: 600 }}>007krcs</a>
           {' · '}
-          <a href="https://ui.tekivex.com" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary, textDecoration: 'none' }}>GitHub</a>
+          <a href="https://www.tekivex.com/ui" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary, textDecoration: 'none' }}>GitHub</a>
           {' · '}
           <a href="https://www.npmjs.com/package/tekivex-ui" target="_blank" rel="noopener noreferrer" style={{ color: theme.primary, textDecoration: 'none' }}>npm</a>
         </p>

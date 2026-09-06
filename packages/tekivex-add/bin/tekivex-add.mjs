@@ -10,7 +10,7 @@
 //
 // What it does:
 //   1. Resolves the component name(s) against a registry that maps names
-//      to their source files in ui.tekivex.com
+//      to their source files in www.tekivex.com/ui
 //   2. Downloads the source via the GitHub raw URL
 //   3. Writes the file to <dir>/Tkx<Name>.tsx (defaults: src/components/ui/)
 //   4. Reports each file written or skipped (already exists)

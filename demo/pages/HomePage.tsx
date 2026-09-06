@@ -875,7 +875,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
 - [x] Remote \`src\` URL
 - [ ] Your next project
 
-[Learn more](https://ui.tekivex.com/)`}
+[Learn more](https://www.tekivex.com/ui/)`}
               </pre>
             </div>
             <div style={{ padding: 20, borderRadius: 14, background: `${theme.surface}cc`, border: `1px solid ${theme.primary}44`, backdropFilter: 'blur(20px)' }}>
@@ -899,7 +899,7 @@ export function HomePage({ theme }: { theme: ThemeTokens }) {
 - [x] Remote \`src\` URL
 - [ ] Your next project
 
-[Learn more](https://ui.tekivex.com/)`}
+[Learn more](https://www.tekivex.com/ui/)`}
                 compact
               />
             </div>

@@ -192,7 +192,7 @@ export function RSCPage({ theme }: Props) {
         <p style={{ margin: '0 0 8px', fontSize: 13, fontWeight: 700, color: theme.primary }}>🤖 AI coding tools</p>
         <p style={{ margin: 0, fontSize: 13, color: theme.textMuted, lineHeight: 1.7 }}>
           TekiVex UI ships a <code style={{ color: theme.text }}>llms.txt</code> manifest at{' '}
-          <a href="/llms.txt" target="_blank" rel="noreferrer" style={{ color: theme.primary }}>ui.tekivex.com/llms.txt</a>{' '}
+          <a href="/llms.txt" target="_blank" rel="noreferrer" style={{ color: theme.primary }}>www.tekivex.com/ui/llms.txt</a>{' '}
           listing all 78 components with props, usage examples, and RSC status. Cursor, Copilot, and Claude Code
           use this to generate correct TekiVex code automatically.
         </p>

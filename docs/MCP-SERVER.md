@@ -133,7 +133,7 @@ agent scaffolding a Next.js or Remix file never has to infer it:
 
 Five components are server-safe today (`TkxBadge`, `TkxDivider`, `TkxEmpty`,
 `TkxIcon`, `TkxSparkline`); everything else reads the theme through React
-context. See [React Server Components](https://ui.tekivex.com/docs/rsc/).
+context. See [React Server Components](https://www.tekivex.com/ui/docs/rsc/).
 
 ## Enterprise controls
 

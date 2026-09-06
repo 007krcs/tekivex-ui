@@ -29,7 +29,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const DOCS_DIR = resolve(ROOT, 'docs-site/src/content/docs');
 const OUT = resolve(ROOT, 'docs-site/public/llms-full.txt');
-const SITE = 'https://ui.tekivex.com';
+const SITE = 'https://www.tekivex.com/ui';
 
 // Order matters — put the high-signal pages first so an LLM that truncates
 // still gets the most important context.

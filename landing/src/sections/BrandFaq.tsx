@@ -19,7 +19,7 @@ const FAQS: { question: string; answer: string }[] = [
   {
     question: 'What does Tekivex mean and who builds it?',
     answer:
-      'Tekivex is the umbrella brand for the TekiVex UI ecosystem of React libraries — tekivex-ui, tekivex-3d, tekivex-pdf, and related packages. The project is maintained by an open-source collective and distributed under the MIT license at ui.tekivex.com.',
+      'Tekivex is the umbrella brand for the TekiVex UI ecosystem of React libraries — tekivex-ui, tekivex-3d, tekivex-pdf, and related packages. The project is maintained by an open-source collective and distributed under the MIT license at www.tekivex.com/ui.',
   },
   {
     question: 'How do I install Tekivex UI?',
@@ -44,12 +44,12 @@ const FAQS: { question: string; answer: string }[] = [
   {
     question: 'Where can I see Tekivex UI components in action?',
     answer:
-      'The interactive playground at ui.tekivex.com/playground renders every component live with editable props. The component catalog at ui.tekivex.com/book groups them by use case. Each component also has its own documentation page under ui.tekivex.com/docs with API tables, examples, accessibility notes, and a list of common pitfalls drawn from the public issue tracker.',
+      'The interactive playground at www.tekivex.com/ui/playground renders every component live with editable props. The component catalog at www.tekivex.com/ui/book groups them by use case. Each component also has its own documentation page under www.tekivex.com/ui/docs with API tables, examples, accessibility notes, and a list of common pitfalls drawn from the public issue tracker.',
   },
   {
     question: 'How do I report a bug or request a feature?',
     answer:
-      'File an issue on the public GitHub issue tracker at github.com/007krcs/tekivex-ui — the maintainers respond inside 24 hours on weekdays. For commercial enquiries, use the contact form at ui.tekivex.com/contact and the maintainers will get back to you.',
+      'File an issue on the public GitHub issue tracker at github.com/007krcs/tekivex-ui — the maintainers respond inside 24 hours on weekdays. For commercial enquiries, use the contact form at www.tekivex.com/ui/contact and the maintainers will get back to you.',
   },
 ];
 
@@ -137,7 +137,7 @@ export function BrandFaq() {
           <strong>TekiVex UI</strong> (sometimes written <strong>tekivex-ui</strong> or just{' '}
           <strong>Tekivex</strong>) is the React component library at the core of the Tekivex
           ecosystem. It is published on npm under the package name <code>tekivex-ui</code>{' '}
-          and documented at <a href="https://ui.tekivex.com">ui.tekivex.com</a>. The library
+          and documented at <a href="https://www.tekivex.com/ui">www.tekivex.com/ui</a>. The library
           covers everything most production React applications need: form primitives, data
           tables, charts, navigation, overlays, motion, a built-in design-token system, and
           a 3D + 360° toolkit shipped as <code>tekivex-3d</code>. Every Tekivex package is

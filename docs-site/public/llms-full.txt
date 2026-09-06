@@ -3,7 +3,7 @@
 > This file is the expanded, single-document form of the TekiVex UI docs,
 > generated from the live MDX source. It is intended for AI answer engines
 > and LLMs to ingest the complete documentation in one fetch. The curated
-> link map is at https://ui.tekivex.com/llms.txt. Canonical HTML docs at https://ui.tekivex.com/.
+> link map is at https://www.tekivex.com/ui/llms.txt. Canonical HTML docs at https://www.tekivex.com/ui/.
 
 Generated from 148 documentation pages. Source of truth:
 https://github.com/007krcs/tekivex-ui (docs-site/src/content/docs).
@@ -13,7 +13,7 @@ https://github.com/007krcs/tekivex-ui (docs-site/src/content/docs).
 
 
 ## Get started in 60 seconds
-URL: https://ui.tekivex.com/getting-started/
+URL: https://www.tekivex.com/ui/getting-started/
 Install tekivex-ui, wrap your app in ThemeProvider, import a component. Done.
 
 ## Install
@@ -108,7 +108,7 @@ Install tekivex-ui, wrap your app in ThemeProvider, import a component. Done.
 
 
 ## Bundler integration
-URL: https://ui.tekivex.com/bundlers/
+URL: https://www.tekivex.com/ui/bundlers/
 Drop-in recipes for Vite, Webpack 5, Next.js (App + Pages), Remix, Parcel, Rollup, Astro, and CRA.
 
 `tekivex-ui` works with every major bundler and meta-framework. Pick yours
@@ -265,7 +265,7 @@ If you see a styled card and a button, the integration is correct.
 
 
 ## Theme & dark mode
-URL: https://ui.tekivex.com/themes/
+URL: https://www.tekivex.com/ui/themes/
 Auto/light/dark with prefers-color-scheme, custom themes, palette generators, and the TKX atomic CSS engine.
 
 ## Three modes — pick one
@@ -353,7 +353,7 @@ you actually use.
 
 
 ## React Server Components
-URL: https://ui.tekivex.com/rsc/
+URL: https://www.tekivex.com/ui/rsc/
 13 components in tekivex-ui render in Next.js App Router, Remix, and any RSC-capable framework — no "use client" required.
 
 13 components in `tekivex-ui` are RSC-compatible: they use no hooks, no
@@ -432,7 +432,7 @@ form hydrates.
 
 
 ## Quick reference — when to reach for which component
-URL: https://ui.tekivex.com/quick-reference/
+URL: https://www.tekivex.com/ui/quick-reference/
 Use-case indexed catalog. If you're about to hand-roll a div for an alert, banner, or form, check here first.
 
 You already adopted some of the library. The risk is reaching for raw HTML
@@ -673,7 +673,7 @@ close it — feedback welcome.
 
 
 ## Security model
-URL: https://ui.tekivex.com/security/
+URL: https://www.tekivex.com/ui/security/
 Zero-trust SecurityCore — URL sanitisation, Unicode homoglyph defence, PII scrubbing, rate limiting. Defaults, not opt-in.
 
 `tekivex-ui` ships with a security kernel — **SecurityCore** — that runs on
@@ -764,7 +764,7 @@ time we ran it.
 
 
 ## Ecosystem — all 14 packages, grouped by when to install
-URL: https://ui.tekivex.com/ecosystem/
+URL: https://www.tekivex.com/ui/ecosystem/
 Complete map of every npm package in the tekivex-ui ecosystem. What each does, when to reach for it, what it pairs with. One screen, scannable.
 
 14 packages live under the `novaai0401` npm account. They're not all
@@ -885,7 +885,7 @@ If you're already on `tekivex-ui`, **you do not need `tekivex-form`** — everyt
 
 
 ## AAA-targeting dark mode that survives SSR
-URL: https://ui.tekivex.com/recipes/aaa-dark-mode-ssr-safe/
+URL: https://www.tekivex.com/ui/recipes/aaa-dark-mode-ssr-safe/
 Theme toggling that works in Next.js / Remix without hydration mismatch, with no flash of unstyled content, and with verified ≥7:1 contrast on both modes.
 
 Most dark-mode implementations fail at one of three things: they crash React 18
@@ -1165,7 +1165,7 @@ cold load even with the init script wired up.
 
 
 ## Async field validation with debounced server checks
-URL: https://ui.tekivex.com/recipes/async-field-validation/
+URL: https://www.tekivex.com/ui/recipes/async-field-validation/
 Debounced, race-condition-safe "is this username available?" checks — without hammering your auth API or leaking the in-flight request state.
 
 Naive async validation fires a `fetch` on every keystroke, hammers your auth
@@ -1516,7 +1516,7 @@ short-circuiting if `Object.keys(form.validating).length > 0`.
 
 
 ## Tamper-evident audit trail
-URL: https://ui.tekivex.com/recipes/audit-trail/
+URL: https://www.tekivex.com/ui/recipes/audit-trail/
 Append-only SHA-256 hash-chained log of application events. Any mutation breaks the chain — verifiable in O(n).
 
 You need an audit log. The naive version is a Postgres table that anything
@@ -1825,7 +1825,7 @@ function buildComplianceExport(window: { from: number; to: number }) {
 
 
 ## DataGrid with hierarchical (tree) rows
-URL: https://ui.tekivex.com/recipes/data-grid-with-tree-data/
+URL: https://www.tekivex.com/ui/recipes/data-grid-with-tree-data/
 Render an org chart, file tree, or accounts hierarchy as a sortable, editable grid with disclosure carets and indented children. treegrid ARIA built in.
 
 You have data that's tree-shaped — a reporting structure, a chart of
@@ -2161,7 +2161,7 @@ cell editing, `TkxTreeView` is the lighter pick. The tipping point is
 
 
 ## Recipes — concrete, copy-pasteable
-URL: https://ui.tekivex.com/recipes/
+URL: https://www.tekivex.com/ui/recipes/
 Outcome-driven walk-throughs that combine multiple tekivex-ui primitives to ship a real thing.
 
 Each recipe shows one production-shaped pattern, end to end, using the real
@@ -2219,7 +2219,7 @@ If a recipe overpromises, it's a bug — open an issue.
 
 
 ## India address form — Country → State → District → Sub-district → PIN
-URL: https://ui.tekivex.com/recipes/india-address-form/
+URL: https://www.tekivex.com/ui/recipes/india-address-form/
 Cascading Country → State → District → Sub-district picker for Indian forms with region-correct labels (Taluka/Tehsil/Mandal/Block) + India Post PIN lookup.
 
 ## The problem
@@ -2496,7 +2496,7 @@ logos, and insignia (per GODL § 7).
 
 
 ## Peer-to-peer chat with media, reactions, and typing indicators
-URL: https://ui.tekivex.com/recipes/peer-chat-with-media/
+URL: https://www.tekivex.com/ui/recipes/peer-chat-with-media/
 Real-people messaging (not LLM chat): TkxPeerChat with magic-byte-verified media attachments, reply threading, edit/delete, delivery states, and typing.
 
 There's a recurring confusion in the issue tracker: "I tried to build a
@@ -2966,7 +2966,7 @@ network is yours:
 
 
 ## PII redaction before sending to an LLM
-URL: https://ui.tekivex.com/recipes/pii-redaction-before-llm/
+URL: https://www.tekivex.com/ui/recipes/pii-redaction-before-llm/
 Strip SSN, Luhn-validated cards, email, phone, and API keys from text before it reaches OpenAI / Anthropic / any third party. Regex + mod-10 validation.
 
 You're about to ship a feature that puts user-supplied text into a prompt
@@ -3180,7 +3180,7 @@ but only ~1 in 10 will pass Verhoeff.
 
 
 ## Secure file upload with magic-byte verification
-URL: https://ui.tekivex.com/recipes/secure-file-upload/
+URL: https://www.tekivex.com/ui/recipes/secure-file-upload/
 Verify uploads by their real magic-byte signature, not the Content-Type header — defends against polyglots, spoofing, and double-extension tricks.
 
 The browser file picker reports whatever MIME type the OS guesses from the
@@ -3397,7 +3397,7 @@ theme; consumer themes need their own check via `meetsAAA` from
 
 
 ## HIPAA-aligned patient intake form
-URL: https://ui.tekivex.com/blueprints/healthtech-patient-intake/
+URL: https://www.tekivex.com/ui/blueprints/healthtech-patient-intake/
 HIPAA-aligned React patient-intake form mapping tekivex-ui primitives to 45 CFR § 164.312 technical safeguards, with an honest scope-limits section.
 
 This blueprint shows how tekivex-ui primitives help a React application
@@ -4049,7 +4049,7 @@ Security Rule from § 164.312, and tekivex-ui addresses **none** of it:
 
 
 ## Industry blueprints — production-shaped patterns for regulated verticals
-URL: https://ui.tekivex.com/blueprints/
+URL: https://www.tekivex.com/ui/blueprints/
 Industry-scoped walkthroughs showing how tekivex-ui primitives compose for regulated verticals. Honest about scope — composition, not certification.
 
 Industry blueprints show how tekivex-ui primitives help an application
@@ -4102,7 +4102,7 @@ shape for a regulated industry*, look at a blueprint.
 
 
 ## TkxAadhaarInput
-URL: https://ui.tekivex.com/components/aadhaar-input/
+URL: https://www.tekivex.com/ui/components/aadhaar-input/
 TkxAadhaarInput — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -4123,7 +4123,7 @@ TkxAadhaarInput — accessible React component from tekivex-ui. Live demos, prop
 
 ## Source
 
-[`src/components/TkxAadhaarInput.tsx`](https://ui.tekivex.com)
+[`src/components/TkxAadhaarInput.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/aadhaar-input).
@@ -4132,7 +4132,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxAccordion
-URL: https://ui.tekivex.com/components/accordion/
+URL: https://www.tekivex.com/ui/components/accordion/
 Vertically-stacked, expandable panels — single or multi-expand, keyboard-driven, with smooth height animation.
 
 ```tsx
@@ -4219,13 +4219,13 @@ const [open, setOpen] = useState<string[]>([]);
 
 ## Source
 
-[`src/components/TkxAccordion.tsx`](https://ui.tekivex.com)
+[`src/components/TkxAccordion.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxAddressInput
-URL: https://ui.tekivex.com/components/address-input/
+URL: https://www.tekivex.com/ui/components/address-input/
 Indian-address input: type a 6-digit PIN for India Post auto-fill, or use the cascading Country → State → District → Sub-district picker (Taluka/Tehsil).
 
 `TkxAddressInput` is a single component with two complementary input
@@ -4428,7 +4428,7 @@ on upstream pick).
 
 
 ## TkxAffix
-URL: https://ui.tekivex.com/components/affix/
+URL: https://www.tekivex.com/ui/components/affix/
 TkxAffix — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -4449,7 +4449,7 @@ TkxAffix — accessible React component from tekivex-ui. Live demos, props, and 
 
 ## Source
 
-[`src/components/TkxAffix.tsx`](https://ui.tekivex.com)
+[`src/components/TkxAffix.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/affix).
@@ -4458,7 +4458,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxAlert
-URL: https://ui.tekivex.com/components/alert/
+URL: https://www.tekivex.com/ui/components/alert/
 Status callout with info / success / warning / danger variants. Optional title, dismissible, accessible roles.
 
 ```tsx
@@ -4529,13 +4529,13 @@ Components without `'use client'` — useful for status messages from
 
 ## Source
 
-[`src/components/TkxAlert.tsx`](https://ui.tekivex.com)
+[`src/components/TkxAlert.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxAnchor
-URL: https://ui.tekivex.com/components/anchor/
+URL: https://www.tekivex.com/ui/components/anchor/
 TkxAnchor — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -4556,7 +4556,7 @@ TkxAnchor — accessible React component from tekivex-ui. Live demos, props, and
 
 ## Source
 
-[`src/components/TkxAnchor.tsx`](https://ui.tekivex.com)
+[`src/components/TkxAnchor.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/anchor).
@@ -4565,7 +4565,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxAppBar
-URL: https://ui.tekivex.com/components/app-bar/
+URL: https://www.tekivex.com/ui/components/app-bar/
 TkxAppBar — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -4588,7 +4588,7 @@ TkxAppBar — accessible React component from tekivex-ui. Live demos, props, and
 
 ## Source
 
-Implementation in [`src/components/TkxAppBar.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxAppBar.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/app-bar).
@@ -4597,7 +4597,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxAutoForm
-URL: https://ui.tekivex.com/components/auto-form/
+URL: https://www.tekivex.com/ui/components/auto-form/
 Render a complete accessible form from a declarative schema — validation, error summary, themed controls, and built-in input sanitisation.
 
 `TkxAutoForm` renders a complete, working form from a declarative `FormSchema`
@@ -4677,13 +4677,13 @@ Each entry in `schema.fields` is a `FormField`:
 
 ## Source
 
-[`src/components/TkxAutoForm.tsx`](https://ui.tekivex.com)
+[`src/components/TkxAutoForm.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxAutocomplete
-URL: https://ui.tekivex.com/components/autocomplete/
+URL: https://www.tekivex.com/ui/components/autocomplete/
 Type-ahead text input with filtered suggestions, free-solo mode, async loading, and proper ARIA combobox semantics.
 
 ```tsx
@@ -4756,13 +4756,13 @@ const [loading, setLoading] = useState(false);
 
 ## Source
 
-[`src/components/TkxAutocomplete.tsx`](https://ui.tekivex.com)
+[`src/components/TkxAutocomplete.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxAvatar
-URL: https://ui.tekivex.com/components/avatar/
+URL: https://www.tekivex.com/ui/components/avatar/
 User avatar with image, initials fallback, status dot, and group composition. RSC-compatible.
 
 ```tsx
@@ -4853,13 +4853,13 @@ Compose multiple avatars with overlap and an overflow count:
 
 ## Source
 
-[`src/components/TkxAvatar.tsx`](https://ui.tekivex.com)
+[`src/components/TkxAvatar.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxBadge
-URL: https://ui.tekivex.com/components/badge/
+URL: https://www.tekivex.com/ui/components/badge/
 Compact status pill — variants, sizes, outlined style. RSC-compatible.
 
 ```tsx
@@ -4922,13 +4922,13 @@ Components without `'use client'`.
 
 ## Source
 
-[`src/components/TkxBadge.tsx`](https://ui.tekivex.com)
+[`src/components/TkxBadge.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxBottomNav
-URL: https://ui.tekivex.com/components/bottom-nav/
+URL: https://www.tekivex.com/ui/components/bottom-nav/
 TkxBottomNav — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -4951,7 +4951,7 @@ TkxBottomNav — accessible React component from tekivex-ui. Live demos, props, 
 
 ## Source
 
-Implementation in [`src/components/TkxBottomNav.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxBottomNav.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/bottom-nav).
@@ -4960,7 +4960,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxBreadcrumb
-URL: https://ui.tekivex.com/components/breadcrumb/
+URL: https://www.tekivex.com/ui/components/breadcrumb/
 Hierarchical navigation trail with auto-collapse on overflow, custom separators, and full WAI-ARIA semantics.
 
 ```tsx
@@ -5041,13 +5041,13 @@ you route via your framework's `` component instead of bare `<a>`.
 
 ## Source
 
-[`src/components/TkxBreadcrumb.tsx`](https://ui.tekivex.com)
+[`src/components/TkxBreadcrumb.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxButton
-URL: https://ui.tekivex.com/components/button/
+URL: https://www.tekivex.com/ui/components/button/
 Accessible button with variants, sizes, color schemes, loading state, and icon slots.
 
 ```tsx
@@ -5125,7 +5125,7 @@ remains visible to screen readers; the spinner is `aria-hidden`.
 
 
 ## TkxCalendarHeatmap
-URL: https://ui.tekivex.com/components/calendar-heatmap/
+URL: https://www.tekivex.com/ui/components/calendar-heatmap/
 GitHub-style activity calendar heatmap. Pass date/value points for a year grid with intensity colors, tooltips, and keyboard cell navigation.
 
 `TkxCalendarHeatmap` is the date-driven, GitHub-style activity heatmap. Pass an
@@ -5175,13 +5175,13 @@ categorical matrix instead, use [`TkxHeatmap`](/components/heatmap).
 
 ## Source
 
-[`src/components/TkxCalendarHeatmap.tsx`](https://ui.tekivex.com)
+[`src/components/TkxCalendarHeatmap.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxCalendarLunar
-URL: https://ui.tekivex.com/components/calendar-lunar/
+URL: https://www.tekivex.com/ui/components/calendar-lunar/
 Hindu (Tithi/Nakshatra), Hijri, Hebrew, and Buddhist calendar overlays on a standard Gregorian date picker.
 
 ```tsx
@@ -5222,7 +5222,7 @@ shown beneath each date cell.
 
 
 ## TkxCaptcha
-URL: https://ui.tekivex.com/components/captcha/
+URL: https://www.tekivex.com/ui/components/captcha/
 Captcha — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -5260,17 +5260,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxCaptcha.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxCaptcha.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/captcha).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/captcha).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxCard
-URL: https://ui.tekivex.com/components/card/
+URL: https://www.tekivex.com/ui/components/card/
 Container component for grouping related content — header, body, footer slots, multiple visual variants.
 
 ```tsx
@@ -5368,13 +5368,13 @@ Both accept any `ReactNode` children and forward `style` / `className`.
 
 ## Source
 
-[`src/components/TkxCard.tsx`](https://ui.tekivex.com)
+[`src/components/TkxCard.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxCarousel
-URL: https://ui.tekivex.com/components/carousel/
+URL: https://www.tekivex.com/ui/components/carousel/
 Slide carousel with autoplay, pause-on-hover, indicators, swipe, and full keyboard control.
 
 ```tsx
@@ -5484,13 +5484,13 @@ const [active, setActive] = useState(0);
 
 ## Source
 
-[`src/components/TkxCarousel.tsx`](https://ui.tekivex.com)
+[`src/components/TkxCarousel.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxCascader
-URL: https://ui.tekivex.com/components/cascader/
+URL: https://www.tekivex.com/ui/components/cascader/
 TkxCascader — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -5511,7 +5511,7 @@ TkxCascader — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-Implementation in [`src/components/TkxCascader.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxCascader.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/cascader).
@@ -5520,7 +5520,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxChat
-URL: https://ui.tekivex.com/components/chat/
+URL: https://www.tekivex.com/ui/components/chat/
 TkxChat — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -5541,7 +5541,7 @@ TkxChat — accessible React component from tekivex-ui. Live demos, props, and a
 
 ## Source
 
-[`src/components/TkxChat.tsx`](https://ui.tekivex.com)
+[`src/components/TkxChat.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/chat).
@@ -5550,7 +5550,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxCheckbox
-URL: https://ui.tekivex.com/components/checkbox/
+URL: https://www.tekivex.com/ui/components/checkbox/
 Accessible checkbox with controlled state, indeterminate, color schemes, error state, and full keyboard support.
 
 ```tsx
@@ -5596,7 +5596,7 @@ const [checked, setChecked] = useState(true);
 
 ## Source
 
-The implementation lives at [`src/components/TkxCheckbox.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxCheckbox.tsx`](https://www.tekivex.com/ui).
 
 For a full interactive sandbox where you can change every prop and watch
 the rendered checkbox update in real time, open the
@@ -5606,7 +5606,7 @@ the rendered checkbox update in real time, open the
 
 
 ## TkxCheckout
-URL: https://ui.tekivex.com/components/checkout/
+URL: https://www.tekivex.com/ui/components/checkout/
 Multi-step checkout flow — address → payment → review. Composes inputs, summary, and step navigation.
 
 ```tsx
@@ -5653,7 +5653,7 @@ provider switching.
 
 
 ## TkxClock
-URL: https://ui.tekivex.com/components/clock/
+URL: https://www.tekivex.com/ui/components/clock/
 TkxClock — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -5678,7 +5678,7 @@ TkxClock — accessible React component from tekivex-ui. Live demos, props, and 
 
 ## Source
 
-[`src/components/TkxClock.tsx`](https://ui.tekivex.com)
+[`src/components/TkxClock.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox where you can change every prop and watch
 the rendered component update in real time, open the
@@ -5688,7 +5688,7 @@ the rendered component update in real time, open the
 
 
 ## TkxCode
-URL: https://ui.tekivex.com/components/code/
+URL: https://www.tekivex.com/ui/components/code/
 Zero-dependency syntax-highlighted code block. Line numbers, line highlighting, copy button, filename header — token colours from your theme.
 
 A syntax-highlighted code block for docs and dev-tool UIs — with **zero
@@ -5794,7 +5794,7 @@ semantic `<pre><code>` with an `aria-label` derived from `filename` or
 
 
 ## TkxColorPicker
-URL: https://ui.tekivex.com/components/color-picker/
+URL: https://www.tekivex.com/ui/components/color-picker/
 TkxColorPicker — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -5817,7 +5817,7 @@ TkxColorPicker — accessible React component from tekivex-ui. Live demos, props
 
 ## Source
 
-[`src/components/TkxColorPicker.tsx`](https://ui.tekivex.com)
+[`src/components/TkxColorPicker.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/color-picker).
@@ -5826,7 +5826,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxComboBox
-URL: https://ui.tekivex.com/components/combo-box/
+URL: https://www.tekivex.com/ui/components/combo-box/
 Multi-select combobox with token chips. Type to filter, Enter to toggle, chips for selected values — recipients, tags, filters.
 
 A **multi-select** combobox: selected values render as removable token chips
@@ -5931,7 +5931,7 @@ The component forwards its `ref` to the inner `<input>`.
 
 
 ## TkxCommandPalette
-URL: https://ui.tekivex.com/components/command-palette/
+URL: https://www.tekivex.com/ui/components/command-palette/
 Zero-dependency Cmd-K command palette with built-in fuzzy search, sections, recents, keyboard navigation, and ARIA combobox semantics.
 
 `TkxCommandPalette` is a keyboard-first command launcher in the Linear /
@@ -6003,13 +6003,13 @@ command list and the `onSelect` behaviour.
 
 ## Source
 
-[`src/components/TkxCommandPalette.tsx`](https://ui.tekivex.com)
+[`src/components/TkxCommandPalette.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxCommand
-URL: https://ui.tekivex.com/components/command/
+URL: https://www.tekivex.com/ui/components/command/
 TkxCommand — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -6030,7 +6030,7 @@ TkxCommand — accessible React component from tekivex-ui. Live demos, props, an
 
 ## Source
 
-[`src/components/TkxCommand.tsx`](https://ui.tekivex.com)
+[`src/components/TkxCommand.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/command).
@@ -6039,7 +6039,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxConfetti
-URL: https://ui.tekivex.com/components/confetti/
+URL: https://www.tekivex.com/ui/components/confetti/
 TkxConfetti — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -6060,7 +6060,7 @@ TkxConfetti — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-[`src/components/TkxConfetti.tsx`](https://ui.tekivex.com)
+[`src/components/TkxConfetti.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/confetti).
@@ -6069,7 +6069,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxConfigProvider
-URL: https://ui.tekivex.com/components/config-provider/
+URL: https://www.tekivex.com/ui/components/config-provider/
 ConfigProvider — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -6101,17 +6101,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxConfigProvider.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxConfigProvider.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/config-provider).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/config-provider).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxCurrencyInput
-URL: https://ui.tekivex.com/components/currency-input/
+URL: https://www.tekivex.com/ui/components/currency-input/
 TkxCurrencyInput — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -6134,7 +6134,7 @@ TkxCurrencyInput — accessible React component from tekivex-ui. Live demos, pro
 
 ## Source
 
-[`src/components/TkxCurrencyInput.tsx`](https://ui.tekivex.com)
+[`src/components/TkxCurrencyInput.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/currency-input).
@@ -6143,7 +6143,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxDataGrid
-URL: https://ui.tekivex.com/components/data-grid/
+URL: https://www.tekivex.com/ui/components/data-grid/
 Sortable, selectable, virtually-scrolled data grid with filters, pagination, CSV export, and tree-data support.
 
 ```tsx
@@ -6206,7 +6206,7 @@ const [selected, setSelected] = useState<string[]>([]);
 
 ## Source
 
-The implementation lives at [`src/components/TkxDataGrid.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxDataGrid.tsx`](https://www.tekivex.com/ui).
 
 For tree-data, column pinning, row grouping, infinite scroll, and the
 full prop matrix, open the [playground](/playground/#/components/data-grid)
@@ -6216,7 +6216,7 @@ or the [DataGrid recipe](/recipes/data-grid-with-tree-data/).
 
 
 ## TkxDatePicker
-URL: https://ui.tekivex.com/components/date-picker/
+URL: https://www.tekivex.com/ui/components/date-picker/
 Single-date or range picker with built-in presets, time selection, min/max bounds, and full keyboard nav.
 
 ```tsx
@@ -6312,13 +6312,13 @@ override:
 
 ## Source
 
-[`src/components/TkxDatePicker.tsx`](https://ui.tekivex.com)
+[`src/components/TkxDatePicker.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxDivider
-URL: https://ui.tekivex.com/components/divider/
+URL: https://www.tekivex.com/ui/components/divider/
 TkxDivider — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -6343,7 +6343,7 @@ TkxDivider — accessible React component from tekivex-ui. Live demos, props, an
 
 ## Source
 
-[`src/components/TkxDivider.tsx`](https://ui.tekivex.com)
+[`src/components/TkxDivider.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox where you can change every prop and watch
 the rendered component update in real time, open the
@@ -6353,7 +6353,7 @@ the rendered component update in real time, open the
 
 
 ## TkxDrawer
-URL: https://ui.tekivex.com/components/drawer/
+URL: https://www.tekivex.com/ui/components/drawer/
 Side sheet that slides in from any edge — focus-trapped, scroll-locked, RTL-aware.
 
 ```tsx
@@ -6441,13 +6441,13 @@ drawer always slides from the **inline-end** edge unless you pin it.
 
 ## Source
 
-[`src/components/TkxDrawer.tsx`](https://ui.tekivex.com)
+[`src/components/TkxDrawer.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxDropdown
-URL: https://ui.tekivex.com/components/dropdown/
+URL: https://www.tekivex.com/ui/components/dropdown/
 Searchable dropdown with single + multi-select, grouped items, custom rendering, and portal mounting.
 
 ```tsx
@@ -6504,7 +6504,7 @@ Pick country ▾}
 
 ## Source
 
-The implementation lives at [`src/components/TkxDropdown.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxDropdown.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox, open the [playground](/playground/#/components/dropdown).
 
@@ -6512,7 +6512,7 @@ For the full interactive sandbox, open the [playground](/playground/#/components
 
 
 ## TkxEmpty
-URL: https://ui.tekivex.com/components/empty/
+URL: https://www.tekivex.com/ui/components/empty/
 TkxEmpty — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -6539,7 +6539,7 @@ TkxEmpty — accessible React component from tekivex-ui. Live demos, props, and 
 
 ## Source
 
-[`src/components/TkxEmpty.tsx`](https://ui.tekivex.com)
+[`src/components/TkxEmpty.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox where you can change every prop and watch
 the rendered component update in real time, open the
@@ -6549,7 +6549,7 @@ the rendered component update in real time, open the
 
 
 ## TkxAIChatBubble
-URL: https://ui.tekivex.com/components/experimental/aichat-bubble/
+URL: https://www.tekivex.com/ui/components/experimental/aichat-bubble/
 AIChatBubble — experimental React component from tekivex-ui. API not stable.
 
 This component lives in the `tekivex-ui/experimental` subpath. Its API may change or be removed
@@ -6588,17 +6588,17 @@ prototypes; pin and audit before production. For production chat UIs, prefer
 
 ## Source
 
-The implementation lives at [`src/components/TkxAIChatBubble.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxAIChatBubble.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/aichat-bubble).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/aichat-bubble).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxAIConfidenceBar
-URL: https://ui.tekivex.com/components/experimental/aiconfidence-bar/
+URL: https://www.tekivex.com/ui/components/experimental/aiconfidence-bar/
 AIConfidenceBar — experimental React component from tekivex-ui. API not stable.
 
 This component lives in the `tekivex-ui/experimental` subpath. Its API may change or be removed
@@ -6633,17 +6633,17 @@ for prototypes; pin and audit before production.
 
 ## Source
 
-The implementation lives at [`src/components/TkxAIConfidenceBar.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxAIConfidenceBar.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/aiconfidence-bar).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/aiconfidence-bar).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxAIThinking
-URL: https://ui.tekivex.com/components/experimental/aithinking/
+URL: https://www.tekivex.com/ui/components/experimental/aithinking/
 AIThinking — experimental React component from tekivex-ui. API not stable.
 
 This component lives in the `tekivex-ui/experimental` subpath. Its API may change or be removed
@@ -6678,17 +6678,17 @@ prototypes; pin and audit before production.
 
 ## Source
 
-The implementation lives at [`src/components/TkxAIThinking.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxAIThinking.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/aithinking).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/aithinking).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxQuantumForm
-URL: https://ui.tekivex.com/components/experimental/quantum-form/
+URL: https://www.tekivex.com/ui/components/experimental/quantum-form/
 QuantumForm — experimental React component from tekivex-ui. API not stable.
 
 This component lives in the `tekivex-ui/experimental` subpath. Its API may change or be removed
@@ -6723,17 +6723,17 @@ production components. Use it for prototypes; pin and audit before production.
 
 ## Source
 
-The implementation lives at [`src/components/TkxQuantumForm.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxQuantumForm.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/quantum-form).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/quantum-form).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxField
-URL: https://ui.tekivex.com/components/field/
+URL: https://www.tekivex.com/ui/components/field/
 Standalone form-control wrapper — gives any control the accessible label, hint, and error chrome with automatic aria wiring.
 
 `TkxInput` and `TkxTextarea` ship label/hint/error chrome built in — but every
@@ -6809,7 +6809,7 @@ If the child already carries an `id`, TkxField respects it (the label's
 
 
 ## TkxFileUpload
-URL: https://ui.tekivex.com/components/file-upload/
+URL: https://www.tekivex.com/ui/components/file-upload/
 Drag-and-drop file uploader with validation, previews, simulated progress, and full keyboard support.
 
 ```tsx
@@ -6905,13 +6905,13 @@ files. Wire your own POST/PUT to the server:
 
 ## Source
 
-[`src/components/TkxFileUpload.tsx`](https://ui.tekivex.com)
+[`src/components/TkxFileUpload.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxFlowChart
-URL: https://ui.tekivex.com/components/flow-chart/
+URL: https://www.tekivex.com/ui/components/flow-chart/
 Headless node-edge graph editor — pan, zoom, drag nodes, draw edges, inline rename, and an inspector. Parent owns the nodes and edges arrays.
 
 ```tsx
@@ -7038,7 +7038,7 @@ source to the left port of the target (left-to-right reading flow).
 
 
 ## TkxFontProvider
-URL: https://ui.tekivex.com/components/font-provider/
+URL: https://www.tekivex.com/ui/components/font-provider/
 FontProvider — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -7068,17 +7068,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxFontProvider.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxFontProvider.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/font-provider).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/font-provider).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxFormBuilder
-URL: https://ui.tekivex.com/components/form-builder/
+URL: https://www.tekivex.com/ui/components/form-builder/
 Visual form designer with a palette, canvas, inspector, live preview, and JSON view. Edits a small JSON-serialisable FormSchema you own.
 
 ```tsx
@@ -7181,7 +7181,7 @@ validation logic outside the Preview tab (returns an error string or `null`).
 
 
 ## TkxForm
-URL: https://ui.tekivex.com/components/form/
+URL: https://www.tekivex.com/ui/components/form/
 TkxForm — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -7202,7 +7202,7 @@ TkxForm — accessible React component from tekivex-ui. Live demos, props, and a
 
 ## Source
 
-[`src/components/TkxForm.tsx`](https://ui.tekivex.com)
+[`src/components/TkxForm.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/form).
@@ -7211,7 +7211,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxFunnelChart
-URL: https://ui.tekivex.com/components/funnel-chart/
+URL: https://www.tekivex.com/ui/components/funnel-chart/
 Zero-dependency SVG conversion funnel. Trapezoid stages encode value as width, with automatic drop-off percentages between steps.
 
 `TkxFunnelChart` renders a conversion funnel as a stack of trapezoids whose
@@ -7257,13 +7257,13 @@ All other `div` attributes (except `onClick`) are spread onto the root.
 
 ## Source
 
-[`src/components/TkxFunnelChart.tsx`](https://ui.tekivex.com)
+[`src/components/TkxFunnelChart.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxGantt
-URL: https://ui.tekivex.com/components/gantt/
+URL: https://www.tekivex.com/ui/components/gantt/
 Day-resolution project timeline with dependency arrows, progress bars, and UTC-safe date math. Reschedule tasks via keyboard; parent owns the data.
 
 ```tsx
@@ -7359,7 +7359,7 @@ Exported date helpers: `parseDay`, `formatDay`, `dayDiff` (all UTC-safe).
 
 
 ## TkxGauge
-URL: https://ui.tekivex.com/components/gauge/
+URL: https://www.tekivex.com/ui/components/gauge/
 Zero-dependency SVG gauge with arc and speedometer variants, color thresholds, ticks, and animated fill. WAI-ARIA meter role.
 
 `TkxGauge` renders a circular progress gauge as a single self-contained SVG.
@@ -7418,13 +7418,13 @@ All other `div` attributes are spread onto the root element.
 
 ## Source
 
-[`src/components/TkxGauge.tsx`](https://ui.tekivex.com)
+[`src/components/TkxGauge.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxHeatmap
-URL: https://ui.tekivex.com/components/heatmap/
+URL: https://www.tekivex.com/ui/components/heatmap/
 Zero-dependency SVG matrix heatmap for cohorts, confusion and correlation matrices. Sequential or diverging scales, legend, auto-contrast labels.
 
 `TkxHeatmap` is a matrix-style heatmap: categorical x and y axes with
@@ -7475,13 +7475,13 @@ All other `div` attributes (except `onClick`) are spread onto the root.
 
 ## Source
 
-[`src/components/TkxHeatmap.tsx`](https://ui.tekivex.com)
+[`src/components/TkxHeatmap.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxIcon
-URL: https://ui.tekivex.com/components/icon/
+URL: https://www.tekivex.com/ui/components/icon/
 TkxIcon — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -7504,7 +7504,7 @@ TkxIcon — accessible React component from tekivex-ui. Live demos, props, and a
 
 ## Source
 
-[`src/components/TkxIcon.tsx`](https://ui.tekivex.com)
+[`src/components/TkxIcon.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/icon).
@@ -7513,7 +7513,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxImageEditor
-URL: https://ui.tekivex.com/components/image-editor/
+URL: https://www.tekivex.com/ui/components/image-editor/
 ImageEditor — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -7561,17 +7561,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxImageEditor.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxImageEditor.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/image-editor).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/image-editor).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxImage
-URL: https://ui.tekivex.com/components/image/
+URL: https://www.tekivex.com/ui/components/image/
 TkxImage — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -7594,7 +7594,7 @@ TkxImage — accessible React component from tekivex-ui. Live demos, props, and 
 
 ## Source
 
-[`src/components/TkxImage.tsx`](https://ui.tekivex.com)
+[`src/components/TkxImage.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox where you can change every prop and watch
 the rendered component update in real time, open the
@@ -7604,7 +7604,7 @@ the rendered component update in real time, open the
 
 
 ## All components
-URL: https://ui.tekivex.com/components/
+URL: https://www.tekivex.com/ui/components/
 99 React components — primitives, complex widgets, AI-native, real-time, fintech, KYC.
 
 `tekivex-ui` ships **99 components** across nine families. Each is
@@ -7679,7 +7679,7 @@ code example.
 
 
 ## TkxInput
-URL: https://ui.tekivex.com/components/input/
+URL: https://www.tekivex.com/ui/components/input/
 Accessible text input with label, hint, error states, addons, and built-in Unicode homograph defence.
 
 ```tsx
@@ -7746,13 +7746,13 @@ All other props are forwarded to the underlying `<input>` element.
 
 ## Source
 
-[`src/components/TkxInput.tsx`](https://ui.tekivex.com)
+[`src/components/TkxInput.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxKanban
-URL: https://ui.tekivex.com/components/kanban/
+URL: https://www.tekivex.com/ui/components/kanban/
 Headless drag-drop kanban board with pointer + full keyboard reordering, WIP limits, and a WAI-ARIA grid model. Parent owns the columns array.
 
 ```tsx
@@ -7868,7 +7868,7 @@ interface KanbanReorderEvent {
 
 
 ## TkxPanInput, TkxVoterIdInput, TkxDrivingLicenceInput
-URL: https://ui.tekivex.com/components/kyc-inputs/
+URL: https://www.tekivex.com/ui/components/kyc-inputs/
 Indian KYC document inputs with format validation. Each is a focused single-document component.
 
 Three focused KYC components, each validating the format defined by the
@@ -7949,14 +7949,14 @@ Use them in Zod / Yup / Formik schemas, in tests, on the server side.
 
 ## Source
 
-- [`src/components/TkxKycInputs.tsx`](https://ui.tekivex.com)
-- [`src/components/TkxAadhaarInput.tsx`](https://ui.tekivex.com)
+- [`src/components/TkxKycInputs.tsx`](https://www.tekivex.com/ui)
+- [`src/components/TkxAadhaarInput.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxLayout
-URL: https://ui.tekivex.com/components/layout/
+URL: https://www.tekivex.com/ui/components/layout/
 TkxLayout — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -7977,7 +7977,7 @@ TkxLayout — accessible React component from tekivex-ui. Live demos, props, and
 
 ## Source
 
-[`src/components/TkxLayout.tsx`](https://ui.tekivex.com)
+[`src/components/TkxLayout.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/layout).
@@ -7986,7 +7986,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxList
-URL: https://ui.tekivex.com/components/list/
+URL: https://www.tekivex.com/ui/components/list/
 Structured item list with avatars, descriptions, actions, status badges, and a loading state.
 
 ```tsx
@@ -8028,7 +8028,7 @@ Structured item list with avatars, descriptions, actions, status badges, and a l
 
 ## Source
 
-The implementation lives at [`src/components/TkxList.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxList.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox, open the [playground](/playground/#/components/list).
 
@@ -8036,7 +8036,7 @@ For the full interactive sandbox, open the [playground](/playground/#/components
 
 
 ## TkxLiveFeed
-URL: https://ui.tekivex.com/components/live-feed/
+URL: https://www.tekivex.com/ui/components/live-feed/
 LiveFeed — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -8071,17 +8071,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxLiveFeed.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxLiveFeed.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/live-feed).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/live-feed).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxLiveLog
-URL: https://ui.tekivex.com/components/live-log/
+URL: https://www.tekivex.com/ui/components/live-log/
 LiveLog — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -8118,17 +8118,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxLiveLog.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxLiveLog.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/live-log).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/live-log).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxLiveMetrics
-URL: https://ui.tekivex.com/components/live-metrics/
+URL: https://www.tekivex.com/ui/components/live-metrics/
 LiveMetrics — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -8159,17 +8159,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxLiveMetrics.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxLiveMetrics.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/live-metrics).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/live-metrics).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxLogo
-URL: https://ui.tekivex.com/components/logo/
+URL: https://www.tekivex.com/ui/components/logo/
 TkxLogo — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -8192,7 +8192,7 @@ TkxLogo — accessible React component from tekivex-ui. Live demos, props, and a
 
 ## Source
 
-[`src/components/TkxLogo.tsx`](https://ui.tekivex.com)
+[`src/components/TkxLogo.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/logo).
@@ -8201,7 +8201,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxMarkdown
-URL: https://ui.tekivex.com/components/markdown/
+URL: https://www.tekivex.com/ui/components/markdown/
 TkxMarkdown — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -8222,7 +8222,7 @@ TkxMarkdown — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-[`src/components/TkxMarkdown.tsx`](https://ui.tekivex.com)
+[`src/components/TkxMarkdown.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/markdown).
@@ -8231,7 +8231,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxMasonry
-URL: https://ui.tekivex.com/components/masonry/
+URL: https://www.tekivex.com/ui/components/masonry/
 TkxMasonry — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -8252,7 +8252,7 @@ TkxMasonry — accessible React component from tekivex-ui. Live demos, props, an
 
 ## Source
 
-[`src/components/TkxMasonry.tsx`](https://ui.tekivex.com)
+[`src/components/TkxMasonry.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/masonry).
@@ -8261,7 +8261,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxMentions
-URL: https://ui.tekivex.com/components/mentions/
+URL: https://www.tekivex.com/ui/components/mentions/
 TkxMentions — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -8282,7 +8282,7 @@ TkxMentions — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-[`src/components/TkxMentions.tsx`](https://ui.tekivex.com)
+[`src/components/TkxMentions.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/mentions).
@@ -8291,7 +8291,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxMenu
-URL: https://ui.tekivex.com/components/menu/
+URL: https://www.tekivex.com/ui/components/menu/
 Trigger-driven menu with nested submenus, keyboard navigation, separators, shortcuts, and danger items.
 
 ```tsx
@@ -8392,13 +8392,13 @@ Disabled items skip during keyboard navigation and don't fire `onSelect`.
 
 ## Source
 
-[`src/components/TkxMenu.tsx`](https://ui.tekivex.com)
+[`src/components/TkxMenu.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxMessageThread
-URL: https://ui.tekivex.com/components/message-thread/
+URL: https://www.tekivex.com/ui/components/message-thread/
 Headless chat thread UI — bubbles, replies, reactions, edits, attachments, typing indicators, and delivery states. You wire it to any backend.
 
 ```tsx
@@ -8534,7 +8534,7 @@ interface PeerMessage {
 
 
 ## TkxMindMap
-URL: https://ui.tekivex.com/components/mind-map/
+URL: https://www.tekivex.com/ui/components/mind-map/
 Collapsible horizontal tidy-tree with SVG links, full keyboard navigation, and controlled-or-uncontrolled selection and collapse state. Zero deps.
 
 ```tsx
@@ -8632,7 +8632,7 @@ interface MindMapNode {
 
 
 ## TkxModal
-URL: https://ui.tekivex.com/components/modal/
+URL: https://www.tekivex.com/ui/components/modal/
 Accessible modal dialog with focus trap, scrim, escape-to-close, and full keyboard support.
 
 ## Live demo
@@ -8711,13 +8711,13 @@ Full-screen — mobile sheets
 
 ## Source
 
-[`src/components/TkxModal.tsx`](https://ui.tekivex.com)
+[`src/components/TkxModal.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxNumberInput
-URL: https://ui.tekivex.com/components/number-input/
+URL: https://www.tekivex.com/ui/components/number-input/
 TkxNumberInput — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -8742,7 +8742,7 @@ TkxNumberInput — accessible React component from tekivex-ui. Live demos, props
 
 ## Source
 
-[`src/components/TkxNumberInput.tsx`](https://ui.tekivex.com)
+[`src/components/TkxNumberInput.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/number-input).
@@ -8751,7 +8751,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxOrgChart
-URL: https://ui.tekivex.com/components/org-chart/
+URL: https://www.tekivex.com/ui/components/org-chart/
 TkxOrgChart — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -8772,7 +8772,7 @@ TkxOrgChart — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-[`src/components/TkxOrgChart.tsx`](https://ui.tekivex.com)
+[`src/components/TkxOrgChart.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/org-chart).
@@ -8781,7 +8781,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxOTP
-URL: https://ui.tekivex.com/components/otp/
+URL: https://www.tekivex.com/ui/components/otp/
 TkxOTP — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -8806,7 +8806,7 @@ TkxOTP — accessible React component from tekivex-ui. Live demos, props, and ac
 
 ## Source
 
-Implementation in [`src/components/TkxOTP.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxOTP.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/otp).
@@ -8815,7 +8815,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxPagination
-URL: https://ui.tekivex.com/components/pagination/
+URL: https://www.tekivex.com/ui/components/pagination/
 Page navigation — first/prev/next/last + numbered pages, sibling count, page size selector. Localised in 35 languages.
 
 ```tsx
@@ -8889,13 +8889,13 @@ active locale, with English fallbacks for the optional fields.
 
 ## Source
 
-[`src/components/TkxPagination.tsx`](https://ui.tekivex.com)
+[`src/components/TkxPagination.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxPaymentButton
-URL: https://ui.tekivex.com/components/payment-button/
+URL: https://www.tekivex.com/ui/components/payment-button/
 Drop-in payment trigger — Stripe, Razorpay, PayPal. Loads the SDK on click, never on mount.
 
 ```tsx
@@ -8945,7 +8945,7 @@ See `tests/TkxPaymentButton.test.tsx` — 6 tests covering provider switching
 
 
 ## TkxPhoneInput
-URL: https://ui.tekivex.com/components/phone-input/
+URL: https://www.tekivex.com/ui/components/phone-input/
 TkxPhoneInput — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -8968,7 +8968,7 @@ TkxPhoneInput — accessible React component from tekivex-ui. Live demos, props,
 
 ## Source
 
-[`src/components/TkxPhoneInput.tsx`](https://ui.tekivex.com)
+[`src/components/TkxPhoneInput.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/phone-input).
@@ -8977,7 +8977,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxPivotTable
-URL: https://ui.tekivex.com/components/pivot-table/
+URL: https://www.tekivex.com/ui/components/pivot-table/
 Group and aggregate a flat record array into a pivot table with multi-level row/column groups, five aggregators, and grand totals. Zero deps.
 
 ```tsx
@@ -9058,7 +9058,7 @@ interface PivotValue {
 
 
 ## TkxPlayground
-URL: https://ui.tekivex.com/components/playground/
+URL: https://www.tekivex.com/ui/components/playground/
 Live React + tekivex-ui playground — edit JSX in the browser, see the output instantly. Used by the demo site.
 
 ```tsx
@@ -9106,7 +9106,7 @@ themes page.
 
 
 ## TkxPopover
-URL: https://ui.tekivex.com/components/popover/
+URL: https://www.tekivex.com/ui/components/popover/
 Click-triggered popover with placement options, arrow indicator, and click-outside-to-close.
 
 ```tsx
@@ -9150,7 +9150,7 @@ More info}
 
 ## Source
 
-The implementation lives at [`src/components/TkxPopover.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxPopover.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox with every prop tweakable, open
 the [playground](/playground/#/components/popover).
@@ -9159,7 +9159,7 @@ the [playground](/playground/#/components/popover).
 
 
 ## TkxProgress
-URL: https://ui.tekivex.com/components/progress/
+URL: https://www.tekivex.com/ui/components/progress/
 Linear and circular progress bars — determinate or indeterminate, with proper ARIA progressbar semantics.
 
 ```tsx
@@ -9243,13 +9243,13 @@ For two-phase progress (e.g. data downloaded vs played in a video):
 
 ## Source
 
-[`src/components/TkxProgress.tsx`](https://ui.tekivex.com)
+[`src/components/TkxProgress.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxQRCode
-URL: https://ui.tekivex.com/components/qrcode/
+URL: https://www.tekivex.com/ui/components/qrcode/
 TkxQRCode — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -9274,7 +9274,7 @@ TkxQRCode — accessible React component from tekivex-ui. Live demos, props, and
 
 ## Source
 
-[`src/components/TkxQRCode.tsx`](https://ui.tekivex.com)
+[`src/components/TkxQRCode.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/qrcode).
@@ -9283,7 +9283,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxRadio
-URL: https://ui.tekivex.com/components/radio/
+URL: https://www.tekivex.com/ui/components/radio/
 Accessible radio with single-choice group behaviour, color schemes, disabled options, and full keyboard support.
 
 ```tsx
@@ -9326,7 +9326,7 @@ cycle through siblings (roving tab-index).
 
 ## Source
 
-The implementation lives at [`src/components/TkxRadio.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxRadio.tsx`](https://www.tekivex.com/ui).
 
 For a full interactive sandbox where you can change every prop and
 watch the rendered radio group update in real time, open the
@@ -9336,7 +9336,7 @@ watch the rendered radio group update in real time, open the
 
 
 ## TkxRating
-URL: https://ui.tekivex.com/components/rating/
+URL: https://www.tekivex.com/ui/components/rating/
 TkxRating — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -9361,7 +9361,7 @@ TkxRating — accessible React component from tekivex-ui. Live demos, props, and
 
 ## Source
 
-[`src/components/TkxRating.tsx`](https://ui.tekivex.com)
+[`src/components/TkxRating.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/rating).
@@ -9370,7 +9370,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxRealTimeChart
-URL: https://ui.tekivex.com/components/real-time-chart/
+URL: https://www.tekivex.com/ui/components/real-time-chart/
 RealTimeChart — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -9410,17 +9410,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxRealTimeChart.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxRealTimeChart.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/real-time-chart).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/real-time-chart).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxResult
-URL: https://ui.tekivex.com/components/result/
+URL: https://www.tekivex.com/ui/components/result/
 TkxResult — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -9445,7 +9445,7 @@ TkxResult — accessible React component from tekivex-ui. Live demos, props, and
 
 ## Source
 
-[`src/components/TkxResult.tsx`](https://ui.tekivex.com)
+[`src/components/TkxResult.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/result).
@@ -9454,7 +9454,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxRichEditor
-URL: https://ui.tekivex.com/components/rich-editor/
+URL: https://www.tekivex.com/ui/components/rich-editor/
 Accessible contenteditable rich-text editor with a sanitising HTML/Markdown/text output, paste scrubbing, and an imperative ref handle.
 
 ```tsx
@@ -9555,7 +9555,7 @@ interface TkxRichEditorHandle {
 
 
 ## TkxRichTextDisplay
-URL: https://ui.tekivex.com/components/rich-text-display/
+URL: https://www.tekivex.com/ui/components/rich-text-display/
 Schema-typed rich-text renderer. Block-based, sanitised, supports paragraphs, headings, lists, quotes, code, images, embeds.
 
 ```tsx
@@ -9634,13 +9634,13 @@ sandbox attribute. Other providers render as a fallback link.
 
 ## Source
 
-[`src/components/TkxRichTextDisplay.tsx`](https://ui.tekivex.com)
+[`src/components/TkxRichTextDisplay.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxSecurityDashboard
-URL: https://ui.tekivex.com/components/security-dashboard/
+URL: https://www.tekivex.com/ui/components/security-dashboard/
 Live view of the security kernel — XSS, Trojan-Source, PII, audit, rate-limit, and MIME events. JSON export for SIEM.
 
 The tekivex-ui security kernel blocks XSS, Trojan-Source unicode, PII
@@ -9775,7 +9775,7 @@ const unsubscribe = onSecurityEvent((evt) => {
 
 
 ## TkxSegmented
-URL: https://ui.tekivex.com/components/segmented/
+URL: https://www.tekivex.com/ui/components/segmented/
 TkxSegmented — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -9800,7 +9800,7 @@ TkxSegmented — accessible React component from tekivex-ui. Live demos, props, 
 
 ## Source
 
-[`src/components/TkxSegmented.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSegmented.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/segmented).
@@ -9809,7 +9809,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxSelect
-URL: https://ui.tekivex.com/components/select/
+URL: https://www.tekivex.com/ui/components/select/
 Searchable, multi-select capable dropdown — keyboard-driven, virtualised, clearable, with grouped options.
 
 ```tsx
@@ -9890,13 +9890,13 @@ For very long option lists (5000+), enable virtual scroll:
 
 ## Source
 
-[`src/components/TkxSelect.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSelect.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxSEO
-URL: https://ui.tekivex.com/components/seo/
+URL: https://www.tekivex.com/ui/components/seo/
 Imperative SEO helpers — JSON-LD structured data, OpenGraph, Twitter Cards. Mounts and cleans up on unmount.
 
 ```tsx
@@ -9947,7 +9947,7 @@ mount/unmount lifecycle.
 
 
 ## TkxSignaturePad
-URL: https://ui.tekivex.com/components/signature-pad/
+URL: https://www.tekivex.com/ui/components/signature-pad/
 TkxSignaturePad — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -9968,7 +9968,7 @@ TkxSignaturePad — accessible React component from tekivex-ui. Live demos, prop
 
 ## Source
 
-[`src/components/TkxSignaturePad.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSignaturePad.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/signature-pad).
@@ -9977,7 +9977,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxSkeleton
-URL: https://ui.tekivex.com/components/skeleton/
+URL: https://www.tekivex.com/ui/components/skeleton/
 Loading placeholder shimmer. RSC-compatible, respects prefers-reduced-motion.
 
 ```tsx
@@ -10045,13 +10045,13 @@ Pure CSS animation, no hooks. Renders in Next.js Server Components.
 
 ## Source
 
-[`src/components/TkxSkeleton.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSkeleton.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxSlider
-URL: https://ui.tekivex.com/components/slider/
+URL: https://www.tekivex.com/ui/components/slider/
 Range input with single or dual handles, marks, step lock, and proper ARIA slider semantics.
 
 ```tsx
@@ -10128,13 +10128,13 @@ Setting `marks` snaps the slider to those values automatically.
 
 ## Source
 
-[`src/components/TkxSlider.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSlider.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxSnackbar
-URL: https://ui.tekivex.com/components/snackbar/
+URL: https://www.tekivex.com/ui/components/snackbar/
 TkxSnackbar — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -10157,7 +10157,7 @@ TkxSnackbar — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-[`src/components/TkxSnackbar.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSnackbar.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/snackbar).
@@ -10166,7 +10166,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxSortable
-URL: https://ui.tekivex.com/components/sortable/
+URL: https://www.tekivex.com/ui/components/sortable/
 TkxSortable — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -10187,7 +10187,7 @@ TkxSortable — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-[`src/components/TkxSortable.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSortable.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/sortable).
@@ -10196,7 +10196,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxSparkline
-URL: https://ui.tekivex.com/components/sparkline/
+URL: https://www.tekivex.com/ui/components/sparkline/
 Tiny zero-dependency inline SVG sparkline with line, area, and bar variants, optional smoothing, last-point marker, and trailing value.
 
 `TkxSparkline` is a compact, inline trend chart for tables, cards, and stat
@@ -10239,13 +10239,13 @@ All other `span` attributes are spread onto the root.
 
 ## Source
 
-[`src/components/TkxSparkline.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSparkline.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxSpeedDial
-URL: https://ui.tekivex.com/components/speed-dial/
+URL: https://www.tekivex.com/ui/components/speed-dial/
 TkxSpeedDial — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -10266,7 +10266,7 @@ TkxSpeedDial — accessible React component from tekivex-ui. Live demos, props, 
 
 ## Source
 
-[`src/components/TkxSpeedDial.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSpeedDial.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/speed-dial).
@@ -10275,7 +10275,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxSpin
-URL: https://ui.tekivex.com/components/spin/
+URL: https://www.tekivex.com/ui/components/spin/
 TkxSpin — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -10298,7 +10298,7 @@ TkxSpin — accessible React component from tekivex-ui. Live demos, props, and a
 
 ## Source
 
-[`src/components/TkxSpin.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSpin.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox where you can change every prop and watch
 the rendered component update in real time, open the
@@ -10308,7 +10308,7 @@ the rendered component update in real time, open the
 
 
 ## TkxSpreadsheet
-URL: https://ui.tekivex.com/components/spreadsheet/
+URL: https://www.tekivex.com/ui/components/spreadsheet/
 Editable cell grid with a built-in formula evaluator (SUM, AVG, IF, ranges, cell refs) and circular-reference detection. You own the cell map.
 
 ```tsx
@@ -10412,7 +10412,7 @@ The evaluator is exported standalone as `evaluate(address, cells)` for reuse
 
 
 ## TkxStatistic
-URL: https://ui.tekivex.com/components/statistic/
+URL: https://www.tekivex.com/ui/components/statistic/
 TkxStatistic — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -10439,7 +10439,7 @@ TkxStatistic — accessible React component from tekivex-ui. Live demos, props, 
 
 ## Source
 
-[`src/components/TkxStatistic.tsx`](https://ui.tekivex.com)
+[`src/components/TkxStatistic.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox where you can change every prop and watch
 the rendered component update in real time, open the
@@ -10449,7 +10449,7 @@ the rendered component update in real time, open the
 
 
 ## TkxStepper
-URL: https://ui.tekivex.com/components/stepper/
+URL: https://www.tekivex.com/ui/components/stepper/
 Multi-step process indicator. Horizontal or vertical, clickable steps, error/completed states, and full keyboard nav.
 
 ```tsx
@@ -10527,13 +10527,13 @@ For wizards where the user can jump around freely:
 
 ## Source
 
-[`src/components/TkxStepper.tsx`](https://ui.tekivex.com)
+[`src/components/TkxStepper.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxPlanSelector, TkxBillingCycleToggle, TkxProrationPreview
-URL: https://ui.tekivex.com/components/subscription/
+URL: https://www.tekivex.com/ui/components/subscription/
 Three composable subscription / recurring-billing components. Pure UI — pair with TkxPaymentButton for the full flow.
 
 Three components for SaaS-style pricing pages and plan-change flows.
@@ -10681,13 +10681,13 @@ function PricingPage() {
 
 ## Source
 
-[`src/components/TkxSubscription.tsx`](https://ui.tekivex.com)
+[`src/components/TkxSubscription.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxTable
-URL: https://ui.tekivex.com/components/table/
+URL: https://www.tekivex.com/ui/components/table/
 TkxTable — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -10708,7 +10708,7 @@ TkxTable — accessible React component from tekivex-ui. Live demos, props, and 
 
 ## Source
 
-[`src/components/TkxTable.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTable.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/table).
@@ -10717,7 +10717,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxTabs
-URL: https://ui.tekivex.com/components/tabs/
+URL: https://www.tekivex.com/ui/components/tabs/
 Tabbed interface with arrow-key navigation, ARIA tablist semantics, and lazy-rendered panels.
 
 ```tsx
@@ -10793,13 +10793,13 @@ Both require an `id` that links the tab to its panel.
 
 ## Source
 
-[`src/components/TkxTabs.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTabs.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxTag
-URL: https://ui.tekivex.com/components/tag/
+URL: https://www.tekivex.com/ui/components/tag/
 Compact label with optional close button. Variants, sizes, and a paired TkxTagInput for tag editing.
 
 ```tsx
@@ -10905,13 +10905,13 @@ Components. `TkxTagInput` is interactive and requires `'use client'`.
 
 ## Source
 
-[`src/components/TkxTag.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTag.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxTextarea
-URL: https://ui.tekivex.com/components/textarea/
+URL: https://www.tekivex.com/ui/components/textarea/
 Multi-line text input — the textarea counterpart to TkxInput. Label/hint/error, auto-grow, character counter, Unicode-safe.
 
 The multi-line counterpart to [`TkxInput`](/components/input/). Same
@@ -10981,7 +10981,7 @@ The component forwards its `ref` to the underlying `<textarea>`.
 
 
 ## TkxThemeBuilder
-URL: https://ui.tekivex.com/components/theme-builder/
+URL: https://www.tekivex.com/ui/components/theme-builder/
 Visual theme editor — pick colors, see live preview across 80+ components, export as JSON or .ts file.
 
 ```tsx
@@ -11026,14 +11026,14 @@ export const myTheme: ThemeTokens = { bg: '#0a0a0f', ... };
 
 ## Where it's used
 
-The theme builder is mounted at https://ui.tekivex.com/theme-builder/.
+The theme builder is mounted at https://www.tekivex.com/ui/theme-builder/.
 The same component is reusable inside your own admin UI.
 
 --------------------------------------------------------------------------------
 
 
 ## TkxThemeStudio
-URL: https://ui.tekivex.com/components/theme-studio/
+URL: https://www.tekivex.com/ui/components/theme-studio/
 Visual theme editor — pick token colors, see a live component preview with real-time WCAG contrast badges, and export as TypeScript, JSON, or CSS.
 
 ```tsx
@@ -11113,7 +11113,7 @@ formula. The badge turns to the fail color when the token misses its threshold.
 
 
 ## TkxTimeline
-URL: https://ui.tekivex.com/components/timeline/
+URL: https://www.tekivex.com/ui/components/timeline/
 TkxTimeline — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11136,7 +11136,7 @@ TkxTimeline — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-[`src/components/TkxTimeline.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTimeline.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/timeline).
@@ -11145,7 +11145,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxTitle
-URL: https://ui.tekivex.com/components/title/
+URL: https://www.tekivex.com/ui/components/title/
 TkxTitle — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11168,7 +11168,7 @@ TkxTitle — accessible React component from tekivex-ui. Live demos, props, and 
 
 ## Source
 
-[`src/components/TkxTitle.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTitle.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/title).
@@ -11177,7 +11177,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxToast
-URL: https://ui.tekivex.com/components/toast-provider/
+URL: https://www.tekivex.com/ui/components/toast-provider/
 Imperatively-triggered toast notifications. Position, variants, action button, auto-dismiss with pause-on-hover.
 
 ```tsx
@@ -11269,13 +11269,13 @@ toast.dismiss(id?: string);  // dismiss specific or all
 
 ## Source
 
-[`src/components/TkxToast.tsx`](https://ui.tekivex.com)
+[`src/components/TkxToast.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxToast
-URL: https://ui.tekivex.com/components/toast/
+URL: https://www.tekivex.com/ui/components/toast/
 Imperative toast notifications via useToast() + TkxToastProvider. Variants, positions, auto-dismiss.
 
 ```tsx
@@ -11310,7 +11310,7 @@ function SaveButton() {
 
 ## Source
 
-[`src/components/TkxToast.tsx`](https://ui.tekivex.com)
+[`src/components/TkxToast.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/toast).
@@ -11319,7 +11319,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxToggle
-URL: https://ui.tekivex.com/components/toggle/
+URL: https://www.tekivex.com/ui/components/toggle/
 TkxToggle — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11344,7 +11344,7 @@ TkxToggle — accessible React component from tekivex-ui. Live demos, props, and
 
 ## Source
 
-[`src/components/TkxToggle.tsx`](https://ui.tekivex.com)
+[`src/components/TkxToggle.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/toggle).
@@ -11353,7 +11353,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxToolbar
-URL: https://ui.tekivex.com/components/toolbar/
+URL: https://www.tekivex.com/ui/components/toolbar/
 TkxToolbar — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11376,7 +11376,7 @@ TkxToolbar — accessible React component from tekivex-ui. Live demos, props, an
 
 ## Source
 
-Implementation in [`src/components/TkxToolbar.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxToolbar.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/toolbar).
@@ -11385,7 +11385,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxTooltip
-URL: https://ui.tekivex.com/components/tooltip/
+URL: https://www.tekivex.com/ui/components/tooltip/
 Hover/focus tooltip with collision detection, hover-delay, and proper ARIA wiring.
 
 ```tsx
@@ -11467,13 +11467,13 @@ S
 
 ## Source
 
-[`src/components/TkxTooltip.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTooltip.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## TkxTour
-URL: https://ui.tekivex.com/components/tour/
+URL: https://www.tekivex.com/ui/components/tour/
 Tour — accessible React component from tekivex-ui. Variants, props, and accessibility notes.
 
 ```tsx
@@ -11504,17 +11504,17 @@ AAA audit is on the roadmap, not completed.
 
 ## Source
 
-The implementation lives at [`src/components/TkxTour.tsx`](https://ui.tekivex.com).
+The implementation lives at [`src/components/TkxTour.tsx`](https://www.tekivex.com/ui).
 
 > This page is a generated scaffold. It will be replaced with hand-authored
 > examples and a live preview in a follow-up release. For interactive demos,
-> see the [legacy demo site](https://ui.tekivex.com/#/components/tour).
+> see the [legacy demo site](https://www.tekivex.com/ui/#/components/tour).
 
 --------------------------------------------------------------------------------
 
 
 ## TkxTransferList
-URL: https://ui.tekivex.com/components/transfer-list/
+URL: https://www.tekivex.com/ui/components/transfer-list/
 TkxTransferList — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11535,7 +11535,7 @@ TkxTransferList — accessible React component from tekivex-ui. Live demos, prop
 
 ## Source
 
-[`src/components/TkxTransferList.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTransferList.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/transfer-list).
@@ -11544,7 +11544,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxTreeView
-URL: https://ui.tekivex.com/components/tree-view/
+URL: https://www.tekivex.com/ui/components/tree-view/
 TkxTreeView — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11565,7 +11565,7 @@ TkxTreeView — accessible React component from tekivex-ui. Live demos, props, a
 
 ## Source
 
-[`src/components/TkxTreeView.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTreeView.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/tree-view).
@@ -11574,7 +11574,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxTreemap
-URL: https://ui.tekivex.com/components/treemap/
+URL: https://www.tekivex.com/ui/components/treemap/
 Zero-dependency squarified SVG treemap with nesting. Rectangles sized by value, auto-contrast labels, and per-node click handlers.
 
 `TkxTreemap` lays out hierarchical data as nested rectangles sized
@@ -11622,13 +11622,13 @@ All other `div` attributes (except `onClick`) are spread onto the root.
 
 ## Source
 
-[`src/components/TkxTreemap.tsx`](https://ui.tekivex.com)
+[`src/components/TkxTreemap.tsx`](https://www.tekivex.com/ui)
 
 --------------------------------------------------------------------------------
 
 
 ## Typography
-URL: https://ui.tekivex.com/components/typography/
+URL: https://www.tekivex.com/ui/components/typography/
 Typography — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11651,7 +11651,7 @@ Typography — accessible React component from tekivex-ui. Live demos, props, an
 
 ## Source
 
-Implementation in [`src/components/TkxTypography.tsx`](https://ui.tekivex.com).
+Implementation in [`src/components/TkxTypography.tsx`](https://www.tekivex.com/ui).
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/typography).
@@ -11660,7 +11660,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxVideoPlayer
-URL: https://ui.tekivex.com/components/video-player/
+URL: https://www.tekivex.com/ui/components/video-player/
 TkxVideoPlayer — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11681,7 +11681,7 @@ TkxVideoPlayer — accessible React component from tekivex-ui. Live demos, props
 
 ## Source
 
-[`src/components/TkxVideoPlayer.tsx`](https://ui.tekivex.com)
+[`src/components/TkxVideoPlayer.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/video-player).
@@ -11690,7 +11690,7 @@ For the full interactive sandbox, open the
 
 
 ## TkxWatermark
-URL: https://ui.tekivex.com/components/watermark/
+URL: https://www.tekivex.com/ui/components/watermark/
 TkxWatermark — accessible React component from tekivex-ui. Live demos, props, and accessibility notes.
 
 ```tsx
@@ -11713,7 +11713,7 @@ TkxWatermark — accessible React component from tekivex-ui. Live demos, props, 
 
 ## Source
 
-[`src/components/TkxWatermark.tsx`](https://ui.tekivex.com)
+[`src/components/TkxWatermark.tsx`](https://www.tekivex.com/ui)
 
 For the full interactive sandbox, open the
 [playground](/playground/#/components/watermark).
@@ -11722,7 +11722,7 @@ For the full interactive sandbox, open the
 
 
 ## Page templates
-URL: https://ui.tekivex.com/templates/
+URL: https://www.tekivex.com/ui/templates/
 Seven full-page templates — dashboard, portfolio, e-commerce, supply-chain, blog, admin settings, landing.
 
 `tekivex-ui` includes seven complete page templates. Each is responsive
@@ -11740,15 +11740,15 @@ copyable verbatim.
 | **Landing page** | Marketing — hero, features, pricing, FAQ, CTA |
 
 The templates currently live in the interactive demo
-(`https://ui.tekivex.com/#/templates/<name>`); MDX migration with full
+(`https://www.tekivex.com/ui/#/templates/<name>`); MDX migration with full
 source listings ships in a follow-up.
 
 --------------------------------------------------------------------------------
 
 
 ## 404 — page not found
-URL: https://ui.tekivex.com/404/
-The page you're looking for doesn't exist on ui.tekivex.com.
+URL: https://www.tekivex.com/ui/404/
+The page you're looking for doesn't exist on www.tekivex.com/ui.
 
 The link you followed may be outdated, or the page may have been moved.
 
@@ -11772,7 +11772,7 @@ If you arrived here from another site, please [open an issue](https://github.com
 
 
 ## TekiVex UI — Accessible React Component Library
-URL: https://ui.tekivex.com/
+URL: https://www.tekivex.com/ui/
 116 components, self-tested against WCAG 2.1 AAA (third-party audit on roadmap), built-in security kernel, 1,798 tests, RSC-ready. npm install tekivex-ui.
 
 ## What ships in v3.0
@@ -11854,7 +11854,7 @@ React 18 and React 19.
 
 
 ## License
-URL: https://ui.tekivex.com/license/
+URL: https://www.tekivex.com/ui/license/
 TekiVex UI is MIT licensed — free for personal and commercial use.
 
 `tekivex-ui` is released under the **MIT License**.
@@ -11896,7 +11896,7 @@ SOFTWARE.
 
 
 ## PDF primitives — full reference
-URL: https://ui.tekivex.com/pdf-primitives/
+URL: https://www.tekivex.com/ui/pdf-primitives/
 All 15 primitives in @tekivex/pdf — Document, Page, View, Row, Column, Text, Image, Heading, List, Table, Header, Footer, Link, Divider, Watermark.
 
 `@tekivex/pdf` ships **15 primitives**. Together they cover every structured-document shape we've found in real consumer apps without dropping back to the raw `@react-pdf/renderer` API.

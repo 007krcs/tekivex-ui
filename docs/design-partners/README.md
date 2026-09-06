@@ -55,7 +55,7 @@ If 4 of 5 hold, still pursue. If 3 of 5 hold, deprioritize.
 
 ## What we ask in return
 
-- One company logo (SVG, monochrome preferred) on `ui.tekivex.com`.
+- One company logo (SVG, monochrome preferred) on `www.tekivex.com/ui`.
 - One quote (2-3 sentences) from a named decision-maker on the landing page.
 - One short case study (~600 words) we can publish at `/case-studies/<slug>`.
 - Permission to mention them in conference talks, podcast appearances, and one
@@ -95,8 +95,8 @@ Send these from `partners@tekivex.com`. Reply-to should be a real human (007krcs
 > walk through the threat model.
 >
 > — [007krcs]
-> Threat model: https://ui.tekivex.com/docs/security-threat-model
-> SBOM: https://ui.tekivex.com/security/sbom.json
+> Threat model: https://www.tekivex.com/ui/docs/security-threat-model
+> SBOM: https://www.tekivex.com/ui/security/sbom.json
 > GitHub: https://github.com/007krcs/tekivex-ui
 
 ### Template B — Warm intro, fintech

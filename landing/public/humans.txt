@@ -1,6 +1,6 @@
 /* TEAM */
   Project: TekiVex UI
-  Site:    https://ui.tekivex.com
+  Site:    https://www.tekivex.com/ui
   Source:  https://github.com/007krcs/tekivex-ui
 
 /* SITE */

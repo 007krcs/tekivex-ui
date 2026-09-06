@@ -22,7 +22,7 @@ I'm reaching out about a third-party WCAG 2.1 AAA conformance audit for TekiVex 
 
 **Repo:** https://github.com/007krcs/tekivex-ui (MIT, public)
 
-**Live demo site:** https://ui.tekivex.com (interactive playground for all 116 components)
+**Live demo site:** https://www.tekivex.com/ui (interactive playground for all 116 components)
 
 **Scope:**
 - 116 production React components

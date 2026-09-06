@@ -29,7 +29,7 @@ export function JsonLd({ data }: { data: object | object[] }) {
   return null;
 }
 
-const ORIGIN = 'https://ui.tekivex.com';
+const ORIGIN = 'https://www.tekivex.com/ui';
 
 export function breadcrumbList(items: { label: string; href?: string }[]) {
   return {
