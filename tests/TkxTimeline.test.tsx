@@ -44,6 +44,19 @@ describe('TkxTimeline', () => {
     expect(container.firstChild).toBeInTheDocument();
   });
 
+  it('compact variant still renders description (regression: it was dropped)', () => {
+    render(
+      <TkxTimeline
+        variant="compact"
+        items={[{ id: '1', title: 'Call', description: 'Wants 2BHK', timestamp: '10:00' }]}
+      />,
+      { wrapper: Wrapper },
+    );
+    expect(screen.getByText('Call')).toBeInTheDocument();
+    expect(screen.getByText('Wants 2BHK')).toBeInTheDocument();
+    expect(screen.getByText('10:00')).toBeInTheDocument();
+  });
+
   it('renders with alternating variant', () => {
     const { container } = render(<TkxTimeline items={sampleItems} variant="alternating" />, { wrapper: Wrapper });
     expect(container.firstChild).toBeInTheDocument();

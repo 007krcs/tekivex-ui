@@ -135,6 +135,22 @@ export function toCSSVarTheme(palette: ThemeTokens): ResolvedTheme {
   return { ...palette, css: css as unknown as ThemeTokens, raw: palette };
 }
 
+/**
+ * Rough perceived-luminance test for a CSS hex colour. Non-hex values (named
+ * colours, rgb(), gradients) are treated as light so a custom palette never
+ * accidentally flips native controls dark.
+ */
+function isDarkColor(color: string): boolean {
+  const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(color.trim());
+  if (!m) return false;
+  let hex = m[1];
+  if (hex.length === 3) hex = hex.split('').map((c) => c + c).join('');
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5;
+}
+
 export const ThemeContext = createContext<ResolvedTheme>(toCSSVarTheme(quantumDark));
 
 export type ColorScheme = 'light' | 'dark' | 'auto';
@@ -176,6 +192,21 @@ export interface ThemeProviderProps {
    * used by `next-themes`.
    */
   suppressHydrationWarning?: boolean;
+  /**
+   * Also theme the document itself, not just tekivex-ui components.
+   * When `true`, the injected `#tkx-theme` stylesheet sets
+   * `background-color` / `color` on `<body>` from `--tkx-bg` / `--tkx-text`,
+   * so the page behind the widgets follows the active scheme. Off by default
+   * so consumers that style `<body>` themselves are unaffected.
+   *
+   * Independent of this flag, the provider always sets `color-scheme` on
+   * `<html>` (native inputs, scrollbars and form controls follow the scheme)
+   * and exposes the page tokens as CSS variables on `:root`; key your own
+   * styles on them (`background: var(--tkx-bg)`, `color: var(--tkx-text)`,
+   * `border-color: var(--tkx-border)`) or on the `html[data-tkx-scheme="dark"]`
+   * selector.
+   */
+  applyToDocument?: boolean;
   children: ReactNode;
 }
 
@@ -226,6 +257,7 @@ export function ThemeProvider({
   darkTheme = quantumDark,
   defaultMode = 'light',
   suppressHydrationWarning = false,
+  applyToDocument = false,
   children,
 }: ThemeProviderProps) {
   // Resolution rules:
@@ -281,14 +313,21 @@ export function ThemeProvider({
         document.head.appendChild(styleEl);
       }
     }
-    styleEl.textContent = `:root { ${vars} }`;
+    const scheme = resolved === darkTheme ? 'dark' : resolved === lightTheme ? 'light' : 'custom';
+    // `color-scheme` makes native form controls, scrollbars and the default
+    // canvas follow the active scheme, so a dark theme doesn't leave white
+    // <input>/<select> chrome behind the themed components. Custom palettes
+    // are classified by their background luminance.
+    const colorScheme = scheme === 'custom' ? (isDarkColor(resolved.bg) ? 'dark' : 'light') : scheme;
+    const documentRules = applyToDocument
+      ? ` body { background-color: var(--tkx-bg); color: var(--tkx-text); }`
+      : '';
+    styleEl.textContent = `:root { ${vars} color-scheme: ${colorScheme}; }${documentRules}`;
     // Also expose the active scheme on <html> for consumers who want to
     // hook off it via [data-tkx-scheme] selectors.
-    document.documentElement.setAttribute(
-      'data-tkx-scheme',
-      resolved === darkTheme ? 'dark' : resolved === lightTheme ? 'light' : 'custom',
-    );
-  }, [resolved, darkTheme, lightTheme, gated]);
+    document.documentElement.setAttribute('data-tkx-scheme', scheme);
+    document.documentElement.style.colorScheme = colorScheme;
+  }, [resolved, darkTheme, lightTheme, gated, applyToDocument]);
 
   // Also set CSS variables as inline style on the provider wrapper so that
   // SSR-rendered HTML already contains the correct values without a round-trip.

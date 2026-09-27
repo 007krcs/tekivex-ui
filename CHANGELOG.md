@@ -5,6 +5,43 @@ All notable changes to TekiVex UI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+Fixes for the defects reported from the PlotPilot CRM integration
+(`TEKIVEX_UI_REPORT.md`, filed against 3.19.0). Items 1 (`TkxToastProvider`
+hydration mismatch), 2 (double HTML-escaping, fixed in 4.0.0) and 6
+(`TkxDatePicker` popover `aria-modal="false"` + label) were already resolved
+on `main`; a hydration regression test for the toast provider is added so
+item 1 cannot come back.
+
+### Fixed
+
+- **`TkxTimeline variant="compact"` dropped `description`.** Compact items
+  rendered only title, timestamp and badge; the description never reached the
+  DOM. It now renders in compact mode at a smaller size.
+- **`TkxNumberInput` `onChange` fired only on blur.** A controlled parent (and
+  anything derived from it, such as a submit button's `isDisabled`) did not
+  see the value while the user typed, so a click on the button landed before
+  blur committed the value. `onChange` now fires on every keystroke that
+  parses to a number, like a native `<input type="number">`; partial entries
+  (`-`, empty) are left alone, and clamping/formatting still happen on blur.
+- **`TkxTable` rejected rows typed as a plain `interface`.** The generic
+  constraint was `T extends Record<string, unknown>`, which interfaces do not
+  satisfy, forcing `as unknown as Record<string, unknown>[]` casts and losing
+  `row`'s type inside `render`. The constraint is now `T extends object`;
+  sorting is unchanged.
+
+### Added
+
+- **`ThemeProvider` themes the document, not just the widgets.** The provider
+  now sets `color-scheme` on `<html>` and in the injected `:root` rule
+  (`dark`/`light`, or by background luminance for a custom palette), so native
+  inputs, scrollbars and form controls follow the active scheme. New opt-in
+  `applyToDocument` prop sets `body { background-color: var(--tkx-bg);
+  color: var(--tkx-text) }`. Page tokens for consumer CSS are the existing
+  `--tkx-bg`, `--tkx-text`, `--tkx-surface` and `--tkx-border` variables on
+  `:root`, and the `html[data-tkx-scheme="dark"]` selector.
+
 ## [4.5.0] — 2026-09-01
 
 ### Changed — the MCP server is now part of `tekivex-ui`, not a separate package

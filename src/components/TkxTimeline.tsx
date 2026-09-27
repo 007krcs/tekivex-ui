@@ -187,8 +187,11 @@ function ItemContent({
           </span>
         )}
       </div>
-      {item.description && !compact && (
-        <div className={tkx('text-xs leading-relaxed mt-0.5')} style={{ color: theme.css.textMuted }}>
+      {item.description && (
+        <div
+          className={tkx(compact ? 'text-[11px] leading-snug' : 'text-xs leading-relaxed mt-0.5')}
+          style={{ color: theme.css.textMuted }}
+        >
           {typeof item.description === 'string' ? sanitizeString(item.description) : item.description}
         </div>
       )}

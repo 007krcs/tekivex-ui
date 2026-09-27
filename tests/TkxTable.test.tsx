@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent, within } from '@testing-library/react';
+import { render, fireEvent, within, screen } from '@testing-library/react';
 import { TkxTable, type ColumnDef } from '../src/components/TkxTable';
 import { ThemeProvider } from '../src/themes';
 
@@ -155,5 +155,25 @@ describe('TkxTable', () => {
   it('non-virtual mode does not set aria-rowcount', () => {
     const { container } = wrap(<TkxTable columns={cols} data={rows} />);
     expect(container.querySelector('table')?.hasAttribute('aria-rowcount')).toBe(false);
+  });
+
+  it('accepts rows typed as a plain interface (no Record<string, unknown> cast)', () => {
+    interface Client { id: string; name: string; budget: number }
+    const clients: Client[] = [
+      { id: 'a', name: 'Asha', budget: 50 },
+      { id: 'b', name: 'Ravi', budget: 75 },
+    ];
+    const clientCols: ColumnDef<Client>[] = [
+      { key: 'name', header: 'Name' },
+      // `row` keeps its type inside render — no cast needed.
+      { key: 'budget', header: 'Budget', render: (_v, row) => `${row.name}: ${row.budget}L` },
+    ];
+    render(
+      <ThemeProvider>
+        <TkxTable data={clients} columns={clientCols} />
+      </ThemeProvider>,
+    );
+    expect(screen.getByText('Asha: 50L')).toBeInTheDocument();
+    expect(screen.getByText('Ravi: 75L')).toBeInTheDocument();
   });
 });
