@@ -25,7 +25,7 @@ export interface ColumnDef<T> {
   sortable?: boolean;
 }
 
-export interface TkxTableProps<T extends Record<string, unknown>> {
+export interface TkxTableProps<T extends object> {
   columns: ColumnDef<T>[];
   data: T[];
   caption?: string;
@@ -77,7 +77,7 @@ function SortIcon({ dir }: { dir: SortDirection }) {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function TkxTable<T extends Record<string, unknown>>({
+export function TkxTable<T extends object>({
   columns: columns_,
   data: data_,
   caption,

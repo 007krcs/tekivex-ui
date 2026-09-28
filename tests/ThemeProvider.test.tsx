@@ -90,4 +90,38 @@ describe('ThemeProvider v2.7 — auto / explicit modes', () => {
     render(<ShowScheme />);
     expect(screen.getByTestId('scheme').textContent).toBe('dark');
   });
+
+  describe('document-level theming', () => {
+    afterEach(() => {
+      document.documentElement.style.colorScheme = '';
+    });
+
+    it('sets color-scheme on <html> and :root for mode="dark"', () => {
+      render(<ThemeProvider mode="dark"><ShowText /></ThemeProvider>);
+      expect(document.documentElement.style.colorScheme).toBe('dark');
+      expect(document.documentElement.getAttribute('data-tkx-scheme')).toBe('dark');
+      const css = document.getElementById('tkx-theme')!.textContent!;
+      expect(css).toContain('color-scheme: dark');
+      expect(css).toContain(`--tkx-bg: ${quantumDark.bg}`);
+      expect(css).not.toContain('body {');
+    });
+
+    it('sets color-scheme: light for mode="light"', () => {
+      render(<ThemeProvider mode="light"><ShowText /></ThemeProvider>);
+      expect(document.documentElement.style.colorScheme).toBe('light');
+      expect(document.getElementById('tkx-theme')!.textContent).toContain('color-scheme: light');
+    });
+
+    it('classifies a custom palette by background luminance', () => {
+      render(<ThemeProvider theme={{ ...quantumDark, bg: '#101010' }}><ShowText /></ThemeProvider>);
+      expect(document.documentElement.getAttribute('data-tkx-scheme')).toBe('custom');
+      expect(document.documentElement.style.colorScheme).toBe('dark');
+    });
+
+    it('applyToDocument themes <body> from the page tokens', () => {
+      render(<ThemeProvider mode="dark" applyToDocument><ShowText /></ThemeProvider>);
+      const css = document.getElementById('tkx-theme')!.textContent!;
+      expect(css).toContain('body { background-color: var(--tkx-bg); color: var(--tkx-text); }');
+    });
+  });
 });

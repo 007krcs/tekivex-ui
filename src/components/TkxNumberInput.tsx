@@ -60,6 +60,18 @@ const SIZE_MAP = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+/**
+ * Lenient parse for a typed string. Returns `null` for anything that does not
+ * yet read as a number (empty, lone sign or dot, stray letters), so callers can
+ * distinguish "not a number yet" from a real value while the user types.
+ */
+function parseNumeric(raw: string): number | null {
+  const trimmed = raw.trim();
+  if (trimmed === '') return null;
+  const n = Number(trimmed);
+  return Number.isFinite(n) ? n : null;
+}
+
 function clamp(v: number, min?: number, max?: number): number {
   let result = v;
   if (min !== undefined) result = Math.max(result, min);
@@ -280,7 +292,14 @@ export function TkxNumberInput({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Strip bidi-override / zero-width chars before they reach parseFloat —
     // numeric input shouldn't carry them but they're a known smuggling vector.
-    setRawInput(sanitizeUnicode(e.target.value));
+    const raw = sanitizeUnicode(e.target.value);
+    setRawInput(raw);
+    // Commit on every keystroke that parses to a number, like a native
+    // <input type="number">. Clamping and formatting still happen on blur,
+    // so partial entries such as "-" or "" are left alone here and a
+    // controlled parent sees the value while the user is still typing.
+    const parsed = parseNumeric(raw);
+    if (parsed !== null) setVal(parsed);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
